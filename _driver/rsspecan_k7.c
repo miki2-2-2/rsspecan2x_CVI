@@ -974,6 +974,8 @@ ViStatus _VI_FUNC rsspecan_GetADemodResultValues(
 
     checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
 
+// TODO: ERROR!!! Missing Unlock
+
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, demodulationType, 0, 8),

@@ -392,7 +392,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureTrackingGenerator(ViSession instrSession,
 
     viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TGEN_LEVEL_OFFSET, powerOffset),
     		4, "Power Offset");
-    if (strstr (model, "FSQ") != NULL)
+
+	if (RsCore_IsInstrumentModel(instrSession, "FSQ"))
         viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TGEN_FREQUENCY_OFFSET, frequencyOffset),
         		5, "Frequency Offset");
 

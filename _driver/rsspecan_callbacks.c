@@ -334,6 +334,8 @@ ViStatus rsspecan_displayComment_ReadCallback(ViSession instrSession, ViConstStr
 
     checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
 
+// TODO: ERROR!!! Missing Unlock
+
     if ((strstr (model, "FSL")) || (strstr (model, "FSV")))
     {
         viCheckErr(Rs_ReadCallback (instrSession, repCapName, attributeId, bufSize, value));
@@ -2123,6 +2125,8 @@ Error:
 
     checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
 
+// TODO: ERROR!!! Missing Unlock
+
     if ((strstr (model, "FSV")) || (strstr (model, "FSW")))
     {
         *rangeTablePtr=&rsspecan_rngVSAModulationEVMCalcFSV;
@@ -2146,6 +2150,8 @@ Error:
     ViStatus    error = VI_SUCCESS;
 
     checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
+// TODO: ERROR!!! Missing Unlock
 
     if (strstr (model, "FSVR"))
     {
@@ -2174,6 +2180,8 @@ Error:
     ViStatus    error = VI_SUCCESS;
 
     checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
+// TODO: ERROR!!! Missing Unlock
 
     if (strstr (model, "FSV"))
     {
@@ -2222,6 +2230,8 @@ ViStatus rsspecan_AmpUnit_RangeTableCallback(ViSession instrSession, ViConstStri
    ViStatus    error = VI_SUCCESS;
 
     checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
+// TODO: ERROR!!! Missing Unlock
 
     if (strstr (model, "FSL"))
     {
@@ -2274,6 +2284,8 @@ Error:
     ViStatus    error = VI_SUCCESS;
 
     checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
+// TODO: ERROR!!! Missing Unlock
 
     if (strstr (model, "FSV"))
     {

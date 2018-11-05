@@ -3296,7 +3296,7 @@ ViStatus _VI_FUNC rsspecan_SetInstrumentFromMarker (ViSession instrSession,
 			{
                checkErr(RS_ERROR_INSTRUMENT_MODEL);
             }
-        
+
 			checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_TO_STEP, NULL));
         }
 
@@ -3909,7 +3909,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMarkerDemodulation (ViSession instrSession,
 
     viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_MARKER_DEMOD_HOLDOFF, markerStopTime),
     		6, "Marker Stop Time");
-	
+
 	if (RsCore_IsInstrumentModel(instrSession, "ZVH"))
     {
         sprintf (buffer, "Win%ld", window);
@@ -6034,8 +6034,7 @@ ViStatus _VI_FUNC rsspecan_CreateExternalMixerConversionLossTable (ViSession ins
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr(model, "FMU") != NULL))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
 
    // sprintf (buffer, "Win%ld", window);
 
@@ -6145,8 +6144,7 @@ ViStatus _VI_FUNC rsspecan_ExternalMixerConversionLossTableCatalog (ViSession in
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr(model, "FMU") != NULL))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
 
     if (!((strstr (buffer, "K90")  != NULL) || (strstr (buffer, "B21") != NULL)))
         viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
@@ -15729,7 +15727,7 @@ ViStatus _VI_FUNC rsspecan_QuerySEMPowerClassAllLimits (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (!rsspecan_IsFSV (instrSession) || (strstr (model, "FSL") == NULL))
+    if (!rsspecan_IsFSV (instrSession) || (!RsCore_IsInstrumentModel(instrSession, "FSL"))
         checkErr(RS_ERROR_INSTRUMENT_MODEL);
 
     checkErr(rsspecan_QueryViString (instrSession,
@@ -16045,7 +16043,7 @@ ViStatus _VI_FUNC rsspecan_ServiceConfigurePulsedInput (ViSession instrSession,
     viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_SERVICE_INPUT_PULSED_STATE, state),
     		3, "State");
 
-    if ((rsspecan_IsFSV (instrSession)) || (strstr (model, "FSL") != NULL))
+    if ((rsspecan_IsFSV (instrSession)) || RsCore_IsInstrumentModel(instrSession, "FSL"))
     {
         viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_SERVICE_PULSE_CAL_FREQ_FSV, frequency),
         		4, "Frequency");
@@ -17075,9 +17073,9 @@ ViStatus _VI_FUNC rsspecan_SetFastSweepMode (ViSession instrSession,
 {
     ViStatus    error = VI_SUCCESS;
     RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
-    
+
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, fastSweepMode, RSSPECAN_VAL_FAST_SWEEP_NORMAL, RSSPECAN_VAL_FAST_SWEEP_FAST),
-    		2, "Fast Sweep Mode");
+			2, "Fast Sweep Mode");
 
     sessionProperties->fastSweepInstrument = fastSweepMode;
 

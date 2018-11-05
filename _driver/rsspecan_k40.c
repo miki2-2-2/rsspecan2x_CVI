@@ -1489,9 +1489,9 @@ ViStatus _VI_FUNC rsspecan_ReadPhaseTraceData(
 	}
 	else
 	{
-		data = (ViReal64*) malloc (RSSPECAN_DATA_BUFFER_SIZE * sizeof (ViReal64) * 2);
+		data = (ViReal64*) malloc (<DELETED DATA_BUFFER_SIZE> * sizeof (ViReal64) * 2);
 
-		checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, RSSPECAN_DATA_BUFFER_SIZE,  data, &retCnt));
+		checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, <DELETED DATA_BUFFER_SIZE>,  data, &retCnt));
 
 		while (cnt < (retCnt / 2))
 	    {

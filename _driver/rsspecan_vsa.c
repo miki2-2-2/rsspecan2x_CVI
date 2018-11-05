@@ -1654,6 +1654,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAStatisticCount (ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
 
+// TODO: ERROR!!! Missing Unlock
+
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_VSA_STATISTIC_COUNT, statisticCount),
     		2, "Statistic Count");
 
@@ -1679,6 +1681,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAResultRangeNumber (ViSession instrSession
 	ViStatus	error = VI_SUCCESS;
 
 	checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
+// TODO: ERROR!!! Missing Unlock
 
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_VSA_RESULT_RANGE_NUMBER, resultRangeNumber),
     		2, "Result Range Number");
@@ -1707,6 +1711,8 @@ ViStatus _VI_FUNC rsspecan_GetVSACurrentStatisticsCounter (ViSession instrSessio
 	ViChar      buffer[15] = "";
 
     checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
+// TODO: ERROR!!! Missing Unlock
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, evaluationType, RSSPECAN_VAL_VSA_EVAL_STATISTICS, RSSPECAN_VAL_VSA_EVAL_CAPTURE),
 			2, "Evaluation Type");
@@ -2491,6 +2497,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSADisplayYAxisStatisticMeasurement (ViSessi
 	ViStatus	error = VI_SUCCESS;
 
     checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
+// TODO: ERROR!!! Missing Unlock
 
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MEAS_STAT_Y_UNIT, yUnit),
     		2, "Y Unit");
