@@ -8,7 +8,7 @@
 
 Modification History:
 
-3.00, (build 31) 2018-11-05 Miloslav Macko
+3.00, (build 32) 2018-11-05 Miloslav Macko
 	- Reviewed and reworked to reflect the features of LabVIEW and IVI.NET core
 	- Incompatible with rsidr_core 2.xx, therefore the file name and function prefixes change to be able to co-exist with rsidr_core 2.xx :
 	- File names changed to rscore.h and rscore.c
@@ -8064,55 +8064,6 @@ Error:
 }
 
 /******************************************************************************************************/
-/*  RsCore_QueryBinaryOrAsciiFloatArrayToUserBuffer
-	Same as RsCore_QueryBinaryOrAsciiFloatArray, but the response is copies to the user-allocated buffer
-	with limited size.
-	The responseArraySize can be set to NULL
-/******************************************************************************************************/
-ViStatus RsCore_QueryBinaryOrAsciiFloatArrayToUserBuffer(ViSession instrSession, ViConstString query, ViInt32 userArraySize, ViReal64* userArray, ViInt32* responseArraySize)
-{
-	ViStatus error = VI_SUCCESS;
-	ViReal64* dblArray = NULL;
-	ViInt32 dblArraySize = 0;
-
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, query, &dblArray, &dblArraySize));
-	checkErr(RsCore_CopyToUserBufferViReal64Array(instrSession, userArray, userArraySize, dblArray, dblArraySize));
-
-	if (responseArraySize)
-		*responseArraySize = dblArraySize;
-
-Error:
-	if (dblArray)
-		free(dblArray);
-	return error;
-}
-
-/******************************************************************************************************/
-/*  RsCore_QueryBinaryOrAsciiFloatArraToUserBufferWithOpc
-	Same as RsCore_QueryBinaryOrAsciiFloatArrayWithOpc, but the response is copies to the user-allocated buffer
-	with limited size.
-	The responseArraySize can be set to NULL
-/******************************************************************************************************/
-ViStatus RsCore_QueryBinaryOrAsciiFloatArraToUserBufferWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs,
-	ViInt32 userArraySize, ViReal64* userArray, ViInt32* responseArraySize)
-{
-	ViStatus error = VI_SUCCESS;
-	ViReal64* dblArray = NULL;
-	ViInt32 dblArraySize = 0;
-
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArrayWithOpc(instrSession, query, timeoutMs, &dblArray, &dblArraySize));
-	checkErr(RsCore_CopyToUserBufferViReal64Array(instrSession, userArray, userArraySize, dblArray, dblArraySize));
-
-	if (responseArraySize)
-		*responseArraySize = dblArraySize;
-
-Error:
-	if (dblArray)
-		free(dblArray);
-	return error;
-}
-
-/******************************************************************************************************/
 /*  RsCore_QueryBinaryOrAsciiIntegerArray
     Queries an array of integer numbers that can be returned in ASCII format or in binary format.
     The array is always returned as the most-universal ViInt32 array.
@@ -8244,7 +8195,7 @@ Error:
 }
 
 /******************************************************************************************************/
-/*  RsCore_QueryViRealArrayToUserBuffer
+/*  RsCore_QueryFloatArrayToUserBuffer
 	The function sends the query to the instrument, reads the array response and copies it to the provided user buffer
 	Before sending the command, it sends the bin format setting: ':FORM REAL,32'
 	Even if the instrument returns the data in ASCII format, the function parses it properly
@@ -8290,7 +8241,7 @@ Error:
 
 /******************************************************************************************************/
 /*  RsCore_QueryFloatArrayToUserBufferWithOpc
-	Same as RsCore_QueryTraceDataToUserBuffer, but the query is sent with OPC-sync
+	Same as RsCore_QueryBinaryOrAsciiFloatArrayWithOpc, but the query is sent with OPC-sync
 	Set the parameter timeoutMs to 0 in order to use the session's OPC timeout
 /******************************************************************************************************/
 ViStatus RsCore_QueryFloatArrayToUserBufferWithOpc(ViSession instrSession,
@@ -8331,7 +8282,8 @@ Error:
 
 /******************************************************************************************************/
 /*  RsCore_QueryIntegerArrayToUserBuffer
-	The function sends the query to the instrument, reads the array response and copies it to the provided user buffer
+	The function uses RsCore_QueryBinaryOrAsciiIntegerArray to send the query to the instrument,
+	read the array response and copies it to the provided user buffer.
 	The function parses correctly ASCII or BINARY response (it uses RsCore_QueryBinaryOrAsciiIntegerArray)
 	If the userBufferLength is smaller than read-out dataCount, the function only copies
 	the maximum provided count of the data and returns positive error number that equals the dataCount.

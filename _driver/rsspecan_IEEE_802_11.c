@@ -1126,8 +1126,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanAllLimits(ViSession   instrSession,
                                             ViReal64    values[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *pbuffer;
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     maxIdx = 12;
     ViInt32     i=0;
 
@@ -1139,14 +1138,8 @@ ViStatus _VI_FUNC rsspecan_GetWlanAllLimits(ViSession   instrSession,
     		3, "Limit");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, values), 4, "Values");
 
-    checkErr(viQueryf(instrSession, ":CALC%ld:LIM%ld:BURS:ALL?\n","%s", window, limit, buffer));
-
-    pbuffer = strtok(buffer, ",");
-    while ((pbuffer) && (i < maxIdx))
-    {
-        values[i++] = atof (pbuffer);
-        pbuffer = strtok(NULL, ",");
-    }
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":CALC%ld:LIM%ld:BURS:ALL?", "%s", window, limit);
+    checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 12, values, NULL));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1255,39 +1248,12 @@ ViStatus _VI_FUNC rsspecan_ReadWlanMemoryIQData(ViSession   instrSession,
                                                 ViReal64    imaginaryPartsQ[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViInt32     num;
-    ViReal64    *data=NULL;
-    ViInt32     data_num;
-    ViInt32     i;
-
-    checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K90|K91"));
 
-    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":FORM REAL,32;*CLS;:TRAC:IQ:DATA:MEM? %ld,%ld", offsetSamples, noofSamples);
-    checkErr(RsCore_Write(instrSession, cmd));
-    data_num = noofSamples * 2;
-    data = malloc (sizeof (ViReal64) * data_num);
-    /*checkErr(rsspecan_dataReadTraceIQ (instrSession, bufferSize, noofPoints,
-                    realPartsI, imaginaryPartsQ));*/
-    checkErr(rsspecan_dataReadTraceOnly (instrSession, data_num, data, &num));
-
-    if (noofPoints) *noofPoints=num/2;
-
-    num = (noofSamples>bufferSize)?bufferSize:noofSamples;
-
-    for (i=0;i<num;i++)
-    {
-        realPartsI[i]=data[2*i];
-        imaginaryPartsQ[i]=data[2*i+1];
-    }
-    checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_FetchTraceIQData(instrSession, offsetSamples, noofSamples, bufferSize, noofPoints, realPartsI, imaginaryPartsQ));
 
 Error:
-    if (data) free (data);
-    (void)RsCore_UnlockSession(instrSession);
-
     return error;
 }
 
@@ -1309,10 +1275,9 @@ ViStatus _VI_FUNC rsspecan_ReadWlanSEMResults (ViSession instrSession,
                                                ViInt32 *returnedValues)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      *buffer = NULL;
-    ViChar      *pbuf=NULL;
-    ViInt32     count=0;
-    ViInt32     i;
+	ViReal64* data = NULL;
+	ViInt32		dataSize = 0, i;
+	ViInt32		j = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1326,47 +1291,33 @@ ViStatus _VI_FUNC rsspecan_ReadWlanSEMResults (ViSession instrSession,
     viCheckParm(RsCore_InvalidNullPointer(instrSession, limitDistance), 9, "Limit Distance");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, failureFlag), 10, "Failure Flag");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FORM ASCII;:TRAC:DATA? LIST", &buffer)); // TODO: Check the response processing
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "FORM ASCII;:TRAC:DATA? LIST", &data, &dataSize));
 
-    pbuf=strtok(buffer, ",");
-    if (pbuf)
-        do{
-            if (count<noOfValues)
-            {
-                sscanf (pbuf, "%le", &index[count]);
-                pbuf=strtok(NULL, ",");
-                sscanf (pbuf, "%le", &startFrequencyBand[count]);
-                pbuf=strtok(NULL, ",");
-                sscanf (pbuf, "%le", &stopFrequencyBand[count]);
-                pbuf=strtok(NULL, ",");
-                sscanf (pbuf, "%le", &resolutionBandwidth[count]);
-                pbuf=strtok(NULL, ",");
-                sscanf (pbuf, "%le", &limitFailFrequency[count]);
-                pbuf=strtok(NULL, ",");
-                sscanf (pbuf, "%le", &powerAbs[count]);
-                pbuf=strtok(NULL, ",");
-                sscanf (pbuf, "%le", &powerRel[count]);
-                pbuf=strtok(NULL, ",");
-                sscanf (pbuf, "%le", &limitDistance[count]);
-                pbuf=strtok(NULL, ",");
-                sscanf (pbuf, "%le", &failureFlag[count]);
-                pbuf=strtok(NULL, ",");
-            }
-            else
-            {
-                for (i=0;i<11;i++)
-                    pbuf=strtok(NULL, ",");
-            }
-            count++;
-        }while (pbuf);
+	dataSize /= 9;
 
-    if (returnedValues)
-        *returnedValues = count;
+	if (returnedValues)
+		*returnedValues = dataSize;
+
+	if (dataSize > noOfValues)
+		dataSize = noOfValues;
+
+	for (i = 0; i < dataSize; i++)
+	{
+		index[i] = data[j++];
+		startFrequencyBand[i] = data[j++];
+		stopFrequencyBand[i] = data[j++];
+		resolutionBandwidth[i] = data[j++];
+		limitFailFrequency[i] = data[j++];
+		powerAbs[i] = data[j++];
+		powerRel[i] = data[j++];
+		limitDistance[i] = data[j++];
+		failureFlag[i] = data[j++];
+	}
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (buffer) free(buffer);
+	if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }

@@ -587,19 +587,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10Burst(
     switch (burstType)
     {
         case RSSPECAN_VAL_GSM_K10_BURST_NORMAL:
-            if (RsCore_InvalidViInt32Range (modulation, 2, 4) == VI_TRUE && (modulation != RSSPECAN_VAL_GSM_K10_MOD_GMSK))
-            {
-                viCheckParm(RS_ERROR_INVALID_PARAMETER, 6, "Modulation");
-            }
             break;
         case RSSPECAN_VAL_GSM_K10_BURST_HIGHER_RATE:
-            if (RsCore_InvalidViInt32Range (modulation, 3, 4) == VI_TRUE && (modulation != RSSPECAN_VAL_GSM_K10_MOD_QPSK))
-            {
-                viCheckParm(RS_ERROR_INVALID_PARAMETER, 6, "Modulation");
-            }
-
-            viCheckParm(RsCore_InvalidViInt32Range(instrSession, filter, 2, 3),
-            		7, "Filter");
             viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_FILTER, filter),
             		7, "Filter");
             break;
@@ -1324,48 +1313,16 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10ModulationAccuracyResults(
 )
 {
     ViStatus error = VI_SUCCESS;
-    ViChar   buffer [150] = "";
-    ViChar*  ext_buf=NULL;
-    ViChar*  p2buf;
-    ViUInt32 ret_cnt = 0;
-    ViInt32  i = 0;
-    ViInt32  old_timeout = -1;
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(result == NULL,4,"Result");
 
-    checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-    checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
-
-    checkErr(rsspecan_ClearBeforeRead(instrSession));
-
-    strcpy (buffer, "READ:BURS:ALL?;*OPC\n");
-    checkErr(RsCore_Write(instrSession, buffer));
-
-    checkErr(rsspecan_CheckBeforeRead (instrSession, timeout));
-    checkErr(Rs_ReadDataUnknownLength(instrSession, &ext_buf, &ret_cnt));
-
-    p2buf = strtok (ext_buf, ",\n");
-    if (p2buf == NULL)
-        return RS_ERROR_UNEXPECTED_RESPONSE;
-
-    while (p2buf != NULL)
-    {
-        if (i<arraySize)
-        {
-            result[i++] = atof (p2buf);
-        }
-        p2buf = strtok (NULL, ",\n");
-    }
-    if (returnedValues) *returnedValues=i;
+    checkErr(RsCore_QueryFloatArrayToUserBufferWithOpc(instrSession, "READ:BURS:ALL?", timeout, arraySize, result, returnedValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (old_timeout >= 0)
-        rsspecan_SetOPCTimeout (instrSession, old_timeout);
-
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1383,32 +1340,10 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10ModulationAccuracyResults(
 )
 {
     ViStatus error = VI_SUCCESS;
-    ViChar   buffer [150] = "";
-    ViChar*  ext_buf=NULL;
-    ViChar*  p2buf;
-    ViUInt32 ret_cnt = 0;
-    ViInt32  i = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm(result == NULL,3,"Result");
-
-    strcpy (buffer, "FETC:BURS:ALL?\n");
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, buffer, &ext_buf)); // TODO: Check the response processing
-
-    p2buf = strtok (ext_buf, ",\n");
-    if (p2buf == NULL)
-        return RS_ERROR_UNEXPECTED_RESPONSE;
-
-    while (p2buf != NULL)
-    {
-        if (i<arraySize)
-        {
-            result[i++] = atof (p2buf);
-        }
-        p2buf = strtok (NULL, ",\n");
-    }
-    if (returnedValues) *returnedValues=i;
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:ALL?", arraySize, result, returnedValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1584,55 +1519,35 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10SpectrumReferencePower (ViSession instrSess
                                                              ViReal64 *resolutionBW)
 {
 	ViStatus error = VI_SUCCESS;
-    ViChar   buffer [150] = "";
-    ViChar*  ext_buf=NULL;
-    ViChar*  p2buf;
-    ViUInt32 ret_cnt = 0;
-    ViInt32  old_timeout = -1;
+	ViChar   cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViReal64 data[3];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, spectrumType, RSSPECAN_VAL_GSM_K10_MOD_SPEC, RSSPECAN_VAL_GSM_K10_WIDE_SPEC),
     		3, "Spectrum Type");
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-    checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
-
-    checkErr(rsspecan_ClearBeforeRead(instrSession));
-
 	switch (spectrumType)
 	{
 		case RSSPECAN_VAL_GSM_K10_MOD_SPEC:
-			strcpy (buffer, "READ:SPEC:MOD:REF?;*OPC\n");
+			strcpy (cmd, "READ:SPEC:MOD:REF?");
 			break;
 		case RSSPECAN_VAL_GSM_K10_TRANS_SPEC:
-			strcpy (buffer, "READ:SPEC:SWIT:REF?;*OPC\n");
+			strcpy (cmd, "READ:SPEC:SWIT:REF?");
 			break;
 		case RSSPECAN_VAL_GSM_K10_WIDE_SPEC:
-			strcpy (buffer, "READ:WSP:MOD:REF?;*OPC\n");
+			strcpy (cmd, "READ:WSP:MOD:REF?");
 			break;
     }
-    checkErr(RsCore_Write(instrSession, buffer));
-	checkErr(rsspecan_CheckBeforeRead (instrSession, timeout));
-    checkErr(Rs_ReadDataUnknownLength(instrSession, &ext_buf, &ret_cnt));
 
-	p2buf = strtok (ext_buf, ",\n");
-    if (p2buf == NULL)
-        return RS_ERROR_UNEXPECTED_RESPONSE;
-	*level1 = atof (p2buf);
-
-	p2buf = strtok (NULL, ",\n");
-	*level2 = atof (p2buf);
-
-	p2buf = strtok (NULL, ",\n");
-	*resolutionBW = atof (p2buf);
+    checkErr(RsCore_QueryFloatArrayToUserBufferWithOpc(instrSession, cmd, timeout, 3, data, NULL));
+	*level1 = data[0];
+	*level2 = data[1];
+	*resolutionBW = data[2];
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (old_timeout >= 0)
-        rsspecan_SetOPCTimeout (instrSession, old_timeout);
-
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1653,42 +1568,31 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10SpectrumReferencePower (ViSession instrSes
                                                               ViReal64 *resolutionBW)
 {
 	ViStatus error = VI_SUCCESS;
-    ViChar   buffer [150] = "";
-    ViChar*  ext_buf=NULL;
-    ViChar*  p2buf;
-    ViUInt32 ret_cnt = 0;
+	ViChar   cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViReal64 data[3];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, spectrumType, RSSPECAN_VAL_GSM_K10_MOD_SPEC, RSSPECAN_VAL_GSM_K10_WIDE_SPEC),
     		3, "Spectrum Type");
 
-    checkErr(rsspecan_ClearBeforeRead(instrSession));
-
 	switch (spectrumType)
 	{
 		case RSSPECAN_VAL_GSM_K10_MOD_SPEC:
-			strcpy (buffer, "READ:SPEC:MOD:REF?;*OPC\n");
+			strcpy (cmd, "READ:SPEC:MOD:REF?");
 			break;
 		case RSSPECAN_VAL_GSM_K10_TRANS_SPEC:
-			strcpy (buffer, "READ:SPEC:SWIT:REF?;*OPC\n");
+			strcpy (cmd, "READ:SPEC:SWIT:REF?");
 			break;
 		case RSSPECAN_VAL_GSM_K10_WIDE_SPEC:
-			strcpy (buffer, "READ:WSP:MOD:REF?;*OPC\n");
+			strcpy (cmd, "READ:WSP:MOD:REF?");
 			break;
     }
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, buffer, &ext_buf)); // TODO: Check the response processing
-
-	p2buf = strtok (ext_buf, ",\n");
-    if (p2buf == NULL)
-        return RS_ERROR_UNEXPECTED_RESPONSE;
-	*level1 = atof (p2buf);
-
-	p2buf = strtok (NULL, ",\n");
-	*level2 = atof (p2buf);
-
-	p2buf = strtok (NULL, ",\n");
-	*resolutionBW = atof (p2buf);
+	
+	checkErr(RsCore_QueryFloatArrayToUserBufferWithOpc(instrSession, cmd, 0, 3, data, NULL));
+	*level1 = data[0];
+	*level2 = data[1];
+	*resolutionBW = data[2];
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1718,7 +1622,6 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10ModulationSpectrumResults (ViSession instrS
     ViStatus    error = VI_SUCCESS;
     ViChar*     pbuffer = NULL;
     ViChar*     pstring_value;
-    ViUInt32    ret_cnt;
     ViInt32     cnt;
     ViChar      tmp_str[10];
 
@@ -1727,13 +1630,12 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10ModulationSpectrumResults (ViSession instrS
     viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, num_ofResults), 10, "Num Of Results");
 
-    checkErr(RsCore_Write(instrSession, "READ:SPEC:MOD?;*OPC"));
-    checkErr(rsspecan_WaitForOPC (instrSession, timeout));
-    checkErr(Rs_ReadDataUnknownLength (instrSession, &pbuffer, &ret_cnt));
+    checkErr(RsCore_QueryViStringUnknownLengthWithOpc(instrSession, "READ:SPEC:MOD?", timeout, &pbuffer));
 
     cnt=0;
     pstring_value = strtok(pbuffer, ",");
-    while (pstring_value){
+    while (pstring_value)
+	{
         if (cnt<arraySize){
             sscanf(pstring_value,"%ld",&index[cnt]);
             pstring_value = strtok(NULL, ",");
@@ -1754,12 +1656,13 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10ModulationSpectrumResults (ViSession instrS
         }
         cnt++;
     }
-    if (pbuffer) free(pbuffer);
 
     *num_ofResults=cnt;
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
+	if (pbuffer) free(pbuffer);
+
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1790,7 +1693,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10ModulationSpectrumResults (ViSession instr
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, num_ofResults), 10, "Num Of Results");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FETC:SPEC:MOD?", &pbuffer)); // TODO: Check the response processing
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FETC:SPEC:MOD?", &pbuffer));
 
     cnt=0;
     pstring_value = strtok(pbuffer, ",");
@@ -1846,7 +1749,6 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10TransientSpectrumResults (ViSession instrSe
     ViStatus    error = VI_SUCCESS;
     ViChar*     pbuffer = NULL;
     ViChar*     pstring_value;
-    ViUInt32    ret_cnt;
     ViInt32     cnt;
     ViChar      tmp_str[10];
 
@@ -1855,9 +1757,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10TransientSpectrumResults (ViSession instrSe
     viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, num_ofResults), 10, "Num Of Results");
 
-    checkErr(RsCore_Write(instrSession, "READ:SPEC:SWIT?;*OPC"));
-    checkErr(rsspecan_WaitForOPC (instrSession, timeout));
-    checkErr(Rs_ReadDataUnknownLength (instrSession, &pbuffer, &ret_cnt));
+	checkErr(RsCore_QueryViStringUnknownLengthWithOpc(instrSession, "READ:SPEC:SWIT?", timeout, &pbuffer));
 
     cnt=0;
     pstring_value = strtok(pbuffer, ",");
@@ -1918,7 +1818,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10TransientSpectrumResults (ViSession instrS
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, num_ofResults), 10, "Num Of Results");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FETC:SPEC:SWIT?", &pbuffer)); // TODO: Check the response processing
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FETC:SPEC:SWIT?", &pbuffer));
 
     cnt=0;
     pstring_value = strtok(pbuffer, ",");
@@ -1943,12 +1843,12 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10TransientSpectrumResults (ViSession instrS
         }
         cnt++;
     }
-    if (pbuffer) free(pbuffer);
 
     *num_ofResults=cnt;
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
+	if (pbuffer) free(pbuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1981,7 +1881,6 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10WideSpectrumResults (ViSession instrSession
     ViStatus    error = VI_SUCCESS;
     ViChar*     pbuffer = NULL;
     ViChar*     pstring_value;
-    ViUInt32    ret_cnt;
     ViInt32     cnt;
     ViChar      tmp_str[10];
 
@@ -1990,9 +1889,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10WideSpectrumResults (ViSession instrSession
     viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, numOfResults), 11, "Num Of Results");
 
-    checkErr(RsCore_Write(instrSession, "READ:WSP:MOD?;*OPC"));
-    checkErr(rsspecan_WaitForOPC (instrSession, timeout));
-    checkErr(Rs_ReadDataUnknownLength (instrSession, &pbuffer, &ret_cnt));
+	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "READ:WSP:MOD?", &pbuffer));
 
     cnt=0;
     pstring_value = strtok(pbuffer, ",");
@@ -2017,12 +1914,12 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10WideSpectrumResults (ViSession instrSession
         }
         cnt++;
     }
-    if (pbuffer) free(pbuffer);
 
     *numOfResults=cnt;
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
+	if (pbuffer) free(pbuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -2061,7 +1958,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10WideSpectrumResults (ViSession instrSessio
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, numOfResults), 11, "Num Of Results");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FETC:WSP:MOD?", &pbuffer)); // TODO: Check the response processing
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FETC:WSP:MOD?", &pbuffer));
 
     cnt=0;
     pstring_value = strtok(pbuffer, ",");
@@ -2118,9 +2015,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10WideSpectrumGating (ViSession instrSession,
     viCheckParm(RsCore_InvalidNullPointer(instrSession, triggerOffset), 3, "Trigger Offset");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, gateLength), 4, "Gate Length");
 
-    checkErr(RsCore_Write(instrSession, "READ:SPEC:WMOD:GAT?;*OPC"));
-    checkErr(rsspecan_WaitForOPC (instrSession, timeout));
-    checkErr(Rs_ReadDataUnknownLength (instrSession, &pbuffer, NULL));
+	checkErr(RsCore_QueryViStringUnknownLengthWithOpc(instrSession, "READ:SPEC:WMOD:GAT?", timeout, &pbuffer));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 	p2buf = strtok (pbuffer, ",");

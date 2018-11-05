@@ -1229,16 +1229,6 @@ ViStatus RsCore_QueryBinaryOrAsciiFloatArrayWithOpc(ViSession instrSession,
                                                     ViReal64** outDblArray,
                                                     ViInt32* outArraySize);
 
-ViStatus RsCore_QueryBinaryOrAsciiFloatArrayToUserBuffer(ViSession instrSession,
-													ViConstString query,
-													ViInt32 userArraySize,
-													ViReal64* userArray,
-													ViInt32* responseArraySize);
-
-ViStatus RsCore_QueryBinaryOrAsciiFloatArraToUserBufferWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs,
-													ViInt32 userArraySize, ViReal64* userArray, ViInt32* responseArraySize);
-
-
 ViStatus RsCore_QueryFloatArrayToUserBuffer(ViSession instrSession,
 											ViConstString query,
 											ViInt32 userBufferLength,
