@@ -21,8 +21,8 @@
 
 /****/
 
-ViStatus rsspecan_doubleQuotedString_ReadCallback (ViSession io, ViConstString repCapName, ViAttr attributeId, ViInt32 bufSize, void *value);
-ViStatus rsspecan_doubleQuotedString_WriteCallback (ViSession io, ViConstString repCapName, ViAttr attributeId, void *value);
+ViStatus rsspecan_doubleQuotedString_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr);
+ViStatus rsspecan_doubleQuotedString_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value);
 
 
 /***/
@@ -36,42 +36,42 @@ ViStatus rsspecan_doubleQuotedString_WriteCallback (ViSession io, ViConstString 
  * Purpose:  This function overrides standard calback funtion. Returns value
  *           from cache
  *****************************************************************************/
-ViStatus rsspecan_empty_ReadCallback (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, ViInt32 bufSize, void *value)
+ViStatus rsspecan_empty_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
 {
     return VI_SUCCESS;
-}   
+}
 
 /*===========================================================================*/
 /* Function: Calibration User Callback                                       */
 /* Purpose:  Overrides standard callback                                     */
 /*===========================================================================*/
-ViStatus rsspecan_Calibration_ReadCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, ViInt32 bufSize, void *value)
+ViStatus rsspecan_Calibration_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error = VI_SUCCESS;
     ViUInt32    max_cmd_size    = 0,
                 n               = 0;
     ViInt32     idx             = 0;
-    ViChar      *cmd            = VI_NULL,
-                *buffer         = VI_NULL;
+    ViChar      *cmd            = NULL,
+                *buffer         = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
+    // Build the command string
     max_cmd_size = (ViUInt32) strlen (sessionProperties -> attr[idx].command);
 
     if (repCapName)
@@ -83,7 +83,7 @@ ViStatus rsspecan_Calibration_ReadCallback(ViSession instrSession, ViConstString
 
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
-        /* Repeated Capabilities */
+        // Repeated Capabilities
         ViChar      single_repCapName[RS_MAX_MESSAGE_BUF_SIZE],
                     single_repCapNameId[RS_MAX_MESSAGE_BUF_SIZE],
                     command_value[RS_MAX_MESSAGE_BUF_SIZE],
@@ -92,23 +92,23 @@ ViStatus rsspecan_Calibration_ReadCallback(ViSession instrSession, ViConstString
         //          repCapNameId[RS_MAX_MESSAGE_BUF_SIZE],
         ViUInt32    index = 0;
 
-            for (index = 0; index < RS_MAX_ATTR_RCAPS; index++)  
+            for (index = 0; index < RS_MAX_ATTR_RCAPS; index++)
             {
                 if ((error = Rs_GetTokenAtIndex ((ViChar *)repCapName, ",", index, single_repCapName, RS_MAX_MESSAGE_BUF_SIZE)) != VI_SUCCESS)
                 {
                     error = VI_SUCCESS;
                     break;
                 }
-                /* Scan repCap from command*/
-            
+                // Scan repCap from command
+
                 n = (ViUInt32) sscanf (p2cmd, "%[^{]{%[^}]}", tmp, single_repCapNameId);
                 p2cmd = strchr(p2cmd, '}') + 1;
-               
-                viCheckErr (Rs_GetRepCapCmdValue (instrSession, attributeId, single_repCapNameId, single_repCapName, command_value));
+
+                viCheckErr(Rs_GetRepCapCmdValue (instrSession, attributeId, single_repCapNameId, single_repCapName, command_value));
                 max_cmd_size += (ViUInt32) strlen (command_value);
                 viCheckAlloc (cmd = (ViChar*) realloc (cmd, max_cmd_size));
 
-                /* Build the command */
+                // Build the command
                 strcat (cmd, tmp);
                 strcat (cmd, command_value);
             }
@@ -122,12 +122,12 @@ ViStatus rsspecan_Calibration_ReadCallback(ViSession instrSession, ViConstString
     switch (sessionProperties -> attr[idx].dataType)
     {
         case RS_VAL_INT32:
-            viCheckErr (viPrintf(instrSession, "%s?;*OPC\n", cmd));
-            viCheckErr (rsspecan_WaitForOPCCallback(instrSession));
-            viCheckErr (viScanf(instrSession, "%ld%*[^\n]", value));
+            viCheckErr(viPrintf(instrSession, "%s?;*OPC\n", cmd));
+            viCheckErr(rsspecan_WaitForOPCCallback(instrSession));
+            viCheckErr(viScanf(instrSession, "%ld%*[^\n]", value));
             break;
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            viCheckErr(RS_ERROR_INVALID_TYPE);
     }
 Error:
 
@@ -144,54 +144,54 @@ Error:
  * Function: rsspecan_stringToBin_ReadCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_stringToBin_ReadCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, ViInt32 bufSize, void *value)
+ViStatus rsspecan_stringToBin_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     idx             = 0;
-    ViChar      *cmd            = VI_NULL,
-                *buffer         = VI_NULL;
+    ViChar      *cmd            = NULL,
+                *buffer         = NULL;
 
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
-
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
-   /* --- Attribute data type is used for VISA I/O --- */
+   // --- Attribute data type is used for VISA I/O ---
     switch (sessionProperties -> attr[idx].dataType)
     {
         case RS_VAL_STRING:
-            if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY)) 
+            if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY))
             {
-                viCheckErr (viPrintf(instrSession, "%s\n", cmd));
+                checkErr(RsCore_Write(instrSession, cmd));
             }
             else
             {
-                viCheckErr (viPrintf(instrSession, "%s?\n", cmd));
+                snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s?", cmd);
+                checkErr(RsCore_Write(instrSession, cmd));
             }
-            viCheckErr (viScanf(instrSession, "#B%s", value));
+            checkErr(viScanf(instrSession, "#B%s", value));
             break;
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
     }
 
 Error:
-
     if (buffer)
         free (buffer);
 
@@ -205,54 +205,54 @@ Error:
  * Function: rsspecan_stringToHex_ReadCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_stringToHex_ReadCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, ViInt32 bufSize, void *value)
+ViStatus rsspecan_stringToHex_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     idx             = 0;
-    ViChar      *cmd            = VI_NULL,
-                *buffer         = VI_NULL;
+    ViChar      *cmd            = NULL,
+                *buffer         = NULL;
 
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
-
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-   viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+   viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
-   /* --- Attribute data type is used for VISA I/O --- */
+   // --- Attribute data type is used for VISA I/O ---
     switch (sessionProperties -> attr[idx].dataType)
     {
         case RS_VAL_STRING:
-            if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY)) 
+            if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY))
             {
-                viCheckErr (viPrintf(instrSession, "%s\n", cmd));
+                checkErr(RsCore_Write(instrSession, cmd));
             }
             else
             {
-                viCheckErr (viPrintf(instrSession, "%s?\n", cmd));
+                snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s?", cmd);
+                checkErr(RsCore_Write(instrSession, cmd));
             }
-            viCheckErr (viScanf(instrSession, "#H%s", value));
+            checkErr(viScanf(instrSession, "#H%s", value));
             break;
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
     }
 
 Error:
-
     if (buffer)
         free (buffer);
 
@@ -266,53 +266,54 @@ Error:
  * Function: rsspecan_hex_ReadCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_hex_ReadCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, ViInt32 bufSize, void *value)
+ViStatus rsspecan_hex_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     idx             = 0;
-    ViChar      *cmd            = VI_NULL,
-                *buffer         = VI_NULL;
+    ViChar      *cmd            = NULL,
+                *buffer         = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
-   /* --- Attribute data type is used for VISA I/O --- */
+   // --- Attribute data type is used for VISA I/O ---
     switch (sessionProperties -> attr[idx].dataType)
     {
         case RS_VAL_INT32:
-            if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY)) 
+            if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY))
             {
-                viCheckErr (viPrintf(instrSession, "%s\n", cmd));
+                checkErr(RsCore_Write(instrSession, cmd));
             }
             else
             {
-                viCheckErr (viPrintf(instrSession, "%s?\n", cmd));
+                snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s?", cmd);
+                checkErr(RsCore_Write(instrSession, cmd));
             }
-            viCheckErr (viScanf(instrSession, "#H%X", value));
+            checkErr(viScanf(instrSession, "#H%X", value));
             break;
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
     }
 
 Error:
-
     if (buffer)
         free (buffer);
 
@@ -324,75 +325,70 @@ Error:
 
 /*****************************************************************************
  * Function: rsspecan_displayComment_ReadCallback
- * Purpose:  This function overrides standard calback funtion. Reads string 
+ * Purpose:  This function overrides standard calback funtion. Reads string
  *           returned with apostrophes
  *****************************************************************************/
-ViStatus rsspecan_displayComment_ReadCallback (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, ViInt32 bufSize, void *value)
+ViStatus rsspecan_displayComment_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
-    
+
+    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
     if ((strstr (model, "FSL")) || (strstr (model, "FSV")))
     {
-        viCheckErr (Rs_ReadCallback (instrSession, repCapName, attributeId, bufSize, value));       
+        viCheckErr(Rs_ReadCallback (instrSession, repCapName, attributeId, bufSize, value));
     }
     else
     {
-        viCheckErr (rsspecan_quotedString_ReadCallback (instrSession, repCapName, attributeId, bufSize, value));
+        checkErr(rsspecan_quotedString_ReadCallback (instrSession, repCapName, attributeId, bufSize, value));
     }
-    
-Error:
 
-    return error;       
+Error:
+    return error;
 }
 /*****************************************************************************
  * Function: rsspecan_quotedString_ReadCallback
- * Purpose:  This function overrides standard calback funtion. Reads string 
+ * Purpose:  This function overrides standard calback funtion. Reads string
  *           returned with apostrophes
  *****************************************************************************/
- ViStatus rsspecan_quotedString_ReadCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, ViInt32 bufSize, void *value)
+ ViStatus rsspecan_quotedString_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error           = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViUInt32    count           = bufSize;
     ViInt32     idx             = 0;
-    ViChar      *cmd            = VI_NULL,
-                *buffer         = VI_NULL;
+    ViChar      *cmd            = NULL,
+                *buffer         = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
     /* --- If the range table for the attribute exists, revert 'command string'
        back to the 'discreteOrMinValue' and return it as attribute value. --- */
-    
-    /* Range Table Callback */
+
+    // Range Table Callback
     if (sessionProperties -> attr[idx].rangeTableCallback)
-    {                                                          
-        viCheckErr ((sessionProperties -> attr[idx].rangeTableCallback)(instrSession, repCapName, attributeId, &(sessionProperties -> attr[idx].rangeTable)));
+    {
+        viCheckErr((sessionProperties -> attr[idx].rangeTableCallback)(instrSession, repCapName, attributeId, &(sessionProperties -> attr[idx].rangeTable)));
     }
-    
+
     if (sessionProperties -> attr[idx].rangeTable)
         if (sessionProperties -> attr[idx].rangeTable -> type == RS_VAL_DISCRETE)
             {
@@ -403,24 +399,25 @@ Error:
             viCheckAlloc (buffer = (ViChar*) malloc (RS_MAX_MESSAGE_BUF_SIZE));
             count = RS_MAX_MESSAGE_BUF_SIZE;
 
-            if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY)) 
+            if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY))
             {
-                viCheckErr (viPrintf(instrSession, "%s\n", cmd));
+                checkErr(RsCore_Write(instrSession, cmd));
             }
             else
             {
-                viCheckErr (viPrintf(instrSession, "%s?\n", cmd));
+                snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s?", cmd);
+                checkErr(RsCore_Write(instrSession, cmd));
             }
-            viCheckErr (viScanf(instrSession, "'%#[^']'", &count, buffer));
+            checkErr(viScanf(instrSession, "'%#[^']'", &count, buffer));
 
-            /* Go over range table values and check if the command string is present */
+            // Go over range table values and check if the command string is present
             do
                 {
                 p2string = sessionProperties -> attr[idx].rangeTable -> rangeValues[i].cmdString;
 
                 if (sessionProperties -> attr[idx].rangeTable -> rangeValues[i].cmdString == RS_RANGE_TABLE_END_STRING)
                     return RS_ERROR_INVALID_VALUE;
-#ifdef RS_LONG_RESPONSE            
+#ifdef RS_LONG_RESPONSE
                 if ((strlen (p2string) <= 3) || (strlen (buffer) > 4))
                     found = strcmp (buffer,p2string);
                 else
@@ -432,10 +429,9 @@ Error:
                     break;
 
                 i++;
-
                 } while (i);
 
-            /* Return value from range table */
+            // Return value from range table
             switch (sessionProperties -> attr[idx].dataType)
                 {
                 case RS_VAL_INT32:
@@ -451,39 +447,39 @@ Error:
                 case RS_VAL_EVENT:
                 case RS_VAL_UNKNOWN_TYPE:
                 default:
-                    viCheckErr (RS_ERROR_INVALID_TYPE);
+                    checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
                 }
-            
+
             goto Error;
             }
 
-        /* --- Attribute data type is used for VISA I/O --- */
+        // --- Attribute data type is used for VISA I/O ---
         switch (sessionProperties -> attr[idx].dataType)
             {
             case RS_VAL_STRING:
-                if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY)) 
+                if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY))
             {
-                viCheckErr (viPrintf(instrSession, "%s\n", cmd));
+                checkErr(RsCore_Write(instrSession, cmd));
             }
             else
             {
-                viCheckErr (viPrintf(instrSession, "%s?\n", cmd));
+                snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s?", cmd);
+                checkErr(RsCore_Write(instrSession, cmd));
             }
-                viCheckErr (viScanf(instrSession, "'%#[^']'", &count, value));
+                checkErr(viScanf(instrSession, "'%#[^']'", &count, value));
                 break;
             case RS_VAL_INT32:
-            case RS_VAL_REAL64:                
+            case RS_VAL_REAL64:
             case RS_VAL_BOOLEAN:
             case RS_VAL_ADDR:
             case RS_VAL_SESSION:
             case RS_VAL_EVENT:
             case RS_VAL_UNKNOWN_TYPE:
             default:
-                viCheckErr (RS_ERROR_INVALID_TYPE);
+                checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
             }
 
 Error:
-
     if (buffer)
         free (buffer);
 
@@ -493,49 +489,50 @@ Error:
     return error;
 }
 
- 
+
  /*****************************************************************************
  * Function: rsspecan_doubleQuotedString_ReadCallback
- * Purpose:  This function overrides standard calback funtion. Reads string 
+ * Purpose:  This function overrides standard calback funtion. Reads string
  *           returned with apostrophes
  *****************************************************************************/
- ViStatus rsspecan_doubleQuotedString_ReadCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, ViInt32 bufSize, void *value)
+ ViStatus rsspecan_doubleQuotedString_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error           = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViUInt32    count           = bufSize;
     ViInt32     idx             = 0;
-    ViChar      *cmd            = VI_NULL,
-                *buffer         = VI_NULL;
+    ViChar      *cmd            = NULL,
+                *buffer         = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
     /* --- If the range table for the attribute exists, revert 'command string'
        back to the 'discreteOrMinValue' and return it as attribute value. --- */
-    
-    /* Range Table Callback */
+
+    // Range Table Callback
     if (sessionProperties -> attr[idx].rangeTableCallback)
-    {                                                          
-        viCheckErr ((sessionProperties -> attr[idx].rangeTableCallback)(instrSession, repCapName, attributeId, &(sessionProperties -> attr[idx].rangeTable)));
+    {
+        viCheckErr((sessionProperties -> attr[idx].rangeTableCallback)(instrSession, repCapName, attributeId, &(sessionProperties -> attr[idx].rangeTable)));
     }
-    
+
     if (sessionProperties -> attr[idx].rangeTable)
         if (sessionProperties -> attr[idx].rangeTable -> type == RS_VAL_DISCRETE)
             {
@@ -546,24 +543,25 @@ Error:
             viCheckAlloc (buffer = (ViChar*) malloc (RS_MAX_MESSAGE_BUF_SIZE));
             count = RS_MAX_MESSAGE_BUF_SIZE;
 
-            if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY)) 
+            if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY))
             {
-                viCheckErr (viPrintf(instrSession, "%s\n", cmd));
+                checkErr(RsCore_Write(instrSession, cmd));
             }
             else
             {
-                viCheckErr (viPrintf(instrSession, "%s?\n", cmd));
+                snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s?", cmd);
+                checkErr(RsCore_Write(instrSession, cmd));
             }
-            viCheckErr (viScanf(instrSession, "\"%#[^\"]\"", &count, buffer));
+            checkErr(viScanf(instrSession, "\"%#[^\"]\"", &count, buffer));
 
-            /* Go over range table values and check if the command string is present */
+            // Go over range table values and check if the command string is present
             do
                 {
                 p2string = sessionProperties -> attr[idx].rangeTable -> rangeValues[i].cmdString;
 
                 if (sessionProperties -> attr[idx].rangeTable -> rangeValues[i].cmdString == RS_RANGE_TABLE_END_STRING)
                     return RS_ERROR_INVALID_VALUE;
-#ifdef RS_LONG_RESPONSE            
+#ifdef RS_LONG_RESPONSE
                 if ((strlen (p2string) <= 3) || (strlen (buffer) > 4))
                     found = strcmp (buffer,p2string);
                 else
@@ -575,10 +573,9 @@ Error:
                     break;
 
                 i++;
-
                 } while (i);
 
-            /* Return value from range table */
+            // Return value from range table
             switch (sessionProperties -> attr[idx].dataType)
                 {
                 case RS_VAL_INT32:
@@ -594,39 +591,39 @@ Error:
                 case RS_VAL_EVENT:
                 case RS_VAL_UNKNOWN_TYPE:
                 default:
-                    viCheckErr (RS_ERROR_INVALID_TYPE);
+                    checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
                 }
-            
+
             goto Error;
             }
 
-        /* --- Attribute data type is used for VISA I/O --- */
+        // --- Attribute data type is used for VISA I/O ---
         switch (sessionProperties -> attr[idx].dataType)
             {
             case RS_VAL_STRING:
-                if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY)) 
+                if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY))
             {
-                viCheckErr (viPrintf(instrSession, "%s\n", cmd));
+                checkErr(RsCore_Write(instrSession, cmd));
             }
             else
             {
-                viCheckErr (viPrintf(instrSession, "%s?\n", cmd));
+                snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s?", cmd);
+                checkErr(RsCore_Write(instrSession, cmd));
             }
-                viCheckErr (viScanf(instrSession, "\"%#[^\"]\"", &count, value));
+                checkErr(viScanf(instrSession, "\"%#[^\"]\"", &count, value));
                 break;
             case RS_VAL_INT32:
-            case RS_VAL_REAL64:                
+            case RS_VAL_REAL64:
             case RS_VAL_BOOLEAN:
             case RS_VAL_ADDR:
             case RS_VAL_SESSION:
             case RS_VAL_EVENT:
             case RS_VAL_UNKNOWN_TYPE:
             default:
-                viCheckErr (RS_ERROR_INVALID_TYPE);
+                checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
             }
 
 Error:
-
     if (buffer)
         free (buffer);
 
@@ -640,56 +637,56 @@ Error:
  * Function: rsspecan_Item1Item2Itemx_ReadCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_Item1Item2Itemx_ReadCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, ViInt32 bufSize, void *value)
+ ViStatus rsspecan_Item1Item2Itemx_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error           = VI_SUCCESS;
     ViUInt32    count           = bufSize;
     ViInt32     idx             = 0;
-    ViChar      *cmd            = VI_NULL,
-                *buffer         = VI_NULL;
+    ViChar      *cmd            = NULL,
+                *buffer         = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
-  
-    /* --- Attribute data type is used for VISA I/O --- */
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
+
+    // --- Attribute data type is used for VISA I/O ---
     switch (sessionProperties -> attr[idx].dataType)
         {
         case RS_VAL_INT32:
-            viCheckErr (viPrintf(instrSession, "%s\n", cmd));
-            viCheckErr (viScanf(instrSession, "%ld", value));
+            checkErr(RsCore_Write(instrSession, cmd));
+            checkErr(viScanf(instrSession, "%ld", value));
             break;
         case RS_VAL_REAL64:
-            viCheckErr (viPrintf(instrSession, "%s\n", cmd));
-            viCheckErr (viScanf(instrSession, "%le", value));
+            checkErr(RsCore_Write(instrSession, cmd));
+            checkErr(viScanf(instrSession, "%le", value));
             break;
         case RS_VAL_STRING:
-            viCheckErr (viPrintf(instrSession, "%s\n", cmd));
-            viCheckErr (viScanf(instrSession, "%#[^\r\n]", &count, value));
+            checkErr(RsCore_Write(instrSession, cmd));
+            checkErr(viScanf(instrSession, "%#[^\r\n]", &count, value));
             break;
         case RS_VAL_BOOLEAN:
             {
                 ViChar  buf[10];
                 ViInt32 l_count = 3;
-                
-                viCheckErr (viPrintf(instrSession, "%s\n", cmd));
-                viCheckErr (viScanf(instrSession, "%#[^\r\n]", &l_count, buf));
+
+                checkErr(RsCore_Write(instrSession, cmd));
+                checkErr(viScanf(instrSession, "%#[^\r\n]", &l_count, buf));
                 if (!strncmp (buf, "ON", 2))
                     *(ViInt32*)value = 1;
                 else
@@ -699,7 +696,7 @@ Error:
                     else
                         sscanf(buf, "%ld", (long*)value);
                 }
-//                viCheckErr (viScanf(instrSession, "%ld", value)); /* OFF = 0, ON = 1 */
+//                checkErr(viScanf(instrSession, "%ld", value)); // OFF = 0, ON = 1
             }
             break;
         case RS_VAL_ADDR:
@@ -707,11 +704,10 @@ Error:
         case RS_VAL_EVENT:
         case RS_VAL_UNKNOWN_TYPE:
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
         }
 
 Error:
-
     if (buffer)
         free (buffer);
 
@@ -719,75 +715,75 @@ Error:
         free (cmd);
 
     return error;
-    
-} 
+}
 
  /*****************************************************************************
  * Function: rsspecan_quotedInt_ReadCallback
- * Purpose:  This function overrides standard calback funtion. Reads int 
+ * Purpose:  This function overrides standard calback funtion. Reads int
  *           returned with apostrophes
  *****************************************************************************/
- ViStatus rsspecan_quotedInt_ReadCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, ViInt32 bufSize, void *value)
+ ViStatus rsspecan_quotedInt_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
 {
-    return rsspecan_quotedString_ReadCallback(instrSession, repCapName, attributeId, bufSize, value);
+    return rsspecan_quotedString_ReadCallback(instrSession, repCapName, attr);
 }
 
 /*****************************************************************************
  * Function: rsspecan_WimaxZoneToUse_ReadCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_WimaxZoneToUse_ReadCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, ViInt32 bufSize, void *value)
+ViStatus rsspecan_WimaxZoneToUse_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     idx             = 0;
-    ViChar      *cmd            = VI_NULL,
-                *buffer         = VI_NULL;
+    ViChar      *cmd            = NULL,
+                *buffer         = NULL;
     ViChar      response [RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
-   /* --- Attribute data type is used for VISA I/O --- */
+   // --- Attribute data type is used for VISA I/O ---
     switch (sessionProperties -> attr[idx].dataType)
     {
         case RS_VAL_INT32:
-            if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY)) 
+            if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY))
             {
-                viCheckErr (viPrintf(instrSession, "%s\n", cmd));
+                checkErr(RsCore_Write(instrSession, cmd));
             }
             else
             {
-                viCheckErr (viPrintf(instrSession, "%s?\n", cmd));
+                snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s?", cmd);
+                checkErr(RsCore_Write(instrSession, cmd));
             }
-            viCheckErr (viRead (instrSession, (ViPBuf) response, RS_MAX_MESSAGE_BUF_SIZE, NULL));
+            viCheckErr(viRead (instrSession, (ViPBuf) response, RS_MAX_MESSAGE_BUF_SIZE, NULL));
             if (strstr (response, "LAST") != NULL)
                 *(ViInt32*)value = 0;
             else
                 sscanf(response, "Z%ld", (long*)value);
             break;
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
     }
 
 Error:
-
     if (buffer)
         free (buffer);
 
@@ -801,58 +797,59 @@ Error:
  * Function: rsspecan_DeltaMarkerReferenceMarker_ReadCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_DeltaMarkerReferenceMarker_ReadCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, ViInt32 bufSize, void *value)
+ViStatus rsspecan_DeltaMarkerReferenceMarker_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     idx             = 0;
-    ViChar      *cmd            = VI_NULL,
-                *buffer         = VI_NULL;
+    ViChar      *cmd            = NULL,
+                *buffer         = NULL;
     ViChar      response [RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
-   /* --- Attribute data type is used for VISA I/O --- */
+   // --- Attribute data type is used for VISA I/O ---
     switch (sessionProperties -> attr[idx].dataType)
     {
         case RS_VAL_INT32:
-            if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY)) 
+            if ((sessionProperties -> attr[idx].access==RS_VAL_READ_ONLY))
             {
-                viCheckErr (viPrintf(instrSession, "%s\n", cmd));
+                checkErr(RsCore_Write(instrSession, cmd));
             }
             else
             {
-                viCheckErr (viPrintf(instrSession, "%s?\n", cmd));
+                snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s?", cmd);
+                checkErr(RsCore_Write(instrSession, cmd));
             }
-            viCheckErr (viRead (instrSession, (ViPBuf) response, RS_MAX_MESSAGE_BUF_SIZE, NULL));
+            viCheckErr(viRead (instrSession, (ViPBuf) response, RS_MAX_MESSAGE_BUF_SIZE, NULL));
             if (strstr (response, "FIX") != NULL)
                 *(ViInt32*)value = 0;
             else
                 sscanf(response, "%ld", (long*)value);
             break;
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
     }
 
 Error:
-
     if (buffer)
         free (buffer);
 
@@ -868,10 +865,10 @@ Error:
 
 /*****************************************************************************
  * Function: rsspecan_empty_WriteCallback
- * Purpose:  This function overrides standard calback funtion. Does not write 
+ * Purpose:  This function overrides standard calback funtion. Does not write
  *           anything to instrument, just updates the cache
  *****************************************************************************/
-ViStatus rsspecan_empty_WriteCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_empty_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
     return VI_SUCCESS;
 }
@@ -879,42 +876,42 @@ ViStatus rsspecan_empty_WriteCallback(ViSession instrSession, ViConstString repC
  * Function: rsspecan_stringToBin_WriteCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_stringToBin_WriteCallback (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ ViStatus rsspecan_stringToBin_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
  {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error = VI_SUCCESS;
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
-    
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    ViChar      *cmd                = NULL;
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
     switch (sessionProperties -> attr[idx].dataType)
     {
         case RS_VAL_STRING:
-            viCheckErr (viPrintf(instrSession, "%s #B%s\n", cmd, (ViString) value));
+            checkErr(viPrintf(instrSession, "%s #B%s\n", cmd, (ViString) value));
             break;
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
     }
-Error:
 
+Error:
     if (cmd)
         free (cmd);
 
@@ -924,237 +921,236 @@ Error:
  * Function: rsspecan_stringToHex_WriteCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_stringToHex_WriteCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_stringToHex_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error = VI_SUCCESS;
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
-    
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    ViChar      *cmd                = NULL;
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
     switch (sessionProperties -> attr[idx].dataType)
     {
         case RS_VAL_STRING:
-            viCheckErr (viPrintf(instrSession, "%s \'#H%s\'\n", cmd, (ViString) value));
+            checkErr(viPrintf(instrSession, "%s \'#H%s\'\n", cmd, (ViString) value));
             break;
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
     }
-Error:
 
+Error:
     if (cmd)
         free (cmd);
 
     return error;
+}
 
-} 
- 
 /*****************************************************************************
  * Function: rsspecan_hex_WriteCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_hex_WriteCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_hex_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error = VI_SUCCESS;
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
-    
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    ViChar      *cmd                = NULL;
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
     switch (sessionProperties -> attr[idx].dataType)
     {
         case RS_VAL_INT32:
-            viCheckErr (viPrintf(instrSession, "%s #H%X\n", cmd, *(ViInt32 *)value));
+            checkErr(viPrintf(instrSession, "%s #H%X\n", cmd, *(ViInt32 *)value));
             break;
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
     }
-Error:
 
+Error:
     if (cmd)
         free (cmd);
 
     return error;
-
 };
 
 /*****************************************************************************
  * Function: rsspecan_WimaxZoneToUse_WriteCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_WimaxZoneToUse_WriteCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_WimaxZoneToUse_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
-    
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    ViChar      *cmd                = NULL;
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
     switch (sessionProperties -> attr[idx].dataType)
     {
         case RS_VAL_INT32:
             if (*(ViInt32 *)value != 0)
             {
-                viCheckErr (viPrintf(instrSession, "%s Z%ld\n", cmd, *(ViInt32 *)value));
+                checkErr(viPrintf(instrSession, "%s Z%ld\n", cmd, *(ViInt32 *)value));
             }
             else
             {
-                viCheckErr (viPrintf(instrSession, "%s LASTd\n", cmd));
+                snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s LASTd", cmd);
+                checkErr(RsCore_Write(instrSession, cmd));
             }
-                
+
             break;
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
     }
-Error:
 
+Error:
     if (cmd)
         free (cmd);
 
     return error;
-
 };
 
 /*****************************************************************************
  * Function: rsspecan_InstrumentCreate_WriteCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_InstrumentCreate_WriteCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_InstrumentCreate_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error = VI_SUCCESS;
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
-    
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    ViChar      *cmd                = NULL;
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
     switch (sessionProperties -> attr[idx].dataType)
     {
         case RS_VAL_INT32:
-            viCheckErr (viPrintf(instrSession, "%s \'Spectrum %ld\'\n", cmd, *(ViInt32 *)value));
+            checkErr(viPrintf(instrSession, "%s \'Spectrum %ld\'\n", cmd, *(ViInt32 *)value));
             break;
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
     }
-Error:
 
+Error:
     if (cmd)
         free (cmd);
 
     return error;
-
 };
 
 /*****************************************************************************
  * Function: rsspecan_quotedString_WriteCallback
- * Purpose:  This function overrides standard calback funtion. Writes string 
+ * Purpose:  This function overrides standard calback funtion. Writes string
  *           with apostrophes
  *****************************************************************************/
-ViStatus rsspecan_quotedString_WriteCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_quotedString_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error               = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
+    ViChar      *cmd                = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
     /* --- If the range table for the attribute exists, pass 'command string' or
        'discreteOrMinValue' instead of attribute value. --- */
-    /* Range Table Callback */
+    // Range Table Callback
     if (sessionProperties -> attr[idx].rangeTableCallback)
-    {                                                          
-        viCheckErr ((sessionProperties -> attr[idx].rangeTableCallback)(instrSession, repCapName, attributeId, &(sessionProperties -> attr[idx].rangeTable)));
+    {
+        viCheckErr((sessionProperties -> attr[idx].rangeTableCallback)(instrSession, repCapName, attributeId, &(sessionProperties -> attr[idx].rangeTable)));
     }
-    
+
     if (sessionProperties -> attr[idx].rangeTable)
         if (sessionProperties -> attr[idx].rangeTable -> type == RS_VAL_DISCRETE)
             {
@@ -1166,12 +1162,12 @@ ViStatus rsspecan_quotedString_WriteCallback(ViSession instrSession, ViConstStri
 
             precision = (precision < DBL_MIN) ? DBL_MIN : precision;
 
-            /* Allowed data types are only ViInt32 or ViReal64 */
+            // Allowed data types are only ViInt32 or ViReal64
             switch (data_type)
                 {
                 case RS_VAL_INT32:
                 case RS_VAL_REAL64:
-                    /* Valid data types */
+                    // Valid data types
                     break;
                 case RS_VAL_STRING:
                 case RS_VAL_BOOLEAN:
@@ -1180,7 +1176,7 @@ ViStatus rsspecan_quotedString_WriteCallback(ViSession instrSession, ViConstStri
                 case RS_VAL_SESSION:
                 case RS_VAL_UNKNOWN_TYPE:
                 default:
-                    viCheckErr (RS_ERROR_INVALID_TYPE);
+                    checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
                 }
 
             /* Go over range table values and find appropriate command string for passed
@@ -1196,101 +1192,103 @@ ViStatus rsspecan_quotedString_WriteCallback(ViSession instrSession, ViConstStri
                 if (data_type == RS_VAL_INT32)
                     if (fabs(*p2discrete - *(ViInt32 *)value) <= DBL_MIN)
                         {
-                        viCheckErr (viPrintf(instrSession, "%s \'%s\'\n", cmd, p2string));
+                        snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s \'%s\'", cmd, p2string);
+                        checkErr(RsCore_Write(instrSession, cmd));
                         break;
                         }
 
                 if (data_type == RS_VAL_REAL64)
                     if (fabs(*p2discrete - *(ViReal64 *)value) <= precision)
                         {
-                        viCheckErr (viPrintf(instrSession, "%s \'%s\'\n", cmd, p2string));
+                        snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s \'%s\'", cmd, p2string);
+                        checkErr(RsCore_Write(instrSession, cmd));
                         break;
                         }
 
                 i++;
-
                 } while (i);
 
-            goto Error; /* Exit the function */
+            goto Error; // Exit the function
             }
 
-    /* --- Attribute data type is used for VISA I/O --- */
+    // --- Attribute data type is used for VISA I/O ---
     switch (sessionProperties -> attr[idx].dataType)
         {
         case RS_VAL_INT32:
-            viCheckErr (viPrintf(instrSession, "%s %ld\n", cmd, *(ViInt32 *)value));
+            checkErr(viPrintf(instrSession, "%s %ld\n", cmd, *(ViInt32 *)value));
             break;
         case RS_VAL_REAL64:
-            viCheckErr (viPrintf(instrSession, "%s %.12f\n", cmd, *(ViReal64 *)value));
+            checkErr(viPrintf(instrSession, "%s %.12f\n", cmd, *(ViReal64 *)value));
             break;
         case RS_VAL_STRING:
-            viCheckErr (viPrintf(instrSession, "%s \'%s\'\n", cmd, value));
+            snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s \'%s\'", cmd, value);
+            checkErr(RsCore_Write(instrSession, cmd));
             break;
         case RS_VAL_BOOLEAN:
-            viCheckErr (viPrintf(instrSession, "%s %s\n", cmd, (*(ViBoolean *)value == VI_FALSE) ? "OFF" : "ON"));
+            checkErr(viPrintf(instrSession, "%s %s\n", cmd, (*(ViBoolean *)value == VI_FALSE) ? "OFF" : "ON"));
             break;
         case RS_VAL_EVENT:
-            viCheckErr (viPrintf(instrSession, "%s\n", cmd));
+            checkErr(RsCore_Write(instrSession, cmd));
             break;
         case RS_VAL_ADDR:
         case RS_VAL_SESSION:
         case RS_VAL_UNKNOWN_TYPE:
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
         }
 
 Error:
-
     if (cmd)
         free (cmd);
 
     return error;
-
 }
 
 /*******************************************************************************
  * Function: rsspecan_outputSelectionCallback_WriteCallback
- * Purpose:  This function overrides standard calback funtion. Writes string 
+ * Purpose:  This function overrides standard calback funtion. Writes string
  *           with apostrophes, when string is FOC, writes it without apostrophes
  *******************************************************************************/
-ViStatus rsspecan_outputSelectionCallback_WriteCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_outputSelectionCallback_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error               = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
+    ViChar      *cmd                = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
-    
-    /* --- Attribute data type is used for VISA I/O --- */
+    // --- Attribute data type is used for VISA I/O ---
     switch (sessionProperties -> attr[idx].dataType)
         {
         case RS_VAL_STRING:
             if (strcmp (value, "FOC") == 0)
 			{
-				viCheckErr (viPrintf(instrSession, "%s %s\n", cmd, value));
+				snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s %s", cmd, value);
+				checkErr(RsCore_Write(instrSession, cmd));
 			}
 			else
 			{
-				viCheckErr (viPrintf(instrSession, "%s \'%s\'\n", cmd, value));
+				snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s \'%s\'", cmd, value);
+				checkErr(RsCore_Write(instrSession, cmd));
 			}
             break;
 		case RS_VAL_INT32:
@@ -1301,57 +1299,56 @@ ViStatus rsspecan_outputSelectionCallback_WriteCallback(ViSession instrSession, 
         case RS_VAL_SESSION:
         case RS_VAL_UNKNOWN_TYPE:
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
         }
 
 Error:
-
     if (cmd)
         free (cmd);
 
     return error;
-
 }
 
 /*****************************************************************************
  * Function: rsspecan_doubleQuotedString_WriteCallback
- * Purpose:  This function overrides standard calback funtion. Writes string 
+ * Purpose:  This function overrides standard calback funtion. Writes string
  *           with apostrophes
  *****************************************************************************/
-ViStatus rsspecan_doubleQuotedString_WriteCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_doubleQuotedString_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error               = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
+    ViChar      *cmd                = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
     /* --- If the range table for the attribute exists, pass 'command string' or
        'discreteOrMinValue' instead of attribute value. --- */
-    /* Range Table Callback */
+    // Range Table Callback
     if (sessionProperties -> attr[idx].rangeTableCallback)
-    {                                                          
-        viCheckErr ((sessionProperties -> attr[idx].rangeTableCallback)(instrSession, repCapName, attributeId, &(sessionProperties -> attr[idx].rangeTable)));
+    {
+        viCheckErr((sessionProperties -> attr[idx].rangeTableCallback)(instrSession, repCapName, attributeId, &(sessionProperties -> attr[idx].rangeTable)));
     }
-    
+
     if (sessionProperties -> attr[idx].rangeTable)
         if (sessionProperties -> attr[idx].rangeTable -> type == RS_VAL_DISCRETE)
             {
@@ -1363,12 +1360,12 @@ ViStatus rsspecan_doubleQuotedString_WriteCallback(ViSession instrSession, ViCon
 
             precision = (precision < DBL_MIN) ? DBL_MIN : precision;
 
-            /* Allowed data types are only ViInt32 or ViReal64 */
+            // Allowed data types are only ViInt32 or ViReal64
             switch (data_type)
                 {
                 case RS_VAL_INT32:
                 case RS_VAL_REAL64:
-                    /* Valid data types */
+                    // Valid data types
                     break;
                 case RS_VAL_STRING:
                 case RS_VAL_BOOLEAN:
@@ -1377,7 +1374,7 @@ ViStatus rsspecan_doubleQuotedString_WriteCallback(ViSession instrSession, ViCon
                 case RS_VAL_SESSION:
                 case RS_VAL_UNKNOWN_TYPE:
                 default:
-                    viCheckErr (RS_ERROR_INVALID_TYPE);
+                    checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
                 }
 
             /* Go over range table values and find appropriate command string for passed
@@ -1393,139 +1390,140 @@ ViStatus rsspecan_doubleQuotedString_WriteCallback(ViSession instrSession, ViCon
                 if (data_type == RS_VAL_INT32)
                     if (fabs(*p2discrete - *(ViInt32 *)value) <= DBL_MIN)
                         {
-                        viCheckErr (viPrintf(instrSession, "%s \"%s\"\n", cmd, p2string));
+                        snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s \"%s\"", cmd, p2string);
+                        checkErr(RsCore_Write(instrSession, cmd));
                         break;
                         }
 
                 if (data_type == RS_VAL_REAL64)
                     if (fabs(*p2discrete - *(ViReal64 *)value) <= precision)
                         {
-                        viCheckErr (viPrintf(instrSession, "%s \"%s\"\n", cmd, p2string));
+                        snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s \"%s\"", cmd, p2string);
+                        checkErr(RsCore_Write(instrSession, cmd));
                         break;
                         }
 
                 i++;
-
                 } while (i);
 
-            goto Error; /* Exit the function */
+            goto Error; // Exit the function
             }
 
-    /* --- Attribute data type is used for VISA I/O --- */
+    // --- Attribute data type is used for VISA I/O ---
     switch (sessionProperties -> attr[idx].dataType)
         {
         case RS_VAL_INT32:
-            viCheckErr (viPrintf(instrSession, "%s %ld\n", cmd, *(ViInt32 *)value));
+            checkErr(viPrintf(instrSession, "%s %ld\n", cmd, *(ViInt32 *)value));
             break;
         case RS_VAL_REAL64:
-            viCheckErr (viPrintf(instrSession, "%s %.12f\n", cmd, *(ViReal64 *)value));
+            checkErr(viPrintf(instrSession, "%s %.12f\n", cmd, *(ViReal64 *)value));
             break;
         case RS_VAL_STRING:
-            viCheckErr (viPrintf(instrSession, "%s \"%s\"\n", cmd, value));
+            snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s \"%s\"", cmd, value);
+            checkErr(RsCore_Write(instrSession, cmd));
             break;
         case RS_VAL_BOOLEAN:
-            viCheckErr (viPrintf(instrSession, "%s %s\n", cmd, (*(ViBoolean *)value == VI_FALSE) ? "OFF" : "ON"));
+            checkErr(viPrintf(instrSession, "%s %s\n", cmd, (*(ViBoolean *)value == VI_FALSE) ? "OFF" : "ON"));
             break;
         case RS_VAL_EVENT:
-            viCheckErr (viPrintf(instrSession, "%s\n", cmd));
+            checkErr(RsCore_Write(instrSession, cmd));
             break;
         case RS_VAL_ADDR:
         case RS_VAL_SESSION:
         case RS_VAL_UNKNOWN_TYPE:
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
         }
 
 Error:
-
     if (cmd)
         free (cmd);
 
     return error;
-
 }
 /*****************************************************************************
  * Function: rsspecan_FileStateSpecialFormat_WriteCallback
  * Purpose:  This function formats 1, before the argument string
  *****************************************************************************/
-ViStatus rsspecan_FileStateSpecialFormat_WriteCallback(ViSession instrSession, 
-                                ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_FileStateSpecialFormat_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error               = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
+    ViChar      *cmd                = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
-    /* --- Attribute data type is used for VISA I/O --- */
+    // --- Attribute data type is used for VISA I/O ---
     switch (sessionProperties -> attr[idx].dataType)
         {
-        
+
         case RS_VAL_STRING:
-            viCheckErr (viPrintf(instrSession, "%s 1,\'%s\'\n", cmd, value));
+            snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s 1,\'%s\'", cmd, value);
+            checkErr(RsCore_Write(instrSession, cmd));
             break;
-        case RS_VAL_INT32: 
+        case RS_VAL_INT32:
         case RS_VAL_REAL64:
-        case RS_VAL_BOOLEAN: 
+        case RS_VAL_BOOLEAN:
         case RS_VAL_EVENT:
         case RS_VAL_ADDR:
         case RS_VAL_SESSION:
         case RS_VAL_UNKNOWN_TYPE:
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
         }
 
 Error:
-
     if (cmd)
         free (cmd);
 
     return error;
 }
 
-ViStatus rsspecan_HcopyColorDef_WriteCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_HcopyColorDef_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error               = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
+    ViChar      *cmd                = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
     /* --- If the range table for the attribute exists, pass 'command string' or
        'discreteOrMinValue' instead of attribute value. --- */
 
@@ -1541,12 +1539,12 @@ ViStatus rsspecan_HcopyColorDef_WriteCallback(ViSession instrSession, ViConstStr
 
             precision = (precision < DBL_MIN) ? DBL_MIN : precision;
 
-            /* Allowed data types are only ViInt32 or ViReal64 */
+            // Allowed data types are only ViInt32 or ViReal64
             switch (data_type)
                 {
                 case RS_VAL_INT32:
                 case RS_VAL_REAL64:
-                    /* Valid data types */
+                    // Valid data types
                     break;
                 case RS_VAL_STRING:
                 case RS_VAL_BOOLEAN:
@@ -1555,7 +1553,7 @@ ViStatus rsspecan_HcopyColorDef_WriteCallback(ViSession instrSession, ViConstStr
                 case RS_VAL_SESSION:
                 case RS_VAL_UNKNOWN_TYPE:
                 default:
-                    viCheckErr (RS_ERROR_INVALID_TYPE);
+                    checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
                 }
 
             /* Go over range table values and find appropriate command string for passed
@@ -1566,45 +1564,46 @@ ViStatus rsspecan_HcopyColorDef_WriteCallback(ViSession instrSession, ViConstStr
                 p2string = sessionProperties -> attr[idx].rangeTable -> rangeValues[i].cmdString;
 
                 if (sessionProperties -> attr[idx].rangeTable -> rangeValues[i].cmdString == RS_RANGE_TABLE_END_STRING)
-                    viCheckErr (RS_ERROR_INVALID_VALUE);
+                    viCheckErr(RS_ERROR_INVALID_VALUE);
 
                 if (data_type == RS_VAL_INT32)
                     if (fabs(*p2discrete - *(ViInt32 *)value) <= DBL_MIN)
                         {
-                        //viCheckErr (viPrintf(io, "%s %s\n", cmd, p2string));
+                        //checkErr(viPrintf(io, "%s %s\n", cmd, p2string));
                         break;
                         }
 
                 if (data_type == RS_VAL_REAL64)
                     if (fabs(*p2discrete - *(ViReal64 *)value) <= precision)
                         {
-                        //viCheckErr (viPrintf(io, "%s %s\n", cmd, p2string));
+                        //checkErr(viPrintf(io, "%s %s\n", cmd, p2string));
                         break;
                         }
 
                 i++;
-
                 } while (i != 0);
-            /* Check Wait for OPC after writes flag */
+            // Check Wait for OPC after writes flag
             if ((sessionProperties -> attr[idx].flags & RS_VAL_WAIT_FOR_OPC_AFTER_WRITES) != 0)
             {
-                viCheckErr (viPrintf(instrSession, "%s%s;*OPC\n", cmd, p2string));
-            }   
+                snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s%s;*OPC", cmd, p2string);
+                checkErr(RsCore_Write(instrSession, cmd));
+            }
             else
-                viCheckErr (viPrintf(instrSession, "%s%s\n", cmd, p2string));
-                
-            goto Error; /* Exit the function */
+                snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s%s", cmd, p2string);
+                checkErr(RsCore_Write(instrSession, cmd));
+
+            goto Error; // Exit the function
             }
     }
 
-    /* --- Attribute data type is used for VISA I/O --- */
-    /* Check Wait for OPC after writes flag */
+    // --- Attribute data type is used for VISA I/O ---
+    // Check Wait for OPC after writes flag
     if ((sessionProperties -> attr[idx].flags & RS_VAL_WAIT_FOR_OPC_AFTER_WRITES) != 0)
-    {               
+    {
         switch (sessionProperties -> attr[idx].dataType)
             {
             case RS_VAL_INT32:
-                viCheckErr (viPrintf(instrSession, "%s%ld;*OPC\n", cmd, *(ViInt32 *)value));
+                checkErr(viPrintf(instrSession, "%s%ld;*OPC\n", cmd, *(ViInt32 *)value));
                 break;
             case RS_VAL_REAL64:
             case RS_VAL_STRING:
@@ -1614,7 +1613,7 @@ ViStatus rsspecan_HcopyColorDef_WriteCallback(ViSession instrSession, ViConstStr
             case RS_VAL_SESSION:
             case RS_VAL_UNKNOWN_TYPE:
             default:
-                viCheckErr (RS_ERROR_INVALID_TYPE);
+                checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
             }
      }
      else
@@ -1622,7 +1621,7 @@ ViStatus rsspecan_HcopyColorDef_WriteCallback(ViSession instrSession, ViConstStr
         switch (sessionProperties -> attr[idx].dataType)
             {
             case RS_VAL_INT32:
-                viCheckErr (viPrintf(instrSession, "%s%ld\n", cmd, *(ViInt32 *)value));
+                checkErr(viPrintf(instrSession, "%s%ld\n", cmd, *(ViInt32 *)value));
                 break;
             case RS_VAL_REAL64:
             case RS_VAL_STRING:
@@ -1632,12 +1631,11 @@ ViStatus rsspecan_HcopyColorDef_WriteCallback(ViSession instrSession, ViConstStr
             case RS_VAL_SESSION:
             case RS_VAL_UNKNOWN_TYPE:
             default:
-                viCheckErr (RS_ERROR_INVALID_TYPE);
+                checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
             }
      }
-       
-Error:
 
+Error:
     if (cmd)
         free (cmd);
 
@@ -1646,44 +1644,41 @@ Error:
 
 /*****************************************************************************
  * Function: rsspecan_quotedInt_WriteCallback
- * Purpose:  This function overrides standard calback funtion. Writes int 
+ * Purpose:  This function overrides standard calback funtion. Writes int
  *           with apostrophes
  *****************************************************************************/
-ViStatus rsspecan_quotedInt_WriteCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_quotedInt_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
     return rsspecan_quotedString_WriteCallback(instrSession, repCapName, attributeId, value);
 }
 
-ViStatus rsspecan_FFTPhaseLinePosition_WriteCallback (ViSession instrSession,
-                           ViConstString repCapName,
-                           ViAttr attributeId,
-                           void *value)
+ViStatus rsspecan_FFTPhaseLinePosition_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViChar      buffer [RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViStatus    error               = VI_SUCCESS;
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
+    ViChar      *cmd                = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
-    
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
+
     /* --- If the range table for the attribute exists, pass 'command string' or
        'discreteOrMinValue' instead of attribute value. --- */
 
@@ -1699,12 +1694,12 @@ ViStatus rsspecan_FFTPhaseLinePosition_WriteCallback (ViSession instrSession,
 
             precision = (precision < DBL_MIN) ? DBL_MIN : precision;
 
-            /* Allowed data types are only ViInt32 or ViReal64 */
+            // Allowed data types are only ViInt32 or ViReal64
             switch (data_type)
                 {
                 case RS_VAL_INT32:
                 case RS_VAL_REAL64:
-                    /* Valid data types */
+                    // Valid data types
                     break;
                 case RS_VAL_STRING:
                 case RS_VAL_BOOLEAN:
@@ -1713,7 +1708,7 @@ ViStatus rsspecan_FFTPhaseLinePosition_WriteCallback (ViSession instrSession,
                 case RS_VAL_SESSION:
                 case RS_VAL_UNKNOWN_TYPE:
                 default:
-                    viCheckErr (RS_ERROR_INVALID_TYPE);
+                    checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
                 }
 
             /* Go over range table values and find appropriate command string for passed
@@ -1739,21 +1734,20 @@ ViStatus rsspecan_FFTPhaseLinePosition_WriteCallback (ViSession instrSession,
                         }
 
                 i++;
-
                 } while (i != 0);
-    /* Check Wait for OPC after writes flag */
+    // Check Wait for OPC after writes flag
             sprintf(buffer, "%s %s", cmd, p2string);
             if (sessionProperties -> attr[idx].flags & RS_VAL_WAIT_FOR_OPC_AFTER_WRITES)
                 strcat (buffer, "DEG;*OPC\n");
             else
                 strcat (buffer, "DEG\n");
-            
-            viCheckErr (viWrite (instrSession, (ViBuf) buffer, (ViUInt32) strlen (buffer), NULL));
-            goto Error; /* Exit the function */
+
+            checkErr(RsCore_Write(instrSession, buffer));
+            goto Error; // Exit the function
             }
-    }            
-    /* --- Attribute data type is used for VISA I/O --- */
-    /* Check Wait for OPC after writes flag */
+    }
+    // --- Attribute data type is used for VISA I/O ---
+    // Check Wait for OPC after writes flag
         switch (sessionProperties -> attr[idx].dataType)
             {
             case RS_VAL_INT32:
@@ -1777,15 +1771,15 @@ ViStatus rsspecan_FFTPhaseLinePosition_WriteCallback (ViSession instrSession,
             case RS_VAL_SESSION:
             case RS_VAL_UNKNOWN_TYPE:
             default:
-                viCheckErr (RS_ERROR_INVALID_TYPE);
+                checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
             }
     if (sessionProperties -> attr[idx].flags & RS_VAL_WAIT_FOR_OPC_AFTER_WRITES)
         strcat (buffer,"DEG;*OPC\n");
      else
         strcat (buffer,"DEG\n");
-    
-     viCheckErr (viWrite (instrSession, (ViBuf) buffer, (ViUInt32) strlen (buffer), NULL));
-    
+
+     checkErr(RsCore_Write(instrSession, buffer));
+
 Error:
     if (cmd)
         free (cmd);
@@ -1797,31 +1791,32 @@ Error:
  * Function: rsspecan_VsaDemodRecLengthSym_WriteCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_VsaDemodRecLengthSym_WriteCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_VsaDemodRecLengthSym_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error               = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
+    ViChar      *cmd                = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));   
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
     /* --- If the range table for the attribute exists, pass 'command string' or
        'discreteOrMinValue' instead of attribute value. --- */
@@ -1837,12 +1832,12 @@ ViStatus rsspecan_VsaDemodRecLengthSym_WriteCallback(ViSession instrSession, ViC
 
             precision = (precision < DBL_MIN) ? DBL_MIN : precision;
 
-            /* Allowed data types are only ViInt32 or ViReal64 */
+            // Allowed data types are only ViInt32 or ViReal64
             switch (data_type)
                 {
                 case RS_VAL_INT32:
                 case RS_VAL_REAL64:
-                    /* Valid data types */
+                    // Valid data types
                     break;
                 case RS_VAL_STRING:
                 case RS_VAL_BOOLEAN:
@@ -1851,7 +1846,7 @@ ViStatus rsspecan_VsaDemodRecLengthSym_WriteCallback(ViSession instrSession, ViC
                 case RS_VAL_SESSION:
                 case RS_VAL_UNKNOWN_TYPE:
                 default:
-                    viCheckErr (RS_ERROR_INVALID_TYPE);
+                    checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
                 }
 
             /* Go over range table values and find appropriate command string for passed
@@ -1867,49 +1862,50 @@ ViStatus rsspecan_VsaDemodRecLengthSym_WriteCallback(ViSession instrSession, ViC
                 if (data_type == RS_VAL_INT32)
                     if (fabs(*p2discrete - *(ViInt32 *)value) <= DBL_MIN)
                         {
-                        viCheckErr (viPrintf(instrSession, "%s %sSYM\n", cmd, p2string));
+                        snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s %sSYM", cmd, p2string);
+                        checkErr(RsCore_Write(instrSession, cmd));
                         break;
                         }
 
                 if (data_type == RS_VAL_REAL64)
                     if (fabs(*p2discrete - *(ViReal64 *)value) <= precision)
                         {
-                        viCheckErr (viPrintf(instrSession, "%s %sSYM\n", cmd, p2string));
+                        snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s %sSYM", cmd, p2string);
+                        checkErr(RsCore_Write(instrSession, cmd));
                         break;
                         }
 
                 i++;
-
                 } while (i != 0);
 
-            goto Error; /* Exit the function */
+            goto Error; // Exit the function
             }
 
-    /* --- Attribute data type is used for VISA I/O --- */
+    // --- Attribute data type is used for VISA I/O ---
     switch (sessionProperties -> attr[idx].dataType)
         {
         case RS_VAL_INT32:
-            viCheckErr (viPrintf(instrSession, "%s %ldSYM\n", cmd, *(ViInt32 *)value));
+            checkErr(viPrintf(instrSession, "%s %ldSYM\n", cmd, *(ViInt32 *)value));
             break;
         case RS_VAL_REAL64:
-            viCheckErr (viPrintf(instrSession, "%s %.12fSYM\n", cmd, *(ViReal64 *)value));
+            checkErr(viPrintf(instrSession, "%s %.12fSYM\n", cmd, *(ViReal64 *)value));
             break;
         case RS_VAL_STRING:
-            viCheckErr (viPrintf(instrSession, "%s \'%s\'SYM\n", cmd, value));
+            snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s \'%s\'SYM", cmd, value);
+            checkErr(RsCore_Write(instrSession, cmd));
             break;
         case RS_VAL_BOOLEAN:
-            viCheckErr (viPrintf(instrSession, "%s %sSYM\n", cmd, (*(ViBoolean *)value == VI_FALSE) ? "OFF" : "ON"));
+            checkErr(viPrintf(instrSession, "%s %sSYM\n", cmd, (*(ViBoolean *)value == VI_FALSE) ? "OFF" : "ON"));
             break;
         case RS_VAL_EVENT:
         case RS_VAL_ADDR:
         case RS_VAL_SESSION:
         case RS_VAL_UNKNOWN_TYPE:
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
         }
 
 Error:
-
     if (cmd)
         free (cmd);
 
@@ -1920,31 +1916,32 @@ Error:
  * Function: rsspecan_VsaDemodRecLengthSec_WriteCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_VsaDemodRecLengthSec_WriteCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_VsaDemodRecLengthSec_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error               = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
+    ViChar      *cmd                = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));   
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
     /* --- If the range table for the attribute exists, pass 'command string' or
        'discreteOrMinValue' instead of attribute value. --- */
@@ -1960,12 +1957,12 @@ ViStatus rsspecan_VsaDemodRecLengthSec_WriteCallback(ViSession instrSession, ViC
 
             precision = (precision < DBL_MIN) ? DBL_MIN : precision;
 
-            /* Allowed data types are only ViInt32 or ViReal64 */
+            // Allowed data types are only ViInt32 or ViReal64
             switch (data_type)
                 {
                 case RS_VAL_INT32:
                 case RS_VAL_REAL64:
-                    /* Valid data types */
+                    // Valid data types
                     break;
                 case RS_VAL_STRING:
                 case RS_VAL_BOOLEAN:
@@ -1974,7 +1971,7 @@ ViStatus rsspecan_VsaDemodRecLengthSec_WriteCallback(ViSession instrSession, ViC
                 case RS_VAL_SESSION:
                 case RS_VAL_UNKNOWN_TYPE:
                 default:
-                    viCheckErr (RS_ERROR_INVALID_TYPE);
+                    checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
                 }
 
             /* Go over range table values and find appropriate command string for passed
@@ -1990,49 +1987,50 @@ ViStatus rsspecan_VsaDemodRecLengthSec_WriteCallback(ViSession instrSession, ViC
                 if (data_type == RS_VAL_INT32)
                     if (fabs(*p2discrete - *(ViInt32 *)value) <= DBL_MIN)
                         {
-                        viCheckErr (viPrintf(instrSession, "%s %sS\n", cmd, p2string));
+                        snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s %sS", cmd, p2string);
+                        checkErr(RsCore_Write(instrSession, cmd));
                         break;
                         }
 
                 if (data_type == RS_VAL_REAL64)
                     if (fabs(*p2discrete - *(ViReal64 *)value) <= precision)
                         {
-                        viCheckErr (viPrintf(instrSession, "%s %sS\n", cmd, p2string));
+                        snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s %sS", cmd, p2string);
+                        checkErr(RsCore_Write(instrSession, cmd));
                         break;
                         }
 
                 i++;
-
                 } while (i != 0);
 
-            goto Error; /* Exit the function */
+            goto Error; // Exit the function
             }
 
-    /* --- Attribute data type is used for VISA I/O --- */
+    // --- Attribute data type is used for VISA I/O ---
     switch (sessionProperties -> attr[idx].dataType)
         {
         case RS_VAL_INT32:
-            viCheckErr (viPrintf(instrSession, "%s %ldS\n", cmd, *(ViInt32 *)value));
+            checkErr(viPrintf(instrSession, "%s %ldS\n", cmd, *(ViInt32 *)value));
             break;
         case RS_VAL_REAL64:
-            viCheckErr (viPrintf(instrSession, "%s %.12fS\n", cmd, *(ViReal64 *)value));
+            checkErr(viPrintf(instrSession, "%s %.12fS\n", cmd, *(ViReal64 *)value));
             break;
         case RS_VAL_STRING:
-            viCheckErr (viPrintf(instrSession, "%s \'%s\'S\n", cmd, value));
+            snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s \'%s\'S", cmd, value);
+            checkErr(RsCore_Write(instrSession, cmd));
             break;
         case RS_VAL_BOOLEAN:
-            viCheckErr (viPrintf(instrSession, "%s %sS\n", cmd, (*(ViBoolean *)value == VI_FALSE) ? "OFF" : "ON"));
+            checkErr(viPrintf(instrSession, "%s %sS\n", cmd, (*(ViBoolean *)value == VI_FALSE) ? "OFF" : "ON"));
             break;
         case RS_VAL_EVENT:
         case RS_VAL_ADDR:
         case RS_VAL_SESSION:
         case RS_VAL_UNKNOWN_TYPE:
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
         }
 
 Error:
-
     if (cmd)
         free (cmd);
 
@@ -2043,59 +2041,60 @@ Error:
  * Function: rsspecan_DeltaMarkerReferenceMarker_WriteCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_DeltaMarkerReferenceMarker_WriteCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_DeltaMarkerReferenceMarker_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error               = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
+    ViChar      *cmd                = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));  
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
-    /* --- Attribute data type is used for VISA I/O --- */
+    // --- Attribute data type is used for VISA I/O ---
     switch (sessionProperties -> attr[idx].dataType)
         {
-        
+
         case RS_VAL_INT32:
             if (*(ViInt32 *)value == 0)
             {
-                viCheckErr (viPrintf(instrSession, "%s FIX\n", cmd));
+                snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s FIX", cmd);
+                checkErr(RsCore_Write(instrSession, cmd));
             }
             else
             {
-                viCheckErr (viPrintf(instrSession, "%s %ld\n", cmd, *(ViInt32 *)value));
+                checkErr(viPrintf(instrSession, "%s %ld\n", cmd, *(ViInt32 *)value));
             }
             break;
         case RS_VAL_STRING:
         case RS_VAL_REAL64:
-        case RS_VAL_BOOLEAN: 
+        case RS_VAL_BOOLEAN:
         case RS_VAL_EVENT:
         case RS_VAL_ADDR:
         case RS_VAL_SESSION:
         case RS_VAL_UNKNOWN_TYPE:
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
         }
 
 Error:
-
     if (cmd)
         free (cmd);
 
@@ -2118,27 +2117,23 @@ Error:
  * Function: rsspecan_EVMCalculation_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_EVMCalculation_RangeTableCallback  (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ ViStatus rsspecan_EVMCalculation_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
  {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
+
+    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
     if ((strstr (model, "FSV")) || (strstr (model, "FSW")))
     {
         *rangeTablePtr=&rsspecan_rngVSAModulationEVMCalcFSV;
     }
     else
     {
-        *rangeTablePtr=&rsspecan_rngVSAModulationEVMCalc;   
+        *rangeTablePtr=&rsspecan_rngVSAModulationEVMCalc;
     }
-   
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
  }
 
@@ -2146,31 +2141,27 @@ Error:
  * Function: rsspecan_SpectrogramHistoryDepth_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_SpectrogramHistoryDepth_RangeTableCallback  (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ ViStatus rsspecan_SpectrogramHistoryDepth_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
  {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
+
+    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
     if (strstr (model, "FSVR"))
     {
         *rangeTablePtr=&rsspecan_rngSpemHistoryBuffDepthFSVR;
     }
     else if (strstr (model, "FSV"))
     {
-        *rangeTablePtr=&rsspecan_rngSpemHistoryBuffDepthFSV;   
+        *rangeTablePtr=&rsspecan_rngSpemHistoryBuffDepthFSV;
     }
     else
     {
-        *rangeTablePtr=&rsspecan_rngSpemHistoryBuffDepth;   
+        *rangeTablePtr=&rsspecan_rngSpemHistoryBuffDepth;
     }
-   
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
  }
 
@@ -2178,27 +2169,23 @@ Error:
  * Function: rsspecan_XAxisQuantize_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_XAxisQuantize_RangeTableCallback  (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ ViStatus rsspecan_XAxisQuantize_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
  {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
+
+    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
     if (strstr (model, "FSV"))
     {
         *rangeTablePtr=&rsspecan_rngVSAConfDisplayXQuantizeFSV;
     }
     else
     {
-        *rangeTablePtr=&rsspecan_rngVSAConfDisplayXQuantize;   
+        *rangeTablePtr=&rsspecan_rngVSAConfDisplayXQuantize;
     }
-   
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
  }
 
@@ -2206,28 +2193,23 @@ Error:
  * Function: rsspecan_TraceRange_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_TraceRange_RangeTableCallback(ViSession instrSession, ViConstString repCapName, 
-                    ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ ViStatus rsspecan_TraceRange_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
+
+    checkErr(RsCore_LockSession(instrSession));
+
     if ((strstr (model, "FSL")) || (strstr (model, "FSV")))
     {
         *rangeTablePtr=&rsspecan_rngFslTrace;
     }
     else
     {
-        *rangeTablePtr=&rsspecan_rngTrace;   
+        *rangeTablePtr=&rsspecan_rngTrace;
     }
-   
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 };
 
@@ -2235,44 +2217,36 @@ Error:
  * Function: rsspecan_AmpUnit_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_AmpUnit_RangeTableCallback (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ViStatus rsspecan_AmpUnit_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
  {
    ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
+
+    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
     if (strstr (model, "FSL"))
     {
         *rangeTablePtr=&rsspecan_rngFslAmplitudeUnitsRangeTable;
     }
     else
     {
-        *rangeTablePtr=&rsspecan_rngAmplitudeUnitsRangeTable;   
+        *rangeTablePtr=&rsspecan_rngAmplitudeUnitsRangeTable;
     }
-   
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
-    return error;    
+    (void)RsCore_UnlockSession(instrSession);
+    return error;
  }
 
 /*****************************************************************************
  * Function: rsspecan_PowStandard_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_PowStandard_RangeTableCallback (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ ViStatus rsspecan_PowStandard_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
+
+    checkErr(RsCore_LockSession(instrSession));
+
     if (strstr (model, "FSL"))
     {
         *rangeTablePtr=&rsspecan_rngFslMeasPowerStandard;
@@ -2283,11 +2257,11 @@ Error:
     }
     else
     {
-        *rangeTablePtr=&rsspecan_rngMeasPowerStandard;   
+        *rangeTablePtr=&rsspecan_rngMeasPowerStandard;
     }
-   
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2295,27 +2269,23 @@ Error:
  * Function: rsspecan_ExtMixerHarmonic_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_ExtMixerHarmonic_RangeTableCallback  (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ ViStatus rsspecan_ExtMixerHarmonic_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
  {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
+
+    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
     if (strstr (model, "FSV"))
     {
         *rangeTablePtr=&rsspecan_rngExtMixerHarmonicFSV;
     }
     else
     {
-        *rangeTablePtr=&rsspecan_rngExtMixerHarmonic;   
+        *rangeTablePtr=&rsspecan_rngExtMixerHarmonic;
     }
-   
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
  }
 
@@ -2323,43 +2293,44 @@ Error:
  * Function: rsspecan_BtoChannel_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_BtoChannel_RangeTableCallback(ViSession instrSession, ViConstString repCapName, 
-                    ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ ViStatus rsspecan_BtoChannel_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
     ViInt32     region;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViInt32(instrSession,"", RSSPECAN_ATTR_BTO_GEOG, &region));
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_GetAttributeViInt32(instrSession,"", RSSPECAN_ATTR_BTO_GEOG, &region));
     switch (region){
         case RSSPECAN_BTO_GEOG_EUR:
         case RSSPECAN_BTO_GEOG_USA:
-            *rangeTablePtr=&rsspecan_rngBtoChannel;    
+            *rangeTablePtr=&rsspecan_rngBtoChannel;
         break;
         case RSSPECAN_BTO_GEOG_FRAN:
             *rangeTablePtr=&rsspecan_rngBtoChannelFranc;
         break;
-    }    
+    }
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 };
 
-ViStatus rsspecan_C2kSetCount_RangeTableCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
-{ 
+ViStatus rsspecan_C2kSetCount_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
+{
     ViStatus    error = VI_SUCCESS;
     ViChar     mode[256]="";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString(instrSession,"", RSSPECAN_ATTR_GET_INSTR_MODE, 256, mode));
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_GetAttributeViString(instrSession,"", RSSPECAN_ATTR_GET_INSTR_MODE, 256, mode));
     if (!(strcmp(mode,"BC2K")&&strcmp(mode,"M2CK")))
-        *rangeTablePtr=&rsspecan_rngC2KSetCount;        
+        *rangeTablePtr=&rsspecan_rngC2KSetCount;
     else
-        *rangeTablePtr=&rsspecan_rngBDOSetCount;    
+        *rangeTablePtr=&rsspecan_rngBDOSetCount;
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2367,65 +2338,57 @@ Error:
  * Function: rsspecan_IQSrate_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_IQSrate_RangeTableCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ViStatus rsspecan_IQSrate_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
-    
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
     if (!(strstr (buffer, "B72")))
-        *rangeTablePtr=&rsspecan_rngIQSRate;    
+        *rangeTablePtr=&rsspecan_rngIQSRate;
     else
         *rangeTablePtr=&rsspecan_rngIQSRateB72;
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
-} 
+}
 
 /*****************************************************************************
  * Function: rsspecan_AvgType_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_AvgType_RangeTableCallback (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ViStatus rsspecan_AvgType_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
+
+    checkErr(RsCore_LockSession(instrSession));
+
     if ((strstr (model, "FSV")) || (strstr (model, "FSL")))
     {
         *rangeTablePtr=&rsspecan_rngAvgTypeFSV;
     }
     else
     {
-        *rangeTablePtr=&rsspecan_rngAvgType;   
+        *rangeTablePtr=&rsspecan_rngAvgType;
     }
-   
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
-                                             
+
 /*****************************************************************************
  * Function: rsspecan_InpAmpEattMan_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_InpAmpEattMan_RangeTableCallback (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ViStatus rsspecan_InpAmpEattMan_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
+
+    checkErr(RsCore_LockSession(instrSession));
+
     if (strstr (model, "FSV"))
     {
         *rangeTablePtr=&rsspecan_rngInpAmptEattManFSV;
@@ -2436,11 +2399,11 @@ ViStatus rsspecan_InpAmpEattMan_RangeTableCallback (ViSession instrSession, ViCo
     }
     else
     {
-        *rangeTablePtr=&rsspecan_rngInpAmptEattMan;   
+        *rangeTablePtr=&rsspecan_rngInpAmptEattMan;
     }
-   
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2448,27 +2411,23 @@ Error:
  * Function: rsspecan_AdemSpecBW_FSV_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_AdemSpecBW_FSV_RangeTableCallback (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ViStatus rsspecan_AdemSpecBW_FSV_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
+
+    checkErr(RsCore_LockSession(instrSession));
+
     if (strstr (model, "FSV"))
     {
         *rangeTablePtr=&rsspecan_rngAdemBandResFSV;
     }
     else
     {
-        *rangeTablePtr=&rsspecan_rngAdemBandRes;   
+        *rangeTablePtr=&rsspecan_rngAdemBandRes;
     }
-   
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2476,27 +2435,23 @@ Error:
  * Function: rsspecan_ZoneType_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_ZoneType_RangeTableCallback (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ViStatus rsspecan_ZoneType_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
+
+    checkErr(RsCore_LockSession(instrSession));
+
     if (strstr (model, "FSV"))
     {
         *rangeTablePtr=&rsspecan_rngWiMAXZoneTypeFSV;
     }
     else
     {
-        *rangeTablePtr=&rsspecan_rngWiMAXZoneType;   
+        *rangeTablePtr=&rsspecan_rngWiMAXZoneType;
     }
-   
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2504,27 +2459,23 @@ Error:
  * Function: rsspecan_SEListRangeFilterType_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_SEListRangeFilterType_RangeTableCallback (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ViStatus rsspecan_SEListRangeFilterType_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
+
+    checkErr(RsCore_LockSession(instrSession));
+
     if (strstr (model, "FSV"))
     {
         *rangeTablePtr=&rsspecan_rngListFiltTypeFSV;
     }
     else
     {
-        *rangeTablePtr=&rsspecan_rngListFiltType;   
+        *rangeTablePtr=&rsspecan_rngListFiltType;
     }
-   
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2532,27 +2483,23 @@ Error:
  * Function: rsspecan_HCopyLanguage_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_HCopyLanguage_RangeTableCallback (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ViStatus rsspecan_HCopyLanguage_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
+
+    checkErr(RsCore_LockSession(instrSession));
+
     if ((strstr (model, "FSV")) || (strstr (model, "FSL")))
     {
         *rangeTablePtr=&rsspecan_rngHcopyDeviceLangFSL;
     }
     else
     {
-        *rangeTablePtr=&rsspecan_rngHcopyDeviceLang;   
+        *rangeTablePtr=&rsspecan_rngHcopyDeviceLang;
     }
-   
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2560,28 +2507,26 @@ Error:
  * Function: rsspecan_IQSrateFMU_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_IQSrateFMU_RangeTableCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ViStatus rsspecan_IQSrateFMU_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    ViChar      opt[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_INSTRUMENT_MODEL, RSSPECAN_IO_BUFFER_SIZE, buffer));
-    
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, opt));
-    
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      opt[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
     if (!(strstr (buffer, "FMU")) && !(strstr (buffer, "FSQ")))
     {
-        *rangeTablePtr=&rsspecan_rngIQSRate;    
-    
+        *rangeTablePtr=&rsspecan_rngIQSRate;
+
         if ((strstr (opt, "B72")) || ((strstr (buffer, "FSV")) && (strstr (opt, "B70"))))
             *rangeTablePtr=&rsspecan_rngIQSRateB72;
     }
     else
         *rangeTablePtr=&rsspecan_rngIQSRateFMU;
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2589,22 +2534,22 @@ Error:
  * Function: rsspecan_DetectorType_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_DetectorType_RangeTableCallback (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ViStatus rsspecan_DetectorType_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_INSTRUMENT_MODEL, RSSPECAN_IO_BUFFER_SIZE, buffer));
-    
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
     if (((strstr (buffer, "FMU")) != NULL) || ((strstr (buffer, "FSW")) != NULL))
         *rangeTablePtr=&rsspecan_rngDetectorTypeFMURangeTable;
     else if (strstr (buffer, "FSV") != NULL)
         *rangeTablePtr=&rsspecan_rngDetectorTypeESLRangeTable;
     else
         *rangeTablePtr=&rsspecan_rngDetectorTypeRangeTable;
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2612,41 +2557,41 @@ Error:
  * Function: rsspecan_BBInput_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_BBInput_RangeTableCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ViStatus rsspecan_BBInput_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_INSTRUMENT_MODEL, RSSPECAN_IO_BUFFER_SIZE, buffer));
-    
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
     if (!(strstr (buffer, "FMU")))
-        *rangeTablePtr=&rsspecan_rngBBInput;    
+        *rangeTablePtr=&rsspecan_rngBBInput;
     else
         *rangeTablePtr=&rsspecan_rngBBInputFMU;
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
-} 
+}
 
 /*****************************************************************************
  * Function: rsspecan_TriggerRFLevel_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_TriggerRFLevel_RangeTableCallback(ViSession instrSession, ViConstString repCapName, ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ViStatus rsspecan_TriggerRFLevel_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_INSTRUMENT_MODEL, RSSPECAN_IO_BUFFER_SIZE, buffer));
-    
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
     if (!(strstr (buffer, "FSV")))
-        *rangeTablePtr=&rsspecan_rngTrigRFPowerLevel;    
+        *rangeTablePtr=&rsspecan_rngTrigRFPowerLevel;
     else
         *rangeTablePtr=&rsspecan_rngTrigRFPowerLevelFSV;
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2654,28 +2599,23 @@ Error:
  * Function: rsspecan_TraceRange_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_NoiseMarkerAssign_RangeTableCallback(ViSession instrSession, ViConstString repCapName, 
-                    ViAttr attributeId, RsRangeTablePtr *rangeTablePtr)
+ ViStatus rsspecan_NoiseMarkerAssign_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
+
+    checkErr(RsCore_LockSession(instrSession));
+
     if (strstr (model, "FSW"))
     {
         *rangeTablePtr=&rsspecan_rngNoiseMarkerAssignFSW;
     }
     else
     {
-        *rangeTablePtr=&rsspecan_rngNoiseMarkerAssign;   
+        *rangeTablePtr=&rsspecan_rngNoiseMarkerAssign;
     }
-   
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2683,37 +2623,37 @@ Error:
  * Function: rsspecan_Attenuation_WriteCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
-ViStatus rsspecan_Attenuation_WriteCallback (ViSession instrSession, ViConstString repCapName, ViAttr attributeId, void *value)
+ViStatus rsspecan_Attenuation_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
     ViStatus    error               = VI_SUCCESS;
     ViInt32     idx                 = 0;
-    ViChar      *cmd                = VI_NULL;
+    ViChar      *cmd                = NULL;
 
-    viCheckErr (Rs_GetAttributeIndex (instrSession, attributeId, &idx));
+    viCheckErr(Rs_GetAttributeIndex (instrSession, attributeId, &idx));
 
-    /* If no command available, exit the function */
-    if (sessionProperties -> attr[idx].command == VI_NULL)
+    // If no command available, exit the function
+    if (sessionProperties -> attr[idx].command == NULL)
         return VI_SUCCESS;
 
-    /* Check if attribute uses repeated capabilities */
+    // Check if attribute uses repeated capabilities
     if (sessionProperties -> attr[idx].usercaps == VI_TRUE)
         {
         if (!repCapName)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
 
         if (strlen (repCapName) == 0)
-            viCheckErr (RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
+            viCheckErr(RS_ERROR_INVALID_REPEATED_CAPABILITY_NAME);
         }
 
-    /* Build the command string */
-    viCheckErr (Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));   
+    // Build the command string
+    viCheckErr(Rs_BuildCommandString (instrSession, attributeId, idx, repCapName, &cmd));
 
-    /* --- Attribute data type is used for VISA I/O --- */
+    // --- Attribute data type is used for VISA I/O ---
     switch (sessionProperties -> attr[idx].dataType)
         {
         case RS_VAL_REAL64:
-            viCheckErr (viPrintf(instrSession, "%s %.0f\n", cmd, *(ViReal64 *)value));
+            checkErr(viPrintf(instrSession, "%s %.0f\n", cmd, *(ViReal64 *)value));
             break;
         case RS_VAL_INT32:
         case RS_VAL_STRING:
@@ -2723,11 +2663,10 @@ ViStatus rsspecan_Attenuation_WriteCallback (ViSession instrSession, ViConstStri
         case RS_VAL_SESSION:
         case RS_VAL_UNKNOWN_TYPE:
         default:
-            viCheckErr (RS_ERROR_INVALID_TYPE);
+            checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType, NULL));
         }
 
 Error:
-
     if (cmd)
         free (cmd);
 

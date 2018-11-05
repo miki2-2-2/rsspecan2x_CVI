@@ -19,20 +19,21 @@
 
 /*===========================================================================*/
 /* Function: Set TDS UE Measurement
-/* Purpose:  This function selects the measurement of the Application 
+/* Purpose:  This function selects the measurement of the Application
 /*           Firmware R&S FS-K77, TD-SCDMA mobile station test.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_SetTDSUEMeasurement(ViSession    instrSession,
                                                 ViInt32 measurement)
 {
     ViStatus    error = VI_SUCCESS;
-	
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-	
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_TDUE_MEAS, 
-															measurement), 2, "Measurement"); 
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_MEAS, measurement),
+    		2, "Measurement");
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -46,13 +47,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUEAdaptToSignal(ViSession    instrSession
 {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
+
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_ADAPT_SIGN_SLOT_START, startSlot),
-                        2, "Start Slot");
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_ADAPT_SIGN_SLOT_STOP, stopSlot), 
-                        3, "Stop Slot");
+    		2, "Start Slot");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_ADAPT_SIGN_SLOT_STOP, stopSlot),
+    		3, "Stop Slot");
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -64,47 +68,42 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUECapture (ViSession instrSession,
                                                   ViInt32 setCount,
                                                   ViInt32 setValue,
                                                   ViInt32 captureLength,
-                                                  ViInt32 channel, 
+                                                  ViInt32 channel,
                                                   ViInt32 slot)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      model[10] = "";
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
-    
-    if (strstr (model, "FSQ") != NULL)
+    checkErr(RsCore_LockSession(instrSession));
+
+    if (RsCore_IsInstrumentModel(instrSession, "FSQ"))
     {
-        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_RESULT_SET_COUNT, setCount), 
-                            2, "Set Count"); 
-        if (setCount>1) 
+    	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_RESULT_SET_COUNT, setCount),
+    			2, "Set Count");
+        if (setCount>1)
         {
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_RESULT_SET_VALUE, setValue), 
-                            3, "Set Value");
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_RESULT_SET_VALUE, setValue),
+            		3, "Set Value");
         }
         else
         {
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_CAPTURE_LENGTH, captureLength), 
-                            4, "Capture Length");                       
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_CAPTURE_LENGTH, captureLength),
+            		4, "Capture Length");
         }
     }
     else
     {
-        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_CAPTURE_LENGTH, captureLength), 
-                        4, "Capture Length");                       
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_CAPTURE_LENGTH, captureLength),
+        		4, "Capture Length");
     }
-            
+
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_RESULT_SEL_CHAN, channel),
-                        5, "Channel");
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_RESULT_SEL_SLOT, slot), 
-                        6, "Slot");
-       
-    
+    		5, "Channel");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_RESULT_SEL_SLOT, slot),
+    		6, "Slot");
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -117,17 +116,18 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUEResults(ViSession  instrSession,
 {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
+
     switch (resultType)
     {
         case RSSPECAN_VAL_TDS_RES_CDP:
         case RSSPECAN_VAL_TDS_RES_CDPRAT:
         case RSSPECAN_VAL_TDS_RES_CDEP:
         case RSSPECAN_VAL_TDS_RES_CTAB:
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_TDUE_RESULT_TYPE, resultType), 
-                        2, "Result Type");    
-        break;      
-        case RSSPECAN_VAL_TDS_RES_MACC: 
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_TDUE_RESULT_TYPE, resultType),
+            		2, "Result Type");
+        break;
+        case RSSPECAN_VAL_TDS_RES_MACC:
         case RSSPECAN_VAL_TDS_RES_PVSLA:
         case RSSPECAN_VAL_TDS_RES_PVSLR:
         case RSSPECAN_VAL_TDS_RES_PVSYM:
@@ -137,57 +137,61 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUEResults(ViSession  instrSession,
         case RSSPECAN_VAL_TDS_RES_SYMBCONST:
         case RSSPECAN_VAL_TDS_RES_SYMBEVM:
         case RSSPECAN_VAL_TDS_RES_COMPCONST:
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_TDUE_RESULT_TYPE, resultType), 
-                        2, "Result Type");    
-        break;              
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_TDUE_RESULT_TYPE, resultType),
+            		2, "Result Type");
+        break;
         default:
-            viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Result Type");     
-    }   
+            viCheckParm(RsCore_InvalidViInt32Value(instrSession, resultType), 2, "Result Type");
+    }
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: TDS UE Adapt Signal Auto Level Time
-/* Purpose:  This function starts the autorange routine for the reference 
-/*           level. 
+/* Purpose:  This function starts the autorange routine for the reference
+/*           level.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_TDSUEAdaptSignalAutoLevelTime(ViSession  instrSession)
 {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    viCheckErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_ADAPT_SIGN_AUT_LEVEL_TIME, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_ADAPT_SIGN_AUT_LEVEL_TIME, NULL));
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: TDS UE CDP Level Adjust
-/* Purpose:  This function initiates automatic setting of the RF attenuation 
-/*           and IF gain to the level of the applied signal. The unit is put 
-/*           into RF ATTEN MANUAL mode to optimize RF attenuation and IF gain 
-/*           independently of each other. This mode is retained after 
+/* Purpose:  This function initiates automatic setting of the RF attenuation
+/*           and IF gain to the level of the applied signal. The unit is put
+/*           into RF ATTEN MANUAL mode to optimize RF attenuation and IF gain
+/*           independently of each other. This mode is retained after
 /*           changing from TD-SCDMA BTS mode to SPECTRUM mode.
 /*===========================================================================*/
-ViStatus _VI_FUNC rsspecan_TDSUECDPLevelAdjust(ViSession    instrSession, 
+ViStatus _VI_FUNC rsspecan_TDSUECDPLevelAdjust(ViSession    instrSession,
                                                ViUInt32         timeout)
 {
     ViStatus    error = VI_SUCCESS;
-    ViInt32     old_timeout = -1; 
+    ViInt32     old_timeout = -1;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    if (rsspecan_invalidViUInt32Range (timeout, 0, 4294967295UL) == VI_TRUE)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Timeout"); 
-    checkErr (rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-    checkErr (rsspecan_SetOPCTimeout (instrSession, timeout));        
-    viCheckErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_CDP_LEV_ADJUST, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
+    checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
+    checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+    checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_CDP_LEV_ADJUST, NULL));
+
 Error:
-    if (old_timeout >= 0)    
+    if (old_timeout >= 0)
         rsspecan_SetOPCTimeout (instrSession, old_timeout);
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -201,20 +205,21 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUESEMLimits (ViSession instrSession,
                                                     ViInt32 release)
 {
 	ViStatus    error = VI_SUCCESS;
-	checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "",
-        RSSPECAN_ATTR_TDUE_SEM_LIMITS, release), 2, "Release");    
+
+	checkErr(RsCore_LockSession(instrSession));
+
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_SEM_LIMITS, release),
+			2, "Release");
 
 Error:
- 	(void) Rs_UnlockSession(instrSession, VI_NULL);
+ 	(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 
 
 /*===========================================================================*/
 /* Function: TDS UE Channel Table Operations
-/* Purpose:  This function performs the selected operation with channel 
+/* Purpose:  This function performs the selected operation with channel
 /*           table.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_TDSUEChannelTableOperations(ViSession    instrSession,
@@ -222,70 +227,66 @@ ViStatus _VI_FUNC rsspecan_TDSUEChannelTableOperations(ViSession    instrSession
                                                         ViString    channelTable)
 {
     ViStatus    error = VI_SUCCESS;
-    
-	checkErr( Rs_LockSession (instrSession, VI_NULL));
-    if (rsspecan_invalidViInt32Range (operation, RSSPECAN_VAL_TDS_TABLE_OFF, RSSPECAN_VAL_TDS_TABLE_COPY))
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Operation");
-    if (!channelTable) 
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Channel Table");
-	
+
+	checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, operation, RSSPECAN_VAL_TDS_TABLE_OFF, RSSPECAN_VAL_TDS_TABLE_COPY),
+    		2, "Operation");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTable), 3, "Channel Table");
+
 	switch(operation)
 	{
 		case RSSPECAN_VAL_TDS_TABLE_OFF:
-	        viCheckErr (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_STATE,
-	                VI_FALSE)); 
+	        checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_STATE, VI_FALSE));
 	    break;
 	    case RSSPECAN_VAL_TDS_TABLE_SELECT:
-	        viCheckErr (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_STATE,
-	                VI_TRUE));
-	        viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_SEL, 
-	                 channelTable), 3, "Channel Table");                    
-	    break;  
+	        checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_STATE, VI_TRUE));
+	        viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_SEL, channelTable),
+	        		3, "Channel Table");
+	    break;
 	    case RSSPECAN_VAL_TDS_TABLE_NEW:
-	        viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_NAME, 
-	                 channelTable), 3, "Channel Table"); 
-	    break;  
+	        viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_NAME, channelTable),
+	        		3, "Channel Table");
+	    break;
 	    case RSSPECAN_VAL_TDS_TABLE_DELETE:
-	        viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_DEL, 
-	                 channelTable), 3, "Channel Table");
-	    break;           
+	        viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_DEL, channelTable),
+	        		3, "Channel Table");
+	    break;
 	    case RSSPECAN_VAL_TDS_TABLE_COPY:
-	        viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_COPY, 
-	                 channelTable), 3, "Channel Table");
+	        viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_COPY, channelTable),
+	        		3, "Channel Table");
 	    break;
     }
-	
-	
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure TDS UE Channel Table Comment
-/* Purpose:  This function defines a comment for the selected channel table 
+/* Purpose:  This function defines a comment for the selected channel table
 /*           in the code domain power measurement mode.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_ConfigureTDSUEChannelTableComment(ViSession  instrSession,
                                                     ViString    channelTableComment)
 {
     ViStatus    error = VI_SUCCESS;
-	
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-	
-    viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_COMM, 
-                 	channelTableComment), 2, "Channel Table Comment");
-	
-	
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_COMM, channelTableComment),
+    		2, "Channel Table Comment");
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure TDS UE Channel Table Data
-/* Purpose:  This function defines a channel table. The whole table is 
-/*           defined in one operation. The inactive channels (INACtive) do 
+/* Purpose:  This function defines a channel table. The whole table is
+/*           defined in one operation. The inactive channels (INACtive) do
 /*           not have to be defined.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_ConfigureTDSUEChannelTableData(ViSession instrSession,
@@ -301,72 +302,70 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUEChannelTableData(ViSession instrSession
 {
     ViStatus    error = VI_SUCCESS;
     ViInt32     i=0;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViChar      *pbuffer;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-	checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
-	
-    if (!(strstr (buffer, "K77")))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
 
-    if (arraySize<=0)
-      viCheckParm(RS_ERROR_INVALID_PARAMETER, 2, "Array Size");
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K77"));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
+    		2, "Array Size");
     pbuffer = buffer;
 	pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,%ld,%d,%ld,%ld",
 	                channelType[i], codeClass[i], codeNumber[i], modulationType[i], midableShift[i],
 					status[i], reserved1[i], reserved2[i]);
-	
+
     for (i=1;i<arraySize; i++)
         pbuffer += sprintf (pbuffer, ",%ld,%ld,%ld,%ld,%ld,%d,%ld,%ld",
-                channelType[i], codeClass[i], codeNumber[i], modulationType[i], midableShift[i], status[i], 
-                reserved1[i], reserved2[i]);    
-    viCheckErr (viPrintf (instrSession,"%s\n", buffer));
-    
-    checkErr( rsspecan_CheckStatus (instrSession)); 
+                channelType[i], codeClass[i], codeNumber[i], modulationType[i], midableShift[i], status[i],
+                reserved1[i], reserved2[i]);
+    checkErr(RsCore_Write(instrSession, buffer));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure TDS UE Channel Table Order
-/* Purpose:  This function selects sorting of the channel table in code 
+/* Purpose:  This function selects sorting of the channel table in code
 /*           order or midamble order.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_ConfigureTDSUEChannelTableOrder(ViSession    instrSession,
                                                             ViInt32 order)
 {
     ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-	
-	viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_ORDER, 
-                 	order), 2, "Order");
-	
+
+    checkErr(RsCore_LockSession(instrSession));
+
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_ORDER, order),
+			2, "Order");
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure TDS UE Channel Table Midamble Shift
-/* Purpose:  This function defines the maximum number of midamble shifts in 
+/* Purpose:  This function defines the maximum number of midamble shifts in
 /*           the channel table.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_ConfigureTDSUEChannelTableMidambleShift(ViSession instrSession,
                                                         ViInt32 maximumofMidableShifts)
 {
     ViStatus    error = VI_SUCCESS;
-	
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-	viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_MSHIFT, 
-                 	maximumofMidableShifts), 2, "Maximum of Midable Shifts");
-	
+
+    checkErr(RsCore_LockSession(instrSession));
+
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_MSHIFT, maximumofMidableShifts),
+			2, "Maximum of Midable Shifts");
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -382,19 +381,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUEChannelTableMaxModulation (ViSession in
 {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-	
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "",
-        RSSPECAN_ATTR_TDUE_CTAB_MMAX, highestModulation), 2, "Highest Modulation");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_CTAB_MMAX, highestModulation),
+    		2, "Highest Modulation");
 
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Get TDS UE Channel Table Catalog
-/* Purpose:  This function reads out the names of all channel tables stored 
+/* Purpose:  This function reads out the names of all channel tables stored
 /*           on the harddisk in the code domain power measurement mode.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_GetTDSUEChannelTableCatalog(ViSession    instrSession,
@@ -403,43 +402,35 @@ ViStatus _VI_FUNC rsspecan_GetTDSUEChannelTableCatalog(ViSession    instrSession
                                                         ViChar      channelTablesList[])
 {
     ViStatus    error = VI_SUCCESS;
-	ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = "";
     ViUInt32    retCnt;
-    ViChar      *buf=VI_NULL;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
-	
-	viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
-	
-    if (!(strstr (buffer, "K77")))    
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
-    
-    if (bufferSize < 0)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Buffer Size");         
-    if ((bufferSize > 0) && (channelTablesList == VI_NULL))
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 4, "Channel Table List");  
-    
-	if ((strstr (model, "FSW") == NULL)) 
+    ViChar      *buf=NULL;
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K77"));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, bufferSize, 0, INT_MAX),
+    		3, "Buffer Size");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTablesList), 4, "Channel Table List");
+
+	if ((strstr (model, "FSW") == NULL))
 	{
-    	viCheckErr (viPrintf (instrSession, ":CONF:CDP:CTAB:CAT?\n"));
+    	checkErr(RsCore_Write(instrSession, ":CONF:CDP:CTAB:CAT?"));
 	}
 	else
 	{
-		viCheckErr (viPrintf (instrSession, ":CONF:CDP:MS:CTAB:CAT?\n"));
+		checkErr(RsCore_Write(instrSession, ":CONF:CDP:MS:CTAB:CAT?"));
 	}
-	
-    viCheckErr (Rs_ReadDataUnknownLength(instrSession, &buf, &retCnt));
-	
-    viCheckErr (rsspecan_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
 
-    checkErr( rsspecan_CheckStatus (instrSession));
+    checkErr(Rs_ReadDataUnknownLength(instrSession, &buf, &retCnt));
+
+    checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
+
 Error:
-    if (buf) free(buf); 
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    if (buf) free(buf);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -457,42 +448,47 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUEMeasurement(ViSession  instrSession,
 {
     ViStatus    error = VI_SUCCESS;
     ViBoolean   tmp_state = VI_FALSE;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_TDUE_SCODE, 
-                 scramblingCode), 2, "Scrambling Code");                 
-    viCheckErr (rsspecan_GetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_TDBS_CTAB_STATE, &tmp_state));            
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_SCODE, scramblingCode),
+    		2, "Scrambling Code");
+    checkErr(rsspecan_GetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_TDBS_CTAB_STATE, &tmp_state));
     if (tmp_state == VI_FALSE)
     {
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_TDUE_CELL_SHIFTS, 
-                 midableShiftCells), 3, "Midable Shifts");  
-    }             
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_TDUE_SIDE_BAND, 
-                 sideBand), 5, "Side Band"); 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_TDUE_NORMALIZE, 
-                 normalize), 6, "Normalize");  
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_TDUE_INACT_CHAN_THR, 
-                 inactiveChannelTreshold), 7, "Inactive Channel Treshold"); 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_TDUE_INVERT_Q, 
-                 invertQ), 8, "Invert Q");                 
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_CELL_SHIFTS, midableShiftCells),
+        		3, "Midable Shifts");
+    }
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_SIDE_BAND, sideBand),
+    		5, "Side Band");
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TDUE_NORMALIZE, normalize),
+    		6, "Normalize");
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TDUE_INACT_CHAN_THR, inactiveChannelTreshold),
+    		7, "Inactive Channel Treshold");
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TDUE_INVERT_Q, invertQ),
+    		8, "Invert Q");
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure TDS UE Sync To Slot
-/* Purpose:  This function configures the TDS UE sync to slot. By default 
-/*           the R&S FS-K76 determines the phase reference for all downlink 
-/*           data slots from the downlink pilot channel (DwPCH). For e.g. 
-/*           beamforming or repeater measurements it might be necessary to 
-/*           apply different phase offsets to each time slot.Using the DwPCH 
-/*           as phase reference leads to rotated constellation diagrams and 
-/*           bad EVM values in these time slots. By activating the new 
-/*           setting 'SYNC TO SLOT' the R&S FS-K76 determines the phase 
-/*           reference from the midamble of the selected slot. Thus the data 
-/*           slots can be phase rotated to each other without degrading the 
-/*           EVM results. The selected slot must contain at least one data 
+/* Purpose:  This function configures the TDS UE sync to slot. By default
+/*           the R&S FS-K76 determines the phase reference for all downlink
+/*           data slots from the downlink pilot channel (DwPCH). For e.g.
+/*           beamforming or repeater measurements it might be necessary to
+/*           apply different phase offsets to each time slot.Using the DwPCH
+/*           as phase reference leads to rotated constellation diagrams and
+/*           bad EVM values in these time slots. By activating the new
+/*           setting 'SYNC TO SLOT' the R&S FS-K76 determines the phase
+/*           reference from the midamble of the selected slot. Thus the data
+/*           slots can be phase rotated to each other without degrading the
+/*           EVM results. The selected slot must contain at least one data
 /*           channel with sufficient power for successful synchronization.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_ConfigureTDSUESyncToSlot(
@@ -501,16 +497,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUESyncToSlot(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    
-        
-    viCheckParm( rsspecan_SetAttributeViBoolean (instrSession, "", 
-                                                RSSPECAN_ATTR_TDUE_SYNC_TO_SLOT, syncToSlot),
-                                                2, "sync To Slot");                                                 
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TDUE_SYNC_TO_SLOT, syncToSlot),
+    		2, "sync To Slot");
 
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL); 
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -526,23 +520,23 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUEUCPICH(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_TDUE_CPICH_STATE, 
-                 userDefinedCPICH), 2, "User Defined CPICH");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TDUE_CPICH_STATE, userDefinedCPICH),
+    		2, "User Defined CPICH");
 
     if (userDefinedCPICH) {
-    
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_TDUE_CPICH_CODE, 
-                 cpichCode), 3, "CPICH Code");
 
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_TDUE_CPICH_PATTERN, 
-                 cpichPattern), 4, "CPICH Pattern"); 
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_CPICH_CODE, cpichCode),
+        		3, "CPICH Code");
+
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_CPICH_PATTERN, cpichPattern),
+        		4, "CPICH Pattern");
     }
 
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -557,19 +551,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUEPVTMeasurement(ViSession   instrSession
 {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_TDUE_MEAS_PVT_SFRAMES, 
-                 subframes), 2, "Subframes"); 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_TDUE_MEAS_PVT_HDYN, 
-                 highDynamicState), 3, "High Dynamic State"); 
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_MEAS_PVT_SFRAMES, subframes),
+    		2, "Subframes");
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TDUE_MEAS_PVT_HDYN, highDynamicState),
+    		3, "High Dynamic State");
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Get TDS UE Reference Level Adjustment Result
-/* Purpose:  This function adjusts the refernce level and returns the 
+/* Purpose:  This function adjusts the refernce level and returns the
 /*           result.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_GetTDSUEReferenceLevelAdjustmentResult(ViSession instrSession,
@@ -577,19 +574,20 @@ ViStatus _VI_FUNC rsspecan_GetTDSUEReferenceLevelAdjustmentResult(ViSession inst
                                               ViInt32*  result)
 {
     ViStatus    error = VI_SUCCESS;
-    ViInt32     old_timeout = -1; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    if (rsspecan_invalidViUInt32Range (timeout, 0, 4294967295UL) == VI_TRUE)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Timeout"); 
-    checkErr (rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-    checkErr (rsspecan_SetOPCTimeout (instrSession, timeout));
-    viCheckParm (rsspecan_GetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_TDUE_ADJ_RLEV_QUERY, 
-                 result), 2, "Result"); 
+    ViInt32     old_timeout = -1;
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
+    checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
+    checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_ADJ_RLEV_QUERY, result),
+    		2, "Result");
+
 Error:
-    if (old_timeout >= 0)    
+    if (old_timeout >= 0)
         rsspecan_SetOPCTimeout (instrSession, old_timeout);
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 

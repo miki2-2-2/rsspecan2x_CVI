@@ -6,7 +6,7 @@
 
 #pragma warning(disable:4100) //unreferenced formal parameter
 
-static ViString traceC2KArr[] = {"CTAB",VI_NULL};
+static ViString traceC2KArr[] = {"CTAB",NULL};
 static ViString analyzerResultSummaryArr[] = {"SLOT","PTOT","PPIC","RHO", "MACC",
                                               "PCD" ,"IQIM","IQOF","FERR","FERP",
                                               "CERR","TFR", "ACT", "SRAT","CHAN",
@@ -18,7 +18,7 @@ static ViString analyzerResultSummaryArr[] = {"SLOT","PTOT","PPIC","RHO", "MACC"
                                               "RHOD","RHOM",
                                               "PNF","PAV","TAU","TACT","EVMP",
                                               "CDEP","CDER","CODM","CODP",
-                                               VI_NULL};
+                                               NULL};
 
 /*****************************************************************************
  * Function: Adjust C2K Settings
@@ -29,28 +29,25 @@ static ViString analyzerResultSummaryArr[] = {"SLOT","PTOT","PPIC","RHO", "MACC"
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_AdjustC2KSettings(ViSession  instrSession,
                                              ViInt32    window,
-                                             ViInt32    adjustSettings, 
+                                             ViInt32    adjustSettings,
                                              ViUInt32   timeout)
 {
     ViStatus    error   = VI_SUCCESS;
-
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViInt32     old_timeout = -1;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    if (rsspecan_invalidViUInt32Range (timeout, 0, 4294967295UL) == VI_TRUE)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 4, "Timeout");
-    sprintf (buffer, "Win%ld", window);
-    checkErr (rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-    checkErr (rsspecan_SetOPCTimeout (instrSession, timeout));        
-    viCheckErr( rsspecan_SetAttributeViInt32 (instrSession, buffer, RSSPECAN_ATTR_C2K_ACH_PRES, adjustSettings));
 
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 4, "Timeout");
+    sprintf (buffer, "Win%ld", window);
+    checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
+    checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+    checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_C2K_ACH_PRES, adjustSettings));
 
 Error:
-    if (old_timeout >= 0)    
+    if (old_timeout >= 0)
         rsspecan_SetOPCTimeout (instrSession, old_timeout);
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -61,29 +58,25 @@ Error:
  *           channel power measurement.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_AdjustC2KReferenceLevel(ViSession    instrSession,
-                                                   ViInt32      window, 
+                                                   ViInt32      window,
                                                    ViUInt32     timeout)
 {
     ViStatus    error   = VI_SUCCESS;
-
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViInt32     old_timeout = -1;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    if (rsspecan_invalidViUInt32Range (timeout, 0, 4294967295UL) == VI_TRUE)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Timeout");
-    sprintf (buffer, "Win%ld", window);
-    checkErr (rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-    checkErr (rsspecan_SetOPCTimeout (instrSession, timeout));        
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, buffer,
-                                              RSSPECAN_ATTR_C2K_ADJUST_REF_LEVEL, VI_NULL));
 
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
+    sprintf (buffer, "Win%ld", window);
+    checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
+    checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_C2K_ADJUST_REF_LEVEL, NULL));
 
 Error:
-    if (old_timeout >= 0)    
+    if (old_timeout >= 0)
         rsspecan_SetOPCTimeout (instrSession, old_timeout);
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -97,21 +90,17 @@ ViStatus _VI_FUNC rsspecan_SelectC2KMeasurement(
 )
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
+    checkErr(RsCore_LockSession(instrSession));
 
     if ((measurementSelect == RSSPECAN_VAL_C2K_MEAS_SEL_PVTIME) && (!strstr (buffer, "K84")))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
-    
-    viCheckErr( rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_MEAS_SELECT, measurementSelect));
+        viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
 
+    checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_MEAS_SELECT, measurementSelect));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -124,25 +113,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KPCGSettings( ViSession   instrSession,
                                                     ViInt32 setToAnalyze)
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
- 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_INSTRUMENT_MODEL, RSSPECAN_IO_BUFFER_SIZE, buffer));
-
-    if (!strstr (buffer, "FSQ")) 
+    if (!strstr (buffer, "FSQ"))
     {
-        viCheckErr (RS_ERROR_INSTRUMENT_MODEL);  
+        viCheckErr(RS_ERROR_INSTRUMENT_MODEL);
     }
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_SET_COUNT,
-                 setCount), 2, "Set Count");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_SET_COUNT, setCount),
+    		2, "Set Count");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_SET_TO_ANALYZE,
-                 setToAnalyze), 3, "Set To Analyze");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_SET_TO_ANALYZE, setToAnalyze),
+    		3, "Set To Analyze");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -157,15 +143,12 @@ ViStatus _VI_FUNC rsspecan_RestoreC2KSEMStandardLines(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "",
-                                               RSSPECAN_ATTR_C2K_LIM_RESTORE, VI_NULL));
-
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_LIM_RESTORE, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -178,38 +161,29 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KSignalStatisticMeasurement (ViSession ins
                                                                    ViInt32 numberofSamples)
 {
     ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    if (rsspecan_invalidViInt32Range (measurement, 0, 2) == VI_TRUE)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Measurement");
- 
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 0, 2),
+    		2, "Measurement");
+
     switch (measurement){
         case RSSPECAN_VAL_SSTAT_OFF:
-            viCheckErr( rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                RSSPECAN_ATTR_MEAS_STAT_APD_STATE,
-                                                VI_FALSE));
-            viCheckErr( rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                RSSPECAN_ATTR_MEAS_STAT_CCDF_STATE,
-                                                VI_FALSE));
-        break;        
-        case RSSPECAN_VAL_SSTAT_APD:      
-            viCheckErr( rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                RSSPECAN_ATTR_MEAS_STAT_APD_STATE,
-                                                VI_TRUE));                                                
+            checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_MEAS_STAT_APD_STATE, VI_FALSE));
+            checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_MEAS_STAT_CCDF_STATE, VI_FALSE));
         break;
-        case RSSPECAN_VAL_SSTAT_CCDF:      
-            viCheckErr( rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                RSSPECAN_ATTR_MEAS_STAT_CCDF_STATE,
-                                                VI_TRUE));
+        case RSSPECAN_VAL_SSTAT_APD:
+            checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_MEAS_STAT_APD_STATE, VI_TRUE));
         break;
-        
+        case RSSPECAN_VAL_SSTAT_CCDF:
+            checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_MEAS_STAT_CCDF_STATE, VI_TRUE));
+        break;
     }
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "",
-                                                RSSPECAN_ATTR_MEAS_STAT_SAMPLES,
-                                                numberofSamples), 3, "Number Of Samples"); 
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MEAS_STAT_SAMPLES, numberofSamples),
+    		3, "Number Of Samples");
 
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -219,24 +193,22 @@ Error:
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureC2KSignalStatisticsPercentMarker(
     ViSession   instrSession,
-    ViInt32 window, 
+    ViInt32 window,
     ViInt32 marker,
     ViReal64 percentMarker
 )
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
+
     sprintf (buffer, "Win%ld,M%ld", window, marker);
 
-    viCheckErr( rsspecan_SetAttributeViReal64 (instrSession, buffer,
-                                               RSSPECAN_ATTR_C2K_PERCENT_MARKER, 
-                                               percentMarker));
+    checkErr(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_C2K_PERCENT_MARKER, percentMarker));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -252,42 +224,39 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KChannelTableOperations(
 {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    if (rsspecan_invalidViInt32Range (operation, 0, 4))
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Operation");
-    if (!channelTable)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Channel Table");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, operation, 0, 4),
+    		2, "Operation");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTable), 3, "Channel Table");
 
     switch(operation)
     {
         case RSSPECAN_VAL_TABLE_OFF:
-            viCheckErr (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_STATE,
-                VI_FALSE));
+            checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_STATE, VI_FALSE));
         break;
         case RSSPECAN_VAL_TABLE_SELECT:
-            viCheckErr (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_STATE,
-                VI_TRUE));
-            viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_SELECT,
-                channelTable), 3, "Channel Table");
+            checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_STATE, VI_TRUE));
+            viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_SELECT, channelTable),
+            		3, "Channel Table");
         break;
         case RSSPECAN_VAL_TABLE_NEW:
-            viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_NAME,
-                channelTable), 3, "Channel Table");
+            viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_NAME, channelTable),
+            		3, "Channel Table");
         break;
         case RSSPECAN_VAL_TABLE_DELETE:
-            viCheckErr( rsspecan_SetAttributeViString (instrSession, "",
-                                              RSSPECAN_ATTR_C2K_CTABLE_DELETE, VI_NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_DELETE, NULL));
         break;
         case RSSPECAN_VAL_TABLE_COPY:
-            viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_COPY,
-                channelTable), 3, "Channel Table");
+            viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_COPY, channelTable),
+            		3, "Channel Table");
         break;
         default:
-            viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Operation");
+            viCheckParm(RsCore_InvalidViInt32Value(instrSession, operation), 2, "Operation");
     }
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -304,15 +273,12 @@ ViStatus _VI_FUNC rsspecan_RestoreC2KChannelTable(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "",
-                                   RSSPECAN_ATTR_C2K_CTABLE_RESTORE, VI_NULL));
-
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_RESTORE, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -338,14 +304,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KChannelTableComment(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_COMMENT,
-                                        channelTableComment), 2, "Channel Table Comment");
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_COMMENT, channelTableComment),
+    		2, "Channel Table Comment");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -367,31 +332,23 @@ ViStatus _VI_FUNC rsspecan_QueryC2KChannelTableCatalog(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViUInt32    retCnt;
-    ViChar      *buf=VI_NULL;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      *buf=NULL;
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K82|K83|K84|K85"));
 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (!(strstr (buffer, "K82")||strstr (buffer, "K83")||strstr (buffer, "K84")||strstr (buffer, "K85")))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, bufferSize, 0, INT_MAX),
+    		3, "Buffer Size");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTablesList), 4, "Channel Table List");
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CONF:CDP:CTAB:CAT?", &buf)); // TODO: Check the response processing
+    checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
 
-    if (bufferSize < 0)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Buffer Size");
-    if ((bufferSize > 0) && (channelTablesList == VI_NULL))
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 4, "Channel Table List");
-
-    viCheckErr (viPrintf (instrSession, "CONF:CDP:CTAB:CAT?\n"));
-    viCheckErr (Rs_ReadDataUnknownLength(instrSession, &buf, &retCnt));
-    viCheckErr (rsspecan_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
-
-    checkErr( rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
     if (buf) free(buf);
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -410,54 +367,50 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KBasicSettings(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = "";   
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL, RSSPECAN_IO_BUFFER_SIZE, model));
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_BCLASS, bandClass),
+    		2, "Band Class");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_BCLASS,
-                 bandClass), 2, "Band Class");
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_CDP_TPMEAS, timePhase),
+    		3, "Time Phase");
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_C2K_CDP_TPMEAS,
-                 timePhase), 3, "Time Phase");
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_CDP_ICTHRES, inactChannelThreshold),
+    		4, "Inact Channel Threshold");
 
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_ICTHRES,
-                 inactChannelThreshold), 4, "Inact Channel Threshold");
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_CDP_QINVERT, invertQ),
+    		5, "Invert Q");
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_C2K_CDP_QINVERT,
-                 invertQ), 5, "Invert Q");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_SBAND, sideBand),
+    		6, "Side Band");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_SBAND,
-                 sideBand), 6, "Side Band");
-
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_C2K_CDP_NORMALIZE,
-                 normalize), 7, "Normalize");
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_CDP_NORMALIZE, normalize),
+    		7, "Normalize");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
- 
+
 /// HIFN This function defines how the pilot channel power is displayed in the Result Summary.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR mode/This control selects the pilot channel display mode.
 ViStatus _VI_FUNC rsspecan_ConfigureC2KPowerDisplay (ViSession instrSession,
                                             ViInt32 mode)
 {
 	ViStatus    error   = VI_SUCCESS;
-	
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", 
-											   RSSPECAN_ATTR_C2K_CDP_DISPLAY,
-								               mode), 2, "Mode"); 
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_DISPLAY, mode),
+    		2, "Mode");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -473,14 +426,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KAmplitudeYScaleDivision(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_C2K_PDIV,
-                 yScaleDiv), 2, "Y Scale Div");
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_PDIV, yScaleDiv),
+    		2, "Y Scale Div");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -492,21 +444,19 @@ ViStatus _VI_FUNC rsspecan_AdjustC2KAmplitudeReferenceLevel(ViSession   instrSes
                                                             ViUInt32 timeout)
 {
     ViStatus    error   = VI_SUCCESS;
-
     ViInt32     old_timeout = -1;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    if (rsspecan_invalidViUInt32Range (timeout, 0, 4294967295UL) == VI_TRUE)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Timeout"); 
-    checkErr (rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-    checkErr (rsspecan_SetOPCTimeout (instrSession, timeout));
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "",
-                                 RSSPECAN_ATTR_C2K_CDP_LEVEL_ADJUST, VI_NULL));
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
+    checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
+    checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_CDP_LEVEL_ADJUST, NULL));
 
 Error:
-    if (old_timeout >= 0)    
+    if (old_timeout >= 0)
         rsspecan_SetOPCTimeout (instrSession, old_timeout);
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -533,32 +483,26 @@ ViStatus _VI_FUNC rsspecan_ReadC2KTraceData(
 )
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar      *exBuf = NULL;
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    ViChar      *exBuf = VI_NULL;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K82|K83|K84|K85"));
 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
-
-    if (!(strstr (buffer, "K82")||strstr (buffer, "K83")||strstr (buffer, "K84")||strstr (buffer, "K85")))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
-
-    if (rsspecan_invalidViInt32Range (sourceTrace, 1, 2))
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Source Trace");
-    if (!actualPoints)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 5, "Actual Points");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, sourceTrace, 1, 2),
+    		3, "Source Trace");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, actualPoints), 5, "Actual Points");
 
     sprintf (buffer, "TRACE%ld", sourceTrace);
-    viCheckErr (rsspecan_dataReadTrace (instrSession, window, buffer, arrayLength,
+    checkErr(rsspecan_dataReadTrace (instrSession, window, buffer, arrayLength,
                     values, actualPoints));
 
-
-    checkErr( rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
     if (exBuf) free (exBuf);
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -613,32 +557,26 @@ ViStatus _VI_FUNC rsspecan_ReadC2KCDPTraceData(
 )
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar      *exBuf = NULL;
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    ViChar      *exBuf = VI_NULL;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
-
-     if (!(strstr (buffer, "K82")||strstr (buffer, "K83")||strstr (buffer, "K84")||strstr (buffer, "K85")))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
+     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K82|K83|K84|K85"));
 
     if (sourceTrace != RSSPECAN_VAL_C2K_CTABLE)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Source Trace");
-    if (!actualPoints)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 5, "Actual Points");
+        viCheckParm(RS_ERROR_INVALID_PARAMETER, 3, "Source Trace");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, actualPoints), 5, "Actual Points");
 
     sprintf (buffer, "%s", traceC2KArr[sourceTrace]);
-    viCheckErr (rsspecan_dataReadTrace (instrSession, window, buffer, arrayLength,
+    checkErr(rsspecan_dataReadTrace (instrSession, window, buffer, arrayLength,
                     values, actualPoints));
 
-
-    checkErr( rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
     if (exBuf) free (exBuf);
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -652,14 +590,12 @@ ViStatus _VI_FUNC rsspecan_BC2KMode(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "",
-                                 RSSPECAN_ATTR_C2K_MODE, VI_NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_MODE, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -676,26 +612,25 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KSEM(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_LIM_MODE,
-                 limitLineType), 2, "Limit Line Type");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_LIM_MODE, limitLineType),
+    		2, "Limit Line Type");
 
     if (limitLineType == RSSPECAN_VAL_C2K_LIM_MODE_MAN)
     {
-        viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_C2K_LIM_VAL,
-                     limitLineValue), 3, "Limit Line Value");
+        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_LIM_VAL, limitLineValue),
+        		3, "Limit Line Value");
     }
-    
+
     if (!rsspecan_IsFSV (instrSession))
 	{
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_C2K_LIM_TRANS,
-	                 _30kHz1MHzTransition), 4, "30kHz/1MHz Transition");
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_LIM_TRANS, _30kHz1MHzTransition),
+				4, "30kHz/1MHz Transition");
 	}
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -708,19 +643,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KCodeDomainAnalyzerResults(ViSession   in
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
     switch (resultType)
     {
         case RSSPECAN_VAL_C2K_FEED_CDP:
         case RSSPECAN_VAL_C2K_FEED_CDP_RAT:
         case RSSPECAN_VAL_C2K_FEED_CDEP:
         case RSSPECAN_VAL_C2K_FEED_ERR_CTAB:
-        case RSSPECAN_VAL_C2K_FEED_CPOW: 
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType), 
-                        2, "Result Type");    
-        break;      
-        case RSSPECAN_VAL_C2K_FEED_MACC: 
+        case RSSPECAN_VAL_C2K_FEED_CPOW:
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
+            		2, "Result Type");
+        break;
+        case RSSPECAN_VAL_C2K_FEED_MACC:
         case RSSPECAN_VAL_C2K_FEED_PVSL:
         case RSSPECAN_VAL_C2K_FEED_PVSY:
         case RSSPECAN_VAL_C2K_FEED_BSTR:
@@ -729,15 +664,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KCodeDomainAnalyzerResults(ViSession   in
         case RSSPECAN_VAL_C2K_FEED_SYMB_CONS:
         case RSSPECAN_VAL_C2K_FEED_SYMB_EVM:
         case RSSPECAN_VAL_C2K_FEED_COMP_CONS:
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType), 
-                        2, "Result Type");  
-        break;              
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
+            		2, "Result Type");
+        break;
         default:
-            viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Result Type");     
+            viCheckParm(RsCore_InvalidViInt32Value(instrSession, resultType), 2, "Result Type");
     }
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -753,33 +688,29 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KCodeDomainAnalyzerSettings(
 )
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_INSTRUMENT_MODEL, RSSPECAN_IO_BUFFER_SIZE, buffer));
-    
     if (!strstr (buffer, "FSP")) // not FSP
     {
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_IQLENGTH_FSQ_FSU,
-                 captureLength), 2, "Capture Length");
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_IQLENGTH_FSQ_FSU, captureLength),
+        		2, "Capture Length");
     }
     else // is FSP
     {
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_IQLENGTH_FSP,
-                 captureLength), 2, "Capture Length");
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_IQLENGTH_FSP, captureLength),
+        		2, "Capture Length");
     }
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_SLOT,
-                 selectPCG), 4, "Select PCG");
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_CODE,
-                 selectChannel), 3, "Select Channel");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_SLOT, selectPCG),
+    		4, "Select PCG");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_CODE, selectChannel),
+    		3, "Select Channel");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -792,7 +723,7 @@ Error:
  *
  *           Prior to this function, the name of the channel table has to be
  *           defined with function Configure CDMA2000 Channel Table Name
- *           (ConfigureC2KChannelTableName) - attribute 
+ *           (ConfigureC2KChannelTableName) - attribute
  *           RSSPECAN_ATTR_C2K_CTABLE_NAME.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureBC2KChannelTableData(
@@ -809,19 +740,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KChannelTableData(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-
     ViInt32     i = 0;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViChar      *pbuffer;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
 
-    if (!strstr (buffer, "K82"))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (numofElements<=0)
-      viCheckParm(RS_ERROR_INVALID_PARAMETER, 10, "Num of Elements");
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K82"));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
+    		10, "Num of Elements");
     pbuffer = buffer;
     pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%ld,%.12f",
                 channelType[i], codeClass[i], codeNumber[i], radioConfiguration[i], status[i],
@@ -832,12 +760,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KChannelTableData(
             channelType[i], codeClass[i], codeNumber[i], radioConfiguration[i], status[i],
                 cdpRelative[i]);
 
-    viCheckErr (viPrintf (instrSession,"%s\n", buffer));
+    checkErr(RsCore_Write(instrSession, buffer));
 
-    checkErr( rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -855,23 +783,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KAdvancedSettings(
 {
     ViStatus    error   = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_PNOFFSET,
-                 pnOffset), 2, "PN Offset");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_PNOFFSET, pnOffset),
+    		2, "PN Offset");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_SFACTOR,
-                 baseSpreadingFactor), 3, "Base Spreading Factor");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_SFACTOR, baseSpreadingFactor),
+    		3, "Base Spreading Factor");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_PREFERENCE,
-                 powerReference), 4, "Power Reference");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_PREFERENCE, powerReference),
+    		4, "Power Reference");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_ORDER,
-                 order), 5, "Order");
-
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_ORDER, order),
+    		5, "Order");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -897,15 +824,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KForce1xEVDV(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_C2K_FORCE_DV,
-                 _1xEVDV), 2, "1xEV-DV");
-
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_FORCE_DV, _1xEVDV),
+    		2, "1xEV-DV");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -921,22 +846,21 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KAntennaSettings(
 {
     ViStatus    error   = VI_SUCCESS;
 
-
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
     if(antennaDiversity == RSSPECAN_VAL_C2K_ANTENNA_OFF)
     {
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_ANTENNA,
-                 antennaDiversity), 2, "Antenna Diversity");
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_ANTENNA, antennaDiversity),
+        		2, "Antenna Diversity");
     }
     else
     {
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_ANTENNA,
-                 antennaNumber), 3, "Antenna Number");
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_ANTENNA, antennaNumber),
+        		3, "Antenna Number");
     }
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -956,43 +880,37 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KMultiCarrier(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_STATE,
-                 multiCarrier), 2, "Multi Carrier");
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_STATE, multiCarrier),
+    		2, "Multi Carrier");
 
     if (multiCarrier == VI_TRUE)
     {
-        viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                    RSSPECAN_ATTR_C2K_MCARRIER_ENH_ALG, enhancedAlgorithm),
-                    3, "Enhanced Algorithm");
+        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_ENH_ALG, enhancedAlgorithm),
+        		3, "Enhanced Algorithm");
 
-        viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                    RSSPECAN_ATTR_C2K_MCARRIER_FILTER_STATE, mcFilter),
-                    4, "MC Filter");
+        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_FILTER_STATE, mcFilter),
+        		4, "MC Filter");
 
         if (mcFilter == VI_TRUE)
         {
-            viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                        RSSPECAN_ATTR_C2K_MCARRIER_FILTER_TYPE, filterType),
-                        5, "Filter Type");
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_FILTER_TYPE, filterType),
+            		5, "Filter Type");
 
             if (filterType == RSSPECAN_VAL_C2K_MCARRIER_FTYPE_RRC)
             {
-                viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                            RSSPECAN_ATTR_C2K_MCARRIER_ROLL_OFF, rollOff),
-                            6, "Roll Off");
+                viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_ROLL_OFF, rollOff),
+                		6, "Roll Off");
 
-                viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                            RSSPECAN_ATTR_C2K_MCARRIER_CUT_OFF_FREQ, cutOffFrequency),
-                            7, "Cut Off Frequency");
+                viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_CUT_OFF_FREQ, cutOffFrequency),
+                		7, "Cut Off Frequency");
             }
         }
     }
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1006,14 +924,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KPichMarkerSettings(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "C1,M1",
-                                               RSSPECAN_ATTR_C2K_MARKER_PICH, VI_NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, "C1,M1", RSSPECAN_ATTR_C2K_MARKER_PICH, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1032,14 +948,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KTDPichMarkerSettings(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "C1,M1",
-                                               RSSPECAN_ATTR_C2K_MARKER_TDPICH, VI_NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, "C1,M1", RSSPECAN_ATTR_C2K_MARKER_TDPICH, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1055,14 +969,13 @@ ViStatus _VI_FUNC rsspecan_StoreBC2KSEMToFile(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_LIM_STORE_FILE, fileName),
+    		2, "File Name");
 
-    viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_C2K_LIM_STORE_FILE, 
-                            fileName), 2, "File Name");
-    
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1082,20 +995,20 @@ ViStatus _VI_FUNC rsspecan_ReadBC2KSEMPeakList(
 {
     ViStatus    error   = VI_SUCCESS;
     ViInt32     arrayLength;
-    ViReal64    *data = VI_NULL;
+    ViReal64    *data = NULL;
     ViInt32     retVal;
     ViInt32     i;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
     arrayLength = 3*numberOfValues;
     data=malloc (sizeof(ViReal64)*arrayLength);
 
-    viCheckErr (rsspecan_dataReadTrace (instrSession, window, "FINal1", arrayLength,
+    checkErr(rsspecan_dataReadTrace (instrSession, window, "FINal1", arrayLength,
                     data, &retVal));
 
     if (returnedValues)
-        *returnedValues = retVal / 3; /* Three result arrays */
+        *returnedValues = retVal / 3; // Three result arrays
 
     retVal = (retVal>arrayLength)?arrayLength:retVal;
 
@@ -1108,12 +1021,11 @@ ViStatus _VI_FUNC rsspecan_ReadBC2KSEMPeakList(
         deltaLimit[i] = data[i*3+2];
     }
 
-
-    checkErr( rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
     if (data) free(data);
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1130,36 +1042,29 @@ ViStatus _VI_FUNC rsspecan_QueryBC2KCodeDomainAnalyzerResultSummary(
 )
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      *buf=NULL;
+    ViUInt32    local_count     = 0;
 
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    ViChar      *buf=VI_NULL; 
-    
-    ViUInt32    local_count     = 0;   
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K82"));
 
-    if (!strstr (buffer, "K82"))       
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
+    if (RsCore_InvalidViInt32Range (resultType, RSSPECAN_VAL_C2K_SLOT, RSSPECAN_VAL_C2K_EVMPEAK)&&RsCore_InvalidViInt32Range (resultType, RSSPECAN_VAL_C2K_DMTYPE, RSSPECAN_VAL_C2K_DMTYPE))
+        viCheckParm(RS_ERROR_INVALID_PARAMETER, 3, "Result Type");
 
-    if (rsspecan_invalidViInt32Range (resultType, RSSPECAN_VAL_C2K_SLOT, RSSPECAN_VAL_C2K_EVMPEAK)&&rsspecan_invalidViInt32Range (resultType, RSSPECAN_VAL_C2K_DMTYPE, RSSPECAN_VAL_C2K_DMTYPE))
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Result Type");
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:CDP:RES? %s", window, analyzerResultSummaryArr[resultType]);
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf)); // TODO: Check the response processing
 
-    viCheckErr (viPrintf (instrSession, "CALC%ld:MARK:FUNC:CDP:RES? %s\n",
-                window, analyzerResultSummaryArr[resultType]));
-
-    viCheckErr (Rs_ReadDataUnknownLength(instrSession, &buf, &local_count));
-            
     if ((strstr (buf, "Sync")) != NULL)
-        *result =   RSSPECAN_NAN;
+        *result =   RS_VAL_NAN_VI_REAL64;
     else
         *result = atof(buf);
-        
-    checkErr( rsspecan_CheckStatus (instrSession));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1173,15 +1078,12 @@ ViStatus _VI_FUNC rsspecan_MC2KMode(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "",
-                                 RSSPECAN_ATTR_MC2K_MODE, VI_NULL));
-
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MC2K_MODE, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1197,20 +1099,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KSEM(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_LIM_MODE,
-                 limitLineType), 2, "Limit Line Type");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_LIM_MODE, limitLineType),
+    		2, "Limit Line Type");
 
     if (!rsspecan_IsFSV (instrSession))
 	{
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_C2K_LIM_TRANS,
-	                 _30kHz1MHzTransition), 3, "30kHz/1MHz Transition");
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_LIM_TRANS, _30kHz1MHzTransition),
+				3, "30kHz/1MHz Transition");
 	}
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1223,8 +1124,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KCodeDomainAnalyzerResults(ViSession   in
 {
     ViStatus    error   = VI_SUCCESS;
 
-
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
     switch (resultType)
     {
@@ -1232,10 +1132,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KCodeDomainAnalyzerResults(ViSession   in
         case RSSPECAN_VAL_C2K_FEED_CDP_RAT:
         case RSSPECAN_VAL_C2K_FEED_CDEP:
         case RSSPECAN_VAL_C2K_FEED_ERR_CTAB:
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType), 
-                        2, "Result Type");    
-        break;      
-        case RSSPECAN_VAL_C2K_FEED_MACC: 
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
+            		2, "Result Type");
+        break;
+        case RSSPECAN_VAL_C2K_FEED_MACC:
         case RSSPECAN_VAL_C2K_FEED_PVSL:
         case RSSPECAN_VAL_C2K_FEED_PVSY:
         case RSSPECAN_VAL_C2K_FEED_BSTR:
@@ -1244,15 +1144,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KCodeDomainAnalyzerResults(ViSession   in
         case RSSPECAN_VAL_C2K_FEED_SYMB_CONS:
         case RSSPECAN_VAL_C2K_FEED_SYMB_EVM:
         case RSSPECAN_VAL_C2K_FEED_COMP_CONS:
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType), 
-                        2, "Result Type");  
-        break;              
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
+            		2, "Result Type");
+        break;
         default:
-            viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Result Type");     
+            viCheckParm(RsCore_InvalidViInt32Value(instrSession, resultType), 2, "Result Type");
     }
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1267,40 +1167,34 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KCodeDomainAnalyzerSettings(ViSession   i
                                                                     ViInt32 selectMapping)
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
-
-    if (!strstr (buffer, "K83"))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
-
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_INSTRUMENT_MODEL, RSSPECAN_IO_BUFFER_SIZE, buffer));
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K83"));
 
     if (!strstr (buffer, "FSP")) // not FSP
     {
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_IQLENGTH_FSQ_FSU,
-                 captureLength), 2, "Capture Length");
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_IQLENGTH_FSQ_FSU, captureLength),
+        		2, "Capture Length");
     }
     else // is FSP
     {
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_IQLENGTH_FSP,
-                 captureLength), 2, "Capture Length");
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_IQLENGTH_FSP, captureLength),
+        		2, "Capture Length");
     }
-   
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_CODE,
-                 selectChannel), 3, "Select Channel");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_SLOT,
-                 selectPCG), 4, "Select PCG");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_CODE, selectChannel),
+    		3, "Select Channel");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_MAPPING,
-                 selectMapping), 5, "Select Mapping");
-    
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_SLOT, selectPCG),
+    		4, "Select PCG");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_MAPPING, selectMapping),
+    		5, "Select Mapping");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1313,7 +1207,7 @@ Error:
  *
  *           Prior to this function, the name of the channel table has to be
  *           defined with function Configure CDMA2000 Channel Table Name
- *           (ConfigureC2KChannelTableName) - attribute 
+ *           (ConfigureC2KChannelTableName) - attribute
  *           RSSPECAN_ATTR_C2K_CTABLE_NAME.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureMC2KChannelTableData(
@@ -1330,21 +1224,17 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KChannelTableData(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-
     ViInt32     i = 0;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViChar      *pbuffer;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (!strstr (buffer, "K83"))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K83"));
 
-    if (numofElements<=0)
-      viCheckParm(RS_ERROR_INVALID_PARAMETER, 10, "Num of Elements");
-    
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
+    		10, "Num of Elements");
+
     pbuffer = buffer;
     pbuffer += sprintf (pbuffer,  "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%ld,%.12f",
                 channelType[i], codeClass[i], codeNumber[i], mapping[i], status[i],
@@ -1355,13 +1245,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KChannelTableData(
             channelType[i], codeClass[i], codeNumber[i], mapping[i], status[i],
                 cdpRelative[i]);
 
-    viCheckErr (viPrintf (instrSession,"%s\n", buffer));
+    checkErr(RsCore_Write(instrSession, buffer));
 
-
-    checkErr( rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1382,36 +1271,34 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KAdvancedSettings(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_SFACTOR, baseSpreadingFactor),
+    		2, "Base Spreading Factor");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_SFACTOR,
-                 baseSpreadingFactor), 2, "Base Spreading Factor");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_PREFERENCE, powerReference),
+    		3, "Power Reference");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_PREFERENCE,
-                 powerReference), 3, "Power Reference");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_ORDER, order),
+    		4, "Order");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_ORDER,
-                 order), 4, "Order");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_MAPPING, selectIQ),
+    		5, "Select IQ");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_MAPPING,
-                 selectIQ), 5, "Select IQ");
-
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_LCODE_MODE,
-                 longCodeMode), 6, "Long Code Mode");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_LCODE_MODE, longCodeMode),
+    		6, "Long Code Mode");
 
     if (longCodeMode == RSSPECAN_VAL_MC2K_LCODE_STANDARD)
     {
-        viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_LCODE_MASK,
-                     longCodeMask), 7, "Long Code Mask");
+        viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_LCODE_MASK, longCodeMask),
+        		7, "Long Code Mask");
 
-        viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_LCODE_OFFSET,
-                     longCodeOffset), 8, "Long Code Offset");
-
+        viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_LCODE_OFFSET, longCodeOffset),
+        		8, "Long Code Offset");
     }
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1425,14 +1312,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KCDPOverview(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_OVERVIEW,
-                 codeDomainOverview), 2, "Code Domain Overview");
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_OVERVIEW, codeDomainOverview),
+    		2, "Code Domain Overview");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1447,14 +1333,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KPichMarkerSettings(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "C1,M1",
-                                               RSSPECAN_ATTR_MC2K_MARKER_PICH, VI_NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, "C1,M1", RSSPECAN_ATTR_MC2K_MARKER_PICH, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1471,26 +1355,22 @@ ViStatus _VI_FUNC rsspecan_QueryMC2KCodeDomainAnalyzerResultSummary(
 )
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K83"));
 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultType, RSSPECAN_VAL_C2K_SLOT, RSSPECAN_VAL_C2K_EVMPEAK),
+    		3, "Result Type");
 
-    if (!strstr (buffer, "K83"))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:CDP:RES? %s", window, analyzerResultSummaryArr[resultType]);
+    checkErr(RsCore_QueryViReal64(instrSession, cmd, result));
 
-    if (rsspecan_invalidViInt32Range (resultType, RSSPECAN_VAL_C2K_SLOT, RSSPECAN_VAL_C2K_EVMPEAK))
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Result Type");
-
-    viCheckErr (viQueryf (instrSession, "CALC%ld:MARK:FUNC:CDP:RES? %s\n", "%le",
-                window, analyzerResultSummaryArr[resultType], result));
-
-    checkErr( rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1504,14 +1384,12 @@ ViStatus _VI_FUNC rsspecan_BDOMode(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "",
-                                 RSSPECAN_ATTR_BDO_MODE, VI_NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_BDO_MODE, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1528,24 +1406,23 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOSEM(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_LIM_MODE,
-                 limitLineType), 2, "Limit Line Type");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_LIM_MODE, limitLineType),
+    		2, "Limit Line Type");
 
     if (limitLineType == RSSPECAN_VAL_C2K_LIM_MODE_MAN)
-        viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_C2K_LIM_VAL,
-                 limitLineValue), 3, "Limit Line Value");
+        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_LIM_VAL, limitLineValue),
+        		3, "Limit Line Value");
 
     if (!rsspecan_IsFSV (instrSession))
 	{
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_C2K_LIM_TRANS,
-	                 _30kHz1MHzTransition), 4, "30kHz/1MHz Transition");
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_LIM_TRANS, _30kHz1MHzTransition),
+				4, "30kHz/1MHz Transition");
 	}
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1559,8 +1436,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOCodeDomainAnalyzerResults(
 {
     ViStatus    error   = VI_SUCCESS;
 
-
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
     switch (resultType)
     {
@@ -1569,10 +1445,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOCodeDomainAnalyzerResults(
         case RSSPECAN_VAL_C2K_FEED_CDEP:
         case RSSPECAN_VAL_C2K_FEED_ERR_CTAB:
         case RSSPECAN_VAL_C2K_FEED_CPOW:
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType), 
-                        2, "Result Type");    
-        break;      
-        case RSSPECAN_VAL_C2K_FEED_MACC: 
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
+            		2, "Result Type");
+        break;
+        case RSSPECAN_VAL_C2K_FEED_MACC:
         case RSSPECAN_VAL_C2K_FEED_PVSL:
         case RSSPECAN_VAL_C2K_FEED_PVSY:
         case RSSPECAN_VAL_C2K_FEED_BSTR:
@@ -1582,15 +1458,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOCodeDomainAnalyzerResults(
         case RSSPECAN_VAL_C2K_FEED_SYMB_EVM:
         case RSSPECAN_VAL_C2K_FEED_COMP_CONS:
         case RSSPECAN_VAL_C2K_FEED_PVCH:
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType), 
-                        2, "Result Type");  
-        break;              
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
+            		2, "Result Type");
+        break;
         default:
-            viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Result Type");     
+            viCheckParm(RsCore_InvalidViInt32Value(instrSession, resultType), 2, "Result Type");
     }
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1606,31 +1482,28 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOCodeDomainAnalyzerSettings(
 )
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_INSTRUMENT_MODEL, RSSPECAN_IO_BUFFER_SIZE, buffer));
-    
     if (!strstr (buffer, "FSP")) // not FSP
     {
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_BDO_CDP_IQLENGTH_FSQ_FSU,
-                 captureLength), 2, "Capture Length");
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_IQLENGTH_FSQ_FSU, captureLength),
+        		2, "Capture Length");
     }
     else // is FSP
     {
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_IQLENGTH_FSP,
-                 captureLength), 2, "Capture Length");
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_IQLENGTH_FSP, captureLength),
+        		2, "Capture Length");
     }
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_SLOT,
-                 selectSlot), 4, "Select Slot");
-        
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_BDO_CDP_CODE,
-                 selectCode), 3, "Select Code");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_SLOT, selectSlot),
+    		4, "Select Slot");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_CODE, selectCode),
+    		3, "Select Code");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1648,28 +1521,26 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOCDPChannelType(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_CTYPE, channelType),
+    		2, "Channel Type");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_BDO_CDP_CTYPE,
-                 channelType), 2, "Channel Type");
-
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_BDO_CDP_OVERVIEW,
-                 codeDomainOverview), 3, "Code Domain Overview");
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BDO_CDP_OVERVIEW, codeDomainOverview),
+    		3, "Code Domain Overview");
 
     if (codeDomainOverview == VI_FALSE)
     {
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_BDO_CDP_MMODE,
-                     mapping), 4, "Mapping");
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_MMODE, mapping),
+        		4, "Mapping");
 
         if (((channelType != RSSPECAN_VAL_C2K_CDP_CTYPE_DATA) && (mapping != RSSPECAN_VAL_C2K_CDP_MMODE_AUTO)) || (mapping != RSSPECAN_VAL_C2K_CDP_MMODE_COMPLEX))
-            viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_BDO_CDP_MAPPING,
-                        select), 5, "Select");
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_MAPPING, select),
+            		5, "Select");
     }
 
-
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1686,21 +1557,20 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOChannelType(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_CTYPE, channelType),
+    		2, "Channel Type");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_BDO_CDP_CTYPE,
-                 channelType), 2, "Channel Type");
-
-   viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_BDO_CDP_MMODE,
-                     mapping), 3, "Mapping");
+   viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_MMODE, mapping),
+   		3, "Mapping");
 
    if (((channelType != RSSPECAN_VAL_C2K_CDP_CTYPE_DATA) && (mapping != RSSPECAN_VAL_C2K_CDP_MMODE_AUTO)) || (mapping != RSSPECAN_VAL_C2K_CDP_MMODE_COMPLEX))
-            viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_BDO_CDP_MAPPING,
-                        select), 4, "Select");
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_MAPPING, select),
+            		4, "Select");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1713,14 +1583,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureEVDOBSTPowerReference (ViSession instrSessio
 {
     ViStatus    error   = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_PREFERENCE,
-                 powerReference), 2, "Power Reference");
-
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_PREFERENCE, powerReference),
+    		2, "Power Reference");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1740,33 +1609,30 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOPowerVsTime(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win1", RSSPECAN_ATTR_NUMBER_OF_SWEEPS, numberOfHalfslots),
+    		2, "Number Of Halfslots");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "Win1", RSSPECAN_ATTR_NUMBER_OF_SWEEPS,
-                 numberOfHalfslots), 2, "Number Of Halfslots");
-
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_BDO_RFSLOT,
-                 referenceSlot), 3, "Reference Slot");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_RFSLOT, referenceSlot),
+    		3, "Reference Slot");
 
     if (referenceSlot == RSSPECAN_VAL_C2K_CDP_RFSLOT_IDLE)
-        viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_BDO_PVT_BURST_FIT,
-                     burstFit), 4, "Burst Fit");
+        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BDO_PVT_BURST_FIT, burstFit),
+        		4, "Burst Fit");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_BDO_LIM_PVT_REFERENCE,
-                 referenceMeanPower), 5, "Reference Mean Power");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_LIM_PVT_REFERENCE, referenceMeanPower),
+    		5, "Reference Mean Power");
 
     if (referenceMeanPower != RSSPECAN_VAL_C2K_LIM_PVT_REF_AUTO)
-        viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_BDO_LIM_PVT_VALUE,
-                     referenceValue), 6, "Reference Value");
+        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_BDO_LIM_PVT_VALUE, referenceValue),
+        		6, "Reference Value");
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_BDO_PVT_FAIL_RESTART,
-                 restartOnFail), 7, "Restart On Fail");
-
-
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BDO_PVT_FAIL_RESTART, restartOnFail),
+    		7, "Restart On Fail");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1779,15 +1645,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOPowerVsTimeListEvaluation (ViSession inst
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_BDO_LIM_PVT_LIST,
-                 state), 2, "State");
-
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BDO_LIM_PVT_LIST, state),
+    		2, "State");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1802,15 +1666,12 @@ ViStatus _VI_FUNC rsspecan_RestoreBDOPowerVsTimeStandardLines(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "",
-                                               RSSPECAN_ATTR_BDO_LIM_PVT_RESTORE, VI_NULL));
-
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_BDO_LIM_PVT_RESTORE, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1823,7 +1684,7 @@ Error:
  *
  *           Prior to this function, the name of the channel table has to be
  *           defined with function Configure CDMA2000 Channel Table Name
- *           (ConfigureC2KChannelTableName) - attribute 
+ *           (ConfigureC2KChannelTableName) - attribute
  *           RSSPECAN_ATTR_C2K_CTABLE_NAME.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureBDOChannelTableData(
@@ -1840,21 +1701,17 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOChannelTableData(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-
     ViInt32     i = 0;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViChar      *pbuffer;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
 
-    if (!strstr (buffer, "K84"))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (numofElements<=0)
-      viCheckParm(RS_ERROR_INVALID_PARAMETER, 10, "Num of Elements");
-    
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K84"));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
+    		10, "Num of Elements");
+
     pbuffer = buffer;
     pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%ld,%.12f",
                 channelType[i], codeClass[i], codeNumber[i], modulation[i], status[i],
@@ -1865,12 +1722,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOChannelTableData(
             channelType[i], codeClass[i], codeNumber[i], modulation[i], status[i],
                 cdpRelative[i]);
 
-    viCheckErr (viPrintf (instrSession,"%s\n", buffer));
+    checkErr(RsCore_Write(instrSession, buffer));
 
-    checkErr( rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1884,25 +1741,20 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOAdvancedSettings (ViSession instrSession,
                                                          ViInt32 revision)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = "";
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_PNOFFSET, pnOffset),
+    		2, "PN Offset");
 
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL, RSSPECAN_IO_BUFFER_SIZE, model));
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BDO_CDP_AVERAGE, cdpAverage),
+    		3, "CDP Average");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_PNOFFSET,
-                 pnOffset), 2, "PN Offset");
-    
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_BDO_CDP_AVERAGE,
-                 cdpAverage), 3, "CDP Average");
-             
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_BDO_REVISION,
-                 revision), 4, "Revision");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_REVISION, revision),
+    		4, "Revision");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1922,44 +1774,37 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOMultiCarrier(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_STATE,
-                 multiCarrier), 2, "Multi Carrier");
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_STATE, multiCarrier),
+    		2, "Multi Carrier");
 
     if (multiCarrier == VI_TRUE)
     {
-        viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                    RSSPECAN_ATTR_C2K_MCARRIER_ENH_ALG, enhancedAlgorithm),
-                    3, "Enhanced Algorithm");
+        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_ENH_ALG, enhancedAlgorithm),
+        		3, "Enhanced Algorithm");
 
-        viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                    RSSPECAN_ATTR_C2K_MCARRIER_FILTER_STATE, mcFilter),
-                    4, "MC Filter");
+        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_FILTER_STATE, mcFilter),
+        		4, "MC Filter");
 
         if (mcFilter == VI_TRUE)
         {
-            viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                        RSSPECAN_ATTR_C2K_MCARRIER_FILTER_TYPE, filterType),
-                        5, "Filter Type");
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_FILTER_TYPE, filterType),
+            		5, "Filter Type");
 
             if (filterType == RSSPECAN_VAL_C2K_MCARRIER_FTYPE_RRC)
             {
-                viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                            RSSPECAN_ATTR_C2K_MCARRIER_ROLL_OFF, rollOff),
-                            6, "Roll Off");
+                viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_ROLL_OFF, rollOff),
+                		6, "Roll Off");
 
-                viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                            RSSPECAN_ATTR_C2K_MCARRIER_CUT_OFF_FREQ, cutOffFrequency),
-                            7, "Cut Off Frequency");
+                viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_CUT_OFF_FREQ, cutOffFrequency),
+                		7, "Cut Off Frequency");
             }
         }
     }
 
-
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1975,15 +1820,13 @@ ViStatus _VI_FUNC rsspecan_StoreBDOSEMToFile(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_C2K_LIM_STORE_FILE, 
-                            fileName), 2, "File Name");
-    
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_LIM_STORE_FILE, fileName),
+    		2, "File Name");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2003,20 +1846,20 @@ ViStatus _VI_FUNC rsspecan_ReadBDOSEMPeakList(
 {
     ViStatus    error   = VI_SUCCESS;
     ViInt32     arrayLength;
-    ViReal64    *data = VI_NULL;
+    ViReal64    *data = NULL;
     ViInt32     retVal;
     ViInt32     i;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
     arrayLength = 3*numberOfValues;
     data=malloc (sizeof(ViReal64)*arrayLength);
 
-    viCheckErr (rsspecan_dataReadTrace (instrSession, window, "FINal1", arrayLength,
+    checkErr(rsspecan_dataReadTrace (instrSession, window, "FINal1", arrayLength,
                     data, &retVal));
 
     if (returnedValues)
-        *returnedValues = retVal / 3; /* Three result arrays */
+        *returnedValues = retVal / 3; // Three result arrays
 
     retVal = (retVal>arrayLength)?arrayLength:retVal;
 
@@ -2029,12 +1872,11 @@ ViStatus _VI_FUNC rsspecan_ReadBDOSEMPeakList(
         deltaLimit[i] = data[i*3+2];
     }
 
-
-    checkErr( rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
     if (data) free(data);
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2059,30 +1901,30 @@ ViStatus _VI_FUNC rsspecan_ReadBDOPowerVsTimeListEvaluation (ViSession instrSess
                                                                  ViInt32 *returnedValues)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViReal64    *pArray=VI_NULL;
+    ViReal64    *pArray=NULL;
     ViInt32     count=0;
     ViInt32     retCnt;
     ViInt32     i;
-    ViInt32     values = noOfValues * 12;  
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    ViInt32     values = noOfValues * 12;
 
-    if (rangeNumber == VI_NULL) viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Range number");
-    if (startTime == VI_NULL) viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Start Time"); 
-    if (stopTime == VI_NULL) viCheckParm (RS_ERROR_INVALID_PARAMETER, 4, "Stop Time"); 
-    if (avgPowerAbs == VI_NULL) viCheckParm (RS_ERROR_INVALID_PARAMETER, 5, "Avg Power Abs"); 
-    if (avgPowerRel == VI_NULL) viCheckParm (RS_ERROR_INVALID_PARAMETER, 6, "Avg Power Rel"); 
-    if (maxPowerAbs == VI_NULL) viCheckParm (RS_ERROR_INVALID_PARAMETER, 7, "Max Power Abs"); 
-    if (maxPowerRel == VI_NULL) viCheckParm (RS_ERROR_INVALID_PARAMETER, 8, "Max Power Rel"); 
-    if (minPowerAbs == VI_NULL) viCheckParm (RS_ERROR_INVALID_PARAMETER, 9, "Min Power Abs"); 
-    if (minPowerRel == VI_NULL) viCheckParm (RS_ERROR_INVALID_PARAMETER, 10, "Min Power Rel"); 
-    if (limitCheck == VI_NULL) viCheckParm (RS_ERROR_INVALID_PARAMETER, 11, "Limit Check");
-    if (reserved1 == VI_NULL) viCheckParm (RS_ERROR_INVALID_PARAMETER, 12, "Reserved 1");
-    if (reserved2 == VI_NULL) viCheckParm (RS_ERROR_INVALID_PARAMETER, 13, "Reserved 2"); 
-     
-    viCheckErr (viPrintf (instrSession, ":CONF:CDP:BTS:PVT:LIST:RES?\n"));
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, rangeNumber), 2, "Range number");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, startTime), 3, "Start Time");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, stopTime), 4, "Stop Time");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, avgPowerAbs), 5, "Avg Power Abs");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, avgPowerRel), 6, "Avg Power Rel");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, maxPowerAbs), 7, "Max Power Abs");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, maxPowerRel), 8, "Max Power Rel");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, minPowerAbs), 9, "Min Power Abs");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, minPowerRel), 10, "Min Power Rel");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, limitCheck), 11, "Limit Check");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, reserved1), 12, "Reserved 1");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, reserved2), 13, "Reserved 2");
+
+    checkErr(RsCore_Write(instrSession, ":CONF:CDP:BTS:PVT:LIST:RES?"));
     pArray = malloc (values*sizeof (ViReal64));
-    viCheckErr (rsspecan_dataReadTraceOnly (instrSession, values, pArray, &retCnt));
+    checkErr(rsspecan_dataReadTraceOnly (instrSession, values, pArray, &retCnt));
     values = (retCnt>values)?values:retCnt;
     i=0;
     while (count<values)
@@ -2112,14 +1954,15 @@ ViStatus _VI_FUNC rsspecan_ReadBDOPowerVsTimeListEvaluation (ViSession instrSess
         reserved2[i]=pArray[count];
         count++;
         i++;
-    }             
+    }
     if (returnedValues)
         *returnedValues = retCnt/11;
-    
-    checkErr( rsspecan_CheckStatus (instrSession));     
+
+    checkErr(rsspecan_CheckStatus (instrSession));
+
 Error:
-    if (pArray) free(pArray); 
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    if (pArray) free(pArray);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2136,47 +1979,32 @@ ViStatus _VI_FUNC rsspecan_QueryBDOCodeDomainAnalyzerGeneralResults(
 )
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      *buf=NULL;
+    ViUInt32    local_count     = 0;
 
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = "";
-    ViChar      *buf=VI_NULL;
-    ViUInt32    local_count     = 0;    
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K84|K47"));
 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
+    if ((RsCore_InvalidViInt32Range (resultType, RSSPECAN_VAL_C2K_RHO, RSSPECAN_VAL_C2K_MACCURACY))&&
+        (RsCore_InvalidViInt32Range (resultType, RSSPECAN_VAL_C2K_FERROR, RSSPECAN_VAL_C2K_TFRAME))&&
+        (RsCore_InvalidViInt32Range (resultType, RSSPECAN_VAL_C2K_RHOPILOT, RSSPECAN_VAL_C2K_IPMMAX))&&
+        (RsCore_InvalidViInt32Range (resultType, RSSPECAN_VAL_C2K_RHODATA, RSSPECAN_VAL_C2K_RHOMAC)) )
+                viCheckParm(RS_ERROR_INVALID_PARAMETER, 3, "Result Type");
 
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL, RSSPECAN_IO_BUFFER_SIZE, model));
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:CDP:RES? %s", window, analyzerResultSummaryArr[resultType]);
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf)); // TODO: Check the response processing
 
-    if (!(strstr (buffer, "K84") || strstr (buffer, "K47")))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
-
-    if ((rsspecan_invalidViInt32Range (resultType, RSSPECAN_VAL_C2K_RHO, RSSPECAN_VAL_C2K_MACCURACY))&&
-        (rsspecan_invalidViInt32Range (resultType, RSSPECAN_VAL_C2K_FERROR, RSSPECAN_VAL_C2K_TFRAME))&&
-        (rsspecan_invalidViInt32Range (resultType, RSSPECAN_VAL_C2K_RHOPILOT, RSSPECAN_VAL_C2K_IPMMAX))&&
-        (rsspecan_invalidViInt32Range (resultType, RSSPECAN_VAL_C2K_RHODATA, RSSPECAN_VAL_C2K_RHOMAC)) )
-                viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Result Type");
-
-    viCheckErr (viPrintf (instrSession, "CALC%ld:MARK:FUNC:CDP:RES? %s\n", 
-                window, analyzerResultSummaryArr[resultType]));
-
-    
-    viCheckErr (Rs_ReadDataUnknownLength(instrSession, &buf, &local_count));
-            
     if ((strstr (buf, "Sync")) != NULL)
-        *result =   RSSPECAN_NAN;
+        *result =   RS_VAL_NAN_VI_REAL64;
     else
         *result = atof(buf);
-        
-        
-    checkErr( rsspecan_CheckStatus (instrSession));
-    
-    
-    
+
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2193,29 +2021,24 @@ ViStatus _VI_FUNC rsspecan_QueryBDOCodeDomainAnalyzerChannelResults(
 )
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K84"));
 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
-
-    if (!strstr (buffer, "K84"))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
-
-    if (rsspecan_invalidViInt32Range (resultType, RSSPECAN_VAL_C2K_PCDERROR, RSSPECAN_VAL_C2K_IQOFFSET))
-            if (rsspecan_invalidViInt32Range (resultType, RSSPECAN_VAL_C2K_SRATE, RSSPECAN_VAL_C2K_EVMPEAK))
+    if (RsCore_InvalidViInt32Range (resultType, RSSPECAN_VAL_C2K_PCDERROR, RSSPECAN_VAL_C2K_IQOFFSET))
+            if (RsCore_InvalidViInt32Range (resultType, RSSPECAN_VAL_C2K_SRATE, RSSPECAN_VAL_C2K_EVMPEAK))
                 if (resultType != RSSPECAN_VAL_C2K_MTYPE)
-                    viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Result Type");
+                    viCheckParm(RS_ERROR_INVALID_PARAMETER, 3, "Result Type");
 
-    viCheckErr (viQueryf (instrSession, "CALC%ld:MARK:FUNC:CDP:RES? %s\n", "%le",
-                window, analyzerResultSummaryArr[resultType], result));
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:CDP:RES? %s", window, analyzerResultSummaryArr[resultType]);
+    checkErr(RsCore_QueryViReal64(instrSession, cmd, result));
 
-
-    checkErr( rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2229,14 +2052,12 @@ ViStatus _VI_FUNC rsspecan_MDOMode(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "",
-                                 RSSPECAN_ATTR_MDO_MODE, VI_NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MDO_MODE, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2252,17 +2073,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOSEM(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_LIM_MODE, limitLineType),
+    		2, "Limit Line Type");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_LIM_MODE,
-                 limitLineType), 2, "Limit Line Type");
-
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_C2K_LIM_TRANS,
-                 _30kHz1MHzTransition), 3, "30kHz/1MHz Transition");
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_LIM_TRANS, _30kHz1MHzTransition),
+    		3, "30kHz/1MHz Transition");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2276,8 +2096,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOCodeDomainAnalyzerResults(
 {
     ViStatus    error   = VI_SUCCESS;
 
-
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
     switch (resultType)
     {
@@ -2285,10 +2104,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOCodeDomainAnalyzerResults(
         case RSSPECAN_VAL_C2K_FEED_CDP_RAT:
         case RSSPECAN_VAL_C2K_FEED_CDEP:
         case RSSPECAN_VAL_C2K_FEED_ERR_CTAB:
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType), 
-                        2, "Result Type");    
-        break;      
-        case RSSPECAN_VAL_C2K_FEED_MACC: 
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
+            		2, "Result Type");
+        break;
+        case RSSPECAN_VAL_C2K_FEED_MACC:
         case RSSPECAN_VAL_C2K_FEED_PVSL:
         case RSSPECAN_VAL_C2K_FEED_PVSY:
         case RSSPECAN_VAL_C2K_FEED_BSTR:
@@ -2297,16 +2116,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOCodeDomainAnalyzerResults(
         case RSSPECAN_VAL_C2K_FEED_SYMB_CONS:
         case RSSPECAN_VAL_C2K_FEED_SYMB_EVM:
         case RSSPECAN_VAL_C2K_FEED_COMP_CONS:
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType), 
-                        2, "Result Type");  
-        break;              
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
+            		2, "Result Type");
+        break;
         default:
-            viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Result Type");     
+            viCheckParm(RsCore_InvalidViInt32Value(instrSession, resultType), 2, "Result Type");
     }
 
-
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2321,41 +2139,34 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOCodeDomainAnalyzerSettings(ViSession   in
                                                                 ViInt32 selectMapping)
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
-
-    if (!strstr (buffer, "K85"))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
-
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_INSTRUMENT_MODEL, RSSPECAN_IO_BUFFER_SIZE, buffer));
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K85"));
 
     if (!strstr (buffer, "FSP")) // not FSP
     {
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MDO_CDP_IQLENGTH_FSQ_FSU,
-                 captureLength), 2, "Capture Length");
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MDO_CDP_IQLENGTH_FSQ_FSU, captureLength),
+        		2, "Capture Length");
     }
     else // is FSP
     {
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MDO_CDP_IQLENGTH_FSP,
-                 captureLength), 2, "Capture Length");
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MDO_CDP_IQLENGTH_FSP, captureLength),
+        		2, "Capture Length");
     }
-   
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MDO_CDP_CODE,
-                 selectChannel), 3, "Select Channel");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_C2K_CDP_SLOT,
-                 selectHalfslot), 4, "Select Halfslot");
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_MAPPING,
-                 selectMapping), 5, "Select Mapping");
-     
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MDO_CDP_CODE, selectChannel),
+    		3, "Select Channel");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_SLOT, selectHalfslot),
+    		4, "Select Halfslot");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_MAPPING, selectMapping),
+    		5, "Select Mapping");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2368,7 +2179,7 @@ Error:
  *
  *           Prior to this function, the name of the channel table has to be
  *           defined with function Configure CDMA2000 Channel Table Name
- *           (ConfigureC2KChannelTableName) - attribute 
+ *           (ConfigureC2KChannelTableName) - attribute
  *           RSSPECAN_ATTR_C2K_CTABLE_NAME.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureMDOChannelTableData(
@@ -2385,19 +2196,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOChannelTableData(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-
     ViInt32     i = 0;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViChar      *pbuffer;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
 
-    if (!strstr (buffer, "K85"))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (numofElements<=0)
-      viCheckParm(RS_ERROR_INVALID_PARAMETER, 10, "Num of Elements");
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K85"));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
+    		10, "Num of Elements");
 
     pbuffer = buffer;
     pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,%ld,0,%ld,0",
@@ -2409,12 +2217,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOChannelTableData(
             channelType[i], codeClass[i], codeNumber[i], mapping[i], activity[i],
                 status[i]);
 
-    viCheckErr (viPrintf (instrSession,"%s\n", buffer));
+    checkErr(RsCore_Write(instrSession, buffer));
 
-    checkErr( rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2435,33 +2243,31 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOAdvancedSettings(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_PREFERENCE, powerReference),
+    		2, "Power Reference");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_PREFERENCE,
-                 powerReference), 2, "Power Reference");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_ORDER, order),
+    		3, "Order");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_ORDER,
-                 order), 3, "Order");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_MAPPING, selectIQ),
+    		4, "Select IQ");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_MAPPING,
-                 selectIQ), 4, "Select IQ");
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_MDO_CDP_AVERAGE, cdpAverage),
+    		5, "CDP Average");
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_MDO_CDP_AVERAGE,
-                 cdpAverage), 5, "CDP Average");
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MDO_CDP_OPERATION, operation),
+    		6, "Operation");
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_MDO_CDP_OPERATION,
-                 operation), 6, "Operation");
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MDO_CDP_LCODE_I, longCodeI),
+    		7, "Long Code I");
 
-    viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_MDO_CDP_LCODE_I,
-                 longCodeI), 7, "Long Code I");
-
-    viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_MDO_CDP_LCODE_Q,
-                 longCodeQ), 8, "Long Code Q");
-
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MDO_CDP_LCODE_Q, longCodeQ),
+    		8, "Long Code Q");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2475,15 +2281,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOCDPOverview(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_MC2K_CDP_OVERVIEW,
-                 codeDomainOverview), 2, "Code Domain Overview");
-
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_OVERVIEW, codeDomainOverview),
+    		2, "Code Domain Overview");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 /*****************************************************************************
@@ -2497,15 +2301,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOPichMarkerSettings(
 {
     ViStatus    error   = VI_SUCCESS;
 
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "C1,M1",
-                                               RSSPECAN_ATTR_MC2K_MARKER_PICH, VI_NULL));
-
+    checkErr(rsspecan_SetAttributeViString(instrSession, "C1,M1", RSSPECAN_ATTR_MC2K_MARKER_PICH, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2522,27 +2323,23 @@ ViStatus _VI_FUNC rsspecan_QueryMDOCodeDomainAnalyzerResultSummary(
 )
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K85"));
 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
+    if (RsCore_InvalidViInt32Range (resultType, RSSPECAN_VAL_C2K_SLOT, RSSPECAN_VAL_C2K_PLENGTH))
+        if (RsCore_InvalidViInt32Range (resultType, RSSPECAN_VAL_C2K_MTYPE, RSSPECAN_VAL_C2K_RHOMAC))
+            viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultType, RSSPECAN_VAL_C2K_CDEPEAK, RSSPECAN_VAL_C2K_CODPOWER),
+            		3, "Result Type");
 
-    if (!strstr (buffer, "K85"))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:CDP:RES? %s", window, analyzerResultSummaryArr[resultType]);
+    checkErr(RsCore_QueryViReal64(instrSession, cmd, result));
 
-    if (rsspecan_invalidViInt32Range (resultType, RSSPECAN_VAL_C2K_SLOT, RSSPECAN_VAL_C2K_PLENGTH))
-        if (rsspecan_invalidViInt32Range (resultType, RSSPECAN_VAL_C2K_MTYPE, RSSPECAN_VAL_C2K_RHOMAC))
-            if (rsspecan_invalidViInt32Range (resultType, RSSPECAN_VAL_C2K_CDEPEAK, RSSPECAN_VAL_C2K_CODPOWER))
-                viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Result Type");
-
-    viCheckErr (viQueryf (instrSession, "CALC%ld:MARK:FUNC:CDP:RES? %s\n", "%le",
-                window, analyzerResultSummaryArr[resultType], result));
-
-    checkErr( rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }

@@ -16,11 +16,11 @@
 #include "rsspecan.h"
 
 
-/// HIFN  This function turns the EMI measurement marker functionality on and 
+/// HIFN  This function turns the EMI measurement marker functionality on and
 /// HIFN  off.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR state/Turns the EMI measurement marker functionality on and off.
 ViStatus _VI_FUNC rsspecan_ConfigureEMIFinalMeasurementMarkerState(
@@ -29,27 +29,26 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMIFinalMeasurementMarkerState(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_EMI_FMEAS_STATE,
-                                                 state), 2, "State");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_EMI_FMEAS_STATE, state),
+    		2, "State");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 
-/// HIFN  This function selects the detector for a specific marker during the 
+/// HIFN  This function selects the detector for a specific marker during the
 /// HIFN  final measurement.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR marker/This control selects marker.
-/// HIPAR detector/Selects the detector for a specific marker during the final 
+/// HIPAR detector/Selects the detector for a specific marker during the final
 /// HIPAR detector/measurement.
 ViStatus _VI_FUNC rsspecan_ConfigureEMIFinalMeasurementMarkerDetector(
 	ViSession	instrSession,
@@ -58,58 +57,50 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMIFinalMeasurementMarkerDetector(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	rep_cap[5] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (marker, 1, 16) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Marker");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 16),
+    		2, "Marker");
+    viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_MARKER_DETECTOR,
+    		"Marker", marker - 1, RS_REPCAP_BUF_SIZE, repCap),
+    		2, "Marker");
 
-    viCheckParm (rsspecan_GetAttributeRepCapName (instrSession,
-                                                 RSSPECAN_ATTR_EMI_FMEAS_MARKER_DETECTOR,
-                                                 "Marker",
-                                                 marker - 1,
-                                                 5,
-                                                 rep_cap), 2, "Marker");
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, rep_cap,
-                                               RSSPECAN_ATTR_EMI_FMEAS_MARKER_DETECTOR,
-                                               detector), 3, "Detector");
-    
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_MARKER_DETECTOR, detector),
+    		3, "Detector");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 
 /// HIFN  This function initiates a marker peak search.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 ViStatus _VI_FUNC rsspecan_EMIFinalMeasurementMarkerPeakSearch(
 	ViSession	instrSession
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckErr (rsspecan_SetAttributeViString (instrSession, "",
-                                               RSSPECAN_ATTR_EMI_FMEAS_MARKER_PEAK_SEARCH, NULL));
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_EMI_FMEAS_MARKER_PEAK_SEARCH, NULL));
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 
 /// HIFN  This function defines the dwell time during the final measurement.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR dwellTime/Defines the dwell time during the final measurement.
 ViStatus _VI_FUNC rsspecan_ConfigureEMIFinalMeasurementMarkerDwellTime(
@@ -118,31 +109,30 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMIFinalMeasurementMarkerDwellTime(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_EMI_FMEAS_DWELL_TIME,
-                                                dwellTime), 2, "Dwell Time");
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_EMI_FMEAS_DWELL_TIME, dwellTime),
+    		2, "Dwell Time");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 
-/// HIFN  This function returns marker limit line condition and vertical 
+/// HIFN  This function returns marker limit line condition and vertical
 /// HIFN  distance.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR marker/This control selects marker.
 /// HIPAR limit/This control selects limit.
-/// HIPAR markerCondition/Returns the condition of a marker position in relation to a certain 
+/// HIPAR markerCondition/Returns the condition of a marker position in relation to a certain
 /// HIPAR markerCondition/limit line.
-/// HIPAR markerVerticalDistance/Returns the vertical distance from the marker position to the limit 
-/// HIPAR markerVerticalDistance/line. The unit is dB. If the marker has been assigned to a different 
+/// HIPAR markerVerticalDistance/Returns the vertical distance from the marker position to the limit
+/// HIPAR markerVerticalDistance/line. The unit is dB. If the marker has been assigned to a different
 /// HIPAR markerVerticalDistance/trace than the limit line, the function returns -200.
 ViStatus _VI_FUNC rsspecan_QueryEMIFinalMeasurementMarkerLimitLine(
 	ViSession	instrSession,
@@ -153,58 +143,44 @@ ViStatus _VI_FUNC rsspecan_QueryEMIFinalMeasurementMarkerLimitLine(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	rep_cap[15] = "";
-	ViChar	rep_cap_m[5] = "";
-	ViChar	rep_cap_l[5] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE] = "";
+	ViChar	repCap_m[RS_REPCAP_BUF_SIZE] = "";
+	ViChar	repCap_l[RS_REPCAP_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (marker, 1, 16) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Marker");
-    }
-	if (rsspecan_invalidViInt32Range (limit, 1, 8) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Limit");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 16),
+    		2, "Marker");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
+			3, "Limit");
+    viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_MARKER_LIMIT_CONDITION,
+    		"Marker", marker - 1, RS_REPCAP_BUF_SIZE, repCap_m),
+    		2, "Marker");
+    viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_MARKER_LIMIT_CONDITION,
+    		"Limit", limit - 1, RS_REPCAP_BUF_SIZE, repCap_l),
+    		3, "Limit");
 
-    viCheckParm (rsspecan_GetAttributeRepCapName (instrSession,
-                                                 RSSPECAN_ATTR_EMI_FMEAS_MARKER_LIMIT_CONDITION,
-                                                 "Marker",
-                                                 marker - 1,
-                                                 5,
-                                                 rep_cap_m), 2, "Marker");
-    
-    viCheckParm (rsspecan_GetAttributeRepCapName (instrSession,
-                                                 RSSPECAN_ATTR_EMI_FMEAS_MARKER_LIMIT_CONDITION,
-                                                 "Limit",
-                                                 limit - 1,
-                                                 5,
-                                                 rep_cap_l), 3, "Limit");
-    
-    strcpy (rep_cap, rep_cap_m);
-    strcat (rep_cap, ",");
-    strcat (rep_cap, rep_cap_l);
-	
-    viCheckParm (rsspecan_GetAttributeViInt32 (instrSession, rep_cap,
-                                               RSSPECAN_ATTR_EMI_FMEAS_MARKER_LIMIT_CONDITION,
-                                               markerCondition), 4, "Marker Condition");
-    
-	viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, rep_cap,
-                                                RSSPECAN_ATTR_EMI_FMEAS_MARKER_LIMIT_VERTICAL_DISTANCE,
-                                                markerVerticalDistance), 5, "Marker Vertical Distance");
-    
+    strcpy (repCap, repCap_m);
+    strcat (repCap, ",");
+    strcat (repCap, repCap_l);
+
+    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_MARKER_LIMIT_CONDITION, markerCondition),
+    		4, "Marker Condition");
+
+	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_MARKER_LIMIT_VERTICAL_DISTANCE, markerVerticalDistance),
+			5, "Marker Vertical Distance");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 
-/// HIFN  This function returns the result of the EMI measurement at the marker 
+/// HIFN  This function returns the result of the EMI measurement at the marker
 /// HIFN  position.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR marker/This control selects marker.
 /// HIPAR result/Returns the result of the EMI measurement at the marker position.
@@ -215,40 +191,33 @@ ViStatus _VI_FUNC rsspecan_QueryEMIFinalMeasurementMarkerResult(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	rep_cap[5] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (marker, 1, 16) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Marker");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 16),
+    		2, "Marker");
+    viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_MARKER_RESULT,
+    		"Marker", marker - 1, RS_REPCAP_BUF_SIZE, repCap),
+    		2, "Marker");
 
-    viCheckParm (rsspecan_GetAttributeRepCapName (instrSession,
-                                                 RSSPECAN_ATTR_EMI_FMEAS_MARKER_RESULT,
-                                                 "Marker",
-                                                 marker - 1,
-                                                 5,
-                                                 rep_cap), 2, "Marker");
-    
-    viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, rep_cap,
-                                                RSSPECAN_ATTR_EMI_FMEAS_MARKER_RESULT,
-                                                result), 3, "Result");
-    
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_MARKER_RESULT, result),
+    		3, "Result");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 
-/// HIFN  This function selects the detector for a specific delta marker during 
+/// HIFN  This function selects the detector for a specific delta marker during
 /// HIFN  the final measurement.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR deltaMarker/This control selects delta marker.
-/// HIPAR detector/Selects the detector for a specific delta marker during the final 
+/// HIPAR detector/Selects the detector for a specific delta marker during the final
 /// HIPAR detector/measurement.
 ViStatus _VI_FUNC rsspecan_ConfigureEMIFinalMeasurementDeltaMarkerDetector(
 	ViSession	instrSession,
@@ -257,63 +226,55 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMIFinalMeasurementDeltaMarkerDetector(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	rep_cap[5] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (deltaMarker, 1, 16) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Delta Marker");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, deltaMarker, 1, 16),
+    		2, "Delta Marker");
+    viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_DETECTOR,
+    		"DeltaMarker", deltaMarker - 1, RS_REPCAP_BUF_SIZE, repCap),
+    		2, "Delta Marker");
 
-    viCheckParm (rsspecan_GetAttributeRepCapName (instrSession,
-                                                 RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_DETECTOR,
-                                                 "DeltaMarker",
-                                                 deltaMarker - 1,
-                                                 5,
-                                                 rep_cap), 2, "Delta Marker");
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, rep_cap,
-                                               RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_DETECTOR,
-                                               detector), 3, "Detector");
-    
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_DETECTOR, detector),
+    		3, "Detector");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /// HIFN  This function initiates a delta marker peak search.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 ViStatus _VI_FUNC rsspecan_EMIFinalMeasurementDeltaMarkerPeakSearch (ViSession instrSession)
 {
 	ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckErr (rsspecan_SetAttributeViString (instrSession, "",
-                                               RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_PEAK_SEARCH, NULL));
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_PEAK_SEARCH, NULL));
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 
-/// HIFN  This function returns delta marker limit line condition and vertical 
+/// HIFN  This function returns delta marker limit line condition and vertical
 /// HIFN  distance.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR deltaMarker/This control selects delta marker.
 /// HIPAR limit/This control selects limit.
-/// HIPAR deltaMarkerCondition/Returns the condition of a delta marker position in relation to a 
+/// HIPAR deltaMarkerCondition/Returns the condition of a delta marker position in relation to a
 /// HIPAR deltaMarkerCondition/certain limit line.
-/// HIPAR deltaMarkerVerticalDistance/Returns the vertical distance from the delta marker position to the 
-/// HIPAR deltaMarkerVerticalDistance/limit line. The unit is dB. If the delta marker has been assigned to a 
+/// HIPAR deltaMarkerVerticalDistance/Returns the vertical distance from the delta marker position to the
+/// HIPAR deltaMarkerVerticalDistance/limit line. The unit is dB. If the delta marker has been assigned to a
 /// HIPAR deltaMarkerVerticalDistance/different trace than the limit line, the function returns -200.
 ViStatus _VI_FUNC rsspecan_QueryEMIFinalMeasurementDeltaMarkerLimitLine(
 	ViSession	instrSession,
@@ -324,61 +285,47 @@ ViStatus _VI_FUNC rsspecan_QueryEMIFinalMeasurementDeltaMarkerLimitLine(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	rep_cap[15] = "";
-	ViChar	rep_cap_m[5] = "";
-	ViChar	rep_cap_l[5] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE] = "";
+	ViChar	repCap_m[RS_REPCAP_BUF_SIZE] = "";
+	ViChar	repCap_l[RS_REPCAP_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (deltaMarker, 1, 16) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Delta Marker");
-    }
-	if (rsspecan_invalidViInt32Range (limit, 1, 8) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Limit");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, deltaMarker, 1, 16),
+    		2, "Delta Marker");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
+			3, "Limit");
+    viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_LIMIT_CONDITION,
+    		"DeltaMarker", deltaMarker - 1, RS_REPCAP_BUF_SIZE, repCap_m),
+    		2, "Delta Marker");
+    viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_LIMIT_CONDITION,
+    		"Limit", limit - 1, RS_REPCAP_BUF_SIZE, repCap_l),
+    		3, "Limit");
 
-    viCheckParm (rsspecan_GetAttributeRepCapName (instrSession,
-                                                 RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_LIMIT_CONDITION,
-                                                 "DeltaMarker",
-                                                 deltaMarker - 1,
-                                                 5,
-                                                 rep_cap_m), 2, "Delta Marker");
-    
-    viCheckParm (rsspecan_GetAttributeRepCapName (instrSession,
-                                                 RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_LIMIT_CONDITION,
-                                                 "Limit",
-                                                 limit - 1,
-                                                 5,
-                                                 rep_cap_l), 3, "Limit");
-    
-    strcpy (rep_cap, rep_cap_m);
-    strcat (rep_cap, ",");
-    strcat (rep_cap, rep_cap_l);
-	
-    viCheckParm (rsspecan_GetAttributeViInt32 (instrSession, rep_cap,
-                                               RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_LIMIT_CONDITION,
-                                               deltaMarkerCondition), 4, "Delta Marker Condition");
-    
-	viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, rep_cap,
-                                                RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_LIMIT_VERTICAL_DISTANCE,
-                                                deltaMarkerVerticalDistance), 5, "Delta Marker Vertical Distance");
-    
+    strcpy (repCap, repCap_m);
+    strcat (repCap, ",");
+    strcat (repCap, repCap_l);
+
+    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_LIMIT_CONDITION, deltaMarkerCondition),
+    		4, "Delta Marker Condition");
+
+	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_LIMIT_VERTICAL_DISTANCE, deltaMarkerVerticalDistance),
+			5, "Delta Marker Vertical Distance");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 
-/// HIFN  This function returns the result of the EMI measurement at the delta 
+/// HIFN  This function returns the result of the EMI measurement at the delta
 /// HIFN  marker position.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR deltaMarker/This control selects delta marker.
-/// HIPAR result/Returns the result of the EMI measurement at the delta marker 
+/// HIPAR result/Returns the result of the EMI measurement at the delta marker
 /// HIPAR result/position.
 ViStatus _VI_FUNC rsspecan_QueryEMIFinalMeasurementDeltaMarkerResult(
 	ViSession	instrSession,
@@ -387,36 +334,29 @@ ViStatus _VI_FUNC rsspecan_QueryEMIFinalMeasurementDeltaMarkerResult(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	rep_cap[5] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (deltaMarker, 1, 16) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Delta Marker");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, deltaMarker, 1, 16),
+    		2, "Delta Marker");
+    viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_RESULT,
+    		"DeltaMarker", deltaMarker - 1, RS_REPCAP_BUF_SIZE, repCap),
+    		2, "DeltaMarker");
 
-    viCheckParm (rsspecan_GetAttributeRepCapName (instrSession,
-                                                 RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_RESULT,
-                                                 "DeltaMarker",
-                                                 deltaMarker - 1,
-                                                 5,
-                                                 rep_cap), 2, "DeltaMarker");
-    
-    viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, rep_cap,
-                                                RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_RESULT,
-                                                result), 3, "Result");
-    
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_RESULT, result),
+    		3, "Result");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 
 /// HIFN  This function selects the V-network to be controlled via user port.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR vNetworkType/This control selects the V-network to be controlled via user port.
 ViStatus _VI_FUNC rsspecan_ConfigureEMILISNVnetworkType(
@@ -425,24 +365,23 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMILISNVnetworkType(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_EMI_LISN_V_NETWORK_TYPE,
-                                               vNetworkType), 2, "V-Network Type");
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_EMI_LISN_V_NETWORK_TYPE, vNetworkType),
+    		2, "V-Network Type");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 
-/// HIFN  This function turns the 150 kHz highpass filter for the ENV216 network 
+/// HIFN  This function turns the 150 kHz highpass filter for the ENV216 network
 /// HIFN  on and off.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR highPassFilter/Turns the 150 kHz highpass filter for the ENV216 network on and off.
 ViStatus _VI_FUNC rsspecan_ConfigureEMILISNVnetworkHighPassFilter(
@@ -451,23 +390,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMILISNVnetworkHighPassFilter(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_EMI_LISN_V_NETWORK_HIGH_PASS_FILTER,
-                                                 highPassFilter), 2, "High Pass Filter");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_EMI_LISN_V_NETWORK_HIGH_PASS_FILTER, highPassFilter),
+    		2, "High Pass Filter");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 
 /// HIFN  This function selects the phase of the LISN you want to measure.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR phase/This control selects the phase of the LISN you want to measure.
 ViStatus _VI_FUNC rsspecan_ConfigureEMILISNVnetworkPhase(
@@ -476,23 +414,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMILISNVnetworkPhase(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_EMI_LISN_V_NETWORK_PHASE,
-                                               phase), 2, "Phase");
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_EMI_LISN_V_NETWORK_PHASE, phase),
+    		2, "Phase");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 
 /// HIFN  This function sets the filter type for the resolution bandwidth.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR filterType/Sets the filter type for the resolution bandwidth.
 ViStatus _VI_FUNC rsspecan_ConfigureEMIBandwithFilterType(
@@ -501,15 +438,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMIBandwithFilterType(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-		                                       RSSPECAN_ATTR_EMI_RESOLUTION_BANDWIDTH_FILTER_TYPE,
-                                               filterType), 2, "Filter Type");
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_EMI_RESOLUTION_BANDWIDTH_FILTER_TYPE, filterType),
+    		2, "Filter Type");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 

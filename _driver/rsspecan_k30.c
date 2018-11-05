@@ -5,10 +5,10 @@
 #include "rsspecan.h"
 #include "rsspecan_utility.h"
 
-static ViString measTypeArr[] = {"LOW","UPP", VI_NULL};
-static ViString fetchTypeArr[]  = {"FIG","TEMP","GAIN", VI_NULL}; 
-static ViString resultArr[]  = {"GAIN", "NOIS", "PCOL", "PHOT", "TEMP", "YFAC", VI_NULL};
-static ViString markerResultArr[]  = {"NoiseGAIN", "NoiseNOIS", "NoisePCOL", "NoisePHOT", "NoiseTEMP", "NoiseYFAC", "NoiseUNC", VI_NULL};
+static ViString measTypeArr[] = {"LOW","UPP", NULL};
+static ViString fetchTypeArr[]  = {"FIG","TEMP","GAIN", NULL};
+static ViString resultArr[]  = {"GAIN", "NOIS", "PCOL", "PHOT", "TEMP", "YFAC", NULL};
+static ViString markerResultArr[]  = {"NoiseGAIN", "NoiseNOIS", "NoisePCOL", "NoisePHOT", "NoiseTEMP", "NoiseYFAC", "NoiseUNC", NULL};
 
 /*****************************************************************************
  * Function: Noise Mode
@@ -20,14 +20,12 @@ ViStatus _VI_FUNC rsspecan_NoiseMode(
 {
     ViStatus    error   = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "",
-                                               RSSPECAN_ATTR_NOISE_MODE, VI_NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_NOISE_MODE, NULL));
 
-    
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -48,159 +46,102 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseFrequencySettings(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-     ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = "";    
-     
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
 
-    if ((startFrequency<0.0)||(startFrequency>8.0e+9))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Start Frequency");
-    
-    if ((stopFrequency<0.0)||(stopFrequency>8.0e+9))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 3, "Stop Frequency");
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((stepFrequency<1.0)||(stepFrequency>8.0e+9))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 4, "Step Frequency");
-    
-    if ((mode<RSSPECAN_VAL_NOISE_DUT_MODE_DIRECT)||
-        (mode>RSSPECAN_VAL_NOISE_DUT_MODE_FIXED_LO_ABS))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 5, "Measurement Mode");
-    
-    if ((fixedLO<0.0)||(fixedLO>999.99e+9))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 6, "Fixed LO");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, startFrequency, 0.0, 8.0e+9), 2, "Start Frequency");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, stopFrequency, 0.0, 8.0e+9), 3, "Stop Frequency");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, stepFrequency, 1.0, 8.0e+9), 4, "Step Frequency");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, mode, RSSPECAN_VAL_NOISE_DUT_MODE_DIRECT, RSSPECAN_VAL_NOISE_DUT_MODE_FIXED_LO_ABS),
+    		5, "Measurement Mode");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, fixedLO, 0.0, 999.99e+9), 6, "Fixed LO");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, fixedIF, 0.0, 8.0e+9), 7, "Fixed IF");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, imageRejection, 0.0, 999.99e+9), 8, "Image Rejection");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, fixedFrequency, 0.0, 8.0e+9), 9, "Fixed Frequency");
 
-    if ((fixedIF<0.0)||(fixedIF>8.0e+9))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 7, "Fixed IF");
-    
-    if ((imageRejection<0.0)||(imageRejection>999.99e+9))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 8, "Image Rejection");
-    
-    if ((fixedFrequency<0.0)||(fixedFrequency>8.0e+9))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 9, "Fixed Frequency");
-    
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "Win1",
-                                                RSSPECAN_ATTR_FREQUENCY_START,
-                                                startFrequency), 2, "Start Frequency");
-    
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "Win1",
-                                                RSSPECAN_ATTR_FREQUENCY_STOP,
-                                                stopFrequency), 3, "Stop Frequency");
-    
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_NOISE_FREQ_STEP,
-                                                stepFrequency), 4, "Step Frequency");
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
-    
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_FREQUENCY_START, startFrequency),
+    		2, "Start Frequency");
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_FREQUENCY_STOP, stopFrequency),
+    		3, "Stop Frequency");
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_FREQ_STEP, stepFrequency),
+    		4, "Step Frequency");
+
 	if ((strstr (model, "FSL") != NULL) || rsspecan_IsFSV (instrSession))
     {
         if ((mode == RSSPECAN_VAL_NOISE_DUT_MODE_FIXED_IF_PLUS) || (mode == RSSPECAN_VAL_NOISE_DUT_MODE_FIXED_IF_ABS))
         {
-            checkErr (RS_ERROR_INSTRUMENT_MODEL);   
+            checkErr(RS_ERROR_INSTRUMENT_MODEL);
         }
     }
     switch (mode)
     {
         case RSSPECAN_VAL_NOISE_DUT_MODE_DIRECT:
             {
-                viCheckErr (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                                          RSSPECAN_ATTR_NOISE_CONF_MODE_DUT,
-                                                          RSSPECAN_VAL_NOISE_CONF_DUT_AMPLIFIER));
+                checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_MODE_DUT, RSSPECAN_VAL_NOISE_CONF_DUT_AMPLIFIER));
             }
             break;
         case RSSPECAN_VAL_NOISE_DUT_MODE_FIXED_IF_PLUS:
             {
-                viCheckErr (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                                          RSSPECAN_ATTR_NOISE_CONF_SYST_LOSC,
-                                                          RSSPECAN_VAL_NOISE_CONF_SYST_LOSC_VARIABLE));
-                
-                viCheckErr (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                                          RSSPECAN_ATTR_NOISE_CONF_MODE_DUT,
-                                                          RSSPECAN_VAL_NOISE_CONF_DUT_DOWNCONV));
-                
-                viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_NOISE_CONF_SYST_INT_FREQ,
-                                                fixedIF), 7, "Fixed IF");
-    
-                viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_NOISE_CORR_EREJ,
-                                                imageRejection), 8, "Image Rejection");
-                                              
+                checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_SYST_LOSC, RSSPECAN_VAL_NOISE_CONF_SYST_LOSC_VARIABLE));
+                checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_MODE_DUT, RSSPECAN_VAL_NOISE_CONF_DUT_DOWNCONV));
+
+                viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_SYST_INT_FREQ, fixedIF),
+                		7, "Fixed IF");
+
+                viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_EREJ, imageRejection),
+                		8, "Image Rejection");
             }
             break;
         case RSSPECAN_VAL_NOISE_DUT_MODE_FIXED_IF_ABS:
             {
-                viCheckErr (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                                          RSSPECAN_ATTR_NOISE_CONF_SYST_LOSC,
-                                                          RSSPECAN_VAL_NOISE_CONF_SYST_LOSC_VARIABLE));
-                
-                viCheckErr (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                                          RSSPECAN_ATTR_NOISE_CONF_MODE_DUT,
-                                                          RSSPECAN_VAL_NOISE_CONF_DUT_UPCONV));
-                                                          
-                viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_NOISE_CONF_SYST_INT_FREQ,
-                                                fixedIF), 7, "Fixed IF");
-    
-                viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_NOISE_CORR_EREJ,
-                                                imageRejection), 8, "Image Rejection");
-                                              
+                checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_SYST_LOSC, RSSPECAN_VAL_NOISE_CONF_SYST_LOSC_VARIABLE));
+                checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_MODE_DUT, RSSPECAN_VAL_NOISE_CONF_DUT_UPCONV));
+
+                viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_SYST_INT_FREQ, fixedIF),
+                		7, "Fixed IF");
+
+                viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_EREJ, imageRejection),
+                		8, "Image Rejection");
             }
             break;
         case RSSPECAN_VAL_NOISE_DUT_MODE_FIXED_LO_PLUS:
             {
-                viCheckErr (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_NOISE_CONF_SYST_LOSC,
-                                               RSSPECAN_VAL_NOISE_CONF_SYST_LOSC_FIXED));
-                
-                viCheckErr (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                                          RSSPECAN_ATTR_NOISE_CONF_MODE_DUT,
-                                                          RSSPECAN_VAL_NOISE_CONF_DUT_UPCONV));
-                                                          
-                viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_NOISE_CONF_SYST_LOSC_FREQ,
-                                                fixedLO), 6, "Fixed LO");
-    
-                viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_NOISE_CORR_EREJ,
-                                                imageRejection), 8, "Image Rejection");
-                                              
+                checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_SYST_LOSC, RSSPECAN_VAL_NOISE_CONF_SYST_LOSC_FIXED));
+                checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_MODE_DUT, RSSPECAN_VAL_NOISE_CONF_DUT_UPCONV));
+
+                viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_SYST_LOSC_FREQ, fixedLO),
+                		6, "Fixed LO");
+
+                viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_EREJ, imageRejection),
+                		8, "Image Rejection");
             }
             break;
         case RSSPECAN_VAL_NOISE_DUT_MODE_FIXED_LO_ABS:
             {
-                viCheckErr (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_NOISE_CONF_SYST_LOSC,
-                                               RSSPECAN_VAL_NOISE_CONF_SYST_LOSC_FIXED));
-                
-                viCheckErr (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                                          RSSPECAN_ATTR_NOISE_CONF_MODE_DUT,
-                                                          RSSPECAN_VAL_NOISE_CONF_DUT_DOWNCONV));
-                                                          
-                viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_NOISE_CONF_SYST_LOSC_FREQ,
-                                                fixedLO), 6, "Fixed LO");
-    
-                viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_NOISE_CORR_EREJ,
-                                                imageRejection), 8, "Image Rejection");
-                                              
+                checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_SYST_LOSC, RSSPECAN_VAL_NOISE_CONF_SYST_LOSC_FIXED));
+                checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_MODE_DUT, RSSPECAN_VAL_NOISE_CONF_DUT_DOWNCONV));
+
+                viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_SYST_LOSC_FREQ, fixedLO),
+                		6, "Fixed LO");
+
+                viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_EREJ, imageRejection),
+                		8, "Image Rejection");
             }
             break;
         default:viCheckErrElab(RS_ERROR_INVALID_VALUE, "The value of Mode is invalid.");
             break;
     }
-    
+
 	if (strstr (model, "FSW") == NULL) // not for FSW
 	{
-	    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "", 
-	                                                RSSPECAN_ATTR_NOISE_FREQ_FIXED,
-	                                                fixedFrequency), 9, "Fixed Frequency");
+	    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_FREQ_FIXED, fixedFrequency),
+	    		9, "Fixed Frequency");
 	}
-    
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -218,19 +159,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseFrequencyTable(
 {
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
-    ViChar      buffer[4*RSSPECAN_IO_BUFFER_SIZE] = "";
-    ViChar      *p2buffer = VI_NULL;
+    ViChar      buffer[4*RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      *p2buffer = NULL;
     ViUInt32    retCnt    = 0;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((numberOfValues<1)||(numberOfValues>100))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Number Of Values");
-        
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, numberOfValues, 1, 100),
+    		2, "Number Of Values");
+
     p2buffer = buffer;
 
     p2buffer += sprintf (p2buffer, "SENS:FREQ:LIST:DATA ");
-    
+
     if (numberOfValues > 0)
     {
         for (i = 0; i < numberOfValues; i++)
@@ -239,19 +180,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseFrequencyTable(
             p2buffer += sprintf (p2buffer, "%.12f,",localOscilatorFrequencyVal[i]);
             p2buffer += sprintf (p2buffer, "%.12f,",intermediateFrequencyValues[i]);
         }
-    
+
         *p2buffer = '\0';
         *--p2buffer = '\n';
-        
-        viCheckErr (viWrite (instrSession, (ViBuf)buffer, (ViUInt32) (p2buffer - buffer), &retCnt));
+
+        checkErr(viWrite (instrSession, (ViBuf)buffer, (ViUInt32) (p2buffer - buffer), &retCnt));
     }
-    
+
     //free(p2buffer);
 
-    checkErr( rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -265,7 +206,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseMeasurementMode(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-	ViChar		model[RSSPECAN_IO_BUFFER_SIZE] = "";
     ViAttr      attr[] = {RSSPECAN_ATTR_NOISE_CONF_CORR,
                           RSSPECAN_ATTR_NOISE_CONF_LIST_CONT,
                           RSSPECAN_ATTR_NOISE_CONF_LIST_SING,
@@ -273,34 +213,24 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseMeasurementMode(
                           RSSPECAN_ATTR_NOISE_CONF_FREQ_CONT,
                           RSSPECAN_ATTR_NOISE_CONF_FREQ_SING};
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-	viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
-	if (strstr (model, "FSW") != NULL)
+	if (RsCore_IsInstrumentModel(instrSession, "FSW"))
 	{
-		if (rsspecan_invalidViInt32Range (measurementMode, RSSPECAN_VAL_NOISE_SECOND_STAGE_CORR_MEAS, RSSPECAN_VAL_NOISE_SINGLE_FREQ_MEAS))
-	    {
-	        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Measurement Mode");
-	    }
-		    
+		viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementMode, RSSPECAN_VAL_NOISE_SECOND_STAGE_CORR_MEAS, RSSPECAN_VAL_NOISE_SINGLE_FREQ_MEAS),
+				2, "Measurement Mode");
 	}
 	else
 	{
-	    if (rsspecan_invalidViInt32Range (measurementMode, RSSPECAN_VAL_NOISE_SECOND_STAGE_CORR_MEAS, RSSPECAN_VAL_NOISE_SINGLE_FREQ_SINGLE_MEAS))
-		{
-	        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Measurement Mode");                          
-		}
+	    viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementMode, RSSPECAN_VAL_NOISE_SECOND_STAGE_CORR_MEAS, RSSPECAN_VAL_NOISE_SINGLE_FREQ_SINGLE_MEAS),
+	    		2, "Measurement Mode");
 	}
-    
-    viCheckParm (rsspecan_SetAttributeViString(instrSession,"",
-                                                attr[measurementMode],
-                                                VI_NULL), 2,"Measurement Type");
 
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, "", attr[measurementMode], NULL),
+    		2, "Measurement Type");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -315,15 +245,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseCalibration(
 {
     ViStatus    error   = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm( rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_NOISE_CORR_STAT,
-                                                 _2ndStageCorrection), 2, "2nd Stage Correction");
-
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_STAT, _2ndStageCorrection),
+    		2, "2nd Stage Correction");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -346,99 +274,68 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseAnalyzerSettings(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE];
-    ViChar      model [RSSPECAN_IO_BUFFER_SIZE] = ""; 
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
-    
-    if ((resolutionBandwidth<10.0)||(resolutionBandwidth>50.0e+6))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Resolution Bandwidth");
-    
-    if ((sweepTime<1.0e-6)||(sweepTime>16.0e+3))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 3, "SweepTime");
-    
-    if ((settlingTime<0.0)||(settlingTime>20.0))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 4, "Settling Time");
-    
-    if ((average<1)||(average>32767))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 5, "Average");
-    
-    if ((RFAttenuation<0.0)||(RFAttenuation>75.0))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 6, "RF Attenuation");
-    
-    if ((range<10.0)||(range>999.99))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 7, "Range");
-    
-    if ((refLevel<-130)||(refLevel>5))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 9, "Ref Level");
-    
-    
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "Win1",
-                                                RSSPECAN_ATTR_RESOLUTION_BANDWIDTH,
-                                                resolutionBandwidth), 2, "Resolution Bandwidth");
-    
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "Win1",
-                                                RSSPECAN_ATTR_SWEEP_TIME, 
-                                                sweepTime), 3, "Sweep Time");
-    
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_NOISE_CONF_DUT_SETT_TIME,
-                                                settlingTime), 4, "Settling Time");
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "Win1",
-                                               RSSPECAN_ATTR_NUMBER_OF_SWEEPS, 
-                                               average), 5, "Average");
-    
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "TR1",
-                                                 RSSPECAN_ATTR_NOISE_DISP_TRAC_REF_LEV_STAT,
-                                                 automaticRefLevel), 8, "Automatic Ref Level");
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, resolutionBandwidth, 10.0, 50.0e+6), 2, "Resolution Bandwidth");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, sweepTime, 1.0e-6, 16.0e+3), 3, "SweepTime");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, settlingTime, 0.0, 20.0), 4, "Settling Time");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, average, 1, 32767),
+    		5, "Average");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, RFAttenuation, 0.0, 75.0), 6, "RF Attenuation");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, range, 10.0, 999.99), 7, "Range");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, refLevel, -130, 5), 9, "Ref Level");
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_RESOLUTION_BANDWIDTH, resolutionBandwidth),
+    		2, "Resolution Bandwidth");
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_SWEEP_TIME, sweepTime),
+    		3, "Sweep Time");
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_DUT_SETT_TIME, settlingTime),
+    		4, "Settling Time");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win1", RSSPECAN_ATTR_NUMBER_OF_SWEEPS, average),
+    		5, "Average");
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "TR1", RSSPECAN_ATTR_NOISE_DISP_TRAC_REF_LEV_STAT, automaticRefLevel),
+    		8, "Automatic Ref Level");
+
     if (automaticRefLevel == VI_FALSE)
     {
-        viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "Win1",
+        viCheckParm(rsspecan_SetAttributeViReal64 (instrSession, "Win1",
                                                     RSSPECAN_ATTR_REFERENCE_LEVEL,
                                                     refLevel), 9, "Ref Level")
-    }                                                    
+    }
     else
     {
-        viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                    RSSPECAN_ATTR_NOISE_CONF_DUT_GAIN,
-                                                    range), 7, "Range");
-    }
-    
-    if (strstr(model, "FMU") == NULL)
-    {
-        viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "Win1",
-                                                RSSPECAN_ATTR_ATTENUATION,
-                                                RFAttenuation), 6, "RF Attenuation");
+        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_DUT_GAIN, range),
+        		7, "Range");
     }
 
-    
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
+    if (!RsCore_IsInstrumentModel(instrSession, "FMU"))
+    {
+    	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_ATTENUATION, RFAttenuation),
+    			6, "RF Attenuation");
+    }
 
-    if (strstr (buffer, "B2,") != VI_NULL)
+    if (strstr (buffer, "B2,") != NULL)
     {
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_NOISE_INP_PRES_STAT,
-                                                 preselector), 10, "Pre-selector");
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_INP_PRES_STAT, preselector),
+    		10, "Pre-selector");
     }
-    
-    if ((strstr (buffer, "B25") != VI_NULL) || 
-        (strstr (buffer, "B2,") != VI_NULL) || 
-        (strstr (buffer, "B22,") != VI_NULL))
+
+    if ((strstr (buffer, "B25") != NULL) ||
+        (strstr (buffer, "B2,") != NULL) ||
+        (strstr (buffer, "B22,") != NULL))
     {
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_NOISE_INP_GAIN_STAT,
-                                                 preamplifier), 11, "Pre-amplifier");
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_INP_GAIN_STAT, preamplifier),
+    		11, "Pre-amplifier");
     }
-    
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -457,38 +354,31 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseGeneratorSettings(
 {
     ViStatus    error   = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((GPIBAddress<0)||(GPIBAddress>30))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "GPIB Address");
-    
-    
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_NOISE_CONF_GEN_CONT_STAT,
-                                                 automaticControl), 2, "Automatic Control");
-    
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, GPIBAddress, 0, 30),
+    		2, "GPIB Address");
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_GEN_CONT_STAT, automaticControl),
+    		2, "Automatic Control");
+
     if (automaticControl == VI_TRUE)
     {
-        viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                    RSSPECAN_ATTR_NOISE_EXT_POW, 
-                                                    level), 3, "Level");
-        
-        viCheckParm (rsspecan_SetAttributeViString (instrSession, "",
-                                                    RSSPECAN_ATTR_NOISE_GEN_TYPE,
-                                                    generatorSelect), 4, "Generator Select");
-        
-        viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                                   RSSPECAN_ATTR_NOISE_GPIB_GEN_ADDR,
-                                                   GPIBAddress), 5, "GPIB Address");
-    
-        viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                     RSSPECAN_ATTR_NOISE_CONF_GEN_INIT_AUTO,
-                                                     initBeforeMeasurement), 6, "Init Before Measurement");
+        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_EXT_POW, level),
+        		3, "Level");
+
+        viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_NOISE_GEN_TYPE, generatorSelect),
+        		4, "Generator Select");
+
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_GPIB_GEN_ADDR, GPIBAddress),
+        		5, "GPIB Address");
+
+        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_GEN_INIT_AUTO, initBeforeMeasurement),
+        		6, "Init Before Measurement");
     }
 
-
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -508,15 +398,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseGeneratorAutoSwitchOff (ViSession instr
 {
     ViStatus    error   = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_NOISE_CONF_GEN_AUTO_SWITCH_OFF,
-                                                 automaticSwitchOff), 2, "Automatic Switch Off");
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_CONF_GEN_AUTO_SWITCH_OFF, automaticSwitchOff),
+    		2, "Automatic Switch Off");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -535,34 +423,29 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseGeneratorFrequency(
 {
     ViStatus    error   = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "OFF1",
-                                                RSSPECAN_ATTR_NOISE_EXT_FREQ_OFFS,
-                                                offsetNr1), 2, "Offset Nr 1");
-    
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "OFF2",
-                                                RSSPECAN_ATTR_NOISE_EXT_FREQ_OFFS,
-                                                offsetNr2), 3, "Offset Nr 2");
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_NOISE_EXT_FREQ_NUM,
-                                               numerator), 4, "Numerator");
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_NOISE_EXT_FREQ_DEN,
-                                               denominator), 5, "Denominator");
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "OFF1", RSSPECAN_ATTR_NOISE_EXT_FREQ_OFFS, offsetNr1),
+    		2, "Offset Nr 1");
 
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "OFF2", RSSPECAN_ATTR_NOISE_EXT_FREQ_OFFS, offsetNr2),
+    		3, "Offset Nr 2");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_EXT_FREQ_NUM, numerator),
+    		4, "Numerator");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_EXT_FREQ_DEN, denominator),
+    		5, "Denominator");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /// HIFN  This function configures the Noise Generator Single Frequency settings.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init 
-/// HIPAR instrSession/or rsspecan_InitWithOptions function. 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init
+/// HIPAR instrSession/or rsspecan_InitWithOptions function.
 /// HIPAR singleFrequency/Defines the frequency for single frequency measurements.
 /// HIPAR coupledToSweepList/Couples or decouples the frequency to the contents of the sweep list.
 ViStatus _VI_FUNC rsspecan_ConfigureNoiseSingleFrequency (ViSession instrSession,
@@ -570,19 +453,17 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseSingleFrequency (ViSession instrSession
                                                           ViBoolean coupledToSweepList)
 {
 	ViStatus	error = VI_SUCCESS;
-	
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_NOISE_SINGLE_FREQUENCY,
-                                                singleFrequency), 2, "Single Frequency");
-    
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                RSSPECAN_ATTR_NOISE_SINGLE_FREQUENCY_COUPLING,
-                                                coupledToSweepList), 3, "Coupled To Sweep List");
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_SINGLE_FREQUENCY, singleFrequency),
+    		2, "Single Frequency");
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_SINGLE_FREQUENCY_COUPLING, coupledToSweepList),
+    		3, "Coupled To Sweep List");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -599,36 +480,27 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseENRSettings(
 {
     ViStatus    error   = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((selectionMode<RSSPECAN_VAL_NOISE_ERN_MODE_SEL_TABLE)||
-        (selectionMode>RSSPECAN_VAL_NOISE_ERN_MODE_SEL_SPOT))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Selection Mode");
-        
-    if ((ENRConstant<-999.99)||(ENRConstant>999.99))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 3, "ENR Constant");
-    
-    if ((roomTemperature<10.0)||(roomTemperature>1000.0))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 4, "Room Temperature");
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_NOISE_CORR_ENR_MODE,
-                                               selectionMode), 2, "Selection Mode");
-    
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, selectionMode, RSSPECAN_VAL_NOISE_ERN_MODE_SEL_TABLE, RSSPECAN_VAL_NOISE_ERN_MODE_SEL_SPOT),
+    		2, "Selection Mode");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, ENRConstant, -999.99, 999.99), 3, "ENR Constant");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, roomTemperature, 10.0, 1000.0), 4, "Room Temperature");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_ENR_MODE, selectionMode),
+    		2, "Selection Mode");
+
     if( selectionMode == RSSPECAN_VAL_NOISE_ERN_MODE_SEL_SPOT)
     {
-        viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                    RSSPECAN_ATTR_NOISE_CORR_ENR_SPOT,
-                                                    ENRConstant), 3, "ENR Constant");
+        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_ENR_SPOT, ENRConstant),
+        		3, "ENR Constant");
     }
 
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_NOISE_CORR_TEMP,
-                                                roomTemperature), 4, "Room Temperature");
-    
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_TEMP, roomTemperature),
+    		4, "Room Temperature");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -645,14 +517,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseENRTable(
 {
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
-    ViChar      buffer[4*RSSPECAN_IO_BUFFER_SIZE] = "";
-    ViChar      *p2buffer = VI_NULL;
+    ViChar      buffer[4*RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      *p2buffer = NULL;
     ViUInt32    retCnt          = 0;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    if ((numberOfValues<1)||(numberOfValues>100))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Number Of Values");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, numberOfValues, 1, 100),
+    		2, "Number Of Values");
 
     p2buffer = buffer;
 
@@ -668,21 +540,21 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseENRTable(
 
         *p2buffer = '\0';
         *--p2buffer = '\n';
-    
-        viCheckErr (viWrite (instrSession, (ViBuf)buffer, (ViUInt32) (p2buffer - buffer), &retCnt));
+
+        checkErr(viWrite (instrSession, (ViBuf)buffer, (ViUInt32) (p2buffer - buffer), &retCnt));
     }
-    
-    checkErr( rsspecan_CheckStatus (instrSession));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /// HIFN This function selects or deletes a ENR table.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR operation/Selects the table operation.
 /// HIPAR tableName/String containing the name of the table.
@@ -691,24 +563,24 @@ ViStatus _VI_FUNC rsspecan_NoiseENRTableOperations (ViSession instrSession,
                                                  ViString tableName)
 {
 	ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
+
+    checkErr(RsCore_LockSession(instrSession));
+
     switch(operation){
         case RSSPECAN_VAL_NOISE_TABLE_SELECT:
-            viCheckParm (rsspecan_SetAttributeViString (instrSession, "", 
-                         RSSPECAN_ATTR_NOISE_CORR_ENR_TABLE_SELECT, tableName), 3, "Table Name");  
+            viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_ENR_TABLE_SELECT, tableName),
+            		3, "Table Name");
         break;
         case RSSPECAN_VAL_NOISE_TABLE_DELETE:
-            viCheckParm (rsspecan_SetAttributeViString (instrSession, "", 
-                         RSSPECAN_ATTR_NOISE_CORR_ENR_TABLE_DELETE, tableName), 3, "Table Name");  
+            viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_ENR_TABLE_DELETE, tableName),
+            		3, "Table Name");
         break;
 		default:
-            viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Operation");
+            viCheckParm(RsCore_InvalidViInt32Value(instrSession, operation), 2, "Operation");
 	}
-    
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -716,29 +588,28 @@ Error:
 /// HIFN on the ENR characteristics defined for the measurement stage are
 /// HIFN also used for the calibration stage.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR commonMode/Select the ERN common mode.
 ViStatus _VI_FUNC rsspecan_ConfigureNoiseENRCommonMode (ViSession instrSession,
                                                         ViBoolean commonMode)
 {
 	ViStatus	error = VI_SUCCESS;
-	
-	checkErr( Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_NOISE_CORR_ENR_COMMON_MODE,
-                                               commonMode), 2, "Common Mode");
-    
+	checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_ENR_COMMON_MODE, commonMode),
+    		2, "Common Mode");
+
 Error:
 	return error;
 }
 
 /// HIFN This function configures the Noise ENR calibration Settings
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR selectionMode/Specify whether a single ENR value applies for all measured
 /// HIPAR selectionMode/frequencies or whether an ENR list table is to be used (ENR
@@ -752,39 +623,38 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseENRCalibrationSettings (ViSession instr
                                                                  ViReal64 ENRConstant)
 {
 	ViStatus	error = VI_SUCCESS;
-	
-	checkErr( Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_NOISE_CORR_ENR_CALIBRATION_MODE,
-                                               selectionMode), 2, "Selection Mode");
-    
+	checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_ENR_CALIBRATION_MODE, selectionMode),
+    		2, "Selection Mode");
+
     if( selectionMode == RSSPECAN_VAL_NOISE_ERN_MODE_SEL_SPOT)
     {
-        viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                    RSSPECAN_ATTR_NOISE_CORR_ENR_CALIBRATION_SPOT,
-                                                    ENRConstant), 3, "ENR Constant");
+        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_ENR_CALIBRATION_SPOT, ENRConstant),
+        		3, "ENR Constant");
     }
-    
+
 Error:
 	return error;
 }
 
 /// HIFN This function selects a ENR calibration table.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR tableName/String containing the name of the table.
 ViStatus _VI_FUNC rsspecan_SelectNoiseENRCalibrationTable (ViSession instrSession,
                                                            ViString tableName)
 {
 	ViStatus	error = VI_SUCCESS;
-	checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckParm (rsspecan_SetAttributeViString (instrSession, "", 
-                         RSSPECAN_ATTR_NOISE_CORR_ENR_CALIBRATION_TABLE_SELECT, tableName), 3, "Table Name");  
-        
+
+	checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_ENR_CALIBRATION_TABLE_SELECT, tableName),
+    		3, "Table Name");
+
 Error:
 	return error;
 }
@@ -801,29 +671,23 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseLossInputSettings(
 {
     ViStatus    error   = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((selectionMode<RSSPECAN_VAL_NOISE_LOSS_MODE_TABLE)||
-        (selectionMode>RSSPECAN_VAL_NOISE_LOSS_MODE_SPOT))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Selection Mode");
-        
-    if ((lossInputConstant<-999.99)||(lossInputConstant>999.99))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 3, "Loss Input Constant");    
-        
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "Inp",
-                                               RSSPECAN_ATTR_NOISE_CORR_LOSS_MODE,
-                                               selectionMode), 2, "Selection Mode");
-    
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, selectionMode, RSSPECAN_VAL_NOISE_LOSS_MODE_TABLE, RSSPECAN_VAL_NOISE_LOSS_MODE_SPOT),
+    		2, "Selection Mode");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, lossInputConstant, -999.99, 999.99), 3, "Loss Input Constant");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Inp", RSSPECAN_ATTR_NOISE_CORR_LOSS_MODE, selectionMode),
+    		2, "Selection Mode");
+
     if( selectionMode == RSSPECAN_VAL_NOISE_LOSS_MODE_SPOT)
     {
-        viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "Inp",
-                                                    RSSPECAN_ATTR_NOISE_CORR_LOSS_SPOT,
-                                                    lossInputConstant), 3, "Loss Input Constant");
+        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Inp", RSSPECAN_ATTR_NOISE_CORR_LOSS_SPOT, lossInputConstant),
+        		3, "Loss Input Constant");
     }
 
-
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -840,14 +704,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseLossInputTable(
 {
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
-    ViChar      buffer[4*RSSPECAN_IO_BUFFER_SIZE] = "";
-    ViChar      *p2buffer = VI_NULL;
+    ViChar      buffer[4*RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      *p2buffer = NULL;
     ViUInt32    retCnt          = 0;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((numberOfValues<1)||(numberOfValues>100))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Number Of Values");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, numberOfValues, 1, 100),
+    		2, "Number Of Values");
 
     p2buffer = buffer;
 
@@ -863,21 +727,21 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseLossInputTable(
 
         *p2buffer = '\0';
         *--p2buffer = '\n';
-    
-        viCheckErr (viWrite (instrSession, (ViBuf)buffer, (ViUInt32) (p2buffer - buffer), &retCnt));
+
+        checkErr(viWrite (instrSession, (ViBuf)buffer, (ViUInt32) (p2buffer - buffer), &retCnt));
     }
-    
-    checkErr( rsspecan_CheckStatus (instrSession));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /// HIFN This function selects or deletes a loss input table.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function. The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function. The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR operation/Selects the table operation.
 /// HIPAR tableName/String containing the name of the table.
@@ -886,24 +750,24 @@ ViStatus _VI_FUNC rsspecan_NoiseLossInputTableOperations (ViSession instrSession
                                                  ViString tableName)
 {
 	ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
+
+    checkErr(RsCore_LockSession(instrSession));
+
     switch(operation){
         case RSSPECAN_VAL_NOISE_TABLE_SELECT:
-            viCheckParm (rsspecan_SetAttributeViString (instrSession, "", 
-                         RSSPECAN_ATTR_NOISE_CORR_LOSS_INPUT_TABLE_SELECT, tableName), 3, "Table Name");  
+            viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_LOSS_INPUT_TABLE_SELECT, tableName),
+            		3, "Table Name");
         break;
         case RSSPECAN_VAL_NOISE_TABLE_DELETE:
-            viCheckParm (rsspecan_SetAttributeViString (instrSession, "", 
-                         RSSPECAN_ATTR_NOISE_CORR_LOSS_INPUT_TABLE_DELETE, tableName), 3, "Table Name");  
+            viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_LOSS_INPUT_TABLE_DELETE, tableName),
+            		3, "Table Name");
         break;
 		default:
-            viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Operation");
+            viCheckParm(RsCore_InvalidViInt32Value(instrSession, operation), 2, "Operation");
 	}
-    
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -919,29 +783,23 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseLossOutputSettings(
 {
     ViStatus    error   = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((selectionMode<RSSPECAN_VAL_NOISE_LOSS_MODE_TABLE)||
-        (selectionMode>RSSPECAN_VAL_NOISE_LOSS_MODE_SPOT))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Selection Mode");
-        
-    if ((lossOutputConstant<-999.99)||(lossOutputConstant>999.99))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 3, "Loss Output Constant");    
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "Out",
-                                               RSSPECAN_ATTR_NOISE_CORR_LOSS_MODE,
-                                               selectionMode), 2, "Selection Mode");
-    
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, selectionMode, RSSPECAN_VAL_NOISE_LOSS_MODE_TABLE, RSSPECAN_VAL_NOISE_LOSS_MODE_SPOT),
+    		2, "Selection Mode");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, lossOutputConstant, -999.99, 999.99), 3, "Loss Output Constant");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Out", RSSPECAN_ATTR_NOISE_CORR_LOSS_MODE, selectionMode),
+    		2, "Selection Mode");
+
     if( selectionMode == RSSPECAN_VAL_NOISE_LOSS_MODE_SPOT)
     {
-        viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "Out",
-                                                    RSSPECAN_ATTR_NOISE_CORR_LOSS_SPOT,
-                                                    lossOutputConstant), 3, "Loss Output Constant");
+        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Out", RSSPECAN_ATTR_NOISE_CORR_LOSS_SPOT, lossOutputConstant),
+        		3, "Loss Output Constant");
     }
 
-
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -958,14 +816,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseLossOutputTable(
 {
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
-    ViChar      buffer[4*RSSPECAN_IO_BUFFER_SIZE] = "";
-    ViChar      *p2buffer = VI_NULL;
+    ViChar      buffer[4*RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      *p2buffer = NULL;
     ViUInt32    retCnt          = 0;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((numberOfValues<1)||(numberOfValues>100))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Number Of Values");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, numberOfValues, 1, 100),
+    		2, "Number Of Values");
 
     p2buffer = buffer;
 
@@ -980,21 +838,21 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseLossOutputTable(
 
         *p2buffer = '\0';
         *--p2buffer = '\n';
-    
-        viCheckErr (viWrite (instrSession, (ViBuf)buffer, (ViUInt32) (p2buffer - buffer), &retCnt));
+
+        checkErr(viWrite (instrSession, (ViBuf)buffer, (ViUInt32) (p2buffer - buffer), &retCnt));
     }
-    
-    checkErr( rsspecan_CheckStatus (instrSession));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /// HIFN This function selects or deletes a loss output table.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR operation/Selects the table operation.
 /// HIPAR tableName/String containing the name of the table.
@@ -1003,24 +861,24 @@ ViStatus _VI_FUNC rsspecan_NoiseLossOutputTableOperations (ViSession instrSessio
                                                   ViString tableName)
 {
 	ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
+
+    checkErr(RsCore_LockSession(instrSession));
+
     switch(operation){
         case RSSPECAN_VAL_NOISE_TABLE_SELECT:
-            viCheckParm (rsspecan_SetAttributeViString (instrSession, "", 
-                         RSSPECAN_ATTR_NOISE_CORR_LOSS_OUTPUT_TABLE_SELECT, tableName), 3, "Table Name");  
+            viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_LOSS_OUTPUT_TABLE_SELECT, tableName),
+            		3, "Table Name");
         break;
         case RSSPECAN_VAL_NOISE_TABLE_DELETE:
-            viCheckParm (rsspecan_SetAttributeViString (instrSession, "", 
-                         RSSPECAN_ATTR_NOISE_CORR_LOSS_OUTPUT_TABLE_DELETE, tableName), 3, "Table Name");  
+            viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_LOSS_OUTPUT_TABLE_DELETE, tableName),
+            		3, "Table Name");
         break;
 		default:
-            viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Operation");
+            viCheckParm(RsCore_InvalidViInt32Value(instrSession, operation), 2, "Operation");
 	}
-    
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1036,35 +894,31 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseResultSettings(
 {
     ViStatus    error   = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((combinedTraceDisplay<RSSPECAN_VAL_DISP_FORMAT_SINGLE)||
-        (combinedTraceDisplay>RSSPECAN_VAL_DISP_FORMAT_SPLIT))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Combined Trace Display");
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                                RSSPECAN_ATTR_DISP_FORMAT,
-                                                combinedTraceDisplay), 2, "Combined Trace Display");
-   
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_NOISE_DISP_TABLE,
-                                                 tableFormResults), 3, "Table Form Results");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, combinedTraceDisplay, RSSPECAN_VAL_DISP_FORMAT_SINGLE, RSSPECAN_VAL_DISP_FORMAT_SPLIT),
+    		2, "Combined Trace Display");
 
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_DISP_FORMAT, combinedTraceDisplay),
+    		2, "Combined Trace Display");
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_DISP_TABLE, tableFormResults),
+    		3, "Table Form Results");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /// HIFN  This function selects a window in which the settings should be applied to.
-/// HIFN  
+/// HIFN
 /// HIFN  Note(s):
-/// HIFN  
+/// HIFN
 /// HIFN  (1) The functions that use this setting are:
-/// HIFN  
+/// HIFN
 /// HIFN  rsspecan_ConfigureNoiseTraceSettings
 /// HIFN  rsspecan_ConfigureNoiseGainTraceSettings
-/// HIFN  
+/// HIFN
 /// HIFN  (2) This functions is intended to be used only with R&S FSW
 /// HIFN  instrument.
 /// HIRET Returns the status code of this operation.
@@ -1073,12 +927,14 @@ Error:
 ViStatus _VI_FUNC rsspecan_SelectWindow (ViSession instrSession, ViInt32 window)
 {
 	ViStatus    error = VI_SUCCESS;
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "",
-        RSSPECAN_ATTR_NOISE_WINDOW_SELECT, window), 2, "Window");   
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_WINDOW_SELECT, window),
+    		2, "Window");
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1096,76 +952,55 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseTraceSettings(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      rep_cap[RSSPECAN_IO_BUFFER_SIZE] = "";
-	ViChar      trace_no[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      repCap[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      trace_no[RS_MAX_MESSAGE_BUF_SIZE] = "";
 	ViInt32		window = 1;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (YAxis, RSSPECAN_VAL_NOISE_DISP_DATA_OFF, RSSPECAN_VAL_NOISE_DISP_DATA_NFIGURE))
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Y-Axis");
-    }
-	
-	viCheckErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_WINDOW_SELECT, &window));
-    
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, YAxis, RSSPECAN_VAL_NOISE_DISP_DATA_OFF, RSSPECAN_VAL_NOISE_DISP_DATA_NFIGURE),
+    		2, "Y-Axis");
+
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_WINDOW_SELECT, &window));
+
     sprintf(trace_no,"TR1");
-	sprintf(rep_cap,"Win%ld,TR1", window);
-	
+	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,TR1", window);
+
     switch (YAxis){
         case RSSPECAN_VAL_NOISE_DISP_DATA_OFF:
-            if (rsspecan_invalidViReal64Range (maxYAxis, -75.0, 75.0))
-            {
-                viCheckParm (RS_ERROR_INVALID_PARAMETER, 6, "Max Y-Axis");
-            }
-            if (rsspecan_invalidViReal64Range (minYAxis, -75.0, 75.0))
-            {
-                viCheckParm (RS_ERROR_INVALID_PARAMETER, 5, "Min Y-Axis");
-            }
-            viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, rep_cap,
+            viCheckParm(RsCore_InvalidViReal64Range(instrSession, maxYAxis, -75.0, 75.0), 6, "Max Y-Axis");
+            viCheckParm(RsCore_InvalidViReal64Range(instrSession, minYAxis, -75.0, 75.0), 5, "Min Y-Axis");
+            viCheckParm(rsspecan_SetAttributeViBoolean (instrSession, repCap,
                                                      RSSPECAN_ATTR_NOISE_DISP_TRAC_STAT,
                                                      VI_FALSE), 2, "Y-Axis")
         break;
         default:
-            if (rsspecan_invalidViReal64Range (maxYAxis, -999990000.0, 999990000.0))
-            {
-                viCheckParm (RS_ERROR_INVALID_PARAMETER, 6, "Max Y-Axis");
-            }
-            if (rsspecan_invalidViReal64Range (minYAxis, -999990000.0, 999990000.0))
-            {
-                viCheckParm (RS_ERROR_INVALID_PARAMETER, 5, "Min Y-Axis");
-            }
-            viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, rep_cap,
-                                                     RSSPECAN_ATTR_NOISE_DISP_TRAC_STAT,
-                                                     VI_TRUE), 2, "Y-Axis");
-        
-            viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, trace_no,
-                                                        RSSPECAN_ATTR_NOISE_DISP_DATA_TRAC,
-                                                        YAxis), 2, "Y-Axis");
-    
-            viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, rep_cap,
-                                                         RSSPECAN_ATTR_NOISE_DISP_SYMB,
-                                                         symbols), 3, "Symbols");
-    
-            viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, rep_cap,
-                                                         RSSPECAN_ATTR_NOISE_DISP_AUTO_SCAL,
-                                                         automaticScaling), 4, "Automatic Scaling");
-    
+            viCheckParm(RsCore_InvalidViReal64Range(instrSession, maxYAxis, -999990000.0, 999990000.0), 6, "Max Y-Axis");
+            viCheckParm(RsCore_InvalidViReal64Range(instrSession, minYAxis, -999990000.0, 999990000.0), 5, "Min Y-Axis");
+            viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_NOISE_DISP_TRAC_STAT, VI_TRUE),
+            		2, "Y-Axis");
+
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, trace_no, RSSPECAN_ATTR_NOISE_DISP_DATA_TRAC, YAxis),
+            		2, "Y-Axis");
+
+            viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_NOISE_DISP_SYMB, symbols),
+            		3, "Symbols");
+
+            viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_NOISE_DISP_AUTO_SCAL, automaticScaling),
+            		4, "Automatic Scaling");
+
             if (automaticScaling == VI_FALSE)
             {
-                viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, rep_cap,
-                                                            RSSPECAN_ATTR_NOISE_DISP_TRAC_BOTTOM,
-                                                            minYAxis), 5, "Min Y-Axis");
-    
-                viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, rep_cap,
-                                                            RSSPECAN_ATTR_NOISE_DISP_TRAC_TOP,
-                                                            maxYAxis), 6, "Max Y-Axis");
+                viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_NOISE_DISP_TRAC_BOTTOM, minYAxis),
+                		5, "Min Y-Axis");
+
+                viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_NOISE_DISP_TRAC_TOP, maxYAxis),
+                		6, "Max Y-Axis");
             }
-    }   
-    
+    }
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1183,49 +1018,41 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseGainTraceSettings(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      rep_cap[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      repCap[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViInt32		window = 1;
-	
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    if ((maxYAxis<-75)||(maxYAxis>75))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 6, "Max Y-Axis");
-    if ((minYAxis<-75)||(minYAxis>75))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 5, "Min Y-Axis");
 
-    viCheckErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_WINDOW_SELECT, &window));
-    
-    sprintf(rep_cap, "Win%ld,TR2", window);
+    checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, rep_cap,
-                                                 RSSPECAN_ATTR_NOISE_DISP_TRAC_STAT,
-                                                 YAxis), 2, "Y-Axis");
-    
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, maxYAxis, -75, 75), 6, "Max Y-Axis");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, minYAxis, -75, 75), 5, "Min Y-Axis");
+
+    checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_WINDOW_SELECT, &window));
+
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,TR2", window);
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_NOISE_DISP_TRAC_STAT, YAxis),
+    		2, "Y-Axis");
+
     if (YAxis == VI_TRUE)
     {
-        viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, rep_cap,
-                                                     RSSPECAN_ATTR_NOISE_DISP_SYMB,
-                                                     symbols), 3, "Symbols");
-    
-        viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, rep_cap,
-                                                     RSSPECAN_ATTR_NOISE_DISP_AUTO_SCAL,
-                                                     automaticScaling), 4, "Automatic Scaling");
-    
+        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_NOISE_DISP_SYMB, symbols),
+        		3, "Symbols");
+
+        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_NOISE_DISP_AUTO_SCAL, automaticScaling),
+        		4, "Automatic Scaling");
+
         if (automaticScaling == VI_FALSE)
         {
-            viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, rep_cap,
-                                                        RSSPECAN_ATTR_NOISE_DISP_TRAC_BOTTOM,
-                                                        minYAxis), 5, "Min Y-Axis");
-    
-            viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, rep_cap,
-                                                        RSSPECAN_ATTR_NOISE_DISP_TRAC_TOP,
-                                                        maxYAxis), 6, "Max Y-Axis");
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_NOISE_DISP_TRAC_BOTTOM, minYAxis),
+            		5, "Min Y-Axis");
+
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_NOISE_DISP_TRAC_TOP, maxYAxis),
+            		6, "Max Y-Axis");
         }
     }
 
-
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1238,44 +1065,39 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseTraceMemoryDisplay (ViSession instrSess
                                                              ViBoolean state)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE]="";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    if (rsspecan_invalidViInt32Range (memory, 1, 3))
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Memory");
-    }
-    
-    sprintf (buffer, "MEM%ld", memory);
-    viCheckParm( rsspecan_SetAttributeViBoolean (instrSession, buffer,
-                                                 RSSPECAN_ATTR_NOISE_DISP_TRACE_MEM,
-                                                 state), 3, "State");
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
 
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, memory, 1, 3),
+    		2, "Memory");
+
+    sprintf (buffer, "MEM%ld", memory);
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_NOISE_DISP_TRACE_MEM, state),
+    		3, "State");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure Noise Current Results Display
- * Purpose:  This function switches the display of the current measurement 
+ * Purpose:  This function switches the display of the current measurement
  *           results on or off.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureNoiseCurrentResultsDisplay (ViSession instrSession,
                                                                 ViBoolean state)
 {
     ViStatus    error   = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm( rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_NOISE_DISPL_CURR_RESULTS,
-                                                 state), 2, "State");
+    checkErr(RsCore_LockSession(instrSession));
 
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_DISPL_CURR_RESULTS, state),
+    		2, "State");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1283,8 +1105,8 @@ Error:
 
 /*****************************************************************************
  * Function: Configure Noise X-Axis Frequency Display
- * Purpose:  This function selects the frequency to be displayed on the x-axis 
- *           if the DUT is not an amplifier, i.e. in a frequency-converting 
+ * Purpose:  This function selects the frequency to be displayed on the x-axis
+ *           if the DUT is not an amplifier, i.e. in a frequency-converting
  *           measurement mode.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureXAxisFrequencyDisplay (ViSession instrSession,
@@ -1292,29 +1114,26 @@ ViStatus _VI_FUNC rsspecan_ConfigureXAxisFrequencyDisplay (ViSession instrSessio
                                                            ViInt32 frequency)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE]="";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    if (rsspecan_invalidViInt32Range (measurementResults, 1, 2))
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Measurement Results");
-    }
-    
-    sprintf (buffer, "TR%ld", measurementResults);
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, buffer,
-                                                 RSSPECAN_ATTR_NOISE_DISP_X_AXIS,
-                                                 frequency), 3, "Frequency");
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
 
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementResults, 1, 2),
+    		2, "Measurement Results");
+
+    sprintf (buffer, "TR%ld", measurementResults);
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_NOISE_DISP_X_AXIS, frequency),
+    		3, "Frequency");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 
 /*****************************************************************************
  * Function: Create Noise Limit Line
- * Purpose:  This function creates new limit or selects existing one and 
+ * Purpose:  This function creates new limit or selects existing one and
  *           configures basic parameters.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_CreateNoiseLimitLine(
@@ -1325,24 +1144,23 @@ ViStatus _VI_FUNC rsspecan_CreateNoiseLimitLine(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      lim_line_no[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      lim_line_no[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((limit<1)||(limit>6))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Limit Line Number");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 6),
+    		2, "Limit Line Number");
 
     sprintf(lim_line_no,"L%d",limit);
-    
-    viCheckParm (rsspecan_SetAttributeViString (instrSession, lim_line_no,
-                                                RSSPECAN_LIMIT_NAME, name), 3, "Limit Line Name");
-    
-    viCheckParm (rsspecan_SetAttributeViString (instrSession, lim_line_no,
-                                                RSSPECAN_LIMIT_COMMENT, comment), 4, "Limit Line Comment");
-    
+
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, lim_line_no, RSSPECAN_LIMIT_NAME, name),
+    		3, "Limit Line Name");
+
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, lim_line_no, RSSPECAN_LIMIT_COMMENT, comment),
+    		4, "Limit Line Comment");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1362,84 +1180,66 @@ ViStatus _VI_FUNC rsspecan_DefineNoiseLimitLine(
 {
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
-	ViChar      model [1024] = ""; 
-    ViChar      lim_line_no[RSSPECAN_IO_BUFFER_SIZE] = "";
-    ViChar      *pbuffer= VI_NULL;
+    ViChar      lim_line_no[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      *pbuffer= NULL;
     ViChar      *p2buf;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-	
-	checkErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, model));
 
-    if ((limit<1)||(limit>6))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Limit Line Number");
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((resultType<RSSPECAN_VAL_NOISE_CALC_LIM_LINE_NFIGURE)||
-        (resultType>RSSPECAN_VAL_NOISE_CALC_LIM_LINE_GAIN))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 3, "Result Type");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 6),
+    		2, "Limit Line Number");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultType, RSSPECAN_VAL_NOISE_CALC_LIM_LINE_NFIGURE, RSSPECAN_VAL_NOISE_CALC_LIM_LINE_GAIN),
+    		3, "Result Type");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, RSSPECAN_VAL_LIMIT_LOWER, RSSPECAN_VAL_LIMIT_UPPER),
+    		4, "Type");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, count, 1, INT_MAX),
+    		5, "Count");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, xAxis), 6, "X Axis");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, amplitude), 7, "Amplitude");
 
-    if ((type<RSSPECAN_VAL_LIMIT_LOWER)||
-        (type>RSSPECAN_VAL_LIMIT_UPPER))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 4, "Type");
-    
-    if (count<1)
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 5, "Count");
-    
-    if (!xAxis)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 6, "X Axis");
-    }
-    if (!amplitude)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 7, "Amplitude");
-    }
-    
     sprintf(lim_line_no,"L%d",limit);
-    
-    if (!(strstr (model, "FSW")))
-    {    
-		viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, lim_line_no,
-                                               RSSPECAN_ATTR_NOISE_CALC_LIM_TRAC,
-                                               resultType), 3, "Result Type");
+
+    if (RsCore_IsInstrumentModel(instrSession, "FSW"))
+    {
+    	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, lim_line_no, RSSPECAN_ATTR_NOISE_CALC_LIM_TRAC, resultType),
+    			3, "Result Type");
     }
-	
+
     viCheckAlloc (pbuffer = (ViChar*) malloc (count * 20 + 200));
-    
+
     p2buf = pbuffer + sprintf (pbuffer, "CALC:LIM%ld:CONT ", limit);
-    
+
         for (i = 0; i < count; i++)
         p2buf += sprintf (p2buf, "%le,", xAxis[i]);
-    
+
     *p2buf = '\0';
     *--p2buf = '\n';
-    
-    viCheckErr (viWrite (instrSession, (ViBuf) pbuffer, (ViUInt32) strlen (pbuffer), VI_NULL));
-    
+
+    checkErr(viWrite (instrSession, (ViBuf) pbuffer, (ViUInt32) strlen (pbuffer), NULL));
+
     p2buf = pbuffer + sprintf (pbuffer, "CALC:LIM%ld:%s ", limit, measTypeArr [type]);
-    
+
     for (i = 0; i < count; i++)
         p2buf += sprintf (p2buf, "%le,", amplitude[i]);
-    
+
     *p2buf = '\0';
     *--p2buf = '\n';
-    
-    viCheckErr (viWrite (instrSession, (ViBuf) pbuffer, (ViUInt32) strlen (pbuffer), VI_NULL));
-    
-    checkErr( rsspecan_CheckStatus (instrSession));
+
+    checkErr(viWrite (instrSession, (ViBuf) pbuffer, (ViUInt32) strlen (pbuffer), NULL));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
     if (pbuffer) free (pbuffer);
 
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /// HIFN This function configures a limit line for a particular result type.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR limit/This control selects limit.
 /// HIPAR resultType/Select the result type.
@@ -1447,64 +1247,59 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseLimitLineType (ViSession instrSession,
                                                ViInt32 limit, ViInt32 resultType)
 {
 	ViStatus    error   = VI_SUCCESS;
-    ViChar      rep_cap [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    ViChar      repCap [RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    if ((limit<1)||(limit>6))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Limit Line Number");
-        
-    sprintf(rep_cap,"L%ld",limit);
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, rep_cap, 
-								RSSPECAN_ATTR_NOISE_CALC_LIMIT_RESULT_TYPE, resultType), 4, "Result Type");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 6),
+    		2, "Limit Line Number");
+
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%ld",limit);
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_NOISE_CALC_LIMIT_RESULT_TYPE, resultType),
+    		4, "Result Type");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /// HIFN This function assigns a limit line to a trace in the indicated measurement window.
-/// HIFN 
+/// HIFN
 /// HIFN Note(s):
-/// HIFN 
+/// HIFN
 /// HIFN (1) This function is available for R&S FSW instrument only.
-/// HIFN 
+/// HIFN
 /// HIFN (2) Limit line is selected by its name. Use attribute
 /// HIFN RSSPECAN_LIMIT_NAME or function rsspecan_CreateNoiseLimitLine.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR assignToTrace/Assigns a limit line to a trace in the indicated measurement window.
 ViStatus _VI_FUNC rsspecan_AssignNoiseLimitLineToTrace (ViSession instrSession,
                                                         ViInt32 assignToTrace)
 {
 	ViStatus	error = VI_SUCCESS;
-	ViChar      rep_cap [RSSPECAN_IO_BUFFER_SIZE] = "";
-	ViChar      buffer [RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-	checkErr( Rs_LockSession (instrSession, VI_NULL));
+	ViChar      repCap [RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, buffer));
+	checkErr(RsCore_LockSession(instrSession));
 
-    if (!(strstr (buffer, "FSW")))
-        viCheckErr (RS_ERROR_INSTRUMENT_MODEL);
-    
-    sprintf (rep_cap, "Win%ld,L%ld", 1, 1);
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, rep_cap, RSSPECAN_LIMIT_ASSIGN_TRACE, assignToTrace), 2, "Assign to Trace");
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "FSW"));
 
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,L%ld", 1, 1);
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_LIMIT_ASSIGN_TRACE, assignToTrace),
+    		2, "Assign to Trace");
 
 Error:
-	Rs_UnlockSession(instrSession, VI_NULL);
+	(void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Enable Noise Limit Check
- * Purpose:  This function switches on or off the limit check and/or limit 
- *           line for the selected limit line in the selected measurement 
+ * Purpose:  This function switches on or off the limit check and/or limit
+ *           line for the selected limit line in the selected measurement
  *           window.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_EnableNoiseLimitCheck(
@@ -1516,30 +1311,30 @@ ViStatus _VI_FUNC rsspecan_EnableNoiseLimitCheck(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      lim_line_no[RSSPECAN_IO_BUFFER_SIZE] = ""; 
+    ViChar      lim_line_no[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViAttr      attr[] = {RSSPECAN_LIMIT_LOWER_STATE,
                           RSSPECAN_LIMIT_UPPER_STATE};
 	ViInt32		window = 1;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((limit<1)||(limit>6))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Limit Line Number");
-        
-    if ((type<RSSPECAN_VAL_LIMIT_LOWER)||
-        (type>RSSPECAN_VAL_LIMIT_UPPER))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 3, "Type");    
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 6),
+    		2, "Limit Line Number");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, RSSPECAN_VAL_LIMIT_LOWER, RSSPECAN_VAL_LIMIT_UPPER),
+    		3, "Type");
 
-    viCheckErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_WINDOW_SELECT, &window));
-    
+    checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_WINDOW_SELECT, &window));
+
     sprintf(lim_line_no,"Win%ld,L%d", window, limit);
-    
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, lim_line_no, RSSPECAN_LIMIT_STATE, limitEnabled), 4, "Limit Enabled");
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, lim_line_no, attr[type], checkEnabled), 5, "Check Enabled");
-    
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, lim_line_no, RSSPECAN_LIMIT_STATE, limitEnabled),
+    		4, "Limit Enabled");
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, lim_line_no, attr[type], checkEnabled),
+    		5, "Check Enabled");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1555,41 +1350,34 @@ ViStatus _VI_FUNC rsspecan_MoveNoiseLimitLine(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      lim_line_no[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      lim_line_no[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViAttr      attr[] = {RSSPECAN_LIMIT_LOWER_SHIFT,
                           RSSPECAN_LIMIT_UPPER_SHIFT,
-                          RSSPECAN_LIMIT_CONTROL_SHIFT};    
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
+                          RSSPECAN_LIMIT_CONTROL_SHIFT};
 
-    if ((limit<1)||(limit>6))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Limit Line Number");
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((type<RSSPECAN_VAL_LIMIT_LOWER)||
-        (type>RSSPECAN_VAL_LIMIT_CONTROL))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 3, "Type");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 6),
+    		2, "Limit Line Number");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, RSSPECAN_VAL_LIMIT_LOWER, RSSPECAN_VAL_LIMIT_CONTROL),
+    		3, "Type");
 
     if (type == RSSPECAN_VAL_LIMIT_CONTROL)
     {
-        if ((value<-300.0e9)||(value>300.0e9))
-            viCheckParm( RS_ERROR_INVALID_PARAMETER, 4, "Value");
+        viCheckParm(RsCore_InvalidViReal64Range(instrSession, value, -300.0e9, 300.0e9), 4, "Value");
     }
     else
     {
-        if ((value<-200.0)||(value>200.0))
-            viCheckParm( RS_ERROR_INVALID_PARAMETER, 4, "Value");
+        viCheckParm(RsCore_InvalidViReal64Range(instrSession, value, -200.0, 200.0), 4, "Value");
     }
-    
+
     sprintf(lim_line_no,"L%d",limit);
-    
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, lim_line_no,
-                                              attr[type],
-                                              value),
-                                              4, "Value");
-    
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, lim_line_no, attr[type], value),
+    		4, "Value");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1604,22 +1392,20 @@ ViStatus _VI_FUNC rsspecan_CopyNoiseLimitLine(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      lim_line_no[RSSPECAN_IO_BUFFER_SIZE] = ""; 
+    ViChar      lim_line_no[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((limit<1)||(limit>6))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Limit Line Number");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 6),
+    		2, "Limit Line Number");
 
     sprintf(lim_line_no,"L%d",limit);
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, lim_line_no,
-                                               RSSPECAN_LIMIT_COPY, copyTo),
-                                               3, "Copy To");
-    
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, lim_line_no, RSSPECAN_LIMIT_COPY, copyTo),
+    		3, "Copy To");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1633,24 +1419,22 @@ ViStatus _VI_FUNC rsspecan_ClearNoiseLimitLineResults(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      lim_line_no[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      lim_line_no[RS_MAX_MESSAGE_BUF_SIZE] = "";
 	ViInt32		window = 1;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    if ((limit<1)||(limit>6))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Limit Line Number");
-    
-    viCheckErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_WINDOW_SELECT, &window));
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 6),
+    		2, "Limit Line Number");
+
+    checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_WINDOW_SELECT, &window));
+
     sprintf(lim_line_no,"Win%ld,L%d", window, limit);
 
-    viCheckErr(rsspecan_SetAttributeViString (instrSession, lim_line_no,
-                                               RSSPECAN_LIMIT_CLEAR, VI_NULL));
-
+    checkErr(rsspecan_SetAttributeViString(instrSession, lim_line_no, RSSPECAN_LIMIT_CLEAR, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1664,30 +1448,28 @@ ViStatus _VI_FUNC rsspecan_DeleteNoiseLimitLine(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      lim_line_no[RSSPECAN_IO_BUFFER_SIZE] = ""; 
+    ViChar      lim_line_no[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((limit<1)||(limit>6))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Limit Line Number");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 6),
+    		2, "Limit Line Number");
 
     sprintf(lim_line_no,"L%d",limit);
-    
-    viCheckErr (rsspecan_SetAttributeViString (instrSession, lim_line_no,
-                                               RSSPECAN_LIMIT_DELETE, VI_NULL));
-    
+
+    checkErr(rsspecan_SetAttributeViString(instrSession, lim_line_no, RSSPECAN_LIMIT_DELETE, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Query Noise Results
  * Purpose:  This function queries the noise measurement results.
- *           
+ *
  *           Notes:
- *           
+ *
  *           (1) This functions is for R&S FSW only.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_QueryNoiseResults (ViSession instrSession,
@@ -1698,54 +1480,45 @@ ViStatus _VI_FUNC rsspecan_QueryNoiseResults (ViSession instrSession,
                                               ViReal64 results[])
 {
 	ViStatus	error = VI_SUCCESS;
-	ViChar		buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-	ViChar*     pbuffer = VI_NULL; 
+	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViChar*     pbuffer = NULL;
     ViChar*     pstring_value;
-    ViUInt32    ret_cnt;
     ViInt32     cnt = 0;
-	
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-	
-	checkErr (rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RSSPECAN_IO_BUFFER_SIZE, buffer));
 
-    if (!(strstr (buffer, "FSW")))
-        viCheckErr (RS_ERROR_INSTRUMENT_MODEL);
-    
-    if (rsspecan_invalidViInt32Range (resultType, RSSPECAN_VAL_NOISE_RESULT_TYPE_GAIN, RSSPECAN_VAL_NOISE_RESULT_TYPE_YFAC))
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 4, "Result Type");
-    }
-    
-    viCheckErr (viPrintf (instrSession, "TRAC%ld:DATA? TRACe%ld,%s\n", window, trace, resultArr[resultType]));
-    
-    viCheckErr (Rs_ReadDataUnknownLength (instrSession, &pbuffer, &ret_cnt)); 
+    checkErr(RsCore_LockSession(instrSession));
 
-    pstring_value = strtok (pbuffer, ",");  
-	
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "FSW"));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultType, RSSPECAN_VAL_NOISE_RESULT_TYPE_GAIN, RSSPECAN_VAL_NOISE_RESULT_TYPE_YFAC),
+    		4, "Result Type");
+
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "TRAC%ld:DATA? TRACe%ld,%s", window, trace, resultArr[resultType]);
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
+
+    pstring_value = strtok (pbuffer, ",");
+
     while (pstring_value && cnt<arrayLength)
 	{
         results[cnt++] = atof (pstring_value);
 		pstring_value = strtok (NULL, ",");
     }
-    
+
 	if (actualPoints != NULL)
     	*actualPoints = cnt;
-	
-    checkErr (rsspecan_CheckStatus (instrSession));
-	
+
+    checkErr(rsspecan_CheckStatus (instrSession));
+
 Error:
-	Rs_UnlockSession(instrSession, VI_NULL);
+	(void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Get Noise Limit Check Result
- * Purpose:  This function queries the result of the limit check of the limit 
- *           line indicated in the selected measurement window. It should be 
- *           noted that a complete sweep must have been performed for obtaining 
- *           a valid result. A synchronization with  *OPC, *OPC? or *WAI should 
+ * Purpose:  This function queries the result of the limit check of the limit
+ *           line indicated in the selected measurement window. It should be
+ *           noted that a complete sweep must have been performed for obtaining
+ *           a valid result. A synchronization with  *OPC, *OPC? or *WAI should
  *           therefore be provided.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_GetNoiseLimitCheckResult(
@@ -1755,53 +1528,47 @@ ViStatus _VI_FUNC rsspecan_GetNoiseLimitCheckResult(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      lim_line_no[RSSPECAN_IO_BUFFER_SIZE] = ""; 
+    ViChar      lim_line_no[RS_MAX_MESSAGE_BUF_SIZE] = "";
 	ViInt32		window = 1;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if ((limit<1)||(limit>6))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Limit Line Number");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 6),
+    		2, "Limit Line Number");
 
-    viCheckErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_WINDOW_SELECT, &window));
-    
+    checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_WINDOW_SELECT, &window));
+
     sprintf(lim_line_no,"Win%ld,L%d", window, limit);
-    
-    viCheckParm (rsspecan_GetAttributeViInt32 (instrSession, lim_line_no,
-                                               RSSPECAN_LIMIT_CHECK_RESULT,
-                                               state),
-                                               3, "State");
 
+    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, lim_line_no, RSSPECAN_LIMIT_CHECK_RESULT, state),
+    		3, "State");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Save Noise Trace Data To Memory
- * Purpose:  This function saves the current trace results (noise figure, noise 
+ * Purpose:  This function saves the current trace results (noise figure, noise
  *           temperature and noise gain traces) to trace memory <n>.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_SaveNoiseTraceDataToMemory (ViSession instrSession,
                                                        ViInt32 memory)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE]="";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    if (rsspecan_invalidViInt32Range (memory, 1, 3))
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Memory");
-    }
-    
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, memory, 1, 3),
+    		2, "Memory");
+
     sprintf (buffer, "MEM%ld", memory);
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, buffer,
-                                                 RSSPECAN_ATTR_NOISE_ARRAY_MEMORY,
-                                                 NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_NOISE_ARRAY_MEMORY, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1809,8 +1576,8 @@ Error:
 
 /// HIFN This function assigns the selected marker to the indicated trace in the specified window.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR window/This control selects the measurement window.
 /// HIPAR marker/This control selects marker.
@@ -1820,31 +1587,27 @@ ViStatus _VI_FUNC rsspecan_AssignMarkerToTrace (ViSession instrSession,
                                                 ViInt32 trace)
 {
 	ViStatus	error = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE]="";
-	
-	checkErr( Rs_LockSession (instrSession, VI_NULL));
-	
-	if (rsspecan_invalidViInt32Range (marker, 1, 16))
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Marker");
-    }
-    
-	sprintf (buffer, "C%ld,M%ld", window, marker);
-	
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, buffer,
-                               				RSSPECAN_ATTR_NOISE_ASSIGN_MARKER_TO_TRACE, 
-							   				trace), 4, "Trace");
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
 
+	checkErr(RsCore_LockSession(instrSession));
+
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 16),
+			3, "Marker");
+
+	sprintf (buffer, "C%ld,M%ld", window, marker);
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_NOISE_ASSIGN_MARKER_TO_TRACE, trace),
+    		4, "Trace");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
-}  
+}
 
 /// HIFN This function queries the position of a marker on the y-axis.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR window/This control selects the measurement window.
 /// HIPAR marker/This control selects marker.
@@ -1856,38 +1619,32 @@ ViStatus _VI_FUNC rsspecan_QueryNoiseMarkerAmplitude (ViSession instrSession,
                                              ViReal64 *markerAmplitude)
 {
 	ViStatus	error = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE]="";
-	
-	checkErr( Rs_LockSession (instrSession, VI_NULL));
-	
-	if (rsspecan_invalidViInt32Range (marker, 1, 16))
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Marker");
-    }
-    if (rsspecan_invalidViInt32Range (resultType, RSSPECAN_VAL_NOISE_LIM_LINE_TYPE_GAIN, 
-												RSSPECAN_VAL_NOISE_LIM_LINE_TYPE_NUNC))
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 4, "Result Type");
-    }
-	
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
+
+	checkErr(RsCore_LockSession(instrSession));
+
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 16),
+			3, "Marker");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultType, RSSPECAN_VAL_NOISE_LIM_LINE_TYPE_GAIN, RSSPECAN_VAL_NOISE_LIM_LINE_TYPE_NUNC),
+    		4, "Result Type");
+
 	sprintf (buffer, "Win%ld,M%ld,%s", window, marker, markerResultArr[resultType]);
-	
-    viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, buffer,
-                               				RSSPECAN_ATTR_NOISE_MARKER_AMPLITUDE, 
-							   				markerAmplitude), 4, "markerAmplitude"); 
+
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_NOISE_MARKER_AMPLITUDE, markerAmplitude),
+    		4, "markerAmplitude");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
-/// HIFN  This function turns matching of the noise source characteristics used 
+/// HIFN  This function turns matching of the noise source characteristics used
 /// HIFN  during calibration and measurement on and off.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
-/// HIPAR state/This control turns matching of the noise source characteristics used 
+/// HIPAR state/This control turns matching of the noise source characteristics used
 /// HIPAR state/during calibration and measurement on and off.
 ViStatus _VI_FUNC rsspecan_ConfigureNoiseUncertaintyCommonSource(
 	ViSession	instrSession,
@@ -1895,28 +1652,27 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseUncertaintyCommonSource(
 )
 {
 	ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_NOISE_UNCERTAINTY_COMMON_SOURCE,
-                                                 state), 2, "state");
-	
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_COMMON_SOURCE, state),
+    		2, "state");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
-    return error;    
+    (void)RsCore_UnlockSession(instrSession);
+    return error;
 }
 
-/// HIFN  This function defines the output match of the noise source. Define the 
+/// HIFN  This function defines the output match of the noise source. Define the
 /// HIFN  output match either as the VSWR or as the return loss (RL).
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR type/This control selects the type of output match.
-/// HIPAR sourceOutput/This control defines the VSWR or return loss at the noise source 
+/// HIPAR sourceOutput/This control defines the VSWR or return loss at the noise source
 /// HIPAR sourceOutput/output.
-/// HIPAR ernUncertainty/This control defines the uncertainty of the excess noise ratio of the 
+/// HIPAR ernUncertainty/This control defines the uncertainty of the excess noise ratio of the
 /// HIPAR ernUncertainty/noise source you are using.
 ViStatus _VI_FUNC rsspecan_ConfigureNoiseUncertaintySourceCharacteristics(
 	ViSession	instrSession,
@@ -1926,53 +1682,53 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseUncertaintySourceCharacteristics(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+
+    checkErr(RsCore_LockSession(instrSession));
 
     switch (type)
 	{
         case RSSPECAN_VAL_NOISE_VSWR:
-            viCheckParm( rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_SOURCE_VSWR, 
-                sourceOutput), 3, "Source Output");
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_SOURCE_VSWR, sourceOutput),
+            		3, "Source Output");
         break;
         case RSSPECAN_VAL_NOISE_RETURN_LOSS:
-            viCheckParm( rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_SOURCE_RETURN_LOSS, 
-                sourceOutput), 3, "Source Output");
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_SOURCE_RETURN_LOSS, sourceOutput),
+            		3, "Source Output");
         break;
         default:
-            viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Type");     
+            viCheckParm(RsCore_InvalidViInt32Value(instrSession, type), 2, "Type");
     }
-	
-	viCheckParm( rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_ERN, 
-                ernUncertainty), 4, "ERN Uncertainty");
-	
+
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_ERN, ernUncertainty),
+			4, "ERN Uncertainty");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 
-/// HIFN  This function defines the output match of the noise source 
-/// HIFN  calibration. Define the output match either as the VSWR or as the 
+/// HIFN  This function defines the output match of the noise source
+/// HIFN  calibration. Define the output match either as the VSWR or as the
 /// HIFN  return loss (RL).
-/// HIFN     
+/// HIFN
 /// HIFN     Attribute(s):
 /// HIFN     RSSPECAN_ATTR_NOISE_UNCERTAINTY_CALIBRATION_SOURCE_VSWR
 /// HIFN     RSSPECAN_ATTR_NOISE_UNCERTAINTY_CALIBRATION_SOURCE_RETURN_LOSS
 /// HIFN     RSSPECAN_ATTR_NOISE_UNCERTAINTY_CALIBRATION_ERN
-/// HIFN     
+/// HIFN
 /// HIFN     Remote-control command(s):
 /// HIFN     CALCulate:UNCertainty:MATCh:SOURce:CALibration[:VSWR]
 /// HIFN     CALCulate:UNCertainty:MATCh:SOURce:CALibration:RL
 /// HIFN     CALCulate:UNCertainty:ENR:CALibration:UNCertainty
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR type/This control selects the type of output match.
-/// HIPAR sourceOutput/This control defines the VSWR or return loss at the calibration noise 
+/// HIPAR sourceOutput/This control defines the VSWR or return loss at the calibration noise
 /// HIPAR sourceOutput/source output.
-/// HIPAR ernUncertainty/This control defines the uncertainty of the excess noise ratio of the 
+/// HIPAR ernUncertainty/This control defines the uncertainty of the excess noise ratio of the
 /// HIPAR ernUncertainty/calibration noise source you are using.
 ViStatus _VI_FUNC rsspecan_ConfigureNoiseUncertaintySourceCalibrationCharacteristics(
 	ViSession	instrSession,
@@ -1982,44 +1738,44 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseUncertaintySourceCalibrationCharacteris
 )
 {
 	ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+
+    checkErr(RsCore_LockSession(instrSession));
 
     switch (type)
 	{
         case RSSPECAN_VAL_NOISE_VSWR:
-            viCheckParm( rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_CALIBRATION_SOURCE_VSWR, 
-                sourceOutput), 3, "Source Output");
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_CALIBRATION_SOURCE_VSWR, sourceOutput),
+            		3, "Source Output");
         break;
         case RSSPECAN_VAL_NOISE_RETURN_LOSS:
-            viCheckParm( rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_CALIBRATION_SOURCE_RETURN_LOSS, 
-                sourceOutput), 3, "Source Output");
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_CALIBRATION_SOURCE_RETURN_LOSS, sourceOutput),
+            		3, "Source Output");
         break;
         default:
-            viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Type");     
+            viCheckParm(RsCore_InvalidViInt32Value(instrSession, type), 2, "Type");
     }
-	
-	viCheckParm( rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_CALIBRATION_ERN, 
-                ernUncertainty), 4, "ERN Uncertainty");
-	
+
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_CALIBRATION_ERN, ernUncertainty),
+			4, "ERN Uncertainty");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
-    return error;    
+    (void)RsCore_UnlockSession(instrSession);
+    return error;
 }
 
-/// HIFN  This function defines the match at the DUT input and output. You can 
-/// HIFN  define the match either as the VSWR or as the return loss (RL). If you 
-/// HIFN  define the VSWR or the return loss, the application automatically 
+/// HIFN  This function defines the match at the DUT input and output. You can
+/// HIFN  define the match either as the VSWR or as the return loss (RL). If you
+/// HIFN  define the VSWR or the return loss, the application automatically
 /// HIFN  calculates the other.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR direction/This control selects the match direction.
 /// HIPAR type/This control selects the type of match.
-/// HIPAR dutUncertainty/This control defines the match at the DUT input and output. You can 
-/// HIPAR dutUncertainty/define the match either as the VSWR or as the return loss (RL). If you 
-/// HIPAR dutUncertainty/define the VSWR or the return loss, the application automatically 
+/// HIPAR dutUncertainty/This control defines the match at the DUT input and output. You can
+/// HIPAR dutUncertainty/define the match either as the VSWR or as the return loss (RL). If you
+/// HIPAR dutUncertainty/define the VSWR or the return loss, the application automatically
 /// HIPAR dutUncertainty/calculates the other.
 ViStatus _VI_FUNC rsspecan_ConfigureNoiseUncertaintyDUTCharacteristics(
 	ViSession	instrSession,
@@ -2032,36 +1788,32 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseUncertaintyDUTCharacteristics(
     ViAttr	attr[2][2] = {{RSSPECAN_ATTR_NOISE_UNCERTAINTY_DUT_INPUT_VSWR, RSSPECAN_ATTR_NOISE_UNCERTAINTY_DUT_INPUT_RETURN_LOSS},
 						  {RSSPECAN_ATTR_NOISE_UNCERTAINTY_DUT_OUTPUT_VSWR, RSSPECAN_ATTR_NOISE_UNCERTAINTY_DUT_OUTPUT_RETURN_LOSS}};
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (direction, RSSPECAN_VAL_NOISE_INPUT, RSSPECAN_VAL_NOISE_OUTPUT) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Direction");
-    }
-	if (rsspecan_invalidViInt32Range (type, RSSPECAN_VAL_NOISE_VSWR, RSSPECAN_VAL_NOISE_RETURN_LOSS) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Type");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, direction, RSSPECAN_VAL_NOISE_INPUT, RSSPECAN_VAL_NOISE_OUTPUT),
+    		2, "Direction");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, RSSPECAN_VAL_NOISE_VSWR, RSSPECAN_VAL_NOISE_RETURN_LOSS),
+			3, "Type");
 
-    viCheckParm( rsspecan_SetAttributeViReal64 (instrSession, "", attr[direction][type], 
-                dutUncertainty), 4, "DUT Uncertainty");
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", attr[direction][type], dutUncertainty),
+    		4, "DUT Uncertainty");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
-/// HIFN  This function turns automatic determination of the DUT characteristics 
+/// HIFN  This function turns automatic determination of the DUT characteristics
 /// HIFN  used for the uncertainty calculation on and off.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
-/// HIPAR _auto/This control turns automatic determination of the DUT characteristics 
+/// HIPAR _auto/This control turns automatic determination of the DUT characteristics
 /// HIPAR _auto/for the calculation of the uncertainty on and off.
 /// HIPAR noiseFigure/This control defines the noise level of the DUT.
 /// HIPAR gain/This control defines the gain of the DUT.
-/// HIPAR frequency/This control defines the frequency for which the uncertainty should be 
+/// HIPAR frequency/This control defines the frequency for which the uncertainty should be
 /// HIPAR frequency/calculated.
 ViStatus _VI_FUNC rsspecan_ConfigureNoiseUncertaintyMeasurementValues(
 	ViSession	instrSession,
@@ -2072,45 +1824,42 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseUncertaintyMeasurementValues(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_NOISE_UNCERTAINTY_AUTO,
-                                                 _auto), 2, "Auto");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_AUTO, _auto),
+    		2, "Auto");
 	if (_auto == VI_FALSE)
 	{
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-	                                                RSSPECAN_ATTR_NOISE_UNCERTAINTY_NOISE,
-	                                                noiseFigure), 3, "Noise Figure");
-    
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-	                                                RSSPECAN_ATTR_NOISE_UNCERTAINTY_GAIN,
-	                                                gain), 4, "Gain");
-    
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-	                                                RSSPECAN_ATTR_NOISE_UNCERTAINTY_FREQUENCY,
-	                                                frequency), 5, "Frequency");
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_NOISE, noiseFigure),
+				3, "Noise Figure");
+
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_GAIN, gain),
+				4, "Gain");
+
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_FREQUENCY, frequency),
+				5, "Frequency");
 	}
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
-/// HIFN  This function configures the characteristics of the test setup when 
+/// HIFN  This function configures the characteristics of the test setup when
 /// HIFN  using an external preamplifier.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
-/// HIPAR preamplifierState/This control includes or excludes an external preamplifier from the 
+/// HIPAR preamplifierState/This control includes or excludes an external preamplifier from the
 /// HIPAR preamplifierState/uncertainty calculation.
-/// HIPAR noiseFigure/This control defines the noise level of an external preamplifier that 
+/// HIPAR noiseFigure/This control defines the noise level of an external preamplifier that
 /// HIPAR noiseFigure/may be part of the test setup.
-/// HIPAR gain/This control define the gain of an external preamplifier that may be 
+/// HIPAR gain/This control define the gain of an external preamplifier that may be
 /// HIPAR gain/part of the test setup.
 /// HIPAR type/This control selects the type of match.
-/// HIPAR analyzerUncertainty/This control defines the VSWR or return loss at the input of the 
+/// HIPAR analyzerUncertainty/This control defines the VSWR or return loss at the input of the
 /// HIPAR analyzerUncertainty/preamplifier.
 ViStatus _VI_FUNC rsspecan_ConfigureNoiseUncertaintyAnalyzerCharacteristics(
 	ViSession	instrSession,
@@ -2122,45 +1871,43 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseUncertaintyAnalyzerCharacteristics(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_NOISE_UNCERTAINTY_PREAMPLIFIER_STATE,
-                                                 preamplifierState), 2, "Preamplifier State");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_PREAMPLIFIER_STATE, preamplifierState),
+    		2, "Preamplifier State");
 	if (preamplifierState == VI_TRUE)
 	{
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-	                                                RSSPECAN_ATTR_NOISE_UNCERTAINTY_PREAMPLIFIER_NOISE,
-	                                                noiseFigure), 3, "Noise Figure");
-		
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-	                                                RSSPECAN_ATTR_NOISE_UNCERTAINTY_PREAMPLIFIER_GAIN,
-	                                                gain), 4, "Gain");
-		
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_PREAMPLIFIER_NOISE, noiseFigure),
+				3, "Noise Figure");
+
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_PREAMPLIFIER_GAIN, gain),
+				4, "Gain");
+
 		switch (type)
 		{
 	        case RSSPECAN_VAL_NOISE_VSWR:
-	            viCheckParm( rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_PREAMPLIFIER_VSWR, 
-	                analyzerUncertainty), 6, "Analyzer Uncertainty");
+	            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_PREAMPLIFIER_VSWR, analyzerUncertainty),
+	            		6, "Analyzer Uncertainty");
 	        break;
 	        case RSSPECAN_VAL_NOISE_RETURN_LOSS:
-	            viCheckParm( rsspecan_SetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_PREAMPLIFIER_RETURN_LOSS, 
-	                analyzerUncertainty), 6, "Analyzer Uncertainty");
+	            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_PREAMPLIFIER_RETURN_LOSS, analyzerUncertainty),
+	            		6, "Analyzer Uncertainty");
 	        break;
 	        default:
-	            viCheckParm (RS_ERROR_INVALID_PARAMETER, 5, "Type");     
+	            viCheckParm(RsCore_InvalidViInt32Value(instrSession, type), 5, "Type");
 	    }
 	}
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /// HIFN  This function queries the uncertainty of noise figure results.
 /// HIRET Returns the status code of this operation.
-/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or 
-/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular 
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsspecan_init or
+/// HIPAR instrSession/rsspecan_InitWithOptions function.  The handle identifies a particular
 /// HIPAR instrSession/instrument session.
 /// HIPAR uncertainty/This control queries the uncertainty of noise figure results.
 ViStatus _VI_FUNC rsspecan_QueryNoiseUncertainty(
@@ -2169,15 +1916,14 @@ ViStatus _VI_FUNC rsspecan_QueryNoiseUncertainty(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_NOISE_UNCERTAINTY_RESULT,
-                                                uncertainty), 2, "Uncertainty");
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_NOISE_UNCERTAINTY_RESULT, uncertainty),
+    		2, "Uncertainty");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2198,17 +1944,14 @@ ViStatus _VI_FUNC rsspecan_QuerySpectrumAnalyzerUncertainty (ViSession instrSess
 	ViAttr		attr[] = {RSSPECAN_ATTR_SPEC_ANALYZER_UNCERTAINTY_GAIN,
 						  RSSPECAN_ATTR_SPEC_ANALYZER_UNCERTAINTY_NOISE};
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
-	
-	if (rsspecan_invalidViInt32Range (spectrumAnalyzer, RSSPECAN_VAL_INT_GAIN, RSSPECAN_VAL_INT_NOISE))
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Spectrum Analyzer");
-    }
-    
-    viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, "",
-                                                attr[spectrumAnalyzer],
-                                                uncertainty), 3, "Uncertainty");
-    
+    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, spectrumAnalyzer, RSSPECAN_VAL_INT_GAIN, RSSPECAN_VAL_INT_NOISE),
+			2, "Spectrum Analyzer");
+
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", attr[spectrumAnalyzer], uncertainty),
+    		3, "Uncertainty");
+
 Error:
 	return error;
 }
@@ -2224,12 +1967,12 @@ ViStatus _VI_FUNC rsspecan_InitNoiseGenerator (ViSession instrSession)
 {
     ViStatus    error   = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_NOISE_INIT_GENERATOR, VI_NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_NOISE_INIT_GENERATOR, NULL));
 
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2246,36 +1989,34 @@ ViStatus _VI_FUNC rsspecan_FetchNoiseArray(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar*     pbuffer = VI_NULL; 
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar*     pbuffer = NULL;
     ViChar*     pstring_value;
     ViInt32     cnt     = 0;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    if ((modifier<RSSPECAN_VAL_NOISE_FETC_FIGURE)||
-        (modifier>RSSPECAN_VAL_NOISE_FETC_GAIN))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Modifier");
-    
-    if ((arraySize<1)||
-        (arraySize>100))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 3, "Array Size");
-    
-    viCheckErr (viPrintf (instrSession, "FORM ASC;:FETC:ARR:NOIS:%s?\n", fetchTypeArr[modifier]));
-    viCheckErr (Rs_ReadDataUnknownLength (instrSession, &pbuffer, VI_NULL)); 
-   
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_NOISE_FETC_FIGURE, RSSPECAN_VAL_NOISE_FETC_GAIN),
+    		2, "Modifier");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, 100),
+    		3, "Array Size");
+
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FORM ASC;:FETC:ARR:NOIS:%s?", fetchTypeArr[modifier]);
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
+
     pstring_value = strtok(pbuffer, ",");
     while (pstring_value && cnt<arraySize)
     {
         values[cnt++] = atof (pstring_value);
         pstring_value = strtok(NULL, ",");
     }
-    
+
     if (pbuffer) free(pbuffer);
-    
-    checkErr( rsspecan_CheckStatus (instrSession));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2290,31 +2031,31 @@ ViStatus _VI_FUNC rsspecan_FetchNoiseScalar(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar*     pbuffer = VI_NULL; 
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar*     pbuffer = NULL;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    if ((modifier<RSSPECAN_VAL_NOISE_FETC_FIGURE)||
-        (modifier>RSSPECAN_VAL_NOISE_FETC_GAIN))
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Modifier");
-    
-    viCheckErr (viPrintf (instrSession, "FETC:SCAL:NOIS:%s?\n", fetchTypeArr[modifier]));
-    viCheckErr (Rs_ReadDataUnknownLength (instrSession, &pbuffer, VI_NULL)); 
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_NOISE_FETC_FIGURE, RSSPECAN_VAL_NOISE_FETC_GAIN),
+    		2, "Modifier");
+
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FETC:SCAL:NOIS:%s?", fetchTypeArr[modifier]);
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
 
     sscanf(pbuffer,"%le",value);
 
     if (pbuffer) free(pbuffer);
-    
-    checkErr( rsspecan_CheckStatus (instrSession));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Fetch Noise Memory Array
- * Purpose:  This function returns the measurement results of the selected 
+ * Purpose:  This function returns the measurement results of the selected
  *           memory.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_FetchNoiseMemoryArray (ViSession instrSession,
@@ -2324,41 +2065,36 @@ ViStatus _VI_FUNC rsspecan_FetchNoiseMemoryArray (ViSession instrSession,
                                                   ViReal64 measResult[])
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar*     pbuffer = VI_NULL; 
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar*     pbuffer = NULL;
     ViChar*     pstring_value;
     ViInt32     cnt     = 0;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    if (rsspecan_invalidViInt32Range (modifier, RSSPECAN_VAL_NOISE_FETC_FIGURE, RSSPECAN_VAL_NOISE_FETC_GAIN))
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Modifier");
-    }
-    
-    if (rsspecan_invalidViInt32Range (memory, 1, 3))
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Memory");
-    }
-    if (rsspecan_invalidViInt32Range (arraySize, 1, 100))
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 4, "Array Size");
-    }
-  
-    viCheckErr (viPrintf (instrSession, "FETC:ARR:MEM%ld:NOIS:%s?\n", memory, fetchTypeArr[modifier]));
-    viCheckErr (Rs_ReadDataUnknownLength (instrSession, &pbuffer, VI_NULL)); 
-   
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_NOISE_FETC_FIGURE, RSSPECAN_VAL_NOISE_FETC_GAIN),
+    		2, "Modifier");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, memory, 1, 3),
+    		3, "Memory");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, 100),
+    		4, "Array Size");
+
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FETC:ARR:MEM%ld:NOIS:%s?", memory, fetchTypeArr[modifier]);
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
+
     pstring_value = strtok(pbuffer, ",");
     while (pstring_value && cnt<arraySize)
     {
         measResult[cnt++] = atof (pstring_value);
         pstring_value = strtok(NULL, ",");
     }
-    
+
     if (pbuffer) free(pbuffer);
-    
-    checkErr( rsspecan_CheckStatus (instrSession));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 

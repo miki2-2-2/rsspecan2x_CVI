@@ -3,11 +3,11 @@
  *  Rohde & Schwarz Spectrum Analyzer instrument driver include file
  *
  ****************************************************************************/
-  
+
 #ifndef __RSSPECAN_HEADER
 #define __RSSPECAN_HEADER
 
-#include "rsidr_core.h"
+#include "rscore.h"
 #include "rsspecan_attributes.h"
 #include "rsspecan_utility.h"
 
@@ -26,37 +26,7 @@ extern "C" {
 #define RSSPECAN_VALID_ID_RESPONSE_STRING "Rohde&Schwarz"      /* Valid response for identification query */
 #define RSSPECAN_SIMULATION_OPT_QUERY     ""      /* Simulated response for *OPT? command */
 
-#define RSSPECAN_IO_BUFFER_SIZE           1024L   /* I/O buffer size */
 #define RSSPECAN_OPC_TIMEOUT              5000L   /* Maximum time to wait for OPC in milliseconds */
-/*
-bit - meaning
--------------
-0 - Unused
-1 - Unused
-_2_ - Error queue not empty
-3 - Questionable status sum
-4 - Message available
-_5_ - ESB (see ESE mask)
-6 - Master status summary
-7 - Operation status sum
-*/
-#define IEEE_488_2_STB_OPC_POLL_MASK      0x24    /* Status byte mask for OPC polling */
-#define IEEE_488_2_ERROR_MASK           0x4    /* 488.2 Error queue not empty bit mask */
-/*
-bit - meaning
--------------
-_0_ - Operation Complete
-1 - Unused
-_2_ - Query Error
-_3_ - Device-dependent Error
-_4_ - Execution Error
-_5_ - Command Error
-6 - User Request
-7 - Power On
-*/
-#define IEEE_488_2_ESE_MASK               0x3D    /* 488.2 Event Status Register (ESE) Bits */
-#define RSSPECAN_NAN                 9.91e+37
-#define RSSPECAN_DATA_BUFFER_SIZE         32001L   /* I/O buffer size for trace transfer*/
 
 /****************************************************************************
  *----------------- Instrument Driver Revision Information -----------------*
@@ -81,7 +51,7 @@ _5_ - Command Error
 #define RSSPECAN_MINOR_VERSION                      8L   /* Instrument driver minor version          */
 #define RSSPECAN_MINOR_MINOR_VERSION                2L    /* Instrument driver minor minor version    */
 
-/* Driver Capabilities */          
+/* Driver Capabilities */
 
 #define RSSPECAN_SUPPORTED_INSTRUMENT_MODELS        ""    /* Instrument driver supported model(s)     */
 #define RSSPECAN_GROUP_CAPABILITIES                 ""
@@ -5726,9 +5696,9 @@ _5_ - Command Error
 #define RSSPECAN_VAL_MARKER_SEARCH_NEXT_PEAK                        (3L)
 #define RSSPECAN_VAL_MARKER_SEARCH_NEXT_PEAK_LEFT                   (4L)
 #define RSSPECAN_VAL_MARKER_SEARCH_NEXT_PEAK_RIGHT                  (5L)
-#define RSSPECAN_VAL_MARKER_SEARCH_NEXT_MINIMUM                     (6L) 
-#define RSSPECAN_VAL_MARKER_SEARCH_NEXT_MINIMUM_LEFT                (7L) 
-#define RSSPECAN_VAL_MARKER_SEARCH_NEXT_MINIMUM_RIGHT               (8L) 
+#define RSSPECAN_VAL_MARKER_SEARCH_NEXT_MINIMUM                     (6L)
+#define RSSPECAN_VAL_MARKER_SEARCH_NEXT_MINIMUM_LEFT                (7L)
+#define RSSPECAN_VAL_MARKER_SEARCH_NEXT_MINIMUM_RIGHT               (8L)
 
 #define RSSPECAN_VAL_MARKER_SEARCH_CLASS_EXT_BASE                   (500L)
 #define RSSPECAN_VAL_MARKER_SEARCH_SPECIFIC_EXT_BASE                (1000L)
@@ -5769,7 +5739,7 @@ _5_ - Command Error
 #define RSSPECAN_VAL_MEASTYPE_MAX   2
 #define RSSPECAN_VAL_MEASTYPE_PEAK  3
 #define RSSPECAN_VAL_MEASTYPE_AVER  4
-  
+
 
 #define RSSPECAN_VAL_MEASTYPE_MAXMIN    0
 #define RSSPECAN_VAL_MEASTYPE_MAXMAX    1
@@ -5967,14 +5937,14 @@ _5_ - Command Error
 #define RSSPECAN_VAL_FMDEM_MEAS_CAR 4
 
 #define RSSPECAN_VAL_FM_FEED_AM_REL         0
-#define RSSPECAN_VAL_FM_FEED_AM             1 
+#define RSSPECAN_VAL_FM_FEED_AM             1
 #define RSSPECAN_VAL_FM_FEED_SPEC           2
-#define RSSPECAN_VAL_FM_FEED_FM             3  
+#define RSSPECAN_VAL_FM_FEED_FM             3
 #define RSSPECAN_VAL_FM_FEED_PM             4
 #define RSSPECAN_VAL_FM_FEED_AMS            5
 #define RSSPECAN_VAL_FM_FEED_AMS_REL        6
 #define RSSPECAN_VAL_FM_FEED_FMS            7
-#define RSSPECAN_VAL_FM_FEED_PMS            8 
+#define RSSPECAN_VAL_FM_FEED_PMS            8
 #define RSSPECAN_VAL_FM_FEED_FM_AFSP        9
 #define RSSPECAN_VAL_FM_FEED_PM_AFSP        10
 #define RSSPECAN_VAL_FM_FEED_AM_REL_AFSP    11
@@ -6021,7 +5991,7 @@ _5_ - Command Error
 #define RSSPECAN_VAL_PHASE_RPM 1
 #define RSSPECAN_VAL_PHASE_RMS 2
 
-/* K90/91 - WLAN constants  */   
+/* K90/91 - WLAN constants  */
 #define RSSPECAN_VAL_WLAN_GATE_TIME      0
 #define RSSPECAN_VAL_WLAN_GATE_SAMPLE    1
 
@@ -6180,7 +6150,7 @@ _5_ - Command Error
 #define RSSPECAN_VAL_WIMAX_IQ_IQ        2
 
 #define RSSPECAN_VAL_WIMAX_PREA          0
-#define RSSPECAN_VAL_WIMAX_SUBF          1 
+#define RSSPECAN_VAL_WIMAX_SUBF          1
 
 /* K8  Bluetooth constants */
 #define RSSPECAN_VAL_BTO_CFS_FERR_INITIAL           0
@@ -6232,7 +6202,7 @@ _5_ - Command Error
 
 #define RSSPECAN_VAL_SPECM_FRAME_CURRENT 0
 #define RSSPECAN_VAL_SPECM_FRAME_ALL     1
-    
+
 /* K20 constants */
 #define RSSPECAN_VAL_LIM_LOW 0
 #define RSSPECAN_VAL_LIM_UPP 1
@@ -6525,16 +6495,16 @@ _5_ - Command Error
 #define RSSPECAN_VAL_VSA_RESULT_QUADRATURE_ERROR 15
 #define RSSPECAN_VAL_VSA_RESULT_AMPLITUDE_DROOP  16
 
-#define RSSPECAN_VAL_VSA_STAT_AVERAGE_SWEEP  0      
-#define RSSPECAN_VAL_VSA_STAT_AVERAGE        1      
-#define RSSPECAN_VAL_VSA_STAT_PEAK           2      
-#define RSSPECAN_VAL_VSA_STAT_SDEV           3      
-#define RSSPECAN_VAL_VSA_STAT_95_RMS         4      
+#define RSSPECAN_VAL_VSA_STAT_AVERAGE_SWEEP  0
+#define RSSPECAN_VAL_VSA_STAT_AVERAGE        1
+#define RSSPECAN_VAL_VSA_STAT_PEAK           2
+#define RSSPECAN_VAL_VSA_STAT_SDEV           3
+#define RSSPECAN_VAL_VSA_STAT_95_RMS         4
 #define RSSPECAN_VAL_VSA_STAT_MAX_PEAK_SWEEP 5
-#define RSSPECAN_VAL_VSA_STAT_MAX_AVG        6      
-#define RSSPECAN_VAL_VSA_STAT_MAX_PEAK       7      
-#define RSSPECAN_VAL_VSA_STAT_MAX_SDEV       8      
-#define RSSPECAN_VAL_VSA_STAT_MAX_95_RMS     9  
+#define RSSPECAN_VAL_VSA_STAT_MAX_AVG        6
+#define RSSPECAN_VAL_VSA_STAT_MAX_PEAK       7
+#define RSSPECAN_VAL_VSA_STAT_MAX_SDEV       8
+#define RSSPECAN_VAL_VSA_STAT_MAX_95_RMS     9
 
 #define RSSPECAN_VAL_VSA_LIMIT_MODULATION_ACCURACY 0
 
@@ -6610,20 +6580,20 @@ _5_ - Command Error
 #define RSSPECAN_VAL_WCDP_RES_FERR      1
 #define RSSPECAN_VAL_WCDP_RES_TFR       2
 #define RSSPECAN_VAL_WCDP_RES_MACC      3
-#define RSSPECAN_VAL_WCDP_RES_PCD       4  
-#define RSSPECAN_VAL_WCDP_RES_EVMR      5  
-#define RSSPECAN_VAL_WCDP_RES_EVMP      6  
-#define RSSPECAN_VAL_WCDP_RES_CERR      7  
-#define RSSPECAN_VAL_WCDP_RES_CSL       8  
-#define RSSPECAN_VAL_WCDP_RES_SRAT      9  
-#define RSSPECAN_VAL_WCDP_RES_CHAN      10 
-#define RSSPECAN_VAL_WCDP_RES_CDPA      11 
-#define RSSPECAN_VAL_WCDP_RES_CDPR      12 
-#define RSSPECAN_VAL_WCDP_RES_IQOF      13 
-#define RSSPECAN_VAL_WCDP_RES_IQIM      14 
-#define RSSPECAN_VAL_WCDP_RES_MTYP      15 
-#define RSSPECAN_VAL_WCDP_RES_RHO       16 
-#define RSSPECAN_VAL_WCDP_RES_TOFF      17 
+#define RSSPECAN_VAL_WCDP_RES_PCD       4
+#define RSSPECAN_VAL_WCDP_RES_EVMR      5
+#define RSSPECAN_VAL_WCDP_RES_EVMP      6
+#define RSSPECAN_VAL_WCDP_RES_CERR      7
+#define RSSPECAN_VAL_WCDP_RES_CSL       8
+#define RSSPECAN_VAL_WCDP_RES_SRAT      9
+#define RSSPECAN_VAL_WCDP_RES_CHAN      10
+#define RSSPECAN_VAL_WCDP_RES_CDPA      11
+#define RSSPECAN_VAL_WCDP_RES_CDPR      12
+#define RSSPECAN_VAL_WCDP_RES_IQOF      13
+#define RSSPECAN_VAL_WCDP_RES_IQIM      14
+#define RSSPECAN_VAL_WCDP_RES_MTYP      15
+#define RSSPECAN_VAL_WCDP_RES_RHO       16
+#define RSSPECAN_VAL_WCDP_RES_TOFF      17
 #define RSSPECAN_VAL_WCDP_RES_PSYM      18
 #define RSSPECAN_VAL_WCDP_RES_ACH       19
 #define RSSPECAN_VAL_WCDP_RES_MPIC      20
@@ -6734,7 +6704,7 @@ _5_ - Command Error
 #define RSSPECAN_VAL_TDS_RESULT_CDP             18
 #define RSSPECAN_VAL_TDS_RESULT_EVMR            19
 #define RSSPECAN_VAL_TDS_RESULT_EVMP            20
-#define RSSPECAN_VAL_TDS_RESULT_ARCDE           21 
+#define RSSPECAN_VAL_TDS_RESULT_ARCDE           21
 #define RSSPECAN_VAL_TDS_RESULT_CMAPPING        22
 #define RSSPECAN_VAL_TDS_RESULT_CSLOT           23
 #define RSSPECAN_VAL_TDS_RESULT_MPIC            24
@@ -6811,7 +6781,7 @@ _5_ - Command Error
 #define RSSPECAN_VAL_VNET_MEAS_FINAL     1
 
 /* End of Receiver constants*/
-     
+
 /* K10 constants*/
 #define RSSPECAN_VAL_GSM_K10_FREQ_BAND_TGSM_380 0
 #define RSSPECAN_VAL_GSM_K10_FREQ_BAND_TGSM_410 1
@@ -6854,13 +6824,13 @@ _5_ - Command Error
 #define RSSPECAN_VAL_GSM_K10_MEAS_PERC_EVM        12
 #define RSSPECAN_VAL_GSM_K10_MEAS_PERC_MERR       13
 #define RSSPECAN_VAL_GSM_K10_MEAS_PERC_PERR       14
-#define RSSPECAN_VAL_GSM_K10_MEAS_TRIGGER_TO_SYNC 15 
+#define RSSPECAN_VAL_GSM_K10_MEAS_TRIGGER_TO_SYNC 15
 
 #define RSSPECAN_VAL_GSM_K10_MOD_AVG            0
 #define RSSPECAN_VAL_GSM_K10_MOD_CUR            1
 #define RSSPECAN_VAL_GSM_K10_MOD_MAX            2
 #define RSSPECAN_VAL_GSM_K10_MOD_DEV            3
-         
+
 #define RSSPECAN_VAL_GSM_K10_BURST_ALL          0
 #define RSSPECAN_VAL_GSM_K10_BURST_CURR         1
 
@@ -6877,7 +6847,7 @@ _5_ - Command Error
 #define RSSPECAN_VAL_GSM_K10_WIDE_SPEC   2
 
 /* End of K10 constants*/
-     
+
 /* K15 constants*/
 
 #define RSSPECAN_VAR_AVI_DEMOD_SUMM_30     0
@@ -6907,9 +6877,9 @@ _5_ - Command Error
 
 #define RSSPECAN_VAL_DIQ_IN                0
 #define RSSPECAN_VAL_DIQ_OUT               1
-         
+
 /* Signal Source Analyzer constants*/
-         
+
 #define RSSPECAN_VAL_SSA_VCO_TYPE_PUSH     0
 #define RSSPECAN_VAL_SSA_VCO_TYPE_PULL     1
 
@@ -6922,7 +6892,7 @@ _5_ - Command Error
 #define RSSPECAN_VAL_SSA_PHAS_NOIS_RES_RPM 1
 #define RSSPECAN_VAL_SSA_PHAS_NOIS_RES_RMS 2
 #define RSSPECAN_VAL_SSA_PHAS_NOIS_RES_IPN 3
-     
+
 #define RSSPECAN_VAL_SSA_VCO_TCH_RES_TYPE_FREQ 0
 #define RSSPECAN_VAL_SSA_VCO_TCH_RES_TYPE_POW  1
 #define RSSPECAN_VAL_SSA_VCO_TCH_RES_TYPE_SENS 2
@@ -7231,7 +7201,7 @@ _5_ - Command Error
 /* Function: rsspecan_ConfigurePhaseDisplayYAxisSettings */
 #define RSSPECAN_VAL_PHASE_Y_SCALE_AUTO 4
 
-/* Function: rsspecan_ConfigurePhaseGlobalIQWindowSettings */ 
+/* Function: rsspecan_ConfigurePhaseGlobalIQWindowSettings */
 #define RSSPECAN_VAL_PHASE_ALL_DECADE         0
 #define RSSPECAN_VAL_PHASE_PARTICULAR_DECADE  1
 
@@ -7247,11 +7217,11 @@ _5_ - Command Error
 #define RSSPECAN_VAL_PULSE_RESULT_POWER_AVG  5
 #define RSSPECAN_VAL_PULSE_RESULT_POWER_MIN  6
 #define RSSPECAN_VAL_PULSE_RESULT_POWER_MAX  7
-#define RSSPECAN_VAL_PULSE_RESULT_POWER_PON  8 
+#define RSSPECAN_VAL_PULSE_RESULT_POWER_PON  8
 #define RSSPECAN_VAL_PULSE_RESULT_POWER_PAVG 9
 #define RSSPECAN_VAL_PULSE_RESULT_POWER_PMIN 10
 #define RSSPECAN_VAL_PULSE_RESULT_POWER_ADP  11
-#define RSSPECAN_VAL_PULSE_RESULT_POWER_ADDB 12 
+#define RSSPECAN_VAL_PULSE_RESULT_POWER_ADDB 12
 #define RSSPECAN_VAL_PULSE_RESULT_POWER_RPER 13
 #define RSSPECAN_VAL_PULSE_RESULT_POWER_RDB  14
 #define RSSPECAN_VAL_PULSE_RESULT_POWER_OPER 15
@@ -7381,7 +7351,7 @@ _5_ - Command Error
 #define RSSPECAN_VAL_SYNC_TO_PCCPCH   0
 #define RSSPECAN_VAL_SYNC_TO_MIDAMBLE 1
 
-#define RSSPECAN_VAL_WLAN_CURRENT 0 
+#define RSSPECAN_VAL_WLAN_CURRENT 0
 #define RSSPECAN_VAL_WLAN_ALL     1
 
 #define RSSPECAN_VAL_WLAN_MEAS_ACPR 0
@@ -9891,7 +9861,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10PVTAlignment (ViSession instrumentHand
 ViStatus _VI_FUNC rsspecan_ConfigureGSMK10ModulationTransientSpectrum
              (ViSession instrumentHandle, ViBoolean enableLeftLimit,
               ViBoolean enableRightLimit);
-ViStatus 
+ViStatus
     _VI_FUNC rsspecan_ConfigureGSMK10ModulationTransientSpectrumAdditional
         (ViSession instrumentHandle, ViInt32 filterType,
          ViInt32 transientReferencePower, ViInt32 offsetFrequency,
@@ -10167,10 +10137,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayInput
 ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayReferenceLevel
              (ViSession instrumentHandle, ViInt32 window, ViReal64 referenceLevel,
               ViReal64 referenceLevelOffset);
-ViStatus 
+ViStatus
     _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayMechanicalAttenuator
         (ViSession instrumentHandle, ViBoolean autoMode, ViReal64 value);
-ViStatus 
+ViStatus
     _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayElectronicAttenuator
         (ViSession instrumentHandle, ViBoolean state,
          ViBoolean electronicAttenuatorAuto, ViInt32 manualValuedB);
@@ -10184,7 +10154,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayYAxisScaling
 ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayYAxisScalingMaxMin
              (ViSession instrumentHandle, ViInt32 window, ViReal64 maximumValue,
               ViReal64 miniumumValue);
-ViStatus 
+ViStatus
     _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayYAxisScalingReferencePerDivision
         (ViSession instrumentHandle, ViInt32 window, ViReal64 scaling,
          ViReal64 referencePosition, ViReal64 referenceValue);
@@ -10558,7 +10528,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseUncertaintyCommonSource
 ViStatus _VI_FUNC rsspecan_ConfigureNoiseUncertaintySourceCharacteristics
              (ViSession instrumentHandle, ViInt32 type, ViReal64 sourceOutput,
               ViReal64 ERNUncertainty);
-ViStatus 
+ViStatus
     _VI_FUNC rsspecan_ConfigureNoiseUncertaintySourceCalibrationCharacteristics
         (ViSession instrumentHandle, ViInt32 type, ViReal64 sourceOutput,
          ViReal64 ERNUncertainty);
@@ -12060,10 +12030,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11nMCSIndex
              (ViSession instrumentHandle, ViInt32 MCSIndexMode, ViInt32 MCSIndex);
 ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11nSTBCField
              (ViSession instrumentHandle, ViInt32 STBCField);
-ViStatus 
+ViStatus
     _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11nGuardIntervalLength
         (ViSession instrumentHandle, ViInt32 guardIntervalLength);
-ViStatus 
+ViStatus
     _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11nExtensionSpatialStreams
         (ViSession instrumentHandle, ViInt32 extensionSpatialStreams);
 ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11b_g_DSSS
@@ -12076,7 +12046,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11acMCSIndex
              (ViSession instrumentHandle, ViInt32 MCSIndexMode, ViInt32 MCSIndex);
 ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11acSTBCField
              (ViSession instrumentHandle, ViInt32 STBCField);
-ViStatus 
+ViStatus
     _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11acGuardIntervalLength
         (ViSession instrumentHandle, ViInt32 guardIntervalLength);
 ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11acNsts
@@ -12817,7 +12787,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkDataAnalysis
               ViBoolean compensateDCOffset, ViBoolean autoDemodulation);
 ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkCodeBitsScrambling
              (ViSession instrumentHandle, ViBoolean scramblingOfCodedBits);
-ViStatus 
+ViStatus
     _VI_FUNC rsspecan_ConfigureLTEUplinkSuppressedInterferenceSynchronization
         (ViSession instrumentHandle, ViBoolean suppressedInterferenceSync);
 ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkTracking (ViSession instrumentHandle,
@@ -12849,10 +12819,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSoundingReferenceSignal
               ViInt32 numberOfSubcarriers);
 ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSoundingReferenceSignalNRRC
              (ViSession instrumentHandle, ViInt32 frequencyDomainPosition);
-ViStatus 
+ViStatus
     _VI_FUNC rsspecan_ConfigureLTEUplinkSoundingReferenceSignalANSimultaneousTX
         (ViSession instrumentHandle, ViBoolean ANSimultaneousTX);
-ViStatus 
+ViStatus
     _VI_FUNC rsspecan_ConfigureLTEUplinkSoundingReferenceSignalModulation
         (ViSession instrumentHandle, ViReal64 parameterAlpha, ViInt32 parameterU,
          ViInt32 mode, ViInt32 parameterQ);

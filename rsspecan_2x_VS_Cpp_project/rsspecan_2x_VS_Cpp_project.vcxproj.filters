@@ -103,9 +103,6 @@
     <ClCompile Include="..\_driver\rsspecan_k90_k91.c">
       <Filter>Driver</Filter>
     </ClCompile>
-    <ClCompile Include="..\_driver\rsspecan_k92.c">
-      <Filter>Driver</Filter>
-    </ClCompile>
     <ClCompile Include="..\_driver\rsspecan_k100_k102.c">
       <Filter>Driver</Filter>
     </ClCompile>

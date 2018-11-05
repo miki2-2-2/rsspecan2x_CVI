@@ -9,22 +9,22 @@
  *  Rohde & Schwarz Vertriebs-GmbH Rohde & Schwarz Support Center
  *
  *  e-mail: CustomerSupport@rohde-schwarz.com
- *  
+ *
  *****************************************************************************/
 
 #include "rsspecan.h"
 
-static ViString tetraMoveMarkerMeasArr[] = {"PVT","EVMS","EVMC","MERR","PERR","SPEC","ACPM","ACPT","CAPT", VI_NULL};
-static ViString evmLimitTypeArr[] = {"All","Data","DHEA","DSP","SPIL","IQOF","FERR","PHAS","MAGE", VI_NULL};
-static ViString tetraMeasModArr[] = {"None","Min","max","Aver","Curr", VI_NULL};
-static ViString tetraACPTypeArr[] = {"Mod","Trans", VI_NULL};
-static ViString tetraACPChannelArr[] = {"0","1","2","3","4","5","6", VI_NULL};
-static ViString tetraChannelBWArr[] = {"BW25","BW50","BW100","BW150", VI_NULL};
-static ViString tetraMeasurementSelectArr[] = {"PvsT","EVMSYMbol","EVMCARrier","MAGNitude","PHASe","SPECFFT","SPECACPMod","SPECACPUpp","SPECACPLow","CONSSYMbol","CONSCarrier","STATistics","SUMTable", VI_NULL};
+static ViString tetraMoveMarkerMeasArr[] = {"PVT","EVMS","EVMC","MERR","PERR","SPEC","ACPM","ACPT","CAPT", NULL};
+static ViString evmLimitTypeArr[] = {"All","Data","DHEA","DSP","SPIL","IQOF","FERR","PHAS","MAGE", NULL};
+static ViString tetraMeasModArr[] = {"None","Min","max","Aver","Curr", NULL};
+static ViString tetraACPTypeArr[] = {"Mod","Trans", NULL};
+static ViString tetraACPChannelArr[] = {"0","1","2","3","4","5","6", NULL};
+static ViString tetraChannelBWArr[] = {"BW25","BW50","BW100","BW150", NULL};
+static ViString tetraMeasurementSelectArr[] = {"PvsT","EVMSYMbol","EVMCARrier","MAGNitude","PHASe","SPECFFT","SPECACPMod","SPECACPUpp","SPECACPLow","CONSSYMbol","CONSCarrier","STATistics","SUMTable", NULL};
 static ViString tetraYAxisMeasArr[] = {"ECarrier","ESymbol","Magnitude","Phase"};
-static ViString tetraSummaryTableArr[] = {"EVMAll","EVMData","EVMDHEAder","EVMDSPilot","EVMSPILot","IQOFfset","GIMBalance","QUADerror","AMPDroop","FERRor","PHASeerror","MAGerror","BPWR","CRESt", VI_NULL};
-static ViString tetraPVTMeasArr[] = {"REFPower","SLOTpower","BEFBpower","RELBeforepower","AFTBpower","RELafterpower", VI_NULL};
-static ViString tetraACPMeas[] = {"TETRABANDwidth","TETRARRCosine","TETRAOFFSet","TETRAABSPower","TETRARELPower","TETRADELLimit", VI_NULL};
+static ViString tetraSummaryTableArr[] = {"EVMAll","EVMData","EVMDHEAder","EVMDSPilot","EVMSPILot","IQOFfset","GIMBalance","QUADerror","AMPDroop","FERRor","PHASeerror","MAGerror","BPWR","CRESt", NULL};
+static ViString tetraPVTMeasArr[] = {"REFPower","SLOTpower","BEFBpower","RELBeforepower","AFTBpower","RELafterpower", NULL};
+static ViString tetraACPMeas[] = {"TETRABANDwidth","TETRARRCosine","TETRAOFFSet","TETRAABSPower","TETRARELPower","TETRADELLimit", NULL};
 
 /*****************************************************************************
  * Function: Set TETRA Mode
@@ -35,20 +35,19 @@ ViStatus _VI_FUNC rsspecan_SetTETRAMode(
 )
 {
     ViStatus	error = VI_SUCCESS;
-	
-	checkErr (Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckErr (rsspecan_SetAttributeViString (instrSession, "",
-                                               RSSPECAN_ATTR_TETRA_MODE, NULL));
-    
+
+	checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_TETRA_MODE, NULL));
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA Signal Characteristics
- * Purpose:  This function configures the general settings concerning the 
+ * Purpose:  This function configures the general settings concerning the
  *           physical attributes of the signals to be measured.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRASignalCharacteristics(
@@ -59,27 +58,26 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRASignalCharacteristics(
 )
 {
     ViStatus	error = VI_SUCCESS;
-	
-	checkErr (Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "Win0",
-                                                RSSPECAN_ATTR_FREQUENCY_CENTER,
-                                                frequency), 2, "Frequency");
-	viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_TETRA_BURST_TYPE,
-                                               slotType), 3, "Slot Type");
-	viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_TETRA_CHANNEL_BANDWIDTH,
-                                               channelBandwidth), 4, "Channel Bandwidth");
-    
+
+	checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_FREQUENCY_CENTER, frequency),
+    		2, "Frequency");
+
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_BURST_TYPE, slotType),
+			3, "Slot Type");
+
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_CHANNEL_BANDWIDTH, channelBandwidth),
+			4, "Channel Bandwidth");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA Level Settings
- * Purpose:  This function configures settings related to the reference 
+ * Purpose:  This function configures settings related to the reference
  *           level and the RF attenuation.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRALevelSettings(
@@ -93,39 +91,34 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRALevelSettings(
     ViInt32    type;
     autoLevel;
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    viCheckErr (rsspecan_GetAttributeViInt32 (instrSession, "",
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, "",
                                                RSSPECAN_ATTR_TETRA_INPUT_SELECT, &type));
-	
-	viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "Win0",
-                                                RSSPECAN_ATTR_REFERENCE_LEVEL_OFFSET,
-                                                externalAttenuation), 4, "External Attenuation");
-	
+
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_REFERENCE_LEVEL_OFFSET, externalAttenuation),
+			4, "External Attenuation");
+
     switch (type)
 	{
 		case RSSPECAN_VAL_BB_INPUT_RF:
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                	RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_RF_MEASUREMENT,
-                                                	level), 3, "Level");
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_RF_MEASUREMENT, level),
+				3, "Level");
 		break;
-		
+
 		case RSSPECAN_VAL_BB_INPUT_AIQ:
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                	RSSPECAN_ATTR_DIGITAL_INPUT_RANGE,
-                                                	level), 3, "Level");
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_RANGE, level),
+				3, "Level");
 		break;
-		
+
 		case RSSPECAN_VAL_BB_INPUT_DIQ:
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                	RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_IQ_MEASUREMENT,
-                                                	level), 3, "Level");
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_IQ_MEASUREMENT, level),
+				3, "Level");
 		break;
 	}
-	
-	
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -142,45 +135,41 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRADataCaptureSettings(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+
+    checkErr(RsCore_LockSession(instrSession));
 
     if (captureTimeUnit == RSSPECAN_VAL_TETRA_UNIT_SECONDS)
 	{
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "Win0",
-                                                RSSPECAN_ATTR_SWEEP_TIME,
-                                                captureTime), 2, "Capture Time");
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_SWEEP_TIME, captureTime),
+				2, "Capture Time");
 	}
 	else
 	{
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_TETRA_TEDS_SLOT_DURATION,
-                                                captureTime), 2, "Capture Time");
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_TEDS_SLOT_DURATION, captureTime),
+				2, "Capture Time");
 	}
-	
-	viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                               RSSPECAN_ATTR_TETRA_OVERALL_BURST_COUNT,
-                                               useNumberOfSlotsToAnalyzer), 3, "Use Number Of Slots To Analyzer");
-	
+
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TETRA_OVERALL_BURST_COUNT, useNumberOfSlotsToAnalyzer),
+			3, "Use Number Of Slots To Analyzer");
+
 	if (useNumberOfSlotsToAnalyzer == VI_TRUE)
 	{
-	viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_TETRA_NUMBER_OF_BURST,
-                                               numberOfSlotsToAnalyze), 4, "Number Of Slots To Analyze");
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_NUMBER_OF_BURST, numberOfSlotsToAnalyze),
+			4, "Number Of Slots To Analyze");
 	}
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA Trigger Settings
- * Purpose:  This function configures the trigger parameters. 
- *           
+ * Purpose:  This function configures the trigger parameters.
+ *
  *           Note(s):
- *           
- *           (1) This function is only available for RF input and analog 
+ *
+ *           (1) This function is only available for RF input and analog
  *           baseband input.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRATriggerSettings(
@@ -197,55 +186,48 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRATriggerSettings(
 	ViInt32 type;
 	powerTriggerLevel;
 	autoTriggerLevel;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
-	
-	viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_TETRA_TRIGGER_MODE,
-                                               mode), 2, "Mode");
-	
+
+    checkErr(RsCore_LockSession(instrSession));
+
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_TRIGGER_MODE, mode),
+			2, "Mode");
+
 	if (offsetUnit == RSSPECAN_VAL_TETRA_UNIT_SECONDS)
 	{
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "Win0",
-                                               	   RSSPECAN_ATTR_TRIGGER_DELAY,
-                                               	   offset), 3, "Offset");
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_DELAY, offset),
+				3, "Offset");
 	}
 	else
 	{
-		viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
+		viCheckParm(rsspecan_SetAttributeViInt32 (instrSession, "",
                                                	   RSSPECAN_ATTR_TETRA_TRIGGER_TEDS_SLOT_DURATION,
                                                	   (ViInt32) offset), 3, "Offset");
 	}
-	
-	viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "Win0",
-                                                RSSPECAN_ATTR_EXTERNAL_TRIGGER_LEVEL,
-                                                extTriggerLevel), 5, "Ext. Trigger Level");
-	
-	viCheckErr (rsspecan_GetAttributeViInt32 (instrSession, "",
+
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_EXTERNAL_TRIGGER_LEVEL, extTriggerLevel),
+			5, "Ext. Trigger Level");
+
+	checkErr(rsspecan_GetAttributeViInt32 (instrSession, "",
                                                RSSPECAN_ATTR_TETRA_INPUT_SELECT, &type));
-	
+
 	if (mode == RSSPECAN_VAL_TRIG_MODE_POW)
 	{
 		switch (type)
 		{
 			case RSSPECAN_VAL_BB_INPUT_RF:
-				viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_TETRA_TRIGGER_POWER_LEVEL,
-                                                extTriggerLevel), 7, "Power Trigger Level");
+				viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_TRIGGER_POWER_LEVEL, extTriggerLevel),
+						7, "Power Trigger Level");
 				break;
-				
-			case RSSPECAN_VAL_BB_INPUT_DIQ:	
-				 viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_TETRA_TRIGGER_IQ_LEVEL,
-                                                extTriggerLevel), 7, "Power Trigger Level");
+
+			case RSSPECAN_VAL_BB_INPUT_DIQ:
+				 viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_TRIGGER_IQ_LEVEL, extTriggerLevel),
+				 		7, "Power Trigger Level");
 				 break;
 		}
-		
 	}
-	
-		
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -259,23 +241,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAIQSettings(
 )
 {
     ViStatus	error = VI_SUCCESS;
-	
-	checkErr (Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_TETRA_IQ_SETTING,
-                                                 swapIQ), 2, "Swap IQ");
+
+	checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TETRA_IQ_SETTING, swapIQ),
+    		2, "Swap IQ");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA Input Settings
- * Purpose:  This function configures whether the RF input or the analog 
- *           Baseband input or the digital Baseband input is the currently 
- *           selected signal input. 
+ * Purpose:  This function configures whether the RF input or the analog
+ *           Baseband input or the digital Baseband input is the currently
+ *           selected signal input.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRAInputSettings(
 	ViSession	instrSession,
@@ -283,22 +264,21 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAInputSettings(
 )
 {
     ViStatus	error = VI_SUCCESS;
-	
-	checkErr (Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_TETRA_INPUT_SELECT,
-                                               input), 2, "Input");
+
+	checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_INPUT_SELECT, input),
+    		2, "Input");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA Advanced Baseband Settings
- * Purpose:  This function configures details of how the instrument operates 
- *           and how measurements are performed. 
+ * Purpose:  This function configures details of how the instrument operates
+ *           and how measurements are performed.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRAAdvancedBasebandSettings(
 	ViSession	instrSession,
@@ -310,33 +290,32 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAAdvancedBasebandSettings(
 )
 {
     ViStatus	error = VI_SUCCESS;
-	
-	checkErr (Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_BB_INPUT_IMPEDANCE,
-                                               impedance), 2, "Impedance");
-	viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_BB_INPUT_SIGNAL_PATH,
-                                               path), 3, "Path");
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_BB_INPUT_BALANCED,
-                                                 balanced), 4, "Balanced");
-	viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_BB_INPUT_IQ_LPAS,
-                                                 lowPass), 5, "Low Pass");
-	viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_BB_INPUT_IQ_DITH,
-                                                 iqDither), 6, "IQ Dither");
+
+	checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BB_INPUT_IMPEDANCE, impedance),
+    		2, "Impedance");
+
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BB_INPUT_SIGNAL_PATH, path),
+			3, "Path");
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BB_INPUT_BALANCED, balanced),
+    		4, "Balanced");
+
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BB_INPUT_IQ_LPAS, lowPass),
+			5, "Low Pass");
+
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BB_INPUT_IQ_DITH, iqDither),
+			6, "IQ Dither");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA Advanced IQ Digital
- * Purpose:  This function configures settings related to the reference 
+ * Purpose:  This function configures settings related to the reference
  *           level and the RF attenuation.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRAAdvancedIQDigital(
@@ -350,52 +329,45 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAAdvancedIQDigital(
     ViStatus	error = VI_SUCCESS;
     ViInt32 type;
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "Win0",
-                                                 RSSPECAN_ATTR_DIGITAL_INPUT_RANGE_AUTO,
-                                                 autoLevel), 2, "Auto Level");
-	
-	viCheckErr (rsspecan_GetAttributeViInt32 (instrSession, "",
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_DIGITAL_INPUT_RANGE_AUTO, autoLevel),
+    		2, "Auto Level");
+
+	checkErr(rsspecan_GetAttributeViInt32 (instrSession, "",
                                                RSSPECAN_ATTR_TETRA_INPUT_SELECT, &type));
     switch (type)
 	{
 		case RSSPECAN_VAL_BB_INPUT_RF:
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                	RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_RF_MEASUREMENT,
-                                                	level), 3, "Level");
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_RF_MEASUREMENT, level),
+				3, "Level");
 		break;
-		
+
 		case RSSPECAN_VAL_BB_INPUT_AIQ:
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                	RSSPECAN_ATTR_DIGITAL_INPUT_RANGE,
-                                                	level), 3, "Level");
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_RANGE, level),
+				3, "Level");
 		break;
-		
+
 		case RSSPECAN_VAL_BB_INPUT_DIQ:
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                	RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_IQ_MEASUREMENT,
-                                                	level), 3, "Level");
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_IQ_MEASUREMENT, level),
+				3, "Level");
 		break;
-		
 	}
-	
-	viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "Win0",
-                                                 RSSPECAN_ATTR_DIGITAL_INPUT_SAMPLE_RATE_AUTO,
-                                                 autoSamplingRate), 4, "Auto Sampling Rate");
-	
-	viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_DIGITAL_INPUT_SRATE,
-                                                samplingRate), 5, "Sampling Rate");
+
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_DIGITAL_INPUT_SAMPLE_RATE_AUTO, autoSamplingRate),
+			4, "Auto Sampling Rate");
+
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_SRATE, samplingRate),
+			5, "Sampling Rate");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA IQ Center Frequency
- * Purpose:  This function configures the IQ value for Center Frequency. 
+ * Purpose:  This function configures the IQ value for Center Frequency.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRAIQCenterFrequency(
 	ViSession	instrSession,
@@ -403,21 +375,20 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAIQCenterFrequency(
 )
 {
     ViStatus	error = VI_SUCCESS;
-	
-	checkErr (Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_TETRA_IQ_CENTER_FREQUENCY,
-                                                iqCenterFrequency), 2, "IQ Center Frequency");
+
+	checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_IQ_CENTER_FREQUENCY, iqCenterFrequency),
+    		2, "IQ Center Frequency");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA Demodulation Settings
- * Purpose:  This function configures the characteristics of the slots to be 
+ * Purpose:  This function configures the characteristics of the slots to be
  *           considered in the measurement results.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRADemodulationSettings(
@@ -430,28 +401,27 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRADemodulationSettings(
 {
     ViStatus	error = VI_SUCCESS;
     demodRRCRolloff;
-	
-	checkErr (Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_TETRA_BURST_TYPE,
-                                               slotType), 2, "Slot Type");
-	viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_TETRA_PAYLOAD_MODULATION,
-                                               payloadModulation), 3, "Payload Modulation");
-	viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_TETRA_MAXIMUM_CARRIER_OFFSET,
-                                                maxCarrierOffset), 4, "Max Carrier Offset");
-    
+
+	checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_BURST_TYPE, slotType),
+    		2, "Slot Type");
+
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_PAYLOAD_MODULATION, payloadModulation),
+			3, "Payload Modulation");
+
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_MAXIMUM_CARRIER_OFFSET, maxCarrierOffset),
+			4, "Max Carrier Offset");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA EVM Settings
- * Purpose:  This function configures the type of calculations and 
- *           normalizations that will be performed on the  demodulator's 
+ * Purpose:  This function configures the type of calculations and
+ *           normalizations that will be performed on the  demodulator's
  *           output.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRAEVMSettings(
@@ -462,21 +432,20 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAEVMSettings(
 )
 {
     ViStatus	error = VI_SUCCESS;
-	
-	checkErr (Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_TETRA_PILOT_TRACKING,
-                                                 pilotTracking), 2, "Pilot Tracking");
-	viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_TETRA_COMPENSATE_AMPLITUDE_DROOP,
-                                                 compensateAmplitudeDroop), 3, "Compensate Amplitude Droop");
-	viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                 RSSPECAN_ATTR_TETRA_COMPENSATE_IQ_OFFSET,
-                                                 compensateIQOffset), 4, "Compensate IQ Offset");
+
+	checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TETRA_PILOT_TRACKING, pilotTracking),
+    		2, "Pilot Tracking");
+
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TETRA_COMPENSATE_AMPLITUDE_DROOP, compensateAmplitudeDroop),
+			3, "Compensate Amplitude Droop");
+
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TETRA_COMPENSATE_IQ_OFFSET, compensateIQOffset),
+			4, "Compensate IQ Offset");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -491,23 +460,20 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRATraceSettings(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (trace, 1, 4) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Trace");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 4),
+    		2, "Trace");
 
     sprintf (buffer, "Win2,TR%ld", trace);
-	
-	viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, buffer,
-                                                 RSSPECAN_ATTR_TRACE_STATE,
-                                                 traceState), 3, "Trace State");
+
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_TRACE_STATE, traceState),
+			3, "Trace State");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -524,34 +490,29 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAMarker(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-	if (rsspecan_invalidViInt32Range (marker, 1, 4) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Marker");
-    }
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 4),
+			3, "Marker");
 
-    sprintf (buffer, "Win%ld,M%ld", window, marker);  
+    sprintf (buffer, "Win%ld,M%ld", window, marker);
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, buffer,
-                                                 RSSPECAN_ATTR_MARKER_ENABLED,
-                                                 markerEnabled), 4, "Marker Enabled");
-	
-	viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, buffer,
-                                               RSSPECAN_ATTR_MARKER_TRACE,
-                                               trace), 5, "Trace");
-    
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_MARKER_ENABLED, markerEnabled),
+    		4, "Marker Enabled");
+
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_MARKER_TRACE, trace),
+			5, "Trace");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: TETRA Marker Search
- * Purpose:  This function specifies the type of marker search and performs 
+ * Purpose:  This function specifies the type of marker search and performs
  *           the search.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_TETRAMarkerSearch(
@@ -562,42 +523,37 @@ ViStatus _VI_FUNC rsspecan_TETRAMarkerSearch(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-	if (rsspecan_invalidViInt32Range (marker, 1, 4) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Marker");
-    }
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 4),
+			3, "Marker");
 
     sprintf (buffer, "Win%ld,M%ld", window, marker);
-	
+
 	if (markerSearch == RSSPECAN_VAL_MARKER_SEARCH_HIGHEST)
 	{
-		viCheckErr (rsspecan_SetAttributeViString (instrSession, buffer,
-                                               	   RSSPECAN_ATTR_MARKER_SEARCH_PEAK, NULL));
+		checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_PEAK, NULL));
 	}
 	else
 	{
-		viCheckErr (rsspecan_SetAttributeViString (instrSession, buffer,
-                                               	   RSSPECAN_ATTR_MARKER_SEARCH_MIN, NULL));
+		checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_MIN, NULL));
 	}
-		
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: TETRA Move Marker
- * Purpose:  This function moves the active marker to the specified 
+ * Purpose:  This function moves the active marker to the specified
  *           horizontal position.
- *           
+ *
  *           Note(s):
- *           
- *           (1) The marker must be ON (use function 
+ *
+ *           (1) The marker must be ON (use function
  *           rsspecan_ConfigureTETRAMarker).
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_TETRAMoveMarker(
@@ -609,35 +565,28 @@ ViStatus _VI_FUNC rsspecan_TETRAMoveMarker(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-	if (rsspecan_invalidViInt32Range (marker, 1, 4) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Marker");
-    }
-	
-	if (rsspecan_invalidViInt32Range (measurement, 0, 8) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 4, "Measurement");
-    }
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 4),
+			3, "Marker");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 0, 8),
+			4, "Measurement");
 
-    sprintf (buffer, "Win%ld,M%ld,Mkr%s", window, marker, tetraMoveMarkerMeasArr[measurement]);  
+    sprintf (buffer, "Win%ld,M%ld,Mkr%s", window, marker, tetraMoveMarkerMeasArr[measurement]);
 
-    
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, buffer,
-                                                RSSPECAN_ATTR_TETRA_MOVE_MARKER,
-                                                markerPosition), 5, "Marker Position");
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_MOVE_MARKER, markerPosition),
+    		5, "Marker Position");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Query TETRA Marker Amplitude
- * Purpose:  This function returns the marker amplitude level of the 
+ * Purpose:  This function returns the marker amplitude level of the
  *           selected marker.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_QueryTETRAMarkerAmplitude(
@@ -648,29 +597,26 @@ ViStatus _VI_FUNC rsspecan_QueryTETRAMarkerAmplitude(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-	if (rsspecan_invalidViInt32Range (marker, 1, 4) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Marker");
-    }
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 4),
+			3, "Marker");
 
-    sprintf (buffer, "Win%ld,M%ld", window, marker);  
+    sprintf (buffer, "Win%ld,M%ld", window, marker);
 
-    viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, buffer,
-                                                RSSPECAN_ATTR_TETRA_MARKER_AMPLITUDE,
-                                                markerAmplitude), 2, "Marker Amplitude");
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_MARKER_AMPLITUDE, markerAmplitude),
+    		2, "Marker Amplitude");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA Display Format
- * Purpose:  This function switches the measurement result display between 
+ * Purpose:  This function switches the measurement result display between
  *           FULL SCREEN and SPLIT SCREEN.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRADisplayFormat(
@@ -679,34 +625,33 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRADisplayFormat(
 )
 {
     ViStatus	error = VI_SUCCESS;
-	
-	checkErr (Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_DISP_FORMAT,
-                                               format), 2, "Format");
+
+	checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_DISP_FORMAT, format),
+    		2, "Format");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA Display Active Window
  * Purpose:  This function selects the active measurement window.
- *           In FULL SCREEN mode, the measurements are only performed in the 
- *           active measurement window. Measurements are therefore initiated 
- *           in the active window and result queries (marker, trace data and 
+ *           In FULL SCREEN mode, the measurements are only performed in the
+ *           active measurement window. Measurements are therefore initiated
+ *           in the active window and result queries (marker, trace data and
  *           other results) answered also in the active window.
- *           Initiating measurements and querying results in the inactive 
+ *           Initiating measurements and querying results in the inactive
  *           window yields an error message (execution error).
- *           In split screen mode, the selection of the active window for 
+ *           In split screen mode, the selection of the active window for
  *           result queries is irrelevant.
- *           
+ *
  *           Note(s):
- *           
- *           (1) In FULL SCREEN mode, settings can also be performed in the 
- *           inactive measurement window. They become effective as soon as 
+ *
+ *           (1) In FULL SCREEN mode, settings can also be performed in the
+ *           inactive measurement window. They become effective as soon as
  *           the corresponding window becomes active.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRADisplayActiveWindow(
@@ -715,17 +660,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRADisplayActiveWindow(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);  
+    sprintf (buffer, "Win%ld", window);
 
-    viCheckErr (rsspecan_SetAttributeViString (instrSession, buffer,
-                                               RSSPECAN_ATTR_SELECT_WINDOW, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SELECT_WINDOW, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -741,28 +685,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAResultSummaryLimits(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (limitType, 0, 8) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Limit Type");
-    }
-	
-	if (rsspecan_invalidViInt32Range (mode, 2, 3) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Mode");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, limitType, 0, 8),
+    		2, "Limit Type");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, mode, 2, 3),
+			3, "Mode");
 
-    sprintf (buffer, "EVMLim%s,TETRA%s", evmLimitTypeArr[limitType], tetraMeasModArr[mode]);  
+    sprintf (buffer, "EVMLim%s,TETRA%s", evmLimitTypeArr[limitType], tetraMeasModArr[mode]);
 
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, buffer,
-                                                RSSPECAN_ATTR_TETRA_EVM_SUMMARY_LIMITS,
-                                                value), 4, "Value");
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_EVM_SUMMARY_LIMITS, value),
+    		4, "Value");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -777,32 +715,31 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAResultSummaryLimitsAll(
 )
 {
 	ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViChar      *pbuf;
     ViInt32     i;
-	
-	checkErr( Rs_LockSession (instrSession, VI_NULL));
-	
+
+	checkErr(RsCore_LockSession(instrSession));
+
 	pbuf = buffer;
     if (arraySize>0)
     {
         pbuf += sprintf (buffer, "CALC:LIM:BURS:ALL ");
-        
+
 		for (i = 0; i < arraySize; i++)
-            pbuf += sprintf (pbuf, "%.12f,",limitValues[i]);       
-		
+            pbuf += sprintf (pbuf, "%.12f,",limitValues[i]);
+
 		*pbuf = '\0';
     	*--pbuf = '\n';
-		
-        viCheckErr (viPrintf (instrSession, "%s\n", buffer));
+
+        checkErr(RsCore_Write(instrSession, buffer));
     }
-	
-	checkErr( rsspecan_CheckStatus (instrSession)); 
+
+	checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
-    
 }
 
 /*****************************************************************************
@@ -817,38 +754,37 @@ ViStatus _VI_FUNC rsspecan_GetTETRAResultSummaryLimitsAll(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *buffer = VI_NULL;
-    ViChar      *pbuff = VI_NULL; 
+    ViChar      *buffer = NULL;
+    ViChar      *pbuff = NULL;
     ViInt32     i;
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-	viCheckErr( viPrintf (instrSession, "FETC:BURS:PVTT:ALL?\n"));
-	viCheckErr(Rs_ReadDataUnknownLength (instrSession, &buffer, VI_NULL));  
-    
+	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FETC:BURS:PVTT:ALL?", &buffer)); // TODO: Check the response processing
+
     pbuff = strtok (buffer, ",");
     i = 0;
     do{
         if (i<arraySize) limitValues[i] = atof (pbuff);
         pbuff = strtok (NULL, ",");
         i++;
-    }while(pbuff != NULL);   
-    
+    }while(pbuff != NULL);
+
     if (returnedValues) *returnedValues = i;
-    
-    checkErr( rsspecan_CheckStatus (instrSession));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
     if (buffer) free(buffer);
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA ACP Limits
- * Purpose:  This function configures the ACP Due to Modulation and ACP Due 
- *           to Transients relative power limit for the specified channel and 
- *           
+ * Purpose:  This function configures the ACP Due to Modulation and ACP Due
+ *           to Transients relative power limit for the specified channel and
+ *
  *           bandwidth in dB.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRAACPLimits(
@@ -860,33 +796,24 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAACPLimits(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (acp, 0, 1) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "ACP");
-    }
-	
-	if (rsspecan_invalidViInt32Range (channelNumber, 0, 6) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Channel Number");
-    }
-	
-	if (rsspecan_invalidViInt32Range (channelBandwidth, 0, 3) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 4, "Channel Bandwidth");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, acp, 0, 1),
+    		2, "ACP");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelNumber, 0, 6),
+			3, "Channel Number");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelBandwidth, 0, 3),
+			4, "Channel Bandwidth");
 
-    sprintf (buffer, "ACP%s,ACP%s,Ch%s", tetraACPTypeArr[acp], tetraACPChannelArr[channelNumber], tetraChannelBWArr[channelBandwidth]);  
+    sprintf (buffer, "ACP%s,ACP%s,Ch%s", tetraACPTypeArr[acp], tetraACPChannelArr[channelNumber], tetraChannelBWArr[channelBandwidth]);
 
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, buffer,
-                                                RSSPECAN_ATTR_TETRA_ACP_LIMITS,
-                                                limitValue), 5, "Limit Value");
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_ACP_LIMITS, limitValue),
+    		5, "Limit Value");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -900,28 +827,25 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAMeasurementType(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (measurement, 0, 12) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Measurement");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 0, 12),
+    		2, "Measurement");
 
-    sprintf (buffer, "%s", tetraMeasurementSelectArr[measurement]);  
+    sprintf (buffer, "%s", tetraMeasurementSelectArr[measurement]);
 
-    viCheckErr (rsspecan_SetAttributeViString (instrSession, buffer,
-                                               RSSPECAN_ATTR_TETRA_MEASUREMENT_TYPE, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_TETRA_MEASUREMENT_TYPE, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA Y Axis
- * Purpose:  This function configures the Y-axis for the specified trace 
+ * Purpose:  This function configures the Y-axis for the specified trace
  *           display and measurement.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRAYAxis(
@@ -934,48 +858,43 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAYAxis(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (measurement, 1, 4) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Measurement");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 1, 4),
+    		2, "Measurement");
 
-    sprintf (buffer, "TETRA%s", tetraYAxisMeasArr[measurement]);  
+    sprintf (buffer, "TETRA%s", tetraYAxisMeasArr[measurement]);
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, buffer,
-                                                 RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE_AUTO,
-                                                 autoScaling), 3, "Auto Scaling");
-	viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, buffer,
-                                               RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE_UNIT,
-                                               unit), 4, "Unit");
-	
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE_AUTO, autoScaling),
+    		3, "Auto Scaling");
+
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE_UNIT, unit),
+			4, "Unit");
+
 	if (autoScaling == VI_FALSE)
 	{
 		sprintf (buffer, "TETRA%s,TETRACenter", tetraYAxisMeasArr[measurement]);
-		
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, buffer,
-                                               		RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE,
-                                               		yCenter), 5, "Y-Center");
-		
+
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE, yCenter),
+				5, "Y-Center");
+
 		sprintf (buffer, "TETRA%s,TETRASpan", tetraYAxisMeasArr[measurement]);
-		
-		viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, buffer,
-                                               		RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE,
-                                               		ySpan), 5, "Y-Span");
+
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE, ySpan),
+				5, "Y-Span");
 	}
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA Continuous Measurement
- * Purpose:  This function determines whether the trigger system is 
- *           continuously initiated (continuous) or performs single 
+ * Purpose:  This function determines whether the trigger system is
+ *           continuously initiated (continuous) or performs single
  *           measurements (single)
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRAContinuousMeasurement(
@@ -984,25 +903,24 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAContinuousMeasurement(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "Win0",
-                                                 RSSPECAN_ATTR_SWEEP_MODE_CONTINUOUS,
-                                                 continuous), 2, "Continuous");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_SWEEP_MODE_CONTINUOUS, continuous),
+    		2, "Continuous");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Configure TETRA Constellation Settings
  * Purpose:  This function configures the constellation settings.
- *           
+ *
  *           Note(s):
- *           
- *           (1) This function is available only if Constellation vs. Symbol 
+ *
+ *           (1) This function is available only if Constellation vs. Symbol
  *           or Constellation vs. Carrier measurement is selected.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ConfigureTETRAConstellationSettings(
@@ -1013,27 +931,23 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAConstellationSettings(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
-	
-	if (rsspecan_invalidViInt32Range (carrierSelection, 0, 1) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Carrier Selection");
-    }
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_TETRA_CONSTELLATION_SYMBOL_SETTINGS,
-                                               symbolstoPlotSelection), 2, "Symbols to Plot Selection");
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, carrierSelection, 0, 1),
+			3, "Carrier Selection");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_CONSTELLATION_SYMBOL_SETTINGS, symbolstoPlotSelection),
+    		2, "Symbols to Plot Selection");
+
 	if (carrierSelection == RSSPECAN_VAL_CARRIER_NUM)
 	{
-		viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               	   RSSPECAN_ATTR_TETRA_CONSTELLATION_CARRIER_NUMBER,
-                                               	   carrierNumber), 4, "Carrier Number");
+		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_CONSTELLATION_CARRIER_NUMBER, carrierNumber),
+				4, "Carrier Number");
 	}
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1047,15 +961,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAEVMResultUnits(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_TETRA_EVM_RESULT_UNITS,
-                                               evmUnits), 2, "EVM Units");
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_EVM_RESULT_UNITS, evmUnits),
+    		2, "EVM Units");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1069,21 +982,20 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAGainImbalanceResultUnits(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_TETRA_GAIN_IMBALANCE_RESULT_UNITS,
-                                               gainImbalanceUnits), 2, "Gain Imbalance Units");
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_GAIN_IMBALANCE_RESULT_UNITS, gainImbalanceUnits),
+    		2, "Gain Imbalance Units");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: TETRA Burst Recalc
- * Purpose:  This function causes the measurement results to be recalculated 
+ * Purpose:  This function causes the measurement results to be recalculated
  *           using the current settings and acquisition data.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_TETRABurstRecalc(
@@ -1091,22 +1003,21 @@ ViStatus _VI_FUNC rsspecan_TETRABurstRecalc(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckErr (rsspecan_SetAttributeViString (instrSession, "",
-                                               RSSPECAN_ATTR_TETRA_BURST_RECALC, NULL));
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_TETRA_BURST_RECALC, NULL));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Read TETRA Trace Data
- * Purpose:  This function returns all the measured data that relates to the 
- *           currently selected measurement type. The returned data is 
- *           particular to the currently selected measurement type and is 
+ * Purpose:  This function returns all the measured data that relates to the
+ *           currently selected measurement type. The returned data is
+ *           particular to the currently selected measurement type and is
  *           specified in the Trace Data parameter description.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ReadTETRATraceData(
@@ -1119,25 +1030,25 @@ ViStatus _VI_FUNC rsspecan_ReadTETRATraceData(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
-	
+    checkErr(RsCore_LockSession(instrSession));
+
 	sprintf (buffer, "TRACE%ld", trace);
 
-    viCheckErr (rsspecan_dataReadTrace (instrSession, window, buffer, arraySize, 
+    checkErr(rsspecan_dataReadTrace (instrSession, window, buffer, arraySize,
                     				    traceData, noofValues));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Read TETRA Bitstream
- * Purpose:  This function returns all the measured data that relates to the 
- *           currently selected measurement type. The returned data is 
- *           particular to the currently selected measurement type and is 
+ * Purpose:  This function returns all the measured data that relates to the
+ *           currently selected measurement type. The returned data is
+ *           particular to the currently selected measurement type and is
  *           specified in the Trace Data parameter description.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_ReadTETRABitstream(
@@ -1150,23 +1061,23 @@ ViStatus _VI_FUNC rsspecan_ReadTETRABitstream(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
-	
+    checkErr(RsCore_LockSession(instrSession));
+
 	sprintf (buffer, "TRACE%ld", trace);
-	
-	viCheckErr (rsspecan_dataAsciiReadTrace (instrSession, window, buffer, arraySize, 
+
+	checkErr(rsspecan_dataAsciiReadTrace (instrSession, window, buffer, arraySize,
                     				         traceData, noofValues));
-    
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Fetch TETRA Number Of Bursts
- * Purpose:  This function returns the total number of burst found and 
+ * Purpose:  This function returns the total number of burst found and
  *           analyzed.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_FetchTETRANumberOfBursts(
@@ -1175,21 +1086,20 @@ ViStatus _VI_FUNC rsspecan_FetchTETRANumberOfBursts(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_GetAttributeViInt32 (instrSession, "",
-                                               RSSPECAN_ATTR_TETRA_NUMBER_OF_BURST,
-                                               numberOfBurst), 2, "Number of Burst");
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_NUMBER_OF_BURST, numberOfBurst),
+    		2, "Number of Burst");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Fetch TETRA Measurement Results
- * Purpose:  This function returns the measured current (i.e. of last found 
+ * Purpose:  This function returns the measured current (i.e. of last found
  *           slot), average, minimum or maximum result values.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_FetchTETRAMeasuremenResults(
@@ -1200,46 +1110,41 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAMeasuremenResults(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (measurement, 0, 13) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Measurement");
-    }
-	if (rsspecan_invalidViInt32Range (measurementType, 1, 4) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Measurement Type");
-    }
-					
-    sprintf (buffer, "%s,TETRA%s", tetraSummaryTableArr[measurement], tetraMeasModArr[measurementType]);  
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 0, 13),
+    		2, "Measurement");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, 1, 4),
+			3, "Measurement Type");
 
-    viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, buffer,
-                                                RSSPECAN_ATTR_TETRA_SUMMARY_TABLE_MEASUREMENT_RESULT,
-                                                result), 2, "Result");
+    sprintf (buffer, "%s,TETRA%s", tetraSummaryTableArr[measurement], tetraMeasModArr[measurementType]);
+
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_SUMMARY_TABLE_MEASUREMENT_RESULT, result),
+    		2, "Result");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Fetch TETRA Measurement Results All
- * Purpose:  Returns the results from the R&S FS-K110 Summary Table 
- *           measurement. 
- *           
+ * Purpose:  Returns the results from the R&S FS-K110 Summary Table
+ *           measurement.
+ *
  *           Note(s):
- *           
- *           (1) The units for the EVM results have to be specified before 
- *           with the rsspecan_ConfigureTETRAEVMResultUnits function. The 
- *           units 
- *           for the gain imbalance results have to be specified before with 
+ *
+ *           (1) The units for the EVM results have to be specified before
+ *           with the rsspecan_ConfigureTETRAEVMResultUnits function. The
+ *           units
+ *           for the gain imbalance results have to be specified before with
  *           the rsspecan_ConfigureTETRAGainImbalanceResultUnits function.
- *           
- *           (2) This function does not return all results that the 
- *           rsspecan_FetchTETRAMeasuremenResults function can return. 
- *           Especially the "current" results (i.e. results of the 
+ *
+ *           (2) This function does not return all results that the
+ *           rsspecan_FetchTETRAMeasuremenResults function can return.
+ *           Especially the "current" results (i.e. results of the
  *           last found slot) and the subcarrier results are excluded.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_FetchTETRAMeasurementResultsAll(
@@ -1252,33 +1157,31 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAMeasurementResultsAll(
     ViStatus    error = VI_SUCCESS;
     ViChar      *pbuffer,
                 *pbuf;
-    ViUInt32    retCnt;
 	ViInt32     i = 0;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-	viCheckErr( viPrintf (instrSession, "FETC:BURS:SUMT:ALL?\n")); 
-    viCheckErr(Rs_ReadDataUnknownLength (instrSession, &pbuffer, &retCnt)); 
-    
+
+    checkErr(RsCore_LockSession(instrSession));
+
+	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FETC:BURS:SUMT:ALL?", &pbuffer)); // TODO: Check the response processing
+
 	pbuf = strtok (pbuffer, ",");
-	while (pbuf != VI_NULL && i < arraySize)
+	while (pbuf != NULL && i < arraySize)
 	{
 		result[i++] = atof (pbuf);
-		pbuf = strtok (VI_NULL, ",");
+		pbuf = strtok (NULL, ",");
 	}
-	
+
 	*returnedValues = i;
-    
-    checkErr( rsspecan_CheckStatus (instrSession)); 
-    
+
+    checkErr(rsspecan_CheckStatus (instrSession));
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Fetch TETRA Subcarrier Mean Power
- * Purpose:  Returns the measured current, average, minimum or maximum of 
+ * Purpose:  Returns the measured current, average, minimum or maximum of
  *           the Mean power in each sub-carrier in dBm.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_FetchTETRASubcarrierMeanPower(
@@ -1290,60 +1193,57 @@ ViStatus _VI_FUNC rsspecan_FetchTETRASubcarrierMeanPower(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *buffer = VI_NULL;
-    ViChar      *pbuff = VI_NULL; 
+    ViChar      *buffer = NULL;
+    ViChar      *pbuff = NULL;
     ViInt32     i;
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (measurementType, 1, 4) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Measurement Type");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, 1, 4),
+    		2, "Measurement Type");
 
     switch (measurementType)
 	{
 		case RSSPECAN_VAL_TETRA_MEAS_MIN:
-			viCheckErr( viPrintf (instrSession, "FETC:BURS:SUMT:SCMP:MIN?\n"));
+			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCMP:MIN?"));
 			break;
-			
+
 		case RSSPECAN_VAL_TETRA_MEAS_MAX:
-			viCheckErr( viPrintf (instrSession, "FETC:BURS:SUMT:SCMP:MAX?\n"));
+			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCMP:MAX?"));
 			break;
-			
+
 		case RSSPECAN_VAL_TETRA_MEAS_AVER:
-			viCheckErr( viPrintf (instrSession, "FETC:BURS:SUMT:SCMP:AVER?\n"));
+			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCMP:AVER?"));
 			break;
-			
+
 		case RSSPECAN_VAL_TETRA_MEAS_CURR:
-			viCheckErr( viPrintf (instrSession, "FETC:BURS:SUMT:SCMP?\n"));
+			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCMP?"));
 			break;
-			
 	}
-	
-	viCheckErr(Rs_ReadDataUnknownLength (instrSession, &buffer, VI_NULL));  
-    
+
+	checkErr(Rs_ReadDataUnknownLength (instrSession, &buffer, NULL));
+
     pbuff = strtok (buffer, ",");
     i = 0;
     do{
         if (i<arraySize) result[i] = atof (pbuff);
         pbuff = strtok (NULL, ",");
         i++;
-    }while(pbuff != NULL);   
-    
+    }while(pbuff != NULL);
+
     if (returnedValues) *returnedValues = i;
-    
-    checkErr( rsspecan_CheckStatus (instrSession));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
     if (buffer) free(buffer);
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Fetch TETRA Subcarrier Reference Power
- * Purpose:  Returns the measured current, average, minimum or maximum of 
+ * Purpose:  Returns the measured current, average, minimum or maximum of
  *           the Reference power in each sub-carrier in dBm.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_FetchTETRASubcarrierReferencePower(
@@ -1355,65 +1255,62 @@ ViStatus _VI_FUNC rsspecan_FetchTETRASubcarrierReferencePower(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *buffer = VI_NULL;
-    ViChar      *pbuff = VI_NULL; 
+    ViChar      *buffer = NULL;
+    ViChar      *pbuff = NULL;
     ViInt32     i;
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (measurementType, 1, 4) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Measurement Type");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, 1, 4),
+    		2, "Measurement Type");
 
     switch (measurementType)
 	{
 		case RSSPECAN_VAL_TETRA_MEAS_MIN:
-			viCheckErr( viPrintf (instrSession, "FETC:BURS:SUMT:SCRP:MIN?\n"));
+			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCRP:MIN?"));
 			break;
-			
+
 		case RSSPECAN_VAL_TETRA_MEAS_MAX:
-			viCheckErr( viPrintf (instrSession, "FETC:BURS:SUMT:SCRP:MAX?\n"));
+			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCRP:MAX?"));
 			break;
-			
+
 		case RSSPECAN_VAL_TETRA_MEAS_AVER:
-			viCheckErr( viPrintf (instrSession, "FETC:BURS:SUMT:SCRP:AVER?\n"));
+			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCRP:AVER?"));
 			break;
-			
+
 		case RSSPECAN_VAL_TETRA_MEAS_CURR:
-			viCheckErr( viPrintf (instrSession, "FETC:BURS:SUMT:SCRP?\n"));
+			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCRP?"));
 			break;
-			
 	}
-	
-	viCheckErr(Rs_ReadDataUnknownLength (instrSession, &buffer, VI_NULL));  
-    
+
+	checkErr(Rs_ReadDataUnknownLength (instrSession, &buffer, NULL));
+
     pbuff = strtok (buffer, ",");
     i = 0;
     do{
         if (i<arraySize) result[i] = atof (pbuff);
         pbuff = strtok (NULL, ",");
         i++;
-    }while(pbuff != NULL);   
-    
+    }while(pbuff != NULL);
+
     if (returnedValues) *returnedValues = i;
-    
-    checkErr( rsspecan_CheckStatus (instrSession));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
     if (buffer) free(buffer);
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Fetch TETRA PVT Measurement
- * Purpose:  This function queries value for the Power versus Time 
+ * Purpose:  This function queries value for the Power versus Time
  *           measurements from the result summary list.
- *           
+ *
  *           Note(s):
- *           
- *           (1) The Power versus Time measurement must be selected to 
+ *
+ *           (1) The Power versus Time measurement must be selected to
  *           obtain results.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_FetchTETRAPVTMeasurement(
@@ -1424,43 +1321,37 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAPVTMeasurement(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (pvt, 0, 6) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "PVT");
-    }
-	if (rsspecan_invalidViInt32Range (measurementType, 1, 4) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Measurement Type");
-    }
-	
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, pvt, 0, 6),
+    		2, "PVT");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, 1, 4),
+			3, "Measurement Type");
+
 	if (pvt == RSSPECAN_VAL_TETRA_PVT_TRG_TO_SYNC)
 	{
-		viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, "",
-                                                	RSSPECAN_ATTR_TETRA_PVT_TRIGGER_TO_SYNC_TIME,
-                                                	result), 4, "Result");
+		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_PVT_TRIGGER_TO_SYNC_TIME, result),
+				4, "Result");
 	}
 	else
 	{
-    	sprintf (buffer, "%s,TETRA%s", tetraPVTMeasArr[pvt], tetraMeasModArr[measurementType]);  
+    	sprintf (buffer, "%s,TETRA%s", tetraPVTMeasArr[pvt], tetraMeasModArr[measurementType]);
 
-    	viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, buffer,
-                                                	RSSPECAN_ATTR_TETRA_PVT_MEASUREMENT,
-                                                	result), 4, "Result");
+    	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_PVT_MEASUREMENT, result),
+    			4, "Result");
 	}
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Fetch TETRA PVT Measurement All
- * Purpose:  Returns the results from the R&S FS-K110 Power versus Time 
- *           Summary Table measurement. 
+ * Purpose:  Returns the results from the R&S FS-K110 Power versus Time
+ *           Summary Table measurement.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_FetchTETRAPVTMeasurementAll(
 	ViSession	instrSession,
@@ -1470,41 +1361,40 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAPVTMeasurementAll(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *buffer = VI_NULL;
-    ViChar      *pbuff = VI_NULL; 
+    ViChar      *buffer = NULL;
+    ViChar      *pbuff = NULL;
     ViInt32     i;
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-	viCheckErr( viPrintf (instrSession, "FETC:BURS:PVTT:ALL?\n"));
-	viCheckErr(Rs_ReadDataUnknownLength (instrSession, &buffer, VI_NULL));  
-    
+	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FETC:BURS:PVTT:ALL?", &buffer)); // TODO: Check the response processing
+
     pbuff = strtok (buffer, ",");
     i = 0;
     do{
         if (i<arraySize) results[i] = atof (pbuff);
         pbuff = strtok (NULL, ",");
         i++;
-    }while(pbuff != NULL);   
-    
+    }while(pbuff != NULL);
+
     if (returnedValues) *returnedValues = i;
-    
-    checkErr( rsspecan_CheckStatus (instrSession));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
     if (buffer) free(buffer);
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Fetch TETRA Spectrum FFT Measurement RBW
- * Purpose:  This function returns the RBW used for the most recent Spectrum 
+ * Purpose:  This function returns the RBW used for the most recent Spectrum
  *           FFT measurement. Units are Hertz.
- *           
+ *
  *           Note(s):
- *           
- *           (1) This function is valid only if the Spectrum FFT measurement 
+ *
+ *           (1) This function is valid only if the Spectrum FFT measurement
  *           is selected.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_FetchTETRASpectrumFFTMeasurementRBW(
@@ -1513,21 +1403,20 @@ ViStatus _VI_FUNC rsspecan_FetchTETRASpectrumFFTMeasurementRBW(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_TETRA_SPECTRUM_FFT_MEASUREMENT_RBW,
-                                                result), 2, "Result");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_SPECTRUM_FFT_MEASUREMENT_RBW, result),
+    		2, "Result");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Fetch TETRA ACP
- * Purpose:  Returns the measured ACP due to Modulation and ACP due to 
+ * Purpose:  Returns the measured ACP due to Modulation and ACP due to
  *           Transient results.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_FetchTETRAACP(
@@ -1540,52 +1429,41 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAACP(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (acp, 0, 1) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "ACP");
-    }
-	if (rsspecan_invalidViInt32Range (acpMeasurement, 0, 6) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "ACP Measurement");
-    }
-	if (rsspecan_invalidViInt32Range (channelNumber, 0, 6) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 4, "Channel Number");
-    }
-	if (rsspecan_invalidViInt32Range (channelNumber, 2, 4) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 5, "Measurement Type");
-    }
-	
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, acp, 0, 1),
+    		2, "ACP");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, acpMeasurement, 0, 6),
+			3, "ACP Measurement");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelNumber, 0, 6),
+			4, "Channel Number");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelNumber, 2, 4),
+			5, "Measurement Type");
+
 	if (acpMeasurement == RSSPECAN_VAL_TETRA_ACP_RBW)
 	{
-		viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, "",
-                                                	RSSPECAN_ATTR_TETRA_FETCH_ACP_MODULATION_RBW,
-                                                	result), 6, "Result");
+		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_FETCH_ACP_MODULATION_RBW, result),
+				6, "Result");
 	}
 	else
 	{
-		sprintf (buffer, "ACP%s,ACP%s,%s,TETRA%s", tetraACPTypeArr[acp], tetraACPChannelArr[channelNumber], tetraACPMeas[acpMeasurement], tetraMeasModArr[measurementType]);  
+		sprintf (buffer, "ACP%s,ACP%s,%s,TETRA%s", tetraACPTypeArr[acp], tetraACPChannelArr[channelNumber], tetraACPMeas[acpMeasurement], tetraMeasModArr[measurementType]);
 
-    
-    	viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, buffer,
-    	                                            RSSPECAN_ATTR_TETRA_FETCH_ACP_MEASUREMENT,
-        	                                        result), 6, "Result");
+    	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_FETCH_ACP_MEASUREMENT, result),
+    			6, "Result");
 	}
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Get TETRA Trace X Axis Min Max
- * Purpose:  This function returns the minimum and maximum values 
- *           respectively for the X-axis data for the specified trace display 
+ * Purpose:  This function returns the minimum and maximum values
+ *           respectively for the X-axis data for the specified trace display
  *           and measurement.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_GetTETRATraceXAxisMinMax(
@@ -1597,33 +1475,28 @@ ViStatus _VI_FUNC rsspecan_GetTETRATraceXAxisMinMax(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-	if (rsspecan_invalidViInt32Range (trace, 1, 4) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Trace");
-    }
-	if (rsspecan_invalidViInt32Range (valueType, 1, 2) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 4, "Value Type");
-    }
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 4),
+			3, "Trace");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, valueType, 1, 2),
+			4, "Value Type");
 
-    sprintf (buffer, "Win%ld,TR%ld,TETRA%s", window, trace, tetraMeasModArr[valueType]);  
+    sprintf (buffer, "Win%ld,TR%ld,TETRA%s", window, trace, tetraMeasModArr[valueType]);
 
-    viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, buffer,
-                                                RSSPECAN_ATTR_TETRA_TRACE_X_AXIS_MIN_MAX,
-                                                xAxisValue), 5, "X Axis Value");
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_TRACE_X_AXIS_MIN_MAX, xAxisValue),
+    		5, "X Axis Value");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Get TETRA IQ Data Sampling Rate
- * Purpose:  This function returns the sampling rate in Hz for the current 
+ * Purpose:  This function returns the sampling rate in Hz for the current
  *           IQ data.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_GetTETRAIQDataSamplingRate(
@@ -1632,15 +1505,14 @@ ViStatus _VI_FUNC rsspecan_GetTETRAIQDataSamplingRate(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm (rsspecan_GetAttributeViReal64 (instrSession, "",
-                                                RSSPECAN_ATTR_TETRA_IQ_SAMPLE_RATE,
-                                                iqDataSamplingRate), 2, "IQ Data Sampling Rate");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_IQ_SAMPLE_RATE, iqDataSamplingRate),
+    		2, "IQ Data Sampling Rate");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1656,28 +1528,22 @@ ViStatus _VI_FUNC rsspecan_GetTETRAResultSummaryLimitCheckResult(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (limitType, 0, 8) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Limit Type");
-    }
-	
-	if (rsspecan_invalidViInt32Range (mode, 2, 3) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Mode");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, limitType, 0, 8),
+    		2, "Limit Type");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, mode, 2, 3),
+			3, "Mode");
 
-    sprintf (buffer, "EVMLim%s,TETRA%s", evmLimitTypeArr[limitType], tetraMeasModArr[mode]);  
+    sprintf (buffer, "EVMLim%s,TETRA%s", evmLimitTypeArr[limitType], tetraMeasModArr[mode]);
 
-    viCheckParm (rsspecan_GetAttributeViInt32 (instrSession, buffer,
-                                                RSSPECAN_ATTR_TETRA_RESULT_SUMMARY_LIMIT_CHECK_RESULT,
-                                                result), 4, "Result");
+    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_TETRA_RESULT_SUMMARY_LIMIT_CHECK_RESULT, result),
+    		4, "Result");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1693,36 +1559,35 @@ ViStatus _VI_FUNC rsspecan_GetTETRAResultSummaryLimitCheckResultsAll(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *buffer = VI_NULL;
-    ViChar      *pbuff = VI_NULL; 
+    ViChar      *buffer = NULL;
+    ViChar      *pbuff = NULL;
     ViInt32     i;
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-	viCheckErr( viPrintf (instrSession, "CALC:LIM:BURS:ALL:RES?\n"));
-	viCheckErr(Rs_ReadDataUnknownLength (instrSession, &buffer, VI_NULL));  
-    
+	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CALC:LIM:BURS:ALL:RES?", &buffer)); // TODO: Check the response processing
+
     pbuff = strtok (buffer, ",");
     i = 0;
     do{
         if (i<arraySize) results[i] = atol (pbuff);
         pbuff = strtok (NULL, ",");
         i++;
-    }while(pbuff != NULL);   
-    
+    }while(pbuff != NULL);
+
     if (returnedValues) *returnedValues = i;
-    
-    checkErr( rsspecan_CheckStatus (instrSession));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
     if (buffer) free(buffer);
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*****************************************************************************
  * Function: Get TETRA ACP Limit Check Result
- * Purpose:  This function returns the ACP due to Modulation and ACP Due to 
+ * Purpose:  This function returns the ACP due to Modulation and ACP Due to
  *           Transients relative power limit check result.
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_GetTETRAACPLimitCheckResult(
@@ -1734,32 +1599,23 @@ ViStatus _VI_FUNC rsspecan_GetTETRAACPLimitCheckResult(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_invalidViInt32Range (acp, 0, 1) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "ACP");
-    }
-	
-	if (rsspecan_invalidViInt32Range (channelNumber, 0, 6) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Channel Number");
-    }
-	
-	if (rsspecan_invalidViInt32Range (measurementType, 2, 4) == VI_TRUE)
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 4, "Measurement Type");
-    }
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, acp, 0, 1),
+    		2, "ACP");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelNumber, 0, 6),
+			3, "Channel Number");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, 2, 4),
+			4, "Measurement Type");
 
-    sprintf (buffer, "ACP%s,ACP%s,TETRA%s", tetraACPTypeArr[acp], tetraACPChannelArr[channelNumber], tetraMeasModArr[measurementType]);  
+    sprintf (buffer, "ACP%s,ACP%s,TETRA%s", tetraACPTypeArr[acp], tetraACPChannelArr[channelNumber], tetraMeasModArr[measurementType]);
 
-    viCheckParm (rsspecan_GetAttributeViInt32 (instrSession, buffer,
-                                               RSSPECAN_ATTR_TETRA_ACP_LIMIT_CHECK_RESULT,
-                                               result), 5, "Result");
+    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_TETRA_ACP_LIMIT_CHECK_RESULT, result),
+    		5, "Result");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }

@@ -184,7 +184,6 @@
     <ClCompile Include="..\_driver\rsspecan_k82_k83_k84_k85.c" />
     <ClCompile Include="..\_driver\rsspecan_k9.c" />
     <ClCompile Include="..\_driver\rsspecan_k90_k91.c" />
-    <ClCompile Include="..\_driver\rsspecan_k92.c" />
     <ClCompile Include="..\_driver\rsspecan_tdscdma.c" />
     <ClCompile Include="..\_driver\rsspecan_utility.c" />
     <ClCompile Include="..\_driver\rsspecan_vsa.c" />

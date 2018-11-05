@@ -1,6 +1,6 @@
 /*****************************************************************************
- *  Rohde&Schwarz Spectrum Analyzer instrument driver - 
- *                              K73 - 3GPP FDD Code Domain Power Measurements 
+ *  Rohde&Schwarz Spectrum Analyzer instrument driver -
+ *                              K73 - 3GPP FDD Code Domain Power Measurements
  *  VXIpnp Style Instrument Driver
  *  Original Release: September 2005
  *  By: Martin Koutny (instrument driver core)
@@ -18,32 +18,33 @@
  *  K73 - 3GPP FDD Code Domain Power Measurements
  *****************************************************************************/
 
-#include "rsspecan.h"   
+#include "rsspecan.h"
 static ViString trace3GUEArr[]={"TRACE1","TRACE1","TRACE1","TRACE1","CTAB","TRACE2","TRACE2","TRACE2",
                                 "TRACE2","ABIT","TRACE2","TRACE2","TRACE2","TRACE2","TRACE2","TRACE2","TRACE2",
-                                "TRACE2","TRACE2","TRACE2","TRACE2","CEVM"}; 
+                                "TRACE2","TRACE2","TRACE2","TRACE2","CEVM"};
 static ViString result3GUECDPArr[]={"PTOT","FERR","TFR","MACC",
         "PCD","EVMR","EVMP","CERR","CSL","SRAT","CHAN","CDP","CDPR","IQOF",
-        "IQIM","CMAP","PSYM","RHO","TOFF","EVMB","EVM","MTYP","ACH","MPIC","ARCD"}; 
+        "IQIM","CMAP","PSYM","RHO","TOFF","EVMB","EVM","MTYP","ACH","MPIC","ARCD"};
 /*===========================================================================*/
 /* Function: Set 3GPP FDD UE Mode
-/* Purpose:  This function switches the instrument into 3GPP FDD UE mode. 
+/* Purpose:  This function switches the instrument into 3GPP FDD UE mode.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_Set3GPPUEMode(ViSession  instrSession)
 {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    viCheckErr( rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_3GUE_MODE, ""));
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GUE_MODE, ""));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Set  3GPP FDD UE Measurement
-/* Purpose:  This function configures the 3GPP FDD UE additional 
+/* Purpose:  This function configures the 3GPP FDD UE additional
 /*           measurement.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_Set3GPPUEMeasurement(ViSession   instrSession,
@@ -51,12 +52,13 @@ ViStatus _VI_FUNC rsspecan_Set3GPPUEMeasurement(ViSession   instrSession,
 {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_3GUE_MEAS, 
-                measurement), 2, "Measurement");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_MEAS, measurement),
+    		2, "Measurement");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -82,38 +84,45 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPUEMeasurement(ViSession instrSession,
     invertQ;
     inactiveChannelThreshold;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SCR_CODE, 
-                scramblingCode), 2, "Scrambling Code");
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SCR_TYPE, 
-                scramblingType), 3, "Scrambling Type");
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_3GUE_CDP_BASE, 
-                measurementBase), 4, "Measurement Base");
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SCR_CODE, scramblingCode),
+    		2, "Scrambling Code");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SCR_TYPE, scramblingType),
+    		3, "Scrambling Type");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_BASE, measurementBase),
+    		4, "Measurement Base");
+
     if (measurementBase == RSSPECAN_VAL_3GUE_CDP_BASE_FRAME)
     {
-        viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SLOT, 
-                    slot), 5, "Slot");              
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SLOT, slot),
+        		5, "Slot");
     }
-    
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SIDEBAND, 
-                sideBand), 6, "Side Band");
-    viCheckParm( rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_3GUE_CDP_NORM, 
-                normalize), 7, "Normalize");
-    viCheckParm( rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_3GUE_RRC_FILTER, 
-                rrcFilter), 8, "RRC Filter");
-    viCheckParm( rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_3GUE_CDP_HSDPAUPA_STATE, 
-                hsdpaupa), 9, "HSDPA/UPA");
-    viCheckParm( rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_3GUE_CDP_ELIMINATE_TAIL_CHIPS, 
-                eliminateTailChips), 10, "Eliminate Tail Chips");               
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SIDEBAND, sideBand),
+    		6, "Side Band");
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_NORM, normalize),
+    		7, "Normalize");
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GUE_RRC_FILTER, rrcFilter),
+    		8, "RRC Filter");
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_HSDPAUPA_STATE, hsdpaupa),
+    		9, "HSDPA/UPA");
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_ELIMINATE_TAIL_CHIPS, eliminateTailChips),
+    		10, "Eliminate Tail Chips");
 	if (!rsspecan_IsFSV (instrSession))
 	{
-    	viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_3GUE_CDP_EVM_MEAS_INTERVAL, 
-        	        EVMMeasInterval), 13, "EVM Meas Interval");   
+    	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_EVM_MEAS_INTERVAL, EVMMeasInterval),
+    			13, "EVM Meas Interval");
 	}
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -127,13 +136,16 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPUEMultiframe(ViSession  instrSession,
 {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_3GUE_CDP_MULTIFRAME_CAPTURE_LENGTH, 
-                captureLength), 2, "Capture Length");
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_3GUE_CDP_MULTIFRAME_FRAME_ANALYZE, 
-                frameToAnalyze), 3, "Frame To Analyze");                
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_MULTIFRAME_CAPTURE_LENGTH, captureLength),
+    		2, "Capture Length");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_MULTIFRAME_FRAME_ANALYZE, frameToAnalyze),
+    		3, "Frame To Analyze");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -147,18 +159,20 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPUEResults(ViSession instrSession,
                                                 ViInt32 spreadingFactor)
 {
     ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SEL_COMP, 
-                selectIQ), 2, "Select I/Q");     
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_3GUE_CDP_CHAN_CODE, 
-                channel), 3, "Channel");                
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SFAC, 
-                spreadingFactor), 4, "Spreading Factor");   
-       
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SEL_COMP, selectIQ),
+    		2, "Select I/Q");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_CHAN_CODE, channel),
+    		3, "Channel");
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SFAC, spreadingFactor),
+    		4, "Spreading Factor");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -170,9 +184,9 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPUEResultType(ViSession instrSession,
                                                      ViInt32 resultType)
 {
     ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
+
+    checkErr(RsCore_LockSession(instrSession));
+
     switch (resultType)
     {
         case RSSPECAN_VAL_3GUE_RES_CDP:
@@ -180,10 +194,10 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPUEResultType(ViSession instrSession,
         case RSSPECAN_VAL_3GUE_RES_CDPOVER:
         case RSSPECAN_VAL_3GUE_RES_CDEP:
         case RSSPECAN_VAL_3GUE_RES_CTAB:
-            viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "C1", RSSPECAN_ATTR_3GUE_RESULT, 
-                resultType), 2, "Result Type"); 
-        break;      
-        case RSSPECAN_VAL_3GUE_RES_SUM: 
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_3GUE_RESULT, resultType),
+            		2, "Result Type");
+        break;
+        case RSSPECAN_VAL_3GUE_RES_SUM:
         case RSSPECAN_VAL_3GUE_RES_PCD:
         case RSSPECAN_VAL_3GUE_RES_MACC:
         case RSSPECAN_VAL_3GUE_RES_PVSLA:
@@ -200,20 +214,21 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPUEResultType(ViSession instrSession,
         case RSSPECAN_VAL_3GUE_RES_CHIP_EVM:
         case RSSPECAN_VAL_3GUE_RES_CHIP_MAGN:
         case RSSPECAN_VAL_3GUE_RES_CHIP_PHAS:
-		    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, "C2", RSSPECAN_ATTR_3GUE_RESULT, 
-                resultType), 2, "Result Type"); 
-        break;              
+		    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_3GUE_RESULT, resultType),
+		    		2, "Result Type");
+        break;
         default:
-            viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Result Type");     
-    }   
+            viCheckParm(RsCore_InvalidViInt32Value(instrSession, resultType), 2, "Result Type");
+    }
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure 3GPP FDD UE CDP Channel Table Operations
-/* Purpose:  This function performs the selected operation with channel 
+/* Purpose:  This function performs the selected operation with channel
 /*           table.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableOperations(ViSession    instrSession,
@@ -221,50 +236,45 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableOperations(ViSession   
                                                             ViString    channelTable)
 {
     ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
 
-    if (!channelTable) 
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Channel Table");
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTable), 3, "Channel Table");
+
     switch(operation){
         case RSSPECAN_VAL_CDP_TABLE_OFF:
-            viCheckErr (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB,
-                VI_FALSE)); 
+            checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB, VI_FALSE));
         break;
         case RSSPECAN_VAL_CDP_TABLE_SELECT:
-            viCheckErr (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB,
-                VI_TRUE));
-            viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_SEL, 
-                 channelTable), 3, "Channel Table");                    
-        break;  
+            checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB, VI_TRUE));
+            viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_SEL, channelTable),
+            		3, "Channel Table");
+        break;
         case RSSPECAN_VAL_CDP_TABLE_NEW:
-            viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_NAME, 
-                 channelTable), 3, "Channel Table"); 
-        break;  
+            viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_NAME, channelTable),
+            		3, "Channel Table");
+        break;
         case RSSPECAN_VAL_CDP_TABLE_DELETE:
-            viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_DEL, 
-                 channelTable), 3, "Channel Table");
-        break;           
+            viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_DEL, channelTable),
+            		3, "Channel Table");
+        break;
         case RSSPECAN_VAL_CDP_TABLE_COPY:
-            viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_COPY, 
-                 channelTable), 3, "Channel Table");
+            viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_COPY, channelTable),
+            		3, "Channel Table");
         break;
         default:
-            viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Operation");
+            viCheckParm(RsCore_InvalidViInt32Value(instrSession, operation), 2, "Operation");
         break;
-        
-    }       
-    
+    }
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure 3GPP FDD UE CDP Channel Table Comment
-/* Purpose:  This function defines a comment for the selected channel table 
+/* Purpose:  This function defines a comment for the selected channel table
 /*           in the code domain power measurement mode.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableComment(ViSession   instrSession,
@@ -272,19 +282,20 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableComment(ViSession   ins
 {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    viCheckParm (rsspecan_SetAttributeViString (instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_COMMENT, 
-                 channelTableComment), 2, "Channel Table Comment");
-                 
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_COMMENT, channelTableComment),
+    		2, "Channel Table Comment");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure 3GPP FDD UE CDP Channel Table Data
-/* Purpose:  This function defines the values of the selected channel table 
-/*           in the code domain power measurement mode. Six values are specified 
+/* Purpose:  This function defines the values of the selected channel table
+/*           in the code domain power measurement mode. Six values are specified
 /*           for a line of table.
 /*
 /*           Prior to this function, the name of the channel table has to be
@@ -302,18 +313,15 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableData(ViSession  instrSe
 {
     ViStatus    error = VI_SUCCESS;
     ViInt32     i = 0;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViChar      *pbuffer;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
 
-    if (!strstr (buffer, "K73"))
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
+    checkErr(RsCore_LockSession(instrSession));
 
-    if (arraySize<=0)
-      viCheckParm(RS_ERROR_INVALID_PARAMETER, 2, "Array Size");
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K73"));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
+    		2, "Array Size");
     pbuffer=buffer;
     pbuffer += sprintf (pbuffer, "CONF:WCDP:MS:CTAB:DATA %ld,%ld,%ld,%ld,%ld,%.12f",
                 codeClass[i], codeNumber[i], channelMapping[i], pilotLength[i], status[i],
@@ -324,17 +332,18 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableData(ViSession  instrSe
             codeClass[i], codeNumber[i], channelMapping[i], pilotLength[i], status[i],
                 cdpRelative[i]);
 
-    viCheckErr (viPrintf (instrSession,"%s\n", buffer));
+    checkErr(RsCore_Write(instrSession, buffer));
 
-    checkErr( rsspecan_CheckStatus (instrSession));         
+    checkErr(rsspecan_CheckStatus (instrSession));
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure 3GPP FDD UE CDP Channel Table High Speed Channel
-/* Purpose:  This function activates/deactivates the high speed channel in 
+/* Purpose:  This function activates/deactivates the high speed channel in
 /*           active channel table.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableHighSpeedChannel(ViSession  instrSession,
@@ -342,17 +351,19 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableHighSpeedChannel(ViSess
 {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    viCheckParm (rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_HSDP, 
-                 state), 2, "State");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_HSDP, state),
+    		2, "State");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Query 3GPP FDD UE CDP Channel Table Catalog
-/* Purpose:  This function reads out the names of all channel tables stored 
+/* Purpose:  This function reads out the names of all channel tables stored
 /*           on the harddisk in the code domain power measurement mode.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_Query3GPPFDDUEChannelTableCatalog(ViSession   instrSession,
@@ -361,66 +372,60 @@ ViStatus _VI_FUNC rsspecan_Query3GPPFDDUEChannelTableCatalog(ViSession   instrSe
                                                         ViChar  channelTablesList[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViUInt32    retCnt;
-    ViChar      *buf=VI_NULL;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
+    ViChar      *buf=NULL;
 
-    if (!strstr (buffer, "K73"))    
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
-    
-    if (bufferSize < 0)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Buffer Size");         
-    if ((bufferSize > 0) && (channelTablesList == VI_NULL))
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 4, "Channel Table List");  
-       
-    viCheckErr (viPrintf (instrSession, ":CONF:WCDP:MS:CTAB:CAT?\n"));
-    viCheckErr (Rs_ReadDataUnknownLength(instrSession, &buf, &retCnt));
-    viCheckErr (rsspecan_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
+    checkErr(RsCore_LockSession(instrSession));
 
-    checkErr( rsspecan_CheckStatus (instrSession));
-    
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K73"));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, bufferSize, 0, INT_MAX),
+    		3, "Buffer Size");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTablesList), 4, "Channel Table List");
+
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CONF:WCDP:MS:CTAB:CAT?", &buf)); // TODO: Check the response processing
+    checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
+
 Error:
     if (buf) free(buf);
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Get 3GPP FDD UE Trace
-/* Purpose:  This function initiates a signal acquisition based on the 
-/*           present instrument configuration.  It then waits for the 
-/*           acquisition to complete, and returns the trace as an array of 
-/*           amplitude values. The amplitude array returns data that 
-/*           represent the amplitude of the signals of the sweep from the 
-/*           start frequency to the stop frequency (in frequency domain, in 
-/*           time domain the amplitude array is ordered from beginning of 
-/*           sweep to end).  The Amplitude Units attribute determines the 
-/*           units of the points in the amplitude array.  This function 
+/* Purpose:  This function initiates a signal acquisition based on the
+/*           present instrument configuration.  It then waits for the
+/*           acquisition to complete, and returns the trace as an array of
+/*           amplitude values. The amplitude array returns data that
+/*           represent the amplitude of the signals of the sweep from the
+/*           start frequency to the stop frequency (in frequency domain, in
+/*           time domain the amplitude array is ordered from beginning of
+/*           sweep to end).  The Amplitude Units attribute determines the
+/*           units of the points in the amplitude array.  This function
 /*           resets the sweep count.
-/*           
+/*
 /*           Notes:
-/*           
-/*           (1) If the spectrum analyzer did not complete the acquisition 
-/*           within the time period the user specified with the maxTime 
+/*
+/*           (1) If the spectrum analyzer did not complete the acquisition
+/*           within the time period the user specified with the maxTime
 /*           parameter, the function returns Max Time Exceeded error.
-/*           
-/*           (2) If the data was captured in an uncalibrated spectrum 
-/*           analyzer mode, the function will generate a Measure Uncalibrated 
-/*           warning flag. 
-/*           
+/*
+/*           (2) If the data was captured in an uncalibrated spectrum
+/*           analyzer mode, the function will generate a Measure Uncalibrated
+/*           warning flag.
+/*
 /*           Attribute(s):
 /*           no attribute
-/*           
+/*
 /*           Remote-control command(s):
 /*           INITiate[:IMMediate]
 /*           TRACe<1|2>[:DATA] ABITstream | CWCDp | TPVSlot | CTABle
 /*           :FORM REAL,32
 /*           *CLS
-/*           
-/*           
+/*
+/*
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_Get3GPPUETrace(ViSession instrSession,
                                         ViInt32 window,
@@ -430,29 +435,25 @@ ViStatus _VI_FUNC rsspecan_Get3GPPUETrace(ViSession instrSession,
                                         ViReal64    values[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *exBuf = VI_NULL;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
+    ViChar      *exBuf = NULL;
 
-     if (!strstr (buffer, "K73"))    
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
-        
-    if (rsspecan_invalidViInt32Range (trace, RSSPECAN_VAL_3GUE_TRAC_CDP, RSSPECAN_VAL_3GUE_TRAC_EVM_RMS))
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Trace");
-    if (!actualPoints)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 5, "Actual Points");        
-    
-    viCheckErr (rsspecan_dataReadTrace (instrSession, window, trace3GUEArr[trace], arrayLength, 
+    checkErr(RsCore_LockSession(instrSession));
+
+     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K73"));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, RSSPECAN_VAL_3GUE_TRAC_CDP, RSSPECAN_VAL_3GUE_TRAC_EVM_RMS),
+    		3, "Trace");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, actualPoints), 5, "Actual Points");
+
+    checkErr(rsspecan_dataReadTrace (instrSession, window, trace3GUEArr[trace], arrayLength,
                     values, actualPoints));
-                    
-    checkErr( rsspecan_CheckStatus (instrSession));           
-    
+
+    checkErr(rsspecan_CheckStatus (instrSession));
+
 Error:
     if (exBuf) free (exBuf);
-    Rs_UnlockSession(instrSession, VI_NULL);
-    
+    (void)RsCore_UnlockSession(instrSession);
+
     return error;
 }
 
@@ -465,25 +466,22 @@ ViStatus _VI_FUNC rsspecan_Get3GPPUEResult(ViSession    instrSession,
                                             ViReal64*   result)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = ""; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    checkErr (rsspecan_GetAttributeViString (instrSession, "", RS_ATTR_OPTIONS_LIST, RSSPECAN_IO_BUFFER_SIZE, buffer));
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
-    if (!strstr (buffer, "K73"))    
-        viCheckErr (RS_ERROR_INSTRUMENT_OPTION);
-        
-    if (rsspecan_invalidViInt32Range (type, RSSPECAN_VAL_CDP_RES_PTOT, RSSPECAN_VAL_CDP_RES_ARCD))
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Type");
-    if (!result)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Result");        
+    checkErr(RsCore_LockSession(instrSession));
 
-    viCheckErr (viQueryf (instrSession, "CALC:MARK:FUNC:WCDP:MS:RES? %s\n","%le", 
-                result3GUECDPArr[type], result));
-    checkErr( rsspecan_CheckStatus (instrSession));    
-    
+    checkErr(RsCore_CheckInstrumentOptions(instrSession, "K73"));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, RSSPECAN_VAL_CDP_RES_PTOT, RSSPECAN_VAL_CDP_RES_ARCD),
+    		2, "Type");
+    viCheckParm(RsCore_InvalidNullPointer(instrSession, result), 3, "Result");
+
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MARK:FUNC:WCDP:MS:RES? %s", result3GUECDPArr[type]);
+    checkErr(RsCore_QueryViReal64(instrSession, cmd, result));
+    checkErr(rsspecan_CheckStatus (instrSession));
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 

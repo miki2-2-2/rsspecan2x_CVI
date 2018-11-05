@@ -1,7 +1,7 @@
 
 /*****************************************************************************
  *  Rohde&Schwarz Spectrum Analyzer instrument driver
- *  K9 - Power Meter 
+ *  K9 - Power Meter
  *
  *  Original Release: September 2005
  *  By: Martin Koutny (instrument driver core)
@@ -20,7 +20,7 @@
 
 /*===========================================================================*/
 /* Function: PWM Mode
-/* Purpose:  This function switches measurements with a power sensor on or 
+/* Purpose:  This function switches measurements with a power sensor on or
 /*           off.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_PWMMode(ViSession  instrSession,
@@ -28,18 +28,19 @@ ViStatus _VI_FUNC rsspecan_PWMMode(ViSession  instrSession,
                                          ViBoolean  state)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViInt32 pmet;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
     sprintf (buffer, "Win%ld,PM%ld", window, pmet);
-    viCheckParm( rsspecan_SetAttributeViBoolean (instrSession, buffer, RSSPECAN_ATTR_PMET_STATE, state), 2, "State");
-    
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_PMET_STATE, state),
+    		2, "State");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -51,62 +52,59 @@ Error:
 ViStatus _VI_FUNC rsspecan_PWMSelect (ViSession instrSession, ViInt32 sensor)
 {
     ViStatus    error = VI_SUCCESS;
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "",
-        RSSPECAN_ATTR_PMET_SELECT, sensor), 2, "Sensor");   
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PMET_SELECT, sensor),
+    		2, "Sensor");
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure PWM Measurement
-/* Purpose:  This function configures the power meter measurement 
+/* Purpose:  This function configures the power meter measurement
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_ConfigurePWMMeasurement(ViSession   instrSession,
                                                     ViInt32     window,
-                                                    ViInt32     measurementTime, 
+                                                    ViInt32     measurementTime,
                                                     ViInt32     coupling,
                                                     ViReal64    frequency,
                                                     ViInt32     averageCount)
 {
     ViInt32  pmet = 1;
     ViStatus error = VI_SUCCESS;
-    ViChar   buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    if (rsspecan_invalidViInt32Range (measurementTime, RSSPECAN_VAL_PWMET_MEASTIME_NORM, RSSPECAN_VAL_PWMET_MEASTIME_MANUAL))
-    {
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Measurement Time");
-    }
-    checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
-    
+    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementTime, RSSPECAN_VAL_PWMET_MEASTIME_NORM, RSSPECAN_VAL_PWMET_MEASTIME_MANUAL),
+    		3, "Measurement Time");
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+
     sprintf (buffer, "Win%ld,PM%ld", window, pmet);
     switch (measurementTime)
     {
         case RSSPECAN_VAL_PWMET_MEASTIME_MANUAL:
-            viCheckErr( rsspecan_SetAttributeViBoolean (instrSession, buffer,
-                                                        RSSPECAN_ATTR_PMET_AVERAGE_AUTO,
-                                                        VI_TRUE));
-            viCheckErr( rsspecan_SetAttributeViInt32 (instrSession, buffer, RSSPECAN_ATTR_PMET_AVERAGE_COUNT, averageCount));
-        break;    
+            checkErr(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_PMET_AVERAGE_AUTO, VI_TRUE));
+            checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PMET_AVERAGE_COUNT, averageCount));
+        break;
         default:
-            viCheckErr( rsspecan_SetAttributeViBoolean (instrSession, buffer,
-                                                        RSSPECAN_ATTR_PMET_AVERAGE_AUTO,
-                                                        VI_FALSE));
-                           
-            viCheckErr( rsspecan_SetAttributeViInt32 (instrSession, buffer, RSSPECAN_ATTR_PMET_MEAS_TIME, measurementTime));
-    }       
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, buffer, RSSPECAN_ATTR_PMET_COUPLING, coupling), 4, "Coupling");
+            checkErr(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_PMET_AVERAGE_AUTO, VI_FALSE));
+            checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PMET_MEAS_TIME, measurementTime));
+    }
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PMET_COUPLING, coupling),
+    		4, "Coupling");
     if (coupling == RSSPECAN_VAL_PMET_COUP_OFF)
     {
-        viCheckParm( rsspecan_SetAttributeViReal64 (instrSession, buffer, RSSPECAN_ATTR_PMET_FREQ, frequency), 5, "Frequency");    
-    }    
-    
+        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PMET_FREQ, frequency),
+        		5, "Frequency");
+    }
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -121,24 +119,26 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMRelative(ViSession   instrSession,
 {
     ViStatus error = VI_SUCCESS;
     ViInt32  pmet = 1;
-    ViChar   buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
-    
+    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+
     sprintf (buffer, "C%ld,PM%ld", window, pmet);
-    
-    checkErr( rsspecan_SetAttributeViBoolean (instrSession, buffer, RSSPECAN_ATTR_PMET_RELATIVE, VI_TRUE));
-    
-    viCheckParm( rsspecan_SetAttributeViReal64 (instrSession, buffer, RSSPECAN_ATTR_PMET_REL, referenceValue), 3, "Reference Value");
-    
+
+    checkErr(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_PMET_RELATIVE, VI_TRUE));
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PMET_REL, referenceValue),
+    		3, "Reference Value");
+
     sprintf (buffer, "Win%ld,PM%ld", window, pmet);
-    
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, buffer, RSSPECAN_ATTR_PMET_UNIT_REL, unit), 4, "Unit");
-    
+
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PMET_UNIT_REL, unit),
+    		4, "Unit");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -152,20 +152,20 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMAbsolute(ViSession   instrSession,
 {
     ViInt32  pmet = 1;
     ViStatus error = VI_SUCCESS;
-    ViChar   buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
-    
+    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+
     sprintf (buffer, "C%ld,PM%ld", window, pmet);
-    checkErr( rsspecan_SetAttributeViBoolean (instrSession, buffer, RSSPECAN_ATTR_PMET_RELATIVE, VI_FALSE));
+    checkErr(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_PMET_RELATIVE, VI_FALSE));
     sprintf (buffer, "Win%ld,PM%ld", window, pmet);
-    viCheckParm( rsspecan_SetAttributeViInt32 (instrSession, buffer, RSSPECAN_ATTR_PMET_UNIT_ABS, unit), 3, "Unit");
-    
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PMET_UNIT_ABS, unit),
+    		3, "Unit");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -181,25 +181,24 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMReferenceLevelOffsetState (ViSession inst
 {
     ViInt32  pmet = 1;
     ViStatus error = VI_SUCCESS;
-    ViChar   buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
-    
+    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+
     sprintf (buffer, "Win%ld,PM%ld", window, pmet);
-    viCheckParm( rsspecan_SetAttributeViBoolean (instrSession, buffer, RSSPECAN_ATTR_PMET_REF_LEVEL_OFFSET_STATE, state),
-        3, "State");
-    
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_PMET_REF_LEVEL_OFFSET_STATE, state),
+    		3, "State");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure PWM External Power Trigger
-/* Purpose:  This function accepts the current result as a reference value 
+/* Purpose:  This function accepts the current result as a reference value
 /*           for relative measurements.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_ConfigurePWMExternalPowerTrigger (ViSession instrSession,
@@ -209,24 +208,22 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMExternalPowerTrigger (ViSession instrSess
 {
     ViInt32  pmet = 1;
     ViStatus error = VI_SUCCESS;
-    ViChar   buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
-    
+    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+
     sprintf (buffer, "Win%ld,PM%ld", window, pmet);
-    
-    viCheckParm( rsspecan_SetAttributeViBoolean (instrSession, buffer, 
-        RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_STATE, state),
-        3, "State");
-    
-    viCheckParm( rsspecan_SetAttributeViReal64 (instrSession, buffer, 
-        RSSPECAN_ATTR_PWR_EXTERNAL_POWER_TRIGGER_LEVEL, level),
-        4, "Level");
-    
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_STATE, state),
+    		3, "State");
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PWR_EXTERNAL_POWER_TRIGGER_LEVEL, level),
+    		4, "Level");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -249,31 +246,34 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMExternalPowerTriggerAdvanced (ViSession i
                                                                      ViInt32 slope)
 {
 	ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 	ViInt32     pmet = 1;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+    checkErr(RsCore_LockSession(instrSession));
 
-	checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
     sprintf (buffer, "Win%ld,PM%ld", window, pmet);
 
-									   
-    viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, buffer, RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_HYSTERESIS, hysteresis), 3, "Hysteresis");
-	
-    viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, buffer, RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_DROPOUT_TIME, dropoutTime), 4, "Dropout Time");
-	
-	viCheckParm (rsspecan_SetAttributeViReal64 (instrSession, buffer, RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_HOLDOFF_TIME, holdoffTime), 4, "Holdoff Time");
-	
-	viCheckParm (rsspecan_SetAttributeViInt32 (instrSession, buffer, RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_SLOPE, slope), 3, "Slope");
-	
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_HYSTERESIS, hysteresis),
+    		3, "Hysteresis");
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_DROPOUT_TIME, dropoutTime),
+    		4, "Dropout Time");
+
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_HOLDOFF_TIME, holdoffTime),
+			4, "Holdoff Time");
+
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_SLOPE, slope),
+			3, "Slope");
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure PWM Bar Graph View
-/* Purpose:  This function accepts the current result as a reference value 
+/* Purpose:  This function accepts the current result as a reference value
 /*           for relative measurements.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_ConfigurePWMBarGraphView (ViSession instrSession,
@@ -281,19 +281,18 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMBarGraphView (ViSession instrSession,
 {
     ViInt32  pmet = 1;
     ViStatus error = VI_SUCCESS;
-    ViChar   buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
-    
+    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+
     sprintf (buffer, "Win0,PM%ld", pmet);
-    viCheckParm( rsspecan_SetAttributeViBoolean (instrSession, buffer, 
-        RSSPECAN_ATTR_PMET_BARGRAPH_STATE, barGraphView),
-        2, "Bar Graph View");
-    
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_PMET_BARGRAPH_STATE, barGraphView),
+    		2, "Bar Graph View");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -302,7 +301,7 @@ Error:
 /// HIPAR instrSession/This control accepts the Instrument Handle returned by the Initialize function to select the desired instrument driver session.
 /// HIPAR autoAssignment/Defines whether the selected power sensor index is automatically assigned to a subsequently connected power sensor.
 /// HIPAR placeholder/This control is reserved for future use.
-/// HIPAR type/The power sensor type.         
+/// HIPAR type/The power sensor type.
 /// HIPAR intfc/This control is reserved for future use.
 /// HIPAR serialNumber/The power sensor serial number.
 
@@ -314,28 +313,30 @@ ViStatus _VI_FUNC rsspecan_ConfigurePowerSensorAssignment (ViSession instrSessio
                                                            ViString serialNumber)
 {
     ViStatus    error = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     pmet = 1;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
     intfc;
     placeholder;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
     sprintf (buffer, "PM%ld", pmet);
-    
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer,
-        RSSPECAN_ATTR_PMET_AUTOMATIC_ASSIGNMENT, autoAssignment), 2, "Auto Assignment");    
+
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_PMET_AUTOMATIC_ASSIGNMENT, autoAssignment),
+    		2, "Auto Assignment");
 
     if (autoAssignment == VI_FALSE) // if not AutoAssign only
     {
-        viCheckErr( viPrintf (instrSession, 
-                    "SYST:COMM:RDEV:PMET%ld:DEF '','%s','USB','%s'\n", pmet, type, serialNumber));
+        snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SYST:COMM:RDEV:PMET%ld:DEF '','%s','USB','%s'", pmet, type, serialNumber);
+        checkErr(RsCore_Write(instrSession, cmd));
     }
-    
-    checkErr( rsspecan_CheckStatus (instrSession));
+
+    checkErr(rsspecan_CheckStatus (instrSession));
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -348,13 +349,14 @@ ViStatus _VI_FUNC rsspecan_QueryPowerSensorCount (ViSession instrSession,
                                                   ViInt32 *powerSensorCount)
 {
     ViStatus    error = VI_SUCCESS;
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
 
-    viCheckParm( rsspecan_GetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_PMET_NUMBER_OF_SENSORS, 
-            powerSensorCount), 2, "Power Sensor Count");
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PMET_NUMBER_OF_SENSORS, powerSensorCount),
+    		2, "Power Sensor Count");
 
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -368,29 +370,27 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMDutyCycle (ViSession instrSession,
 {
     ViInt32  pmet = 1;
     ViStatus error = VI_SUCCESS;
-    ViChar   buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
-    
+    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+
     sprintf (buffer, "PM%ld", pmet);
-    viCheckParm( rsspecan_SetAttributeViBoolean (instrSession, buffer, 
-                                                 RSSPECAN_ATTR_PMET_DUTY_CYCLE_STATE, 
-                                                 dutyCycle), 2, "Duty Cycle");
-    
-    viCheckParm( rsspecan_SetAttributeViReal64 (instrSession, buffer, 
-                                                RSSPECAN_ATTR_PMET_DUTY_CYCLE, 
-                                                dutyCycleValue), 3, "Duty Cycle Value");
-    
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_PMET_DUTY_CYCLE_STATE, dutyCycle),
+    		2, "Duty Cycle");
+
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PMET_DUTY_CYCLE, dutyCycleValue),
+    		3, "Duty Cycle Value");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure PWM Measure To Reference
-/* Purpose:  This function accepts the current result as a reference value 
+/* Purpose:  This function accepts the current result as a reference value
 /*           for relative measurements.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_ConfigurePWMMeasToRef(ViSession   instrSession,
@@ -398,17 +398,17 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMMeasToRef(ViSession   instrSession,
 {
     ViInt32  pmet = 1;
     ViStatus error = VI_SUCCESS;
-    ViChar   buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
-    
+    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+
     sprintf (buffer, "C%ld,PM%ld", window, pmet);
-    checkErr( rsspecan_SetAttributeViString (instrSession, buffer, RSSPECAN_ATTR_PMET_REL_AUTO, ""));
-    
+    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_PMET_REL_AUTO, ""));
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -420,17 +420,17 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMZero(ViSession   instrSession)
 {
     ViInt32  pmet = 1;
     ViStatus error = VI_SUCCESS;
-    ViChar   buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
-    
+    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+
     sprintf (buffer, "PM%ld", pmet);
-    checkErr( rsspecan_SetAttributeViString (instrSession, buffer, RSSPECAN_ATTR_PMET_ZERO, ""));
-    
+    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_PMET_ZERO, ""));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -444,52 +444,51 @@ ViStatus _VI_FUNC rsspecan_ConfigurePowerSensorReferenceLevelOffset (ViSession i
 {
     ViInt32  pmet = 1;
     ViStatus error = VI_SUCCESS;
-    ViChar   buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
-    
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+
     sprintf (buffer, "PM%ld", pmet);
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer,
-        RSSPECAN_ATTR_PWM_RELATIVE_OFFSET, offset), 2, "Offset");   
-    
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PWM_RELATIVE_OFFSET, offset),
+    		2, "Offset");
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
 /*===========================================================================*/
 /* Function: Read PWM Result
-/* Purpose:  This function triggers a measurement with the power sensor and 
+/* Purpose:  This function triggers a measurement with the power sensor and
 /*           then outputs the result.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_ReadPWMResult(ViSession  instrSession,
                                         ViInt32     window,
-                                        ViUInt32    timeout, 
+                                        ViUInt32    timeout,
                                         ViReal64*   result)
 {
     ViInt32  pmet = 1;
     ViStatus error = VI_SUCCESS;
-    ViChar   buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    ViInt32  old_timeout = -1; 
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    if (rsspecan_invalidViUInt32Range (timeout, 0, 4294967295UL) == VI_TRUE)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Timeout");
-    checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
-    
+    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViInt32  old_timeout = -1;
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+
     sprintf (buffer, "Win%ld,PM%ld", window, pmet);
-    viCheckErr( rsspecan_GetOPCTimeout (instrSession, &old_timeout));  
-    viCheckErr( rsspecan_SetOPCTimeout (instrSession, timeout)); 
-    viCheckParm( rsspecan_GetAttributeViReal64 (instrSession, buffer, RSSPECAN_ATTR_PMET_READ, result), 3, "Result");
-    
+    checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
+    checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PMET_READ, result),
+    		3, "Result");
+
 Error:
-    if (old_timeout >= 0)    
+    if (old_timeout >= 0)
         rsspecan_SetOPCTimeout (instrSession, old_timeout);
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -503,17 +502,18 @@ ViStatus _VI_FUNC rsspecan_FetchPWMResult(ViSession  instrSession,
 {
     ViInt32  pmet = 1;
     ViStatus error = VI_SUCCESS;
-    ViChar   buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+
+    checkErr(RsCore_LockSession(instrSession));
+
+    checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
     sprintf (buffer, "Win%ld,PM%ld", window, pmet);
-    viCheckParm( rsspecan_GetAttributeViReal64 (instrSession, buffer, RSSPECAN_ATTR_PMET_FETCH, result), 3, "Result");
-    
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PMET_FETCH, result),
+    		3, "Result");
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
