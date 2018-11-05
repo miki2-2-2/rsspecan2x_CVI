@@ -235,7 +235,6 @@ Error:
 	if (responseArray) free(responseArray);
 	return error;
 }
-
 /*===========================================================================*/
 /* Function: Read Trace Data Dynamic size                                    */
 /* Purpose:  This function reads out trace data from the instrument.         */
@@ -252,7 +251,7 @@ ViStatus rsspecan_dataReadTraceDynSize(ViSession instrSession, ViInt32 window, V
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC? %s", trace);
 	else
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC%ld? %s", window, trace);
-
+	
 	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, traceData, noofPoints));
 	checkErr(rsspecan_CheckStatus(instrSession));
 

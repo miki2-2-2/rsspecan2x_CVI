@@ -597,7 +597,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseENRCommonMode (ViSession instrSession,
 {
 	ViStatus	error = VI_SUCCESS;
 
-	checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+	checkErr(RsCore_LockSession(instrSession));
+
+// TODO: ERROR!!! Missing Unlock
 
 // TODO: ERROR!!! Missing Unlock
 
@@ -628,7 +630,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseENRCalibrationSettings (ViSession instr
 {
 	ViStatus	error = VI_SUCCESS;
 
-	checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+	checkErr(RsCore_LockSession(instrSession));
+
+// TODO: ERROR!!! Missing Unlock
 
 // TODO: ERROR!!! Missing Unlock
 
@@ -658,7 +662,9 @@ ViStatus _VI_FUNC rsspecan_SelectNoiseENRCalibrationTable (ViSession instrSessio
 {
 	ViStatus	error = VI_SUCCESS;
 
-	checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+	checkErr(RsCore_LockSession(instrSession));
+
+// TODO: ERROR!!! Missing Unlock
 
 // TODO: ERROR!!! Missing Unlock
 
@@ -1956,7 +1962,9 @@ ViStatus _VI_FUNC rsspecan_QuerySpectrumAnalyzerUncertainty (ViSession instrSess
 	ViAttr		attr[] = {RSSPECAN_ATTR_SPEC_ANALYZER_UNCERTAINTY_GAIN,
 						  RSSPECAN_ATTR_SPEC_ANALYZER_UNCERTAINTY_NOISE};
 
-    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+    checkErr(RsCore_LockSession(instrSession));
+
+// TODO: ERROR!!! Missing Unlock
 
 // TODO: ERROR!!! Missing Unlock
 

@@ -1229,6 +1229,16 @@ ViStatus RsCore_QueryBinaryOrAsciiFloatArrayWithOpc(ViSession instrSession,
                                                     ViReal64** outDblArray,
                                                     ViInt32* outArraySize);
 
+ViStatus RsCore_QueryBinaryOrAsciiFloatArrayToUserBuffer(ViSession instrSession,
+													ViConstString query,
+													ViInt32 userArraySize,
+													ViReal64* userArray,
+													ViInt32* responseArraySize);
+
+ViStatus RsCore_QueryBinaryOrAsciiFloatArraToUserBufferyWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs,
+													ViInt32 userArraySize, ViReal64* userArray, ViInt32* responseArraySize);
+
+
 ViStatus RsCore_QueryFloatArrayToUserBuffer(ViSession instrSession,
 											ViConstString query,
 											ViInt32 userBufferLength,
@@ -1399,7 +1409,7 @@ ViChar* RsCore_AppendToCsvString(ViChar* target, ViChar* delimiter, ViInt32 targ
 
 void RsCore_Delay(ViReal64 numberOfSeconds);
 
-ViStatus RsCore_CopyToUserBufferBinData(ViSession instrSession, ViBuf userBuffer, ViInt32 userBufferSize, ViBuf data, ViInt64 dataSize);
+ViStatus RsCore_CopyToUserBufferViReal64Array(ViSession instrSession, ViReal64* userBuffer, ViInt32 userBufferSize, ViReal64* data, ViInt64 dataSize);
 ViStatus RsCore_CopyToUserBufferAsciiData(ViSession instrSession, ViChar* userBuffer, ViInt32 userBufferSize, ViChar* sourceString);
 
 /******************************************************************************************************

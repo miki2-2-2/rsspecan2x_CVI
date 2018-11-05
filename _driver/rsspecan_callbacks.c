@@ -332,7 +332,9 @@ ViStatus rsspecan_displayComment_ReadCallback(ViSession instrSession, ViConstStr
 {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+    checkErr(RsCore_LockSession(instrSession));
+
+// TODO: ERROR!!! Missing Unlock
 
 // TODO: ERROR!!! Missing Unlock
 
@@ -2125,7 +2127,9 @@ Error:
  {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+    checkErr(RsCore_LockSession(instrSession));
+
+// TODO: ERROR!!! Missing Unlock
 
 // TODO: ERROR!!! Missing Unlock
 
@@ -2153,7 +2157,9 @@ Error:
  {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+    checkErr(RsCore_LockSession(instrSession));
+
+// TODO: ERROR!!! Missing Unlock
 
 // TODO: ERROR!!! Missing Unlock
 
@@ -2185,7 +2191,9 @@ Error:
  {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+    checkErr(RsCore_LockSession(instrSession));
+
+// TODO: ERROR!!! Missing Unlock
 
 // TODO: ERROR!!! Missing Unlock
 
@@ -2237,7 +2245,9 @@ ViStatus rsspecan_AmpUnit_RangeTableCallback(ViSession instrSession, ViConstStri
  {
    ViStatus    error = VI_SUCCESS;
 
-    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+    checkErr(RsCore_LockSession(instrSession));
+
+// TODO: ERROR!!! Missing Unlock
 
 // TODO: ERROR!!! Missing Unlock
 
@@ -2293,7 +2303,9 @@ Error:
  {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+    checkErr(RsCore_LockSession(instrSession));
+
+// TODO: ERROR!!! Missing Unlock
 
 // TODO: ERROR!!! Missing Unlock
 

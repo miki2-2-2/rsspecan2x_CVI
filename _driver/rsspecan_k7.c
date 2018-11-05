@@ -972,7 +972,9 @@ ViStatus _VI_FUNC rsspecan_GetADemodResultValues(
     ViReal32*   p = NULL;
     ViUInt32    i = 0;
 
-    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+    checkErr(RsCore_LockSession(instrSession));
+
+// TODO: ERROR!!! Missing Unlock
 
 // TODO: ERROR!!! Missing Unlock
 

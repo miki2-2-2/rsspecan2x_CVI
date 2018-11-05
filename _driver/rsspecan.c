@@ -1765,7 +1765,6 @@ ViStatus _VI_FUNC rsspecan_TraceIQSet (ViSession instrSession,
 
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
@@ -2264,7 +2263,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureListPowerSequence (ViSession instrSession,
      * Alloc buffer. Size is calclulated as:
      * size of header + size required for one entry * number of entries
      */
-    viCheckAlloc(pwrite_buffer = (ViChar*) malloc((size_t)(20 + 240 * noofListItems)), "ConfigureListPowerSequence input array");
+    viCheckAlloc(pwrite_buffer = (ViChar*) malloc((size_t)(20 + 240 * noofListItems)));
 
     pbuffer = pwrite_buffer;
 
@@ -2304,7 +2303,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureListPowerSequence (ViSession instrSession,
 
     pbuffer += sprintf (pbuffer, "\n");
 
-    checkErr(viWrite (instrSession, (ViBuf) pwrite_buffer, (ViUInt32)strlen (pwrite_buffer), NULL));
+	checkErr(RsCore_Write(instrSession, pwrite_buffer));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2341,8 +2340,7 @@ ViStatus _VI_FUNC rsspecan_QueryListPowerSequence (ViSession instrSession,
     ViStatus    error = VI_SUCCESS;
     ViChar*     pwrite_buffer = NULL;
     ViChar*     pbuffer;
-    ViInt32     i = 0,
-                results;
+	ViInt32     i = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2359,7 +2357,7 @@ ViStatus _VI_FUNC rsspecan_QueryListPowerSequence (ViSession instrSession,
     viCheckParm(RsCore_InvalidNullPointer(instrSession, triggerLevel), 12, "Trigger Level");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, listPowerResults), 13, "List Power Results");
 
-	viCheckAlloc(pwrite_buffer = (ViChar*)malloc((size_t)(20 + 240 * noofListItems)), "rsspecan_QueryListPowerSequence input array");
+	viCheckAlloc(pwrite_buffer = (ViChar*)malloc((size_t)(20 + 240 * noofListItems)));
     pbuffer = pwrite_buffer;
 
     pbuffer += sprintf (pbuffer, "*CLS;:SENS%ld:LIST:POW:SEQ? ", window);
@@ -2382,15 +2380,7 @@ ViStatus _VI_FUNC rsspecan_QueryListPowerSequence (ViSession instrSession,
     *--pbuffer = '\0'; // Remove remaining comma
 
     pbuffer += sprintf (pbuffer, "\n");
-
-    checkErr(viWrite (instrSession, (ViBuf) pwrite_buffer, (ViUInt32) strlen (pwrite_buffer), NULL));
-
-    //checkErr(rsspecan_WaitForOPC (instrSession, timeout));
-    // Read float numbers separated by commas x 3 possibly activated detectors
-
-    results = (noofListItems);
-    checkErr(viScanf(instrSession, "%,#lf", &results, listPowerResults));
-
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArrayToUserBuffer(instrSession, pwrite_buffer, noofListItems, listPowerResults, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -3515,14 +3505,17 @@ ViStatus _VI_FUNC rsspecan_QueryNdBFrequencies (ViSession instrSession,
                                                 ViReal64 *ndBFrequencyHigher)
 {
     ViStatus    error = VI_SUCCESS;
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViChar		response[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, ndBFrequencyLower), 3, "N dB Frequency Lower");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, ndBFrequencyHigher), 3, "N dB Frequency Higher");
 
-    checkErr(viQueryf(instrSession, "CALC%ld:MARK:FUNC:NDBD:FREQ?\n","%Le,%Le", window, ndBFrequencyLower, ndBFrequencyHigher ));
-
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:NDBD:FREQ?", window);
+	checkErr(RsCore_QueryViString(instrSession, cmd, response));
+	sscanf(response, "%Le,%Le", ndBFrequencyLower, ndBFrequencyHigher);
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -3541,13 +3534,17 @@ ViStatus _VI_FUNC rsspecan_QueryNdBTimes (ViSession instrSession,
                                           ViReal64 *n_dBTimeHigher)
 {
     ViStatus    error = VI_SUCCESS;
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViChar      response[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, n_dBTimeLower), 3, "N dB Frequency Lower");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, n_dBTimeHigher), 3, "N dB Frequency Higher");
 
-    checkErr(viQueryf(instrSession, "CALC%ld:MARK:FUNC:NDBD:TIME?\n","%Le,%Le", window, n_dBTimeLower, n_dBTimeHigher ));
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:NDBD:TIME?", window);
+	checkErr(RsCore_QueryViString(instrSession, cmd, response));
+	sscanf(response, "%Le,%Le", n_dBTimeLower, n_dBTimeHigher);
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -3779,10 +3776,7 @@ ViStatus _VI_FUNC rsspecan_QueryMarkerPeakList (ViSession instrSession,
                                                 ViReal64 peakList[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar      *buffer = NULL;
-    ViChar      *pbuff=NULL;
-    ViInt32     i;
+    ViChar	cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     max_marker = 4;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -3793,32 +3787,23 @@ ViStatus _VI_FUNC rsspecan_QueryMarkerPeakList (ViSession instrSession,
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, max_marker),
     		3, "Marker");
 
-    switch (peakListSelection){
+    switch (peakListSelection)
+	{
         case RSSPECAN_VAL_MARKER_SORT_X:
             snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK%ld:FUNC:FPE:X?", window, marker);
-            checkErr(RsCore_Write(instrSession, cmd));
         break;
         case RSSPECAN_VAL_MARKER_SORT_Y:
             snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK%ld:FUNC:FPE:Y?", window, marker);
-            checkErr(RsCore_Write(instrSession, cmd));
         break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, peakListSelection), 5, "Peak List Selection");
         break;
     }
-    checkErr(Rs_ReadDataUnknownLength (instrSession, &buffer, NULL));
-    pbuff = strtok (buffer, ",");
-    i = 0;
-    do{
-        peakList[i] = atof (pbuff);
-        pbuff = strtok (NULL, ",");
-        i++;
-    }while((pbuff != NULL) && (i<arraySize));
-
+	
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArrayToUserBuffer(instrSession, cmd, arraySize, peakList, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (buffer) free(buffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -6102,14 +6087,11 @@ ViStatus _VI_FUNC rsspecan_ExternalMixerConversionLossTableCatalog (ViSession in
     ViUInt32    retCnt = 0;
     ViChar      *buf = NULL;
     ViChar      *buf2 = NULL;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
-
-    if (!((strstr (buffer, "K90")  != NULL) || (strstr (buffer, "B21") != NULL)))
-        viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K90|B21"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, bufferSize, 0, INT_MAX),
     		3, "Buffer Size");
@@ -6427,9 +6409,7 @@ ViStatus _VI_FUNC rsspecan_DefineLimitLine(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      *pbuffer= NULL;
-    ViChar      *p2buf;
-    ViInt32     i;
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -6442,33 +6422,15 @@ ViStatus _VI_FUNC rsspecan_DefineLimitLine(
     viCheckParm(RsCore_InvalidNullPointer(instrSession, xAxis), 5, "X Axis");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, amplitude), 6, "Amplitude");
 
-    viCheckAlloc (pbuffer = (ViChar*) malloc ((size_t)(count * 20 + 200)));
+	snprintf (cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:LIM%ld:CONT ", limit);
+	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, cmd, xAxis, count));
 
-    p2buf = pbuffer + sprintf (pbuffer, "CALC:LIM%ld:CONT ", limit);
-
-    for (i = 0; i < count; i++)
-        p2buf += sprintf (p2buf, "%le,", xAxis[i]);
-
-    *p2buf = '\0';
-    *--p2buf = '\n';
-
-    checkErr(viWrite (instrSession, (ViBuf) pbuffer, (ViUInt32) strlen (pbuffer), NULL));
-
-    p2buf = pbuffer + sprintf (pbuffer, "CALC:LIM%ld:%s ", limit, limTypeArr [type]);
-
-    for (i = 0; i < count; i++)
-        p2buf += sprintf (p2buf, "%le,", amplitude[i]);
-
-    *p2buf = '\0';
-    *--p2buf = '\n';
-
-    checkErr(viWrite (instrSession, (ViBuf) pbuffer, (ViUInt32) strlen (pbuffer), NULL));
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:LIM%ld:%s ", limit, limTypeArr [type]);
+	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, cmd, amplitude, count));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (pbuffer) free (pbuffer);
-
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -6784,8 +6746,7 @@ ViStatus _VI_FUNC rsspecan_GetActiveLimitLines (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr (model, "FMU") != NULL)
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, activeLimitLines), 3, "Active Limit Lines");
 
@@ -6827,8 +6788,7 @@ ViStatus _VI_FUNC rsspecan_GetLimitLineCatalog (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr (model, "FSL") != NULL)
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "!FSL"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, bufferSize, 0, INT_MAX),
     		3, "Buffer Size");
@@ -6957,7 +6917,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureDisplayControl (ViSession instrSession,
 
     viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_DISP_TIME_STATE, time),
     		4, "Time");
-    if (strstr(model, "FSL"))
+
+	if (RsCore_IsInstrumentModel(instrSession, "FSL"))
     {
         if (time == VI_FALSE)
         {
@@ -7992,9 +7953,10 @@ ViStatus _VI_FUNC rsspecan_GetTransducerFactorCatalog (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr (model, "FSL") != NULL) || (strstr (model, "FMU") != NULL) ||
-        (rsspecan_IsFSV (instrSession)))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	if (RsCore_IsInstrumentModel(instrSession, "FSL|FMU") || (rsspecan_IsFSV(instrSession)))
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, bufferSize, 0, INT_MAX),
     		3, "Buffer Size");
@@ -8045,20 +8007,12 @@ ViStatus _VI_FUNC rsspecan_ServiceVersionInfo (ViSession instrSession,
                                                ViChar versionInfo[])
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      *pbuffer=NULL;
-    ViUInt32    ret_val;
-    ViUInt32    length;
 
     checkErr(RsCore_LockSession(instrSession));
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "DIAG:SERV:VERS?", &pbuffer)); // TODO: Check the response processing
-    length=((ViUInt32)arraySize<=ret_val)?arraySize-1:(ViUInt32)ret_val;
-    memcpy (versionInfo,pbuffer,length);
-    versionInfo[length]='\0';
-    checkErr(rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_QueryViString(instrSession, "DIAG:SERV:VERS?", arraySize, versionInfo));
 
 Error:
-    if (pbuffer) free(pbuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -9124,7 +9078,6 @@ ViStatus _VI_FUNC rsspecan_Calibration (ViSession instrSession,
 {
     ViStatus    error   = VI_SUCCESS;
     ViInt32     old_timeout=-1;
-    ViChar response[10];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -9136,16 +9089,11 @@ ViStatus _VI_FUNC rsspecan_Calibration (ViSession instrSession,
         checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
         checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
 
-        checkErr(Rs_ClearBeforeRead(instrSession));
-        viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_CALIBRATION, result),
+		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_CALIBRATION, result),
         		2, "Result");
-
-        checkErr(RsCore_Write(instrSession, "*ESR?"));
-        checkErr(Rs_ReadInstrData(instrSession, 10, response, NULL));
     }
     else
     {
-        checkErr(Rs_ClearBeforeRead(instrSession));
         checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_CALIBRATION, RSSPECAN_VAL_CAL_ALL));
     }
 
@@ -9184,19 +9132,15 @@ ViStatus _VI_FUNC rsspecan_CalibrationResult (ViSession instrSession,
                                               ViChar result[])
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      *pbuffer=NULL;
-    ViUInt32    ret_val;
-    ViUInt32    length;
+    ViChar      *pbuffer = NULL;
 
     checkErr(RsCore_LockSession(instrSession));
 
     //viCheckParm(rsspecan_GetAttributeViString (instrSession, "",
     //        RSSPECAN_ATTR_CALIBRATION_RESULT_QUERY, arraySize, result), 2, "Result");
     checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CAL:RES?", &pbuffer)); // TODO: Check the response processing
-    length=((ViUInt32)arraySize<=ret_val)?(ViUInt32)arraySize-1:ret_val;
-    memcpy (result,pbuffer,length);
-    result[length]='\0';
-    checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
+	checkErr(RsCore_CopyToUserBufferAsciiData(instrSession, result, arraySize, pbuffer));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -9426,7 +9370,7 @@ ViStatus _VI_FUNC rsspecan_GetProbeCalibrationStatus (ViSession instrSession,
     ViStatus    error = VI_SUCCESS;
     ViUInt32    counter     = 0;
     ViInt32     status      = 0;
-    ViUInt16    response    = 0;
+	ViInt32		response = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -9437,7 +9381,7 @@ ViStatus _VI_FUNC rsspecan_GetProbeCalibrationStatus (ViSession instrSession,
 
     do
     {
-        error = viReadSTB (instrSession, &response);
+		checkErr(RsCore_QueryViInt32(instrSession, "*STB?", &response));
 
         if (response & 0x8)
         {
@@ -9504,9 +9448,6 @@ ViStatus _VI_FUNC rsspecan_CalibrationProbeResult (ViSession instrSession,
                                                    ViChar result[])
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      *pbuffer= NULL;
-    ViUInt32    ret_val;
-    ViUInt32    length;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -9515,13 +9456,7 @@ ViStatus _VI_FUNC rsspecan_CalibrationProbeResult (ViSession instrSession,
     viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_CAL_PROBE_DATA_SELECT, probeDataSetName),
     		2, "Probe Data Set Name");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "SENS:PROB:RES?", &pbuffer)); // TODO: Check the response processing
-
-    length = ((ViUInt32)arraySize <= ret_val) ? (ViUInt32)arraySize - 1 : ret_val;
-    memcpy (result, pbuffer, length);
-    result[length] = '\0';
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_QueryViString(instrSession, "SENS:PROB:RES?", arraySize, result));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -9839,9 +9774,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureAutoAdjust (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr (model, "FSW") != NULL)
+    if (RsCore_IsInstrumentModel(instrSession, "FSW"))
         sprintf (buffer, "FSW");
-    else  sprintf (buffer, "FSV");
+    else 
+		sprintf (buffer, "FSV");
 
     switch (adjustSettings)
     {
@@ -10251,8 +10187,7 @@ ViStatus _VI_FUNC rsspecan_ReadYTrace (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr (model, "FSL") != NULL) ||
-        (rsspecan_IsFSV (instrSession)))
+    if (RsCore_IsInstrumentModel(instrSession, "FSL") || rsspecan_IsFSV (instrSession))
         trace_range=6;
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, trace_range),
@@ -10314,8 +10249,7 @@ ViStatus _VI_FUNC rsspecan_FetchYTrace (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr (model, "FSL") != NULL) ||
-        (rsspecan_IsFSV (instrSession)))
+    if (RsCore_IsInstrumentModel(instrSession, "FSL") || rsspecan_IsFSV (instrSession))
         trace_range=6;
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, trace_range),
@@ -10390,18 +10324,15 @@ ViStatus _VI_FUNC rsspecan_FetchXTrace (ViSession instrSession,
                                               ViReal64 x[])
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 6),
     		2, "Timeout");
 
-    sprintf (buffer, "*CLS;FORM REAL,32;TRAC:DATA:X? TRACe%ld\n", trace);
-
-    checkErr(RsCore_Write(instrSession, buffer));
-    checkErr(rsspecan_dataReadTraceOnly (instrSession, arrayLength, x, actualPoints));
-
+    sprintf (cmd, "FORM REAL,32;TRAC:DATA:X? TRACe%ld", trace);
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArrayToUserBuffer(instrSession, cmd, arrayLength, x, actualPoints));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -10414,24 +10345,30 @@ Error:
  * Purpose:     This function returns the current X and Y results of the sweep.
  *              During a sweep the last measured values are read out.
  *****************************************************************************/
-ViStatus _VI_FUNC rsspecan_GetCurrentResults (ViSession instrSession,
-                                         ViInt32 window,
-                                         ViReal64 *xValue,
-                                         ViReal64 *yValue)
+ViStatus _VI_FUNC rsspecan_GetCurrentResults(ViSession instrSession,
+	ViInt32 window,
+	ViReal64 *xValue,
+	ViReal64 *yValue)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus    error = VI_SUCCESS;
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViChar      response[RS_MAX_MESSAGE_BUF_SIZE];
 
-    checkErr(RsCore_LockSession(instrSession));
+	checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr (model, "FSL") != NULL) ||
-        (strstr (model, "FMU") != NULL) ||
-        (rsspecan_IsFSV (instrSession)))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	if (RsCore_IsInstrumentModel(instrSession, "FSL|FMU") || rsspecan_IsFSV(instrSession))
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, xValue), 3, "X Value");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, yValue), 4, "Y Value");
 
-    checkErr(viQueryf(instrSession, "TRAC%ld:IMM:RES?\n", "%le,%le", window, xValue, yValue));
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "TRAC%ld:IMM:RES?", window);
+	checkErr(RsCore_QueryViString(instrSession, cmd, response));
+	sscanf(response, "%Le,%Le", xValue, yValue);
+	checkErr(rsspecan_CheckStatus(instrSession));
+
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -10695,8 +10632,6 @@ ViStatus _VI_FUNC rsspecan_Initiate (ViSession  instrSession,
     checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
     sprintf (buffer, "Win%ld", window);
 
-    checkErr(rsspecan_ClearBeforeRead (instrSession));
-
     checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_INIT, NULL));
 
 Error:
@@ -10875,8 +10810,6 @@ ViStatus _VI_FUNC rsspecan_InitiateSequencer(
 
     checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
     checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
-
-    checkErr(rsspecan_ClearBeforeRead (instrSession));
 
     checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_INIT_SEQUENCER, NULL));
 
@@ -11192,9 +11125,7 @@ Error:
     viCheckParm(RsCore_InvalidNullPointer(instrSession, result), 7, "Result");
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:MSUM? %.12f,%.12f,%.12f,%ld", window, timeOffsetofFirstPulse, measurementTime, period, numberofPulses);
-    checkErr(RsCore_Write(instrSession, cmd));
-    checkErr(viScanf(instrSession, "%,#lf", &numberofPulses, result));
-
+    checkErr(RsCore_QueryBinaryOrAsciiFloatArrayToUserBuffer(instrSession, cmd, numberofPulses, result, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -11943,7 +11874,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureACPAdjacentChannelLimit (ViSession instrSess
 
     sprintf (buffer, "Win%ld", window);
 
-    if (strstr (model, "FSL") != NULL)
+    if (RsCore_IsInstrumentModel(instrSession, "FSL"))
     {
         snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM:ACP:ACH %.12lf,0.0", window, relativeValue);
         checkErr(RsCore_Write(instrSession, cmd));
@@ -12059,19 +11990,24 @@ ViStatus _VI_FUNC rsspecan_QueryACPAdjacentChannelLimitCheckResults (ViSession i
                                                               ViInt32 *upperResult)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buf1[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      buf2[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      buf1[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      buf2[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViChar      response[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, lowerResult), 3, "Lower Result");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, upperResult), 4, "Upper Result");
 
-    checkErr(viQueryf(instrSession, "CALC%ld:LIM:ACP:ACH:RES?\n","%[^,],%[^\r\n]",
-    window, buf1, buf2));
-    viCheckErr(Rs_GetIndexOfToken (resultsString, ",", (ViUInt32 *)lowerResult, buf1));
-    viCheckErr(Rs_GetIndexOfToken (resultsString, ",", (ViUInt32 *)upperResult, buf2));
-    checkErr(rsspecan_CheckStatus (instrSession));
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM:ACP:ACH:RES?", window);
+	checkErr(RsCore_QueryViString(instrSession, cmd, response));
+	sscanf(response, "%[^,],%[^\r\n]", buf1, buf2);
+
+	checkErr(RsCore_GetIndexOfToken(resultsString, ',', buf1, lowerResult, NULL));
+	checkErr(RsCore_GetIndexOfToken(resultsString, ',', buf2, upperResult, NULL));
+	checkErr(rsspecan_CheckStatus(instrSession));
+
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -12090,8 +12026,10 @@ ViStatus _VI_FUNC rsspecan_QueryACPAlternateChannelLimitCheckResults (ViSession 
                                                                ViInt32 *upperResult)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buf1[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      buf2[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      buf1[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      buf2[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViChar      response[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -12100,10 +12038,12 @@ ViStatus _VI_FUNC rsspecan_QueryACPAlternateChannelLimitCheckResults (ViSession 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, lowerResult), 4, "Lower Result");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, upperResult), 5, "Upper Result");
 
-    checkErr(viQueryf(instrSession, "CALC%ld:LIM:ACP:ALT%ld:RES?\n","%[^,],%[^\r\n]",
-    window, channelNumber, buf1, buf2));
-    viCheckErr(Rs_GetIndexOfToken (resultsString, ",", (ViUInt32 *)lowerResult, buf1));
-    viCheckErr(Rs_GetIndexOfToken (resultsString, ",", (ViUInt32 *)upperResult, buf2));
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM:ACP:ALT%ld:RES?", window, channelNumber);
+	checkErr(RsCore_QueryViString(instrSession, cmd, response));
+	sscanf(response, "%[^,],%[^\r\n]", buf1, buf2);
+
+	checkErr(RsCore_GetIndexOfToken(resultsString, ',', buf1, lowerResult, NULL));
+	checkErr(RsCore_GetIndexOfToken(resultsString, ',', buf2, upperResult, NULL));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -12725,8 +12665,7 @@ ViStatus _VI_FUNC rsspecan_QuerySignalStatisticCCDFLevel (ViSession instrSession
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr (model, "FSL") != NULL)
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "!FSL"));
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 3),
     		2, "Trace");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, probability, 0, 3),
@@ -13027,17 +12966,17 @@ ViStatus _VI_FUNC rsspecan_QueryHDist (ViSession instrSession,
                                        ViReal64 *harmonicDistortion_in_dB)
 {
     ViStatus    error = VI_SUCCESS;
+	ViChar      response[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr(model, "FMU") != NULL)
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, harmonicDistortion_in_percent), 2, "Harmonic Distortion in percent");
      viCheckParm(RsCore_InvalidNullPointer(instrSession, harmonicDistortion_in_dB), 3, "Harmonic Distortion in dB");
 
-    checkErr(viQueryf(instrSession, ":CALC:MARK:FUNC:HARM:DIST? TOT\n", "%le,%le",
-                harmonicDistortion_in_percent, harmonicDistortion_in_dB));
+	 checkErr(RsCore_QueryViString(instrSession, ":CALC:MARK:FUNC:HARM:DIST? TOT", response));
+	 sscanf(response, "%Le,%Le", harmonicDistortion_in_percent, harmonicDistortion_in_dB);
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -13057,13 +12996,11 @@ ViStatus _VI_FUNC rsspecan_QueryHDistHarmonicsList (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr(model, "FMU") != NULL)
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, harmonicsList), 2, "Harmonic List");
 
-    checkErr(viQueryf(instrSession, "CALC:MARK:FUNC:HARM:LIST?\n", "%,255lf",
-                harmonicsList));
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArrayToUserBuffer(instrSession, "CALC:MARK:FUNC:HARM:LIST?", 255, harmonicsList, NULL));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -13142,25 +13079,26 @@ ViStatus _VI_FUNC rsspecan_BurstPowerSequence (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr(model, "FMU") != NULL)
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
 
     if (analyzerFrequencyHz<0.0)
         viCheckParm(RS_ERROR_INVALID_PARAMETER, 3, "Analyzer Frequency [Hz]");
-    viCheckParm(RsCore_InvalidViReal64Range(instrSession, resolutionBandwidthHz, 10.0, 10.0e+6), 4, "Resolution Bandwidth [Hz]");
-    viCheckParm(RsCore_InvalidViReal64Range(instrSession, measTimes, 1.0e-6, 30.0), 5, "Meas Time [s]");
-    if ((RsCore_InvalidViInt32Range (triggerSource, RSSPECAN_VAL_TRG_EXT, RSSPECAN_VAL_TRG_EXT) == VI_TRUE)
-            && (RsCore_InvalidViInt32Range (triggerSource, RSSPECAN_VAL_TRG_VID,RSSPECAN_VAL_TRG_VID) == VI_TRUE))
-        viCheckParm(RS_ERROR_INVALID_PARAMETER, 6, "Trigger Source");
-    viCheckParm(RsCore_InvalidViReal64Range(instrSession, triggerLevel, 0.0, 100.0), 7, "Trigger Level");
-    viCheckParm(RsCore_InvalidViReal64Range(instrSession, triggerOffsets, 125.0e-9, 100.0), 8, "Trigger Offset [s]");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, resolutionBandwidthHz, 10.0, 10.0e+6),
+			4, "Resolution Bandwidth [Hz]");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, measTimes, 1.0e-6, 30.0),
+			5, "Meas Time [s]");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, triggerLevel, 0.0, 100.0),
+			7, "Trigger Level");
+    viCheckParm(RsCore_InvalidViReal64Range(instrSession, triggerOffsets, 125.0e-9, 100.0),
+			8, "Trigger Offset [s]");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, type_ofMeas, 0, 1),
     		9, "Type Of Meas");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, noofMeasurements, 1, 501),
     		10, "No Of Measurements");
 
-    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS%ld:MPOW:SEQ %.12lG,%.12lG,%.12lG,%s,%.12lG,%.12lG,%s,%ld", window, analyzerFrequencyHz,resolutionBandwidthHz,measTimes,rsspecan_rngTriggerSource.rangeValues[triggerSource].cmdString,
-    triggerLevel,triggerOffsets,measTypeArr[type_ofMeas],noofMeasurements);
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS%ld:MPOW:SEQ %.12lG,%.12lG,%.12lG,%s,%.12lG,%.12lG,%s,%ld",
+		window, analyzerFrequencyHz,resolutionBandwidthHz,measTimes,rsspecan_rngTriggerSource.rangeValues[triggerSource].cmdString,
+		triggerLevel,triggerOffsets,measTypeArr[type_ofMeas],noofMeasurements);
     checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
@@ -13215,19 +13153,17 @@ ViStatus _VI_FUNC rsspecan_GetBurstPowerSequence (ViSession instrSession,
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViReal64 *data = NULL;
+	ViInt32	dataSize = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr(model, "FMU") != NULL)
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
 
     if (analyzerFrequencyHz<0.0)
         viCheckParm(RS_ERROR_INVALID_PARAMETER, 3, "Analyzer Frequency [Hz]");
     viCheckParm(RsCore_InvalidViReal64Range(instrSession, resolutionBandwidthHz, 10.0, 10.0e+6), 4, "Resolution Bandwidth [Hz]");
     viCheckParm(RsCore_InvalidViReal64Range(instrSession, measTimes, 1.0e-6, 30.0), 5, "Meas Time [s]");
-    if ((RsCore_InvalidViInt32Range (triggerSource, RSSPECAN_VAL_TRG_EXT, RSSPECAN_VAL_TRG_EXT) == VI_TRUE)
-            && (RsCore_InvalidViInt32Range (triggerSource, RSSPECAN_VAL_TRG_VID,RSSPECAN_VAL_TRG_VID) == VI_TRUE))
-        viCheckParm(RS_ERROR_INVALID_PARAMETER, 6, "Trigger Source");
     viCheckParm(RsCore_InvalidViReal64Range(instrSession, triggerLevel, 0.0, 100.0), 7, "Trigger Level");
     viCheckParm(RsCore_InvalidViReal64Range(instrSession, triggerOffsets, 125.0e-9, 100.0), 8, "Trigger Offset [s]");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, type_ofMeas, 0, 1),
@@ -13238,14 +13174,14 @@ ViStatus _VI_FUNC rsspecan_GetBurstPowerSequence (ViSession instrSession,
     viCheckParm(RsCore_InvalidNullPointer(instrSession, burstPowerResults), 12, "Burst Power Results");
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "*CLS;:SENS%ld:MPOW:SEQ? %.12lf,%.12lf,%.12lf,%s,%.12lf,%.12lf,%s,%ld;*OPC", window, analyzerFrequencyHz,resolutionBandwidthHz,measTimes,rsspecan_rngTriggerSource.rangeValues[triggerSource].cmdString,
-    triggerLevel,triggerOffsets,measTypeArr[type_ofMeas],no_ofMeasurements);
-    checkErr(RsCore_Write(instrSession, cmd));
-    checkErr(rsspecan_WaitForOPC (instrSession, timeout));
-    checkErr(viScanf(instrSession, "%,#lf", &no_ofMeasurements, burstPowerResults));
+    triggerLevel,triggerOffsets,measTypeArr[type_ofMeas], no_ofMeasurements);
+    checkErr(RsCore_QueryBinaryOrAsciiFloatArrayWithOpc(instrSession, cmd, timeout, &data, &dataSize));
+	checkErr(RsCore_CopyToUserBufferViReal64Array(instrSession, burstPowerResults, no_ofMeasurements, data, dataSize));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
+	if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -13260,18 +13196,18 @@ ViStatus _VI_FUNC rsspecan_GetBurstPowerResults (ViSession instrSession,
                                                  ViReal64 burstPowerResults[])
 {
     ViStatus    error = VI_SUCCESS;
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr(model, "FMU") != NULL)
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, no_ofResults, 1, INT_MAX),
     		3, "No Of Results");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, burstPowerResults), 4, "burstPowerResults");
 
-    checkErr(viQueryf(instrSession, "*WAI;SENS%ld:MPOW:RES?\n", "%,#lf",
-    window, &no_ofResults, burstPowerResults));
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS%ld:MPOW:RES?", window);
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArraToUserBufferyWithOpc(instrSession, cmd, 0, no_ofResults, burstPowerResults, NULL));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -13437,9 +13373,7 @@ ViStatus _VI_FUNC rsspecan_setStatusRegister (ViSession instrSession,
             viCheckParm(RsCore_InvalidViInt32Range(instrSession, selStatusReg, 0, 23),
             		3, "Questionable Register");
 
-            checkErr(viPrintf(instrSession, ":STAT:QUES%s:ENAB %ld;PTR %ld"
-                ";NTR %ld\n", selStatusRegArr[selStatusReg], enable, PTransition,
-                NTransition));
+            checkErr(viPrintf(instrSession, ":STAT:QUES%s:ENAB %ld;PTR %ld;NTR %ld\n", selStatusRegArr[selStatusReg], enable, PTransition, NTransition));
         break;
         case 2:
             viCheckParm(RsCore_InvalidViInt32Range(instrSession, enable, 0, 65535),
@@ -13449,8 +13383,7 @@ ViStatus _VI_FUNC rsspecan_setStatusRegister (ViSession instrSession,
             viCheckParm(RsCore_InvalidViInt32Range(instrSession, NTransition, 0, 65535),
             		6, "NTransition");
 
-            checkErr(viPrintf(instrSession, ":STAT:OPER:ENAB %ld;PTR %ld"
-                ";NTR %ld\n", enable, PTransition, NTransition));
+            checkErr(viPrintf(instrSession, ":STAT:OPER:ENAB %ld;PTR %ld;NTR %ld\n", enable, PTransition, NTransition));
         break;
     }
 
@@ -14134,11 +14067,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureSESweepListLimits (ViSession instrSession,
     		3, "Limit Checking");
     if (limitChecking == VI_TRUE)
     {
-        if ((strstr (model, "FSL") != NULL) ||
-            (rsspecan_IsFSV (instrSession)) ||
-            (strstr (model, "FSP") != NULL) ||
-            (strstr (model, "FSQ") != NULL) ||
-            (strstr (model, "FSU") != NULL))
+        if (RsCore_IsInstrumentModel(instrSession, "FSL|FSP|FSQ|FSU") || rsspecan_IsFSV (instrSession))
         {
             viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_SE_LIST_RANG_LIMIT_START, absoluteLimitStart),
             		5, "Absolute Limit Start");
@@ -14330,32 +14259,19 @@ Error:
                                                  ViInt32 *returnedValues)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViInt32     arrayLength = 0;
     ViReal64    *data = NULL;
-    ViInt32     retVal = 0;
+    ViInt32     dataSize = 0;
     ViInt32     i;
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr (model, "FMU") != NULL)
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
+	checkErr(rsspecan_dataReadTraceDynSize(instrSession, 1, "SPUR", &data, &dataSize));
+	dataSize /= 3;
+	if (returnedValues)
+		*returnedValues = dataSize;
 
-    arrayLength = 3*noOfValues;
-    data = (ViReal64 *) malloc (sizeof(ViReal64)*arrayLength);
-    if (data == NULL)
-        return VI_ERROR_ALLOC;
-
-    checkErr(rsspecan_dataReadTrace (instrSession, 1, "SPUR", arrayLength,
-                    data, &retVal));
-
-    if (returnedValues)
-        *returnedValues = retVal / 3; // Three result arrays
-
-    retVal = (retVal>arrayLength)?arrayLength:retVal;
-
-    retVal /=3;
-
-    for (i = 0; i < retVal; i++)
+    for (i = 0; i < dataSize; i++)
     {
         frequency[i] = data[i*3];
         level[i] = data[i*3+1];
@@ -14418,8 +14334,7 @@ ViStatus _VI_FUNC rsspecan_ReadSEListEvaluation (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr (model, "FMU") != NULL)
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, rangeNumber), 2, "Range number");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, startFrequency), 3, "Start Frequency");
@@ -14638,8 +14553,7 @@ ViStatus _VI_FUNC rsspecan_ReadSEMPeakList (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr (model, "FMU") != NULL)
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
 
     arrayLength = 3*noOfValues;
     data=malloc (sizeof(ViReal64)*arrayLength);
@@ -14753,8 +14667,7 @@ ViStatus _VI_FUNC rsspecan_ReadSEMListEvaluationResults (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr (model, "FMU") != NULL)
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, rangeNumber), 2, "Range number");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, startFrequency), 3, "Start Frequency");
@@ -14768,10 +14681,10 @@ ViStatus _VI_FUNC rsspecan_ReadSEMListEvaluationResults (ViSession instrSession,
     viCheckParm(RsCore_InvalidNullPointer(instrSession, reserved1), 11, "Reserved 1");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, reserved2), 12, "Reserved 2");
 
-    checkErr(RsCore_Write(instrSession, "TRAC:DATA? LIST"));
     pArray = malloc (values*sizeof (ViReal64));
-    checkErr(rsspecan_dataReadTraceOnly (instrSession, values, pArray, &retCnt));
-    values = (retCnt>values)?values:retCnt;
+    checkErr(RsCore_QueryBinaryOrAsciiFloatArrayToUserBuffer(instrSession, "TRAC:DATA? LIST", values, pArray, &retCnt));
+    
+	values = (retCnt>values)?values:retCnt;
     i=0;
     while (count<values)
     {
@@ -15653,7 +15566,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureSEMPowerClassAllLimits (ViSession instrSessi
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (!rsspecan_IsFSV (instrSession) || (strstr (model, "FSL") == NULL))
+    if (!rsspecan_IsFSV (instrSession) || (!RsCore_IsInstrumentModel(instrSession, "FSL")))
         checkErr(RS_ERROR_INSTRUMENT_MODEL);
 
     pbuffer = (ViChar*) malloc (150 * numberOfLimits + 30);
@@ -15690,8 +15603,10 @@ ViStatus _VI_FUNC rsspecan_QuerySEMPowerClassAllLimits (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (!rsspecan_IsFSV (instrSession) || (!RsCore_IsInstrumentModel(instrSession, "FSL"))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	if (!rsspecan_IsFSV(instrSession) || (!RsCore_IsInstrumentModel(instrSession, "FSL")))
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
     checkErr(rsspecan_QueryViString (instrSession,
                                         "CALC:LIM:ESP:LIM?",
@@ -15976,9 +15891,11 @@ ViStatus _VI_FUNC rsspecan_ServiceConfigureInput (ViSession instrSession,
 
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_SERVICE_INPUT_SOURCE, input),
     		3, "Input");
-    if ((input== RSSPECAN_VAL_INPUT_CAL) && !((strstr (model, "FSL") != NULL) || (rsspecan_IsFSV (instrSession))))
-        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_SERVICE_INPUT_LEVEL, level),
-        		4, "Level");
+	if ((input == RSSPECAN_VAL_INPUT_CAL) && !(RsCore_IsInstrumentModel(instrSession, "FSL") || (rsspecan_IsFSV(instrSession))))
+	{
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_SERVICE_INPUT_LEVEL, level),
+			4, "Level");
+	}
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -16241,22 +16158,14 @@ ViStatus _VI_FUNC rsspecan_ServiceHWInfo (ViSession instrSession,
                                           ViChar HWInfo[])
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      *pbuffer=NULL;
-    ViUInt32    ret_val;
-    ViUInt32     length;
 
     checkErr(RsCore_LockSession(instrSession));
 
     //viCheckParm(rsspecan_GetAttributeViString (instrSession, "",
     //            RSSPECAN_ATTR_SERVICE_HW_INFO, arraySize, HWInfo), 2, "HW Info");
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "DIAG:SERV:HWIN?", &pbuffer)); // TODO: Check the response processing
-    length=((ViUInt32)arraySize<=ret_val)?(ViUInt32)arraySize-1:ret_val;
-    memcpy (HWInfo,pbuffer,length);
-    HWInfo[length]='\0';
-    checkErr(rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_QueryViString(instrSession, "DIAG:SERV:HWIN?", arraySize, HWInfo)); // TODO: Check the response processing
 
 Error:
-    if (pbuffer) free(pbuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -16280,8 +16189,10 @@ ViStatus _VI_FUNC rsspecan_NetworkMapDrive (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr (model, "FSL") == NULL) && !rsspecan_IsFSV (instrSession))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	if (!RsCore_IsInstrumentModel(instrSession, "FSL") && !rsspecan_IsFSV(instrSession))
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
     p2buf += sprintf (p2buf, "MMEM:NETW:MAP '%s','%s'", driveLetter, hostNameIPAddress);
 
@@ -16483,24 +16394,12 @@ ViStatus _VI_FUNC rsspecan_SelfTestResults (ViSession instrSession,
                                             ViChar results[])
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      command[] = "DIAG:SERV:STES:RES?\n";
-    ViChar      *buffer = NULL;
-    ViUInt32     retCnt=0;
 
     checkErr(RsCore_LockSession(instrSession));
 
-    checkErr(RsCore_Write(instrSession, command));
-    //checkErr(viRead (instrSession, (ViBuf) results, (ViUInt32) bufferSize, NULL));
-    checkErr(Rs_ReadDataUnknownLength (instrSession, &buffer, &retCnt));
-    if ((ViInt32)retCnt>bufferSize)
-        strncpy (results, buffer, bufferSize);
-    else
-        strcpy (results, buffer);
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_QueryViString(instrSession, "DIAG:SERV:STES:RES?", bufferSize, results));
 
 Error:
-    if (buffer) free (buffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -16539,10 +16438,8 @@ ViStatus _VI_FUNC rsspecan_setCheckStatus (ViSession instrSession,
                                ViBoolean statusChecking)
 {
     ViStatus    error = VI_SUCCESS;
-    ViInt32     p2value         = 0;
 
-    p2value = (ViInt32) statusChecking;
-    checkErr(Rs_SetAttribute (instrSession, "", RS_ATTR_QUERY_INSTRUMENT_STATUS, 0, &p2value));
+    checkErr(RsCore_SetAttributeViBoolean (instrSession, "", RS_ATTR_QUERY_INSTRUMENT_STATUS, 0, statusChecking));
 
 Error:
     return error;
@@ -16555,10 +16452,13 @@ ViStatus _VI_FUNC rsspecan_setCheckOption (ViSession instrSession,
                                         ViBoolean state)
 {
     ViStatus    error = VI_SUCCESS;
-    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
+	RsCoreSessionPtr rsSession = NULL;
 
-    sessionProperties -> optionChecking = state;
+	checkErr(RsCore_GetRsSession(instrSession, &rsSession));
 
+	rsSession-> optionChecking = state;
+
+Error:
     return error;
 }
 
@@ -16578,6 +16478,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureErrorChecking (ViSession instrSession,
 	RsCoreSessionPtr rsSession = NULL;
 
 	checkErr(RsCore_GetRsSession(instrSession, &rsSession));
+	
 	rsSession->optionChecking = optionChecking;
 	checkErr(RsCore_SetAttributeViBoolean(instrSession, "", RS_ATTR_QUERY_INSTRUMENT_STATUS, 0, statusChecking));
 	checkErr(RsCore_SetAttributeViBoolean(instrSession, "", RS_ATTR_RANGE_CHECK, 0, rangeChecking));
@@ -16597,15 +16498,12 @@ ViStatus _VI_FUNC rsspecan_MemorySize (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr (model, "FSL") != NULL) || (rsspecan_IsFSV (instrSession)))
+    if (RsCore_IsInstrumentModel(instrSession, "FSL") || (rsspecan_IsFSV (instrSession)))
         checkErr(RS_ERROR_INSTRUMENT_MODEL);
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, memorySize), 2, "Memory Size");
 
-    checkErr(RsCore_Write(instrSession, "SYST:MSIZe? MBO"));
-    checkErr(viScanf(instrSession,"%ld", memorySize));
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_QueryViInt32(instrSession, "SYST:MSIZe? MBO", memorySize));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -16684,8 +16582,7 @@ ViStatus _VI_FUNC rsspecan_ErrorListSpecificType (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr (model, "FSW") == NULL))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "FSW"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, messageType, RSSPECAN_VAL_MESSAGE_TYPE_ALL, RSSPECAN_VAL_MESSAGE_TYPE_MESSAGE),
     		2, "Message Type");
@@ -16693,21 +16590,13 @@ ViStatus _VI_FUNC rsspecan_ErrorListSpecificType (ViSession instrSession,
     if (channelName == NULL)
     {
         snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SYST:ERR:EXT? %s", messageTypeArr[messageType]);
-        checkErr(RsCore_Write(instrSession, cmd));
     }
     else
     {
         snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SYST:ERR:EXT? %s,\'%s\'", messageTypeArr[messageType], channelName);
-        checkErr(RsCore_Write(instrSession, cmd));
     }
 
-    checkErr(Rs_ReadDataUnknownLength (instrSession, &pbuffer, &retCnt));
-
-    retCnt = ((ViUInt32) bufferSize>retCnt)?retCnt:bufferSize;
-
-    strncpy (messages, pbuffer, retCnt);
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_QueryViString(instrSession, cmd, bufferSize, messages));
 
 Error:
     if (pbuffer) free(pbuffer);
@@ -17034,12 +16923,14 @@ ViStatus _VI_FUNC rsspecan_SetFastSweepMode (ViSession instrSession,
                                              ViInt32 fastSweepMode)
 {
     ViStatus    error = VI_SUCCESS;
-    RsCoreSessionPtr  sessionProperties = Rs_ViSession (instrSession);
+	RsCoreSessionPtr rsSession = NULL;
+
+	checkErr(RsCore_GetRsSession(instrSession, &rsSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, fastSweepMode, RSSPECAN_VAL_FAST_SWEEP_NORMAL, RSSPECAN_VAL_FAST_SWEEP_FAST),
 			2, "Fast Sweep Mode");
 
-    sessionProperties->fastSweepInstrument = fastSweepMode;
+	rsSession->fastSweepInstrument = fastSweepMode;
 
 Error:
     return error;

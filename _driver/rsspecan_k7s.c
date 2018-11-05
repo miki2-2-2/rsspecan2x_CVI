@@ -1043,7 +1043,9 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoResultValues(
     ViUInt32    i = 0;
     ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    checkErr(RsCore_LockSession(instrSession));  // TODO: ERROR!!! Missing Unlock
+    checkErr(RsCore_LockSession(instrSession));
+
+// TODO: ERROR!!! Missing Unlock
 
 // TODO: ERROR!!! Missing Unlock
 

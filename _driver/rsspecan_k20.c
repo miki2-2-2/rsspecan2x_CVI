@@ -1682,8 +1682,8 @@ ViStatus _VI_FUNC rsspecan_QueryCATVACarrierAllResults (ViSession instrSession,
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-    if (strstr (buffer, "K20") == NULL)
-        viCheckErr(RS_ERROR_INSTRUMENT_OPTION)
+	if (strstr(buffer, "K20") == NULL)
+		viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 2, "Results");
 
@@ -1777,8 +1777,8 @@ ViStatus _VI_FUNC rsspecan_QueryCATVACarrierAllRatioResults (ViSession instrSess
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-    if (strstr (buffer, "K20") == NULL)
-        viCheckErr(RS_ERROR_INSTRUMENT_OPTION)
+	if (strstr(buffer, "K20") == NULL)
+		viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 2, 4),
     		2, "Measurement");
@@ -1886,8 +1886,8 @@ ViStatus _VI_FUNC rsspecan_QueryCATVAVisionAllModulationResults (ViSession instr
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-    if (strstr (buffer, "K20") == NULL)
-        viCheckErr(RS_ERROR_INSTRUMENT_OPTION)
+	if (strstr(buffer, "K20") == NULL)
+		viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 2, "Results");
 
@@ -2218,8 +2218,8 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDOverviewAllResults (ViSession instrSession,
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-    if (strstr (buffer, "K20") == NULL)
-        viCheckErr(RS_ERROR_INSTRUMENT_OPTION)
+	if (strstr(buffer, "K20") == NULL)
+		viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 2, "Results");
 
@@ -2316,8 +2316,8 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDModulationErrorsAllResults (ViSession instr
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-    if (strstr (buffer, "K20") == NULL)
-        viCheckErr(RS_ERROR_INSTRUMENT_OPTION)
+	if (strstr(buffer, "K20") == NULL)
+		viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 2, "Results");
 
@@ -2400,8 +2400,8 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDSignalStatisticsAllResults (ViSession instr
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-    if (strstr (buffer, "K20") == NULL)
-        viCheckErr(RS_ERROR_INSTRUMENT_OPTION)
+	if (strstr(buffer, "K20") == NULL)
+		viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, traceNumber, 1, 4),
     		2, "Measurement");

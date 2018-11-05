@@ -8,7 +8,7 @@
 
 Modification History:
 
-3.00, (build 30) 2018-10-23 Miloslav Macko
+3.00, (build 31) 2018-11-05 Miloslav Macko
 	- Reviewed and reworked to reflect the features of LabVIEW and IVI.NET core
 	- Incompatible with rsidr_core 2.xx, therefore the file name and function prefixes change to be able to co-exist with rsidr_core 2.xx :
 	- File names changed to rscore.h and rscore.c
@@ -8064,6 +8064,55 @@ Error:
 }
 
 /******************************************************************************************************/
+/*  RsCore_QueryBinaryOrAsciiFloatArrayToUserBuffer
+	Same as RsCore_QueryBinaryOrAsciiFloatArray, but the response is copies to the user-allocated buffer
+	with limited size.
+	The responseArraySize can be set to NULL
+/******************************************************************************************************/
+ViStatus RsCore_QueryBinaryOrAsciiFloatArrayToUserBuffer(ViSession instrSession, ViConstString query, ViInt32 userArraySize, ViReal64* userArray, ViInt32* responseArraySize)
+{
+	ViStatus error = VI_SUCCESS;
+	ViReal64* dblArray = NULL;
+	ViInt32 dblArraySize = 0;
+
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, query, &dblArray, &dblArraySize));
+	checkErr(RsCore_CopyToUserBufferViReal64Array(instrSession, userArray, userArraySize, dblArray, dblArraySize));
+
+	if (responseArraySize)
+		*responseArraySize = dblArraySize;
+
+Error:
+	if (dblArray)
+		free(dblArray);
+	return error;
+}
+
+/******************************************************************************************************/
+/*  RsCore_QueryBinaryOrAsciiFloatArraToUserBufferyWithOpc
+	Same as RsCore_QueryBinaryOrAsciiFloatArrayWithOpc, but the response is copies to the user-allocated buffer
+	with limited size.
+	The responseArraySize can be set to NULL
+/******************************************************************************************************/
+ViStatus RsCore_QueryBinaryOrAsciiFloatArraToUserBufferyWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs,
+	ViInt32 userArraySize, ViReal64* userArray, ViInt32* responseArraySize)
+{
+	ViStatus error = VI_SUCCESS;
+	ViReal64* dblArray = NULL;
+	ViInt32 dblArraySize = 0;
+
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArrayWithOpc(instrSession, query, timeoutMs, &dblArray, &dblArraySize));
+	checkErr(RsCore_CopyToUserBufferViReal64Array(instrSession, userArray, userArraySize, dblArray, dblArraySize));
+
+	if (responseArraySize)
+		*responseArraySize = dblArraySize;
+
+Error:
+	if (dblArray)
+		free(dblArray);
+	return error;
+}
+
+/******************************************************************************************************/
 /*  RsCore_QueryBinaryOrAsciiIntegerArray
     Queries an array of integer numbers that can be returned in ASCII format or in binary format.
     The array is always returned as the most-universal ViInt32 array.
@@ -10523,23 +10572,23 @@ void RsCore_Delay(ViReal64 numberOfSeconds)
 }
 
 /*****************************************************************************************************/
-/*  RsCore_CopyBinDataToUserBuffer
-    Copies BINARY data used by the driver to the user-provided buffer that is space-limited.
-    - If the user buffer is bigger or equal to the dataSize, the function copies the entire data
-    - If user buffer is smaller than the dataSize, only the userBufferSize is copied,
-        and the function returns positive number (warning) that equals the dataSize
-    WARNING!!! - Use this function as the last one, otherwise the potential warning
-    can be overwritten by the checkErr or viCheckErr macros
+/*  RsCore_CopyViReal64ArrayToUserBuffer
+Copies ViReal64 array used by the driver to the user-provided buffer that is space-limited.
+- If the user buffer is bigger or equal to the dataSize, the function copies the entire data
+- If user buffer is smaller than the dataSize, only the userBufferSize is copied,
+and the function returns positive number (warning) that equals the dataSize
+WARNING!!! - Use this function as the last one, otherwise the potential warning
+can be overwritten by the checkErr or viCheckErr macros
 ******************************************************************************************************/
-ViStatus RsCore_CopyToUserBufferBinData(ViSession instrSession, ViBuf userBuffer, ViInt32 userBufferSize, ViBuf data, ViInt64 dataSize)
+ViStatus RsCore_CopyToUserBufferViReal64Array(ViSession instrSession, ViReal64* userBuffer, ViInt32 userBufferSize, ViReal64* data, ViInt64 dataSize)
 {
 	if ((size_t)userBufferSize >= (size_t)dataSize)
 	{
-		memcpy(userBuffer, data, (size_t)dataSize);
+		memcpy(userBuffer, data, (size_t)(dataSize * sizeof(ViReal64)));
 		return VI_SUCCESS;
 	}
 
-	memcpy(userBuffer, data, userBufferSize);
+	memcpy(userBuffer, data, (userBufferSize * sizeof(ViReal64)));
 
 	return (ViStatus)dataSize;
 }
