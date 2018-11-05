@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Driver">
+      <UniqueIdentifier>{ae78cbad-b022-4d07-a1fe-8882b30cd25f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Other">
+      <UniqueIdentifier>{81428604-0695-4f02-b075-a13d102c484b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{194ed1da-ff0f-4455-95de-64efee195fc7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\_driver\rsspecan.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_attributes.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_b10.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_b17.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_b27.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_b71.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_callbacks.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_IEEE_802_11.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k5.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k6.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k7.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k7s.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k8.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k9.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k10.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k14.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k15.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k17.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k20.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k30.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k40.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k54.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k70.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k72_k74.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k73.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k76.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k77.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k82_k83_k84_k85.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k90_k91.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k92.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k100_k102.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k101_k105.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_k110.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_tdscdma.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_utility.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rsspecan_vsa.c">
+      <Filter>Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="rsspecan_2x_VS_Cpp_project.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_driver\rscore.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\_driver\ChangeLog">
+      <Filter>Other</Filter>
+    </None>
+    <None Include="..\_driver\license.rtf">
+      <Filter>Other</Filter>
+    </None>
+    <None Include="..\_driver\rsspecan.fp">
+      <Filter>Other</Filter>
+    </None>
+    <None Include="..\_driver\rsspecan.sub">
+      <Filter>Other</Filter>
+    </None>
+    <None Include="..\_driver\rsspecan_attr.chm">
+      <Filter>Other</Filter>
+    </None>
+    <None Include="..\_driver\rsspecan_vxi.chm">
+      <Filter>Other</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\_driver\rsspecan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_driver\rsspecan_attributes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_driver\rsspecan_utility.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="visa.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="visatype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_driver\rscore.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,1528 @@
+2018-07-23, Miloslav Macko
+  * Version 2.8.3
+  * Fixed
+  - rsspecan_Calibrate, rsspecan_self_test - fixed clearing of the instrument status before sending the command
+
+2017-10-19, Martin Krcmar
+  * Version 2.8.2
+  * Updated
+  - rsspecan_ConfigureMarkerPeakList - 'Peak List Size' and 'Automatic Peaks Search' are not used for FSP and FSL
+  
+  2017-08-30, Jiri Kominek
+  * Version 2.8.1
+  * *SRE mask set to 0 
+  * Added progressive delay to OPC polling loop 
+  * Added viClear to rsspecan_ClearStatus 
+  * Added missing function prototypes to rsspecan.h: 
+  - rsspecan_QueryOPC 
+  - rsspecan_IDQueryResponse 
+  - rsspecan_ProcessAllPreviousCommands 
+  - rsspecan_ClearStatus 
+
+2017-03-22, Jiri Kominek, Petr Marcalik
+  * Version 2.8.0
+  - New core
+  * Updated
+  - Several bugfixes   
+  - rsspecan_ConfigurePulseResultParameterTrendFrequency
+  - rsspecan_ConfigurePulseResultParameterTrendPhase   
+    
+2014-12-02, Jiri Kominek
+  * Version 2.7.2
+  * Fixed waiting for OPC to take into account viReadSTB execution time
+
+2014-01-10, Jiri Kominek
+  * Version 2.7.1
+  * Fixed LIB file in installer
+
+2013-08-21, Petr Kominek, Martin Krcmar
+  * Version 2.7.0
+  * Support for FSW 1.80 added
+  * Added
+  - rsspecan_Parameter Spectrum
+  - rsspecan_SelectRealtimeSpectrumMeasurement
+  - rsspecan_FetchPhaseSpursDiscrete
+  - rsspecan_FetchPhaseSpursRandom
+  - rsspecan_FetchPhaseIntegratedPhaseNoise
+  - rsspecan_FetchPhaseUserIntegratedPhaseNoise
+  - rsspecan_ConfigureWlanBurst
+  - rsspecan_ConfigureWlanIQCompensation
+  - rsspecan_ConfigureWlanBurstUnit
+  - rsspecan_FetchWlanBurstPayload
+  - rsspecan_FetchWlanBurstPeak
+  - rsspecan_FetchWlanBurstPreamble
+  - rsspecan_FetchWlanBurstStart
+  - rsspecan_QueryLTEDownlinkMeasurementEVMSDSFAverage
+  - rsspecan_QueryLTEDownlinkMeasurementRSSI
+  - rsspecan_ConfigureLTEUplinkMIMO
+  - rsspecan_ConfigureLTEUplinkTransientSlots
+  * Updated
+  - rsspecan_AddWindow
+  - rsspecan_ReplaceWindow
+  - rsspecan_QueryWindowType
+  - rsspecan_ConfigureSpectrogramFFTWindow
+  - rsspecan_GetSpectrogramTimeStamp
+  - rsspecan_ReadSpectrogramTraceData
+  - rsspecan_ReadPersistenceSpectrumTraceData
+  - rsspecan_ReadMaxholdTraceData
+  - rsspecan_GetSpectrogramXAxisScaling
+  - rsspecan_ConfigureMultiCarrierGroupDelaySettings
+  - rsspecan_ConfigureLTEUplinkTrigger
+  - rsspecan_ConfigurePresetOperatingMode
+  * Cosmetic changes in help         
+
+2013-07-19, Jiri Kominek
+  * Version 2.6.1
+  * Cosmetic changes in help
+
+2013-05-29, Stanislav Vajs
+  * Version 2.6.0
+  * Support for FSW version 1.70 added
+  * New Subsystems
+  - Parameter Trend
+  - CSI-RS      
+  * Added
+  - rsspecan_FetchGSMK10MagnitudeCaptureResults  
+  - rsspecan_ConfigureNoiseUncertaintyCommonSource  
+  - rsspecan_ConfigureNoiseUncertaintySourceCalibrationCharacteristics  
+  - rsspecan_ConfigurePhaseDigitalPLL  
+  - rsspecan_ConfigurePhaseDecimation  
+  - rsspecan_ConfigureVSAOptimization  
+  - rsspecan_FetchWlanBurstLength  
+  - rsspecan_ConfigureLTEDownlinkMeasurement  
+  - rsspecan_ConfigureLTEDownlinkPDSCHStartOffset  
+  - rsspecan_ConfigureLTEUplinkSoundingReferenceSignalANSimultaneousTX    
+  * Modified
+  - subsystem Parameter Trend - changed to attributes, redesigned
+  functionality
+  - rsspecan_AddWindow - Frequency drift, Sweep result list, Pulse Parameter Distribution 
+  - rsspecan_ReplaceWindow - Frequency drift, Sweep result list, Pulse Parameter Distribution 
+  - rsspecan_QueryWindowType - Frequency drift, Sweep result list, Pulse Parameter Distribution 
+  - rsspecan_ConfigurePhaseTraceSettings - median  
+  - rsspecan_ConfigureVSACaptureBuffer - Magnitude Overview Absolute   
+
+2013-04-17, Martin Krcmar
+  * Version 2.5.0
+  * Support for FSW version 1.61 added
+  * Support for FSV version 2.00 added  
+  * Added
+  - rsspecan_SelectProbeConnector  
+  - rsspecan_GetProbeType  
+  - rsspecan_QueryMSRAAllAnalysisInterval  
+  - rsspecan_ConfigureMSRADataEvaluation  
+  - rsspecan_ConfigureAnalogBasebandFullscaleLevel  
+  - rsspecan_ConfigureAnalogBasebandSwapIQ  
+  - rsspecan_ConfigurePulseResultAutomaticRangeScaling  
+  - rsspecan_QueryGSMK10TriggerToSyncNumberOfAcquisitions  
+  - rsspecan_ConfigureNoiseSingleFrequency  
+  - rsspecan_ConfigureWLANDemodulation802_11b_g_DSSS
+  - rsspecan_ConfigureLTEDownlinkPHICHNgParameter  
+  - rsspecan_ConfigureLTEDownlinkPHICHEnhancedTestModels  
+  - rsspecan_ConfigureLTEUplinkPUSCHHopping  
+  - rsspecan_ConfigureLTEUplinkPRACHStructure  
+  - rsspecan_ConfigureLTEUplinkPRACHPreambleMapping
+  - rsspecan_SelectTransducerSet
+  - rsspecan_ConfigureTransducerSet
+  - rsspecan_QueryTransducerSetCatalog
+  - rsspecan_DeleteTransducerSet
+  - rsspecan_QueryActiveTransducerSet
+  - rsspecan_ConfigureLTEDownlinkPDSCHPowerRatio
+  * Modified  
+  - rsspecan_ConfigureIFOutputSource  
+  - rsspecan_AddWindow  
+  - rsspecan_ReplaceWindow  
+  - rsspecan_QueryWindowType  
+  - rsspecan_ProbeMicroButtonAction  
+  - rsspecan_GetProbeInformation
+  - rsspecan_ConfigureWlanResultSummaryDisplay
+  - rsspecan_setStatusRegister
+  - rsspecan_getStatusRegister
+  - rsspecan_ConfigureWLANSignal
+  
+2012-01-30, Martin Krcmar
+  * Version 2.4.1
+  * Modified
+  - RSSPECAN_ATTR_ATTENUATION - data type changed from INT to REAL, added write callback    
+
+
+2012-10-11, Martin Krcmar, Stanislav Vajs
+  * Version 2.4.0
+  * Support for FSW version 1.60 added
+  * New subsystems
+  - TD-SCDMA class
+  - IEEE 802-11 class
+  - MSR ACLR Configuration class    
+  * Added
+  - rsspecan_ConfigureErrorChecking  
+  - rsspecan_DuplicateMeasurementChannel
+  - rsspecan_ConfigureMSRAAnalysisLine
+  - rsspecan_ConfigureAnalogBasebandSignalCalibration
+  - rsspecan_ConfigureADemodFilterManual
+  - rsspecan_ErrorListSpecificType
+  - rsspecan_ConfigureTraceExport
+  - rsspecan_PulseSelectIQDataFile
+  - rsspecan_PhaseCopyToUserLimitLine
+  * Modified  
+  - Enabled driver range checking (in function rsspecan_DefaultInstrSetup)  
+  - RSSPECAN_ATTR_ATTENUATION - data type change from real64 to int32  
+  - rsspecan_HardcopyGetPrinterList  
+  - rsspecan_setStatusRegister - Extended, Extended Info added
+  - rsspecan_getStatusRegister - Extended, Extended Info added
+  - rsspecan_AddWindow - Window type - values 65 - 77
+  - rsspecan_ReplaceWindow - Window type - values 65 - 77
+  - rsspecan_QueryWindowType - Window type - values 65 - 77
+  - rsspecan_ConfigureChannelPowerStandard - MSR added
+  - rsspecan_ConfigurePulseInputSignalSource - FIQ
+  * Functions moved to TD-SCDMA
+  - rsspecan_SetTDSBSMode  
+  - rsspecan_SetTDSUEMode
+  - rsspecan_ConfigureTDSBSAdaptToSignal
+  - rsspecan_ConfigureTDSUESyncToSlotMode
+  - rsspecan_GetTDSBSResult
+  - rsspecan_GetTDSUEResult - New types:
+    - Average RCDE of active channels
+    - Channel Branch
+    - Channel Slot Number
+    - Average Power of the Inactive Codes
+    - Modulation Type
+    - Number of Pilot Bits
+    - Total Power
+    - Timing Offset    
+  - rsspecan_FetchTDSBSTrace
+  - rsspecan_FetchTDSUETrace
+  - Channel Table - whole class moved from K76 - TD-SCDMA BTS Mode
+    - affected functions:
+    - rsspecan_TDSBSChannelTableOperations
+    - rsspecan_ConfigureTDSBSChannelTableComment
+    - rsspecan_ConfigureTDSBSChannelTableComment
+    - rsspecan_ConfigureTDSBSChannelTableData
+    - rsspecan_ConfigureTDSBSChannelTableOrder
+    - rsspecan_ConfigureTDSBSChannelTableMidambleShift
+    - rsspecan_ConfigureTDSBSChannelTableMaxModulation
+    - rsspecan_GetTDSBSChannelTableCatalog 
+  * Functions moved to IEEE 802-11 from K90/91 - WLAN  
+  - rsspecan_WlanSetWlanMode
+  - rsspecan_ConfigureWlanElectronicAtt
+  - rsspecan_ConfigureWlanTracking
+  - rsspecan_ConfigureWLANTrackingPilots
+  - rsspecan_ConfigureWlanGainImbalanceUnit
+  - Display class
+  - rsspecan_ConfigureWlanLimit
+  - rsspecan_ConfigureWLANAllLimits
+  - rsspecan_GetWlanAllLimits
+  - Trace class
+  - rsspecan_FetchWlanBurstAll
+  - rsspecan_FetchWlanBurstPower
+  - rsspecan_FetchWlanBurstError
+  - rsspecan_FetchWlanIQImp
+  - rsspecan_FetchWlanEVM
+  - rsspecan_GetWlanLimitCheckResult
+  - rsspecan_GetWlanACPChannLimitCheckResult
+  - rsspecan_GetWlanAllLimitCheckResults
+  - rsspecan_GetWlanLimitCheck
+  
+2012-10-12, Martin Krcmar
+  * Version 2.3.1
+  * Modified
+  - rsspecan_TraceIQSet - ranges removed
+  - rsspecan_TraceIQSamplingRate - ranges removed
+  - rsspecan_TraceIQRecordLength - ranges removed
+  - rsspecan_TraceIQAveraging - ranges removed
+  - rsspecan_ConfigureTraceIQGate - ranges removed
+
+2012-09-26, Martin Krcmar
+  * Version 2.3.0
+  * Support for FSV version 1.71SP3 added
+  * Support for FSW version 1.51 added
+  * Added
+  - rsspecan_QueryFrontendTemperature
+  - rsspecan_FrequencyMaskWindow
+  - rsspecan_ConfigureFrequencyMaskState
+  - rsspecan_ConfigureFrequencyMaskSpan
+  - rsspecan_QueryWindowType        
+  - rsspecan_ConfigurePulseMeasurementPointAveragingWindow        
+  - rsspecan_SelectAnalogDemodTrace        
+  - rsspecan_ConfigureAnalogDemodPredefinedStandard
+  - rsspecan_ConfigureNoiseENRCommonMode
+  - rsspecan_ConfigureNoiseENRCalibrationSettings
+  - rsspecan_SelectNoiseENRCalibrationTable
+  - rsspecan_ConfigureNoiseUncertaintySourceCharacteristics
+  - rsspecan_ConfigureNoiseUncertaintyDUTCharacteristics
+  - rsspecan_ConfigureNoiseUncertaintyMeasurementValues
+  - rsspecan_ConfigureNoiseUncertaintyAnalyzerCharacteristics
+  - rsspecan_QueryNoiseUncertainty
+  - rsspecan_QuerySpectrumAnalyzerUncertainty
+  - rsspecan_ConfigurePhaseTrackingBW
+  - rsspecan_ConfigureWlanResultSummaryDisplay
+  * Modified
+  - rsspecan_ConfigureSweepOptimization  
+  - rsspecan_AddWindow
+  - rsspecan_ReplaceWindow  
+  - rsspecan_QueryNoiseMarkerAmplitude
+  - rsspecan_ConfigureVSACompensation
+  - rsspecan_GetVSAResult
+  - Frequency Mask Triggering - whole class moved from K14 - Realtime Spectrum Analysis to Base system (Trigger) - now available for R&S FSV 
+    - affected functions: 
+    - rsspecan_ConfigureFrequencyMaskTriggerSource
+    - rsspecan_ConfigureFrequencyMask
+    - rsspecan_ConfigureFrequencyMaskDirectory
+    - rsspecan_DeleteFrequencyMask
+    - rsspecan_ConfigureFrequencyMaskCondition
+    - rsspecan_ConfigureFrequencyMaskShape
+    - rsspecan_ConfigureFrequencyMaskAuto
+    - rsspecan_ConfigureFrequencyMaskShift
+
+2012-08-14, Martin Krcmar
+  * Version 2.2.0
+  * Support for FSV version 1.71 added
+  * Support for FSW version 1.42 added
+  * Added support for R&S FSW K17 - Multi Carrier Group Delay   
+  * Added
+  - rsspecan_ConfigureUserSettingsSoftkey
+  - rsspecan_ExportPulseResultTable
+  - rsspecan_ConfigurePhaseAMRejection
+  - rsspecan_FetchPhaseSpurs
+  - rsspecan_FetchPhaseFrequencyLevel        
+  - rsspecan_ConfigureSEMMSRSettings        
+  - rsspecan_ApplySEMMSRSettings        
+  - rsspecan_ConfigureSEMRangeRelativeLimitsFunctions        
+  - rsspecan_ConfigurePresetOperatingMode
+  - rsspecan_InitiateSequencer
+  - rsspecan_AbortSequencer
+  - rsspecan_RefreshSequencer
+  - rsspecan_ConfigureSequencerState
+  - rsspecan_ConfigureSequencerMode
+  - rsspecan_MSRAMode
+  - rsspecan_QueryMSRAAnalysisInterval
+  - rsspecan_MSRARefresh
+  - rsspecan_ConfigureMSRACaptureOffset
+  - rsspecan_ConfigureLTEUplinkTDDSpecialSubframe
+  - rsspecan_ConfigureLTEDownlinkTDDSpecialSubframe
+  - rsspecan_ConfigureLTEDownlinkYAxisScaling
+  - rsspecan_ConfigureLTEUplinkYAxisScaling
+  - rsspecan_LinkAllMarkers
+  - rsspecan_VSALoadUserModulation        
+  * Modified
+  - RSSPECAN_ATTR_NOISE_INP_PRES_STAT - moved to base system, option and model limits removed
+  - RSSPECAN_ATTR_EMI_RESOLUTION_BANDWIDTH_FILTER_TYPE - command parameter changed from CISP to PULS
+  - rsspecan_AddWindow - added Spurs, Group Delay, Phase, Reference Magnitude, Referenece Phase
+  - rsspecan_ReplaceWindow - added Spurs, Group Delay, Phase, Reference Magnitude, Referenece Phase
+  - rsspecan_AddMeasurementChannel - added GSM, WLAN, LTE
+  - rsspecan_ReplaceMeasurementChannel - added GSM, WLAN, LTE
+  - rsspecan_setStatusRegister
+  - rsspecan_getStatusRegister
+  - rsspecan_ConfigureLTEUplinkPUCCHStructure
+  - rsspecan_ConfigureLTEDownlinkSubframeSelection - range modified
+  - rsspecan_ConfigureLTEUplinkSubframeSelection - range modified
+  - rsspecan_ConfigureVSAModulationSettings - added modulations for FSW
+  
+2012-04-20, Stanislav Vajs, Petr Marcalik (FSW 1.21 support, FSQ 4.70 SP3 support)
+  * Version 2.1.0
+  * Support for FSW version 1.30 added
+  * Support for FSQ version 4.70 SP3 added  
+  * Modified
+  - Control Window was changed in all control panels
+  - Window range checking was removed in all functions      
+  - rsspecan_ConfigureIFOutputSource - FSW support
+  - rsspecan_StoreTraceToFile - trace range for FSW changed
+  - rsspecan_ConfigureIFPowerTriggerParameters - FSW support
+  - rsspecan_ConfigureRFPowerTrigger - FSW support
+  - rsspecan_CreateLimitLine - Help, Assign to Trace range 1 to 4 
+  - rsspecan_ConfigureDisplayMarkerTable - FSW support
+  - rsspecan_ConfigureAutoAdjustHystersis - FSW support
+  - rsspecan_ConfigureAutoAdjustTriggerState - FSW support
+  - rsspecan_ConfigureChannelPowerNoiseCorrectionAuto - FSW support
+  - rsspecan_DefineNoiseLimitLine - Result type is not for FSW
+  - rsspecan_AssignMarkerToTrace - range for FSW changed
+  - rsspecan_ConfigurePhaseCarrierFrequencyOffsetTable - IQ FFT added
+  - rsspecan_ConfigurePhasePresetSettings - IQ FFT added
+  - rsspecan_TraceIQSamplingRate - range for FSQ same as for FMU
+  - rsspecan_QueryGSMK10StatisticCount - Supports all instruments
+  - rsspecan_ConfigureGSMK10ModulationTransientSpectrumAdditional - Supports all instrument
+  - rsspecan_ConfigureWlanStandard - values 6, 7 no longer only for FSV
+  - rsspecan_ConfigureWLANNumberOfAntennas - for FSQ only 2 antennas 
+  - rsspecan_ConfigureWLANSimultaneousCaptureState - Supports all instruments
+  - rsspecan_ConfigureWLANTrackingPilots - Supports all instruments
+  - rsspecan_AddWindow - added Window Types for K30, K40
+  - rsspecan_ReplaceWindow - added Window Types for K30, K40
+  - rsspecan_ConfigureDisplayMultipleZoom - incorrect attribute used
+  - rsspecan_ConfigureNoiseFrequencySettings - FSW checking added
+  - rsspecan_ConfigureNoiseMeasurementMode - FSW checking added
+  - rsspecan_ConfigureNoiseTraceSettings - repeated capability Window added
+  - rsspecan_ConfigureNoiseGainTraceSettings - repeated capability Window added
+  - rsspecan_EnableNoiseLimitCheck - repeated capability Window modified
+  - rsspecan_ClearNoiseLimitLineResults - repeated capability Window modified
+  - rsspecan_GetNoiseLimitCheckResult - repeated capability Window modified
+  - rsspecan_ConfigurePhaseSpotNoiseSettings
+  - rsspecan_ReadPhaseTraceData
+        
+  * Added
+  - K6 Pulse Measurement support
+  - Channel Subsystem
+  - rsspecan_SelectWindow
+  - rsspecan_QueryNoiseResults
+  - rsspecan_AssignNoiseLimitLineToTrace  
+  - rsspecan_ConfigureSweepOptimization      
+    RSSPECAN_ATTR_SWEEP_OPTIMIZATION
+  - rsspecan_TraceIQMaximumBandwidthExtension
+    RSSPECAN_ATTR_IQ_MAX_BANDWIDTH_EXTENSION
+  - rsspecan_LinkMarkerToAnotherMarker
+    RSSPECAN_ATTR_MARKER_LINK_TO_MARKER
+  - rsspecan_LinkDeltaMarkerToAnotherMarker
+    RSSPECAN_ATTR_DELTA_MARKER_LINK_TO_MARKER
+  - rsspecan_ConfigureIQPowerTrigger
+    RSSPECAN_ATTR_TRIGGER_IQP_LEVEL
+  - rsspecan_ConfigureRFPowerTriggerHoldoff
+    RSSPECAN_ATTR_TRIGGER_RFP_HOLDOFF
+  - rsspecan_ConfigureDisplayMeasurementWindowState
+    RSSPECAN_ATTR_DISP_MEAS_WINDOW_STATE
+  - rsspecan_QueryActiveMeasurementWindow
+    RSSPECAN_ATTR_QUERY_ACTIVE_MEASUREMENT_WINDOW
+  - rsspecan_NoiseENRTableOperations
+    RSSPECAN_ATTR_NOISE_CORR_ENR_TABLE_SELECT
+    RSSPECAN_ATTR_NOISE_CORR_ENR_TABLE_DELETE
+  - rsspecan_NoiseLossInputTableOperations
+    RSSPECAN_ATTR_NOISE_CORR_LOSS_INPUT_TABLE_SELECT
+    RSSPECAN_ATTR_NOISE_CORR_LOSS_INPUT_TABLE_DELETE
+  - rsspecan_NoiseLossOutputTableOperations
+    RSSPECAN_ATTR_NOISE_CORR_LOSS_OUTPUT_TABLE_SELECT
+    RSSPECAN_ATTR_NOISE_CORR_LOSS_OUTPUT_TABLE_DELETE
+  - rsspecan_ConfigureNoiseLimitLineType
+    RSSPECAN_ATTR_NOISE_LIMIT_LINE_TYPE
+  - rsspecan_QueryNoiseMarkerAmplitude
+    RSSPECAN_ATTR_NOISE_MARKER_AMPLITUDE
+  - rsspecan_ConfigurePhaseDisplayYAxisSettings
+    RSSPECAN_ATTR_PHASE_Y_AXIS_MANUAL_SCALING
+    RSSPECAN_ATTR_PHASE_DISP_TRACE_Y_RLEV
+    RSSPECAN_ATTR_PHASE_DISP_TRACE_Y_BOTTOM
+    RSSPECAN_ATTR_PHASE_DISP_TRACE_Y
+    RSSPECAN_ATTR_PHASE_DISP_TRACE_Y_AUTO
+  - rsspecan_ConfigurePhaseDisplayXAxisSettings
+    RSSPECAN_ATTR_PHASE_X_AXIS_SCOPE
+    RSSPECAN_ATTR_PHASE_X_AXIS_START_FREQUENCY
+    RSSPECAN_ATTR_PHASE_X_AXIS_STOP_FREQUENCY
+    RSSPECAN_ATTR_PHASE_X_AXIS_HALF_DECADE
+  - rsspecan_ConfigurePhaseTraceCustomRange
+    RSSPECAN_ATTR_PHASE_USER_TRACE
+  - rsspecan_ConfigurePhaseUserResidualCalculations
+    RSSPECAN_ATTR_PHASE_USER_EVALUATE_FROM
+    RSSPECAN_ATTR_PHASE_USER_EVALUATE_TO
+  - rsspecan_ConfigurePhaseSpotNoiseCalculation
+    RSSPECAN_ATTR_PHASE_SPOT_NOISE_CALCULATION
+  - rsspecan_ConfigurePhaseSpurSettings
+    RSSPECAN_ATTR_PHASE_SPUR_SUPPRESSION
+    RSSPECAN_ATTR_PHASE_SPUR_THRESHOLD
+  - rsspecan_ConfigurePhaseSignalVerificationFailed
+    RSSPECAN_ATTR_PHASE_SIGNAL_VERIFICATION_FAILED
+  - rsspecan_ConfigurePhaseGlobalIQWindowSettings
+    RSSPECAN_ATTR_PHASE_IQ_WINDOW_FUNCTION_PARTICULAR_DECADE
+    RSSPECAN_ATTR_PHASE_IQ_WINDOW_FUNCTION_ALL_DECADE
+  - rsspecan_GetActivePhaseLimitLine
+    RSSPECAN_ATTR_LIMIT_LINE_ACTIVE
+  - rsspecan_ConfigurePhaseNoiseLimitSettings
+  - rsspecan_GetPhaseNoiseLimitCheckState
+  - rsspecan_FetchPhaseResidualUserResults
+  - rsspecan_GetPhaseDecadeSpotNoiseResult
+  - rsspecan_ConfigureC2KPowerDisplay
+    RSSPECAN_ATTR_C2K_CDP_DISPLAY 
+  - rsspecan_ConfigureWLANMIMOPayloadLengthSource 
+    RSSPECAN_ATTR_WLAN_MIMO_PAYLOAD_LENGTH_SOURCE
+    
+2012-04-23, Stanislav Vajs 
+  * Version 2.0.1
+  * Modified
+  - rsspecan_ConfigureWlanDemodulation - added MM20, GFM20, MM40, GFM40
+    RSSPECAN_ATTR_WLAN_BTYP 
+
+2012-03-21, Stanislav Vajs (FSV 1.70 support)
+  * Version 2.0.0
+  * Support for FSV version 1.70 added
+  * Changed list of supported instruments - see rsspecan_vxi.chm
+  * Modified
+  - rsspecan_init - added option string "QueryInstrStatus=1" 
+  - rsspecan_ConfigureFilterType - added CISP, MIL Std
+    RSSPECAN_ATTR_RESOLUTION_BANDWIDTH_FILTER_TYPE
+  - rsspecan_ConfigureTriggerSource - added GP0 - GP5
+    RSSPECAN_ATTR_TRIGGER_SOURCE   
+  - rsspecan_ConfigureLimitLine - in code, DBPT for FSV added (upper range for FSV units increased)
+  - rsspecan_ConfigureVSAMeasurementSignal - added I/Q Constellation (Rotated) 
+  - rsspecan_ConfigureWiMAXTrigger - added in FP, attribute - Falling & Rising Edge
+    RSSPECAN_ATTR_WIMAX_TRIG_MODE
+  - rsspecan_ConfigureWlanStandard - added support for MIMO
+    RSSPECAN_ATTR_WLAN_STAN
+  - rsspecan_ConfigureLTEDownlinkSignalCharacteristics
+    RSSPECAN_ATTR_LTE_DOWNLINK_CHANNEL_BANDWIDTH - 2.5 MHz not supported by FSV  
+  - rsspecan_ConfigureLTEUplinkSignalCharacteristics
+    RSSPECAN_ATTR_LTE_UPLINK_CHANNEL_BANDWIDTH - 2.5 MHz not supported by FSV
+  - rsspecan_ConfigureLTEUplinkTrigger - added IF Power for FSV (Differnt command string)
+    RSSPECAN_ATTR_TRIGGER_MODE     
+  - Added *OPC query for theese attributes:
+    RSSPECAN_ATTR_FMDEM_MODE 
+    RSSPECAN_ATTR_FMS_MODE 
+    RSSPECAN_ATTR_BTO_MODE 
+    RSSPECAN_ATTR_GSM_K10_MODE
+    RSSPECAN_ATTR_REALTIME_MODE 
+    RSSPECAN_ATTR_GSM_K10_MODE_FSV 
+    RSSPECAN_ATTR_AVI_MODE 
+    RSSPECAN_ATTR_CATV_MODE
+    RSSPECAN_ATTR_NOISE_MODE 
+    RSSPECAN_ATTR_PHASE_MODE 
+    RSSPECAN_ATTR_C2K_MODE
+  - rsspecan_WriteInstrData - added status checking
+      
+  * Added
+  - rsspecan_ConfigureRemoteLoggingState      
+    RSSPECAN_ATTR_REMOTE_LOGGING_STATE
+  - rsspecan_ProbeActivation 
+    RSSPECAN_ATTR_PROBE_ACTIVATION
+  - rsspecan_ProbeMicroButtonAction
+    RSSPECAN_ATTR_PROBE_MICRO_BUTTON_ACTION
+  - rsspecan_GetProbeInformation
+    RSSPECAN_ATTR_PROBE_CONNECTION_STATE
+    RSSPECAN_ATTR_PROBE_NAME
+    RSSPECAN_ATTR_PROBE_NUMBER
+  - rsspecan_ConfigureAutoAdjustHystersis
+    RSSPECAN_ATTR_AUTO_ADJUST_HYSTERSIS
+  - rsspecan_ConfigureAutoAdjustTriggerState
+    RSSPECAN_ATTR_AUTO_ADJUST_TRIGGER_STATE
+  - rsspecan_ReadYTracePrevious
+  - rsspecan_ConfigureChannelPowerNoiseCorrectionAuto
+    RSSPECAN_ATTR_MEAS_POW_NOISE_CORR_AUTO
+  - rsspecan_QueryGSMK10StatisticCount
+    RSSPECAN_ATTR_GSM_K10_STATISTIC_COUNT
+  - rsspecan_ConfigureGSMK10ModulationTransientSpectrumAdditional
+    RSSPECAN_ATTR_GSM_K10_MODULATION_TRANSIENT_SPECTRUM_FILTER_TYPE
+    RSSPECAN_ATTR_GSM_K10_MODULATION_TRANSIENT_SPECTRUM_REF_POWER
+    RSSPECAN_ATTR_GSM_K10_MODULATION_TRANSIENT_SPECTRUM_HIGH_DYNAMIC
+    RSSPECAN_ATTR_GSM_K10_MODULATION_TRANSIENT_SPECTRUM_FREQUENCY_LIST
+  - rsspecan_GSMK10RefreshCapturedData
+    RSSPECAN_ATTR_GSM_K10_REFRESH_CAPTURED_DATA  
+  - rsspecan_EMIFinalMeasurementDeltaMarkerPeakSearch
+    RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_PEAK_SEARCH
+  - rsspecan_ConfigureVSAFineSynchronization
+    RSSPECAN_ATTR_VSA_FINE_SYNC_AUTO
+    RSSPECAN_ATTR_VSA_FINE_SYNC_MODE
+    RSSPECAN_VAL_VSA_FINE_SYNC_KDAT
+  - rsspecan_QueryVSAFineSynchronizationResult
+    RSSPECAN_ATTR_VSA_FINE_SYNC_RESULT
+  - rsspecan_ConfigureVSAKnownData
+    RSSPECAN_ATTR_VSA_KNOWN_DATA_STATE  
+    RSSPECAN_ATTR_VSA_KNOWN_DATA_FILE_NAME
+  - rsspecan_QueryVSABERResults
+    RSSPECAN_ATTR_VSA_BER_BIT_ERROR_RATE
+    RSSPECAN_ATTR_VSA_BER_NUMBER_OF_ERRORS  
+    RSSPECAN_ATTR_VSA_BER_NUMBER_OF_BITS
+  - rsspecan_ConfigureVSAModulationAccuracyAdditional 
+    - RSSPECAN_ATTR_VSA_RESULT_FORMAT - added RSUM, BER
+  - rsspecan_ConfigureWLANSimultaneousCaptureState
+    RSSPECAN_ATTR_WLAN_ANTENNA_SIMULTANEOUS_CAPTURE_STATE
+  - rsspecan_ConfigureWLANTrackingPilots  
+    RSSPECAN_ATTR_WLAN_TRAC_PILOTS
+  - rsspecan_ConfigureLTEUplinkCodeBitsScrambling
+    RSSPECAN_ATTR_LTE_UPLINK_SCRAMBLING_OF_CODED_BITS
+  - rsspecan_ConfigureLTEUplinkSoundingReferenceSignalNRRC
+    RSSPECAN_ATTR_LTE_UPLINK_SOUNDING_REFERENCE_SIGNAL_N_RRC
+
+2012-03-13, Jiri Kominek, Martin Krcmar
+  * Version 1.19.0
+  * Added support for R&S FSH K43 - Receiver Mode   
+  * Modified
+  - rsspecan_FetchTETRAACP - added Average measurement type
+  - rsspecan_ConfigureScanTableStartStop
+  - rsspecan_SelectTransducerFactor
+  - rsspecan_ConfigureTransducerFactor
+  - RSSPECAN_ATTR_AMPL_PREAMPLIFIER - options removed
+  * Modified Attributes for FSH
+  - RSSPECAN_ATTR_RECEIVER_MODE
+  - RSSPECAN_ATTR_MARKER_AOFF
+  - RSSPECAN_ATTR_MARKER_SEARCH_LIMITS_STATE
+  - RSSPECAN_ATTR_MARKER_SEARCH_LIMITS_LEFT
+  - RSSPECAN_ATTR_MARKER_SEARCH_LIMITS_RIGHT
+  - RSSPECAN_ATTR_RECEIVER_SCAN_START
+  - RSSPECAN_ATTR_RECEIVER_SCAN_STOP
+  - RSSPECAN_ATTR_RECEIVER_SCAN_STEP_SIZE
+  - RSSPECAN_ATTR_DISP_REF_POSITION
+  - RSSPECAN_ATTR_ATTENUATION_MODE
+  - RSSPECAN_ATTR_FREQUENCY_MODE
+  * Added
+  - rsspecan_ConfigureReceiverCISPRBandwidth
+  - rsspecan_ReadReceiverTraceData
+  - rsspecan_TransducerSelect
+
+2012-01-10, Jiri Kominek
+  * Version 1.18.2
+  * Updates and fixes:
+  - Fixed data type of callback addresses in rsspecan_attributes.c
+
+2011-12-20, Martin Krcmar
+  * Version 1.18.1
+  * Updates and fixes:
+  - rsspecan_ConfigureMarkerBandPower (commands corrected)
+  - rsspecan_QueryMarkerBandPower (command corrected)
+
+2011-10-11, Petr Berger (FSQ 4.75 support), Nabil Ouddane (FSH4 1.56 support), Petr Zavodny (ZVH 1.20 support)
+  * Version 1.18.0
+  * Support for FSQ version 4.75 added
+  * Support for ZVH version 1.20 added, support of FSH network analyzer (v1.56) updated   
+  * Support for dual trace (dual window) added for ZVH and FSH   
+  * Modified
+  - rsspecan_ConfigureLTEDownlinkPDSCHConfigurableSubframes - Range updated
+  - ConfigureWLANFFTStartOffset
+  RSSPECAN_ATTR_WLAN_FFT_START_OFFSET
+  - ConfigureWlanSpectrumMeasurement
+  RSSPECAN_ATTR_WLAN_SPEC_SEL
+  - ConfigureWiMAXTrigger
+  RSSPECAN_ATTR_WIMAX_TRIG_MODE
+  - QueryLTEDownlinkMeasurementCrestFactor
+  RSSPECAN_ATTR_LTE_DOWNLINK_CREST_FACTOR_RESULT
+  - QueryLTEUplinkMeasurementCrestFactor
+  RSSPECAN_ATTR_LTE_UPLINK_CREST_FACTOR_RESULT
+  - QueryLTEUplinkMeasurementResultSummary
+  RSSPECAN_ATTR_LTE_UPLINK_EVM_PUSCH_16QAM_RESULT
+  RSSPECAN_ATTR_LTE_UPLINK_EVM_PUSCH_64QAM_RESULT
+  RSSPECAN_ATTR_LTE_UPLINK_EVM_DMRS_PUSCH_QPSK_RESULT
+  RSSPECAN_ATTR_LTE_UPLINK_EVM_DMRS_PUSCH_16QAM_RESULT
+  RSSPECAN_ATTR_LTE_UPLINK_EVM_DMRS_PUSCH_RESULT
+  RSSPECAN_ATTR_LTE_UPLINK_EVM_PUCCH_RESULT
+  RSSPECAN_ATTR_LTE_UPLINK_EVM_PRACH_RESULT
+  - rsspecan_ConfigureMarkerZoomPortable - window control added
+    RSSPECAN_ATTR_NAN_MEAS_MODE    
+    RSSPECAN_ATTR_NAN_MEAS_FORMAT
+  - rsspecan_ConfigureMagnitudeSpacing
+    RSSPECAN_ATTR_NAN_MAGN_SPACING
+  - rsspecan_ConfigureSmithChartReferenceImpedance
+    RSSPECAN_ATTR_NAN_SMITH_REF_IMPEDANCE
+  - rsspecan_ConfigureReflectionCoefficientUnit
+    RSSPECAN_ATTR_NAN_REFL_COEFFICIENT_UNIT
+  - rsspecan_ConfigureTrackingGeneratorReferenceLevel
+    RSSPECAN_ATTR_NAN_CABLE_REF_LEVEL
+    RSSPECAN_ATTR_NAN_MAGN_REF_LEVEL
+    RSSPECAN_ATTR_NAN_PHASE_REF_LEVEL
+    RSSPECAN_ATTR_NAN_CABLE_REF_POSITION
+    RSSPECAN_ATTR_NAN_MAGN_REF_POSITION
+    RSSPECAN_ATTR_NAN_PHASE_REF_POSITION
+  - rsspecan_ConfigureGroupDelay
+    RSSPECAN_ATTR_GDEL_REF_LEVEL
+    RSSPECAN_ATTR_GDEL_REF_POSITION
+    RSSPECAN_ATTR_GDEL_Y_SCALE
+  - rsspecan_ConfigureMarkerOutputFormat
+    RSSPECAN_ATTR_NETWORK_ANALYZER_MARKER_OUTPUT_FORMAT
+  - rsspecan_ConfigurePhaseUnwrap
+    RSSPECAN_ATTR_NAN_PHASE_UNWRAP
+  - rsspecan_ConfigureNetworkAnalyzerMeasurement
+    RSSPECAN_ATTR_NAN_MEAS_MODE
+    RSSPECAN_ATTR_NAN_MEAS_FORMAT
+  - rsspecan_ConfigureTrackingGeneratorYScale
+  - RSSPECAN_ATTR_USER_CALIBRATE_LENGTH - command changed      
+  - rsspecan_ConfigureMarker - range checking modified according to ZVH and FSH
+  - rsspecan_ConfigureTrace   
+  - rsspecan_MarkerSearch    
+  - rsspecan_MoveMarker 
+  - rsspecan_QueryMarker
+  - RSSPECAN_ATTR_GDEL_Y_SCALE - added range checking  
+  - RSSPECAN_ATTR_NAN_CABLE_Y_SCALE
+  - RSSPECAN_ATTR_NAN_MAGN_Y_SCALE  
+  - RSSPECAN_ATTR_NAN_PHASE_Y_SCALE
+  - RSSPECAN_ATTR_NAN_MAGN_REF_LEVEL
+  - RSSPECAN_ATTR_NAN_PHASE_REF_LEVEL
+  - RSSPECAN_ATTR_NAN_CABLE_REF_LEVEL
+  - RSSPECAN_ATTR_NAN_CABLE_REF_POSITION - incrased value range
+  - RSSPECAN_ATTR_USER_CALIBRATE_OFFS - Port selection added 
+  - rsspecan_ConfigureDistancetoFaultThreshold
+  - rsspecan_ConfigureMarkerOutputFormat - values label updated           
+  - rsspecan_ConfigureTrackingGeneratorYScale - units forced to dB for magnitude
+  - rsspecan_ConfigureCATMeasurementMode - option checking added for "Transmission"  
+  - rsspecan_ConfigureUserCaliyabrate - offset legth units changed from mm to m 
+    RSSPECAN_ATTR_USER_CALIBRATE_OFFS
+  - rsspecan_ConfigurePhaseUnwrap - command changed DISPlay:PHASe:Y:UNWRap -> DISPlay:PHASe:UNWRap
+    RSSPECAN_ATTR_NAN_PHASE_UNWRAP
+  - rsspecan_ConfigureNetworkAnalyzerMeasurement - new formats added (Reflection Coefficient, Smith Chart, VSWR, Vector Voltmeter), Magnitude & phase (M Phase) format removed from GUI
+    RSSPECAN_ATTR_NAN_MEAS_MODE
+    RSSPECAN_ATTR_NAN_MEAS_FORMAT
+  - rsspecan_ConfigureGroupDelay - unit changed from ns to s, data type of "Reference Level" control changed to Real, range updated
+    RSSPECAN_ATTR_GDEL_REF_LEVEL
+
+  * Added
+  - rsspecan_SetLTEDownlinkModeFSH
+  - RSSPECAN_ATTR_LTE_DOWNLINK_MODE_FSH
+  - rsspecan_ConfigureLTEDownlinkDemodulationCalculationState
+  - RSSPECAN_ATTR_LTE_DOWNLINK_DEMODULATION_CALCULATION_STATE
+  - rsspecan_ConfigureLTEDownlinkCarrierFrequencyErrorUnits
+  - RSSPECAN_ATTR_LTE_DOWNLINK_CARRIER_FREQUENCY_ERROR_UNITS
+  - rsspecan_QueryLTEDownlinkMeasurementPowerResultSummary
+  - RSSPECAN_ATTR_LTE_DOWNLINK_POWER_QPSK_RESULT
+  - RSSPECAN_ATTR_LTE_DOWNLINK_POWER_16QAM_RESULT
+  - RSSPECAN_ATTR_LTE_DOWNLINK_POWER_64QAM_RESULT
+  - rsspecan_QueryLTEDownlinkMeasurementChannel
+  - RSSPECAN_ATTR_LTE_DOWNLINK_CHANNEL
+  - rsspecan_QueryLTEDownlinkMeasurementReferenceSignal
+  - RSSPECAN_ATTR_LTE_DOWNLINK_REFERENCE_SIGNAL
+  - rsspecan_QueryLTEDownlinkCellIdentity
+  - RSSPECAN_ATTR_LTE_DOWNLINK_IDENTITY
+  - rsspecan_SetLTEUplinkModeFSH
+  - RSSPECAN_ATTR_LTE_UPLINK_MODE_FSH
+  - rsspecan_ConfigureLTEUplinkCarrierFrequencyErrorUnits
+  - RSSPECAN_ATTR_LTE_UPLINK_CARRIER_FREQUENCY_ERROR_UNITS
+  - rsspecan_QueryLTEUplinkMeasurementPowerResultSummary
+  - RSSPECAN_ATTR_LTE_UPLINK_POWER_QPSK_RESULT
+  - RSSPECAN_ATTR_LTE_UPLINK_POWER_16QAM_RESULT
+  - RSSPECAN_ATTR_LTE_UPLINK_POWER_64QAM_RESULT
+  - rsspecan_QueryLTEUplinkMeasurementChannel
+  - RSSPECAN_ATTR_LTE_UPLINK_CHANNEL
+  - rsspecan_QueryLTEUplinkMeasurementReferenceSignal
+  - RSSPECAN_ATTR_LTE_UPLINK_REFERENCE_SIGNAL
+  - rsspecan_QueryLTEUplinkCellIdentity
+  - RSSPECAN_ATTR_LTE_UPLINK_IDENTITY
+  - QueryTPISTimeOffset
+  RSSPECAN_ATTR_QUERY_TPIS_TIME_OFFSET
+  - Configure3GPPTAERBTSCarrier
+  RSSPECAN_ATTR_3GPP_TAER_CPICH_CODE_NUMBER
+  RSSPECAN_ATTR_3GPP_TAER_ANTENNA_PATTERN
+  RSSPECAN_ATTR_3GPP_TAER_FREQUENCY_OFFSET
+  RSSPECAN_ATTR_3GPP_TAER_SCRAMBLING_CODE
+  - Query3GPPTAERBTSNumber
+  RSSPECAN_ATTR_3GPP_TAER_BTS_NUMBER
+  - Set_3GPPTAERBTSOperation
+  RSSPECAN_ATTR_3GPP_TAER_BTS_NUMBER_INSERT
+  RSSPECAN_ATTR_3GPP_TAER_BTS_NUMBER_DELETE
+  RSSPECAN_ATTR_3GPP_TAER_BTS_NUMBER_DELETE_ALL
+  - Query3GPPTAERTableCatalog
+  RSSPECAN_ATTR_3GPP_TAER_TABLE_CATALOG
+  - Set_3GPPTAERTableOperation
+  RSSPECAN_ATTR_3GPP_TAER_TABLE_DELETE
+  RSSPECAN_ATTR_3GPP_TAER_TABLE_SAVE
+  - Set_3GPPTAERTablePreset
+  RSSPECAN_ATTR_3GPP_TAER_TABLE_PRESET
+  - ConfigureWLANNumberOfAntennas
+  RSSPECAN_ATTR_WLAN_NUMBER_OF_ANTENNAS
+  - ConfigureWLANMIMODUTConfiguration
+  RSSPECAN_ATTR_WLAN_MIMO_DUT_CONFIGURATION
+  - ConfigureWLANMIMOAntennaSignalCapture
+  RSSPECAN_ATTR_WLAN_MIMO_ANT_SIGNAL_CAPTURE_TYPE
+  - ConfigureWLANSTCMIMO
+  RSSPECAN_ATTR_WLAN_ANALYZER_STATE
+  RSSPECAN_ATTR_WLAN_ANALYZER_ADDRESS
+  RSSPECAN_ATTR_WLAN_ANTENNA_CONFIGURATION
+  - ConfigureWLANMIMOSequentialCaptureSetup
+  RSSPECAN_ATTR_WLAN_MIMO_OSP_IP_ADDRESS
+  RSSPECAN_ATTR_WLAN_MIMO_OSP_SWITCH_MODULE
+  - ConfigureWLANRBWFilter
+  RSSPECAN_ATTR_WLAN_RBW_FILTER
+  - ConfigureWLANBurstsToAnalyzeSettings
+  RSSPECAN_ATTR_WLAN_BURST_TYPE_TO_MEASURE
+  RSSPECAN_ATTR_WLAN_CHANNEL_BANDWIDTH_TO_MEAS
+  RSSPECAN_ATTR_WLAN_GUARD_INTERVAL_LEGTH
+  RSSPECAN_ATTR_WLAN_STBC
+  RSSPECAN_ATTR_WLAN_EXT_SPATIAL_STREAMS
+  RSSPECAN_ATTR_WLAN_SOURCE_OF_PAYLOAD_LENGTH
+  - ConfigureWLANMCS
+  RSSPECAN_ATTR_WLAN_MCS_INDEX_TO_USE_FBUR
+  RSSPECAN_ATTR_WLAN_MCS_INDEX
+  - ConfigureWLAN_MIMOSpatialMappingConfiguration
+  RSSPECAN_ATTR_WLAN_MIMO_SPATIAL_MAPPING_MODE
+  RSSPECAN_ATTR_WLAN_MIMO_POWER_NORMALISE
+  - ConfigureWLAN_MIMO_UDFSpatialMappingAntenna
+  - ConfigureWLAN_MIMO_UDFSpatialMappingStream
+  RSSPECAN_ATTR_WLAN_MIMO_UDFSPATIAL_MAPPING_TIME_SHIFT
+  - ConfigureWLANChannelSelect
+  RSSPECAN_ATTR_WLAN_SPEC_CSEL
+  - FetchWlanBurstErrorRateForPilots
+  RSSPECAN_ATTR_WLAN_FETC_BERPILOT
+  - ConfigureWiMAXConstellationDiagram
+  RSSPECAN_ATTR_LTE_DOWNLINK_CONSTELLATION_DIAGRAM
+  - ConfigureLTEDownlinkDataAnalysisSettings
+  RSSPECAN_ATTR_LTE_DOWNLINK_PDSCH_SUBFRAME_DETECT
+  RSSPECAN_ATTR_LTE_DOWNLINK_BOOSTING_ESTIMATION
+  RSSPECAN_ATTR_LTE_DOWNLINK_PDSCH_REFERENCE_DATA
+  RSSPECAN_ATTR_LTE_DOWNLINK_MULTICARRIER_FILTER
+  - QueryLTEDownlinkMeasurementRSTP
+  RSSPECAN_ATTR_LTE_DOWNLINK_RSTP_RESULT
+  - ConfigureLTEUplinkSuppressedInterferenceSynchronization
+  RSSPECAN_ATTR_LTE_UPLINK_SUPPRESSED_INTERFERENCE_SYNC
+  - ConfigureLTEUplinkSlotSelection
+  RSSPECAN_ATTR_LTE_UPLINK_SLOT_SELECTION
+  - ApplicationsVersions
+  RSSPECAN_ATTR_APPLICATIONS_VERSIONS
+  - rsspecan_ConfigureEthernetGateway
+  - rsspecan_ConfigureCalibrationDiscard
+  - rsspecan_ConfigureUserPreset
+  - rsspecan_ConfigureMarkerZoomYPortable
+  - rsspecan_ConfigureInterferenceSuppressionState
+  - rsspecan_ConfigureInterferenceSuppressionApertureSize
+  - rsspecan_ConfigureNetworkAnalyzerSMeasurementResult
+  - rsspecan_QueryComplexMarker
+  - rsspecan_ConfigurePortOffsetLength
+
+2011-09-06, Stanislav Vajs, Jiri Kominek
+  * Version 1.17.0
+  * Support for FSUP version 4.67 added
+  * Modified
+  - rsspecan_GetTransducerFactorCatalog - added FSUP support
+  - rsspecan_ConfigureSSAVCOLoopPremeasurement - added attribute: RSSPECAN_ATTR_SSA_PREMEAS_NEW
+  * Added 
+  - rsspecan_CreateTransducerFactor
+    RSSPECAN_ATTR_TFAC_CREATE    
+  - rsspecan_ConfigureSSAPhaseFrequencyAxisTruncation 
+    RSSPECAN_ATTR_SSA_FREQUENCY_AXIS_TRUNCATION
+  - rsspecan_ConfigureSSAPhaseSpotNoiseList
+    RSSPECAN_ATTR_SSA_SPOT_NOISE_LIST
+  - rsspecan_ConfigureSSAPhaseSpurList
+    RSSPECAN_ATTR_SSA_SPUR_LIST
+  - rsspecan_ConfigureSSAPhaseSpursHighlight
+    RSSPECAN_ATTR_SSA_SPURS_HIGHLIGHT
+  - rsspecan_ConfigureSSAVCOMarkerCoupling  
+    RSSPECAN_ATTR_SSA_MARKER_COUPLING
+  - rsspecan_ConfigureSSAVCOLoopFrequencyBand
+    RSSPECAN_ATTR_SSA_ADET_GAIN
+  - rsspecan_ConfigureSSAVCOLoopDUTType
+    RSSPECAN_ATTR_SSA_DUT_TYPE
+  
+2011-09-02, Stanislav Vajs
+  * Version 1.17.0
+  * Support for FSW version 1.10 added
+  * Modified
+  - rsspecan_ConfigureIFOutputSource - added FSW support
+  - rsspecan_ConfigureTriggerSource - added: Trigger Source - External 2, External 3, IQ Power
+  - rsspecan_ConfigureExternalGate - added: Gate Source - External 2, External 3, IQ Power
+  - rsspecan_ConfigureDisplayZoom - added FSW support
+  - rsspecan_ConfigureAutoAdjust - added FSW support  
+  * Added
+  - DISPLAY/LAYOUT Subsystem
+  - TRIGGER/OUTPUT Subsystem  
+  - rsspecan_ConfigureIFOutFrequency
+    RSSPECAN_ATTR_IF_OUTPUT_FREQUENCY    
+  - rsspecan_ConfigureNoiseSource 
+    RSSPECAN_ATTR_NOISE_SOURCE_STATE
+  - rsspecan_ConfigureTriggerDropoutTime
+    RSSPECAN_ATTR_TRIGGER_DROPOUT_TIME
+  - rsspecan_ConfigureExternalTriggerPort
+    RSSPECAN_ATTR_EXTERNAL_TRIGGER_LEVEL_PORT
+  - rsspecan_ConfigureTriggerInput
+    RSSPECAN_ATTR_TRIGGER_DIRECTION
+  - rsspecan_ConfigureTriggerOutput  
+    RSSPECAN_ATTR_TRIGGER_DIRECTION
+    RSSPECAN_ATTR_TRIGGER_OUTPUT_TYPE
+    RSSPECAN_ATTR_TRIGGER_LEVEL
+    RSSPECAN_ATTR_TRIGGER_PULSE_LENGTH
+  - rsspecan_GenerateTriggerPulse
+    RSSPECAN_ATTR_TRIGGER_PULSE_GENERATE
+  - rsspecan_ConfigureHighpassFilter
+    RSSPECAN_ATTR_AMPL_HIGHPASS_FILTER
+  - rsspecan_ConfigureDisplayMultipleZoom
+  - rsspecan_AddWindow
+  - rsspecan_RemoveWindow
+    RSSPECAN_ATTR_LAYOUT_WINDOW_REMOVE
+  - rsspecan_ReplaceWindow
+  - rsspecan_QueryWindowsList
+    RSSPECAN_ATTR_LAYOUT_WINDOW_LIST
+  - rsspecan_QueryWindowIndex
+  - rsspecan_QueryWindowName
+    RSSPECAN_ATTR_LAYOUT_QUERY_WINDOW_NAME  
+  - rsspecan_ConfigureSplitterPosition
+  - rsspecan_ConfigureSESweepListPreamplifierLevel
+    RSSPECAN_ATTR_SE_LIST_RANG_INP_GAIN_LEVEL
+  - rsspecan_ConfigureSEMRangeRFPreamplifierLevel  
+    RSSPECAN_ATTR_SEM_RANGE_PREAMPLIFIER_LEVEL
+  - rsspecan_ConfigureRecieverPreamplificationLevel  
+    RSSPECAN_ATTR_AMPL_PREAMPLIFIER_LEVEL
+        
+2011-07-18, Petr Zavodny, Jiri Kominek
+  * Version 1.16.0
+  * Support for FSV version 1.60 added
+  * Modified
+  - RSSPECAN_ATTR_ACP_USER_STD_SET - added FSV support
+  - rsspecan_ConfigureGSMK10Burst - added: Access Burst Type, TS 0, TS 1, TS 2
+  - rsspecan_ConfigureGSMK10Measurement - added Trigger to Sync measurement
+  - rsspecan_ReadGSMK10MeasurementResults - added results for Trigger to Sync measurement
+    RSSPECAN_ATTR_READ_GSM_K10_TRIGGER_TO_SYNC_RESULTS 
+  - rsspecan_LoadWlanIQData - now uses attribute RSSPECAN_ATTR_LOAD_IQ_DATA
+  - rsspecan_LoadWiMAXIQData - now uses attribute RSSPECAN_ATTR_LOAD_IQ_DATA
+  - rsspecan_StoreWlanIQData - now uses attribute RSSPECAN_ATTR_SAVE_IQ_DATA
+  - rsspecan_StoreWiMAXIQData - now uses attribute RSSPECAN_ATTR_SAVE_IQ_DATA
+  - RSSPECAN_ATTR_IQ_DATA_EXPORT_FILE_DESCRIPTION - added FSV support
+  - rsspecan_ConfigureTriggerSource - Baseband power added  
+    RSSPECAN_ATTR_TRIGGER_SOURCE
+  - rsspecan_ConfigureExternalGate - Power Sensor as Gate Source is available for FSV
+  - rsspecan_ConfigureWiMAXTrigger - addded Power Sensor, RF Power trigger mode
+    RSSPECAN_ATTR_WIMAX_TRIG_MODE
+  - rsspecan_ConfigureWlanTrigger - addded Power Sensor, RF Power trigger mode
+    RSSPECAN_ATTR_WLAN_TRIG_MODE
+  - RSSPECAN_ATTR_VSA_RESULT_FORMAT - added None, IQCorr
+  - RSSPECAN_ATTR_VSA_TX_FILTER_TYPE - added user defined filter type
+  - RSSPECAN_ATTR_VSA_MEASUREMENT_FILTER_TYPE  - added user defined filter type
+  - rsspecan_ReadVSATraceData - new traces added
+  - rsspecan_FileDirectory - fixed portable instruments support
+  * Added
+  - RSSPECAN_ATTR_GSM_K10_MEAS_TRIGGER_TO_SYNC
+  - rsspecan_rsspecan_ConfigureGSMK10TriggerToSync
+    RSSPECAN_ATTR_GSM_K10_TRIGGER_TO_SYNC_BINS_COUNT
+    RSSPECAN_ATTR_GSM_K10_TRIGGER_TO_SYNC_ADAPTIVE_DATA_SIZE
+  - rsspecan_rsspecan_ConfigureGSMK10WideSpectrumResultsUnit 
+    RSSPECAN_ATTR_GSM_K10_WIDE_SPECTRUM_UNIT
+  - rsspecan_rsspecan_ReadGSMK10SpectrumReferencePower
+  - rsspecan_rsspecan_FetchGSMK10SpectrumReferencePower
+  - rsspecan_rsspecan_AssignMarkerToTrace
+    RSSPECAN_ATTR_NOISE_ASSIGN_MARKER_TO_TRACE   
+  - rsspecan_rsspecan_Configure3GPPBSMode
+    RSSPECAN_ATTR_3GPP_BS_STANDARD
+  - rsspecan_rsspecan_ConfigurePWMExternalPowerTriggerAdvanced
+    RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_HYSTERESIS
+    RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_DROPOUT_TIME
+    RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_HOLDOFF_TIME
+    RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_SLOPE
+  - rsspecan_VSARefreshCapturedData
+    RSSPECAN_ATTR_VSA_REFRESH_CAPTURED_DATA
+  - rsspecan_ConfigureVSAUserDefinedTXFilter
+    RSSPECAN_ATTR_VSA_TX_FILTER_USER_FILE
+  - rsspecan_ConfigureVSAUserDefinedMeasurementFilter
+    RSSPECAN_ATTR_VSA_MEASUREMENT_FILTER_USER_FILE
+  - rsspecan_setVSAModulationStatusRegister
+  - rsspecan_getVSAModulationStatusRegister
+    RSSPECAN_ATTR_VSA_MODULATON_QUESTIONABLE_REGISTER   
+  - rsspecan_ConfigureVSALimitsDefault
+    RSSPECAN_ATTR_VSA_LIMIT_MODULATION_ACCURACY_DEFAULTS
+  - RSSPECAN_ATTR_VSA_LIMIT_MOD_ACC_STATE
+  - rsspecan_ConfigureVSALimitsEVM
+    RSSPECAN_ATTR_VSA_LIMIT_MOD_ACC_EVM
+  - rsspecan_ConfigureVSALimitsPhaseError
+    RSSPECAN_ATTR_VSA_LIMIT_MOD_ACC_PHASE_ERROR
+  - rsspecan_ConfigureVSALimitsMagnitudeError
+    RSSPECAN_ATTR_VSA_LIMIT_MOD_ACC_MAGNITUDE_ERROR
+  - rsspecan_ConfigureVSALimitsCarrierFrequencyError
+    RSSPECAN_ATTR_VSA_LIMIT_MOD_ACC_CARRIER_FREQUENCY_ERROR
+  - rsspecan_ConfigureVSALimitsRHO
+    RSSPECAN_ATTR_VSA_LIMIT_MOD_ACC_RHO
+  - rsspecan_ConfigureVSALimitsIQOffset
+    RSSPECAN_ATTR_VSA_LIMIT_MOD_ACC_IQ_OFFSET
+  - rsspecan_ConfigureVSALimitsFrequencyError
+    RSSPECAN_ATTR_VSA_LIMIT_MOD_ACC_FREQUENCY_ERROR
+  - rsspecan_ConfigureVSALimitsFrequencyDeviationError
+    RSSPECAN_ATTR_VSA_LIMIT_MOD_ACC_FREQUENCY_DEVIATION_ERROR
+  - rsspecan_VSARefreshCapturedData
+    RSSPECAN_ATTR_VSA_REFRESH_CAPTURED_DATA
+  - rsspecan_QueryVSAModulationAccuracyLimitsCheckResults
+    RSSPECAN_ATTR_VSA_QUERY_MOD_ACC_LIMIT_CHECK_RESULT
+  - rsspecan_QueryVSAModulationAccuracyStatisticResults
+  
+2011-05-30 Martin Krcmar
+  * Version 1.15.0
+  * Support for FSV version 1.55 added
+  * Support for FSVR version 1.54 added
+  * Support for FSP version 4.60 added
+  * Support for FSU version 4.61 added
+  * Support for FSQ version 4.65 added
+  * New Vector Signal Analysis API
+  * K54 support added
+  * Better FSC and ZVH support
+  * New:
+  - rsspecan_ConfigureSpectrumDisplay
+  - rsspecan_TraceIQRecordLength
+  - rsspecan_ConfigureReferenceMarker
+  - rsspecan_QueryTriggerPositionInSample
+  - rsspecan_ConfigureExternalGeneratorFrequency
+  - rsspecan_ConfigureADemodFilterAWeighting
+  - rsspecan_ConfigureSpectrogramFFTWindow
+  - rsspecan_StoreSpectrogramToFile
+  - rsspecan_ConfigureFrequencyMaskTriggerSource
+  - rsspecan_ConfigureVSAIncludeIQData
+  - rsspecan_LockLocalKey
+  - rsspecan_ActivateMarkerPeakSearch
+  - rsspecan_ConfigureMarkerPeakListSettings
+  - rsspecan_ConfigureGSMK10Trace
+  - rsspecan_ConfigureGSMK10AccessBurst
+  - rsspecan_ConfigureGSMK10AQPSKBurst
+  - rsspecan_ConfigureGSMK10Demodulation
+  - rsspecan_ConfigureGSMK10MultiMeasurement
+  - rsspecan_FetchGSMK10WideSpectrumResults
+  - rsspecan_ConfigurePersistenceSpectrumMarkerPosition
+  - rsspecan_LoadIQData
+  - rsspecan_StoreIQData
+  - rsspecan_ConfigureIQDataExportFileDescription
+  - rsspecan_ConfigureAnalogDemodSquelch
+  - rsspecan_ConfigureFMStereoSquelch
+  - rsspecan_ConfigureSpectrogramContinuousTrigger
+  - rsspecan_ConfigureSpectrogramTimeDomainTrigger
+  - rsspecan_ConfigurePersistenceSpectrumMarkerPosition
+  - rsspecan_QueryPersistenceMarkerZAxis
+  - rsspecan_ConfigurePersistenceSpectrumDeltaMarkerPosition
+  - rsspecan_ConfigureFrequencyMaskDirectory
+  - rsspecan_ConfigureNoiseGeneratorAutoSwitchOff
+  - rsspecan_InitNoiseGenerator
+  - rsspecan_ConfigureTDSBSSyncToSlotRotateCodeChannels
+  - rsspecan_ConfigureLTEDownlinkPRBSymbolOffset
+  - rsspecan_TraceClear
+  - rsspecan_ConfigureMarkerPeakListAnnotation
+  - rsspecan_ConfigureMarkerPeakListState
+  - rsspecan_ReadMarkerPeakList
+  - rsspecan_SEStandardCatalog
+  - rsspecan_SEStandardSave
+  - rsspecan_SEStandardLoad
+  - rsspecan_SEStandardDelete
+  - rsspecan_SEMStandardSave
+  - rsspecan_SEMStandardDelete
+  * Modified:
+  - rsspecan_ConfigureYIGFilter
+  - rsspecan_ConfigureFMStereoAFFilter  
+  - rsspecan_ConfigurePowerMeasurement - added ZVH support
+  - rsspecan_ConfigurePowerChannelBandwidth - added FSC support
+  - rsspecan_FetchPWMResult - fixed
+  - rsspecan_ConfigureGSMK10Burst - added new burst types and modulations
+  - rsspecan_ConfigureTriggerSource
+  - rsspecan_ConfigureExternalGate
+  - rsspecan_ConfigureExternalMixer  
+  - rsspecan_CreateExternalMixerConversionLossTable
+  - rsspecan_FetchXTrace
+  - rsspecan_SpectrogramMarkerSearch
+  - rsspecan_SpectrogramDeltaMarkerSearch
+  - rsspecan_ConfigureSpectrogramResultDisplayMode
+  - rsspecan_ConfigureVSATraceEvaluation
+  - rsspecan_ConfigureBDOAdvancedSettings
+  - rsspecan_ConfigureMDOCodeDomainAnalyzerResults
+  - rsspecan_QueryMDOCodeDomainAnalyzerResultSummary
+  - rsspecan_ConfigureWlanMeasRange
+  - rsspecan_ConfigureWiMAXDemodulation
+  - rsspecan_ConfigureMarkerPeakList - added 2 new arguments
+  - rsspecan_SetInstrumentFromMarker - fixed
+  
+2011-04-07 Martin Krcmar
+  * Version 1.14.0
+  * Support for LTE Uplink added   
+  * Modified functions:
+  - rsspecan_ConfigureLevel (Amplitude Units update for FSH4/8)
+  - rsspecan_QueryPowerResults
+  - rsspecan_ConfigureAcquisition  
+
+2011-03-15 Petr Kominek
+  * Version 1.13.0
+  * Support for ZVH added   
+
+2011-02-11 Petr Marcalik, Martin Krcmar
+  * Version 1.12.0
+  * Support for FSH 4/8 version 1.40 added   
+  * New functions:
+  - rsspecan_ConfigureAntennaSettings
+  - rsspecan_SetChannelNumber
+  - rsspecan_ConfigureRelativeDeltaMarkerPosition
+  - rsspecan_ConfigureExternalGateTime
+  - rsspecan_getGPSAltitude
+  - rsspecan_ConfigureSEMPresetSettings
+  - rsspecan_Configure3GPPFDDBSScramblingCode
+  - rsspecan_ConfigureEVDOBSTPowerReference  
+  * Modified functions:
+  - rsspecan_SelectPowerMeasurement  
+  - rsspecan_SetInstrumentFromMarker
+  - rsspecan_ConfigureExternalGate
+  - rsspecan_ConfigureHardcopyDevice
+  - rsspecan_QueryPowerResults
+  - rsspecan_ConfigureSEMPresetStandard
+  - rsspecan_Configure3GPPBSMeasurement
+  - rsspecan_Configure3GPPBSResults
+  - rsspecan_Search3GPPBSScramblingCode
+  - rsspecan_Get3GPPBSResult
+  - rsspecan_Get3GPPBSCDPResult
+  - rsspecan_Get3GPPBSCDPScramblingCodeResult
+  - rsspecan_ConfigureC2KBasicSettings
+  - rsspecan_ConfigureBC2KAdvancedSettings
+  - rsspecan_ConfigureBC2KAntennaSettings
+  - rsspecan_ConfigureBC2KCodeDomainAnalyzerResults
+  - rsspecan_ConfigureBC2KCodeDomainAnalyzerSettings
+  - rsspecan_QueryBC2KCodeDomainAnalyzerResultSummary
+  - rsspecan_ConfigureBDOCodeDomainAnalyzerResults
+  - rsspecan_ConfigureBDOCodeDomainAnalyzerSettings
+  - rsspecan_ConfigureBDOAdvancedSettings
+  - rsspecan_QueryBDOCodeDomainAnalyzerGeneralResults
+  - RSSPECAN_ATTR_SERVICE_NOISE_SOURCE - remove B5 option checking
+  - RSSPECAN_ATTR_FFT_FILTER_MODE - supported instrument models updated
+  - RSSPECAN_ATTR_SWEEP_TYPE - supported instrument models and range table updated
+
+2011-01-21 Martin Krcmar
+  * Version 1.11.1
+  * Modified functions:
+  - RSSPECAN_ATTR_PMET_SELECT - removed option and instrument checking    
+  - rsspecan_ConfigurePowerSensorAssignment - interface parameter renamed to intfc in header file
+         
+2010-11-23 Nabil Ouddane, Jiri Kominek
+  * Version 1.11.0
+  * Added support for FSVR
+  * Added support for FSV-K14. Old K14 renamed to Realtime Spectrum Analysis
+  * Multiple power sensors support (FSV and FSVR)
+  * New functions:
+  - rsspecan_ConfigureGSMK10CorrelationThreshold
+  - rsspecan_ConfigureGSMK10SwapIQ
+  - rsspecan_ConfigureGSMK10MarkerZoom
+  - rsspecan_ConfigureGSMK10ResultDisplay
+  - rsspecan_ConfigureGSMK10UserTSC
+  - rsspecan_ConfigureGSMK10PVTAlignment
+  - rsspecan_ReadGSMK10BurstSlotDeltaToSync
+  - rsspecan_FetchGSMK10BurstSlotDeltaToSync
+  - rsspecan_ReadGSMK10WideSpectrumResults
+  - rsspecan_ReadGSMK10WideSpectrumGating
+  - rsspecan_ConfigureTraceIQDataAnalyzerEnabled
+  - rsspecan_ConfigurePowerChannelName
+  - rsspecan_ConfigureDisplayFocusedArea
+  - rsspecan_GetSelectedSubwindow
+  - rsspecan_ConfigureDeltaMarkerBandPower
+  - rsspecan_QueryDeltaMarkerBandPower
+  - rsspecan_ConfigureMarkerBandPower
+  - rsspecan_QueryMarkerBandPower
+  - rsspecan_SystemShutdown
+  - rsspecan_ConfigureDigitalBasebandInputCoupling
+  - rsspecan_ConfigureDigitalBasebandInputParameters Auto
+  - rsspecan_Configure3GPPFDDBSWCDPSingleAntennaMIMOMode
+  - rsspecan_Get3GPPFDDBSTimeAlignmentErrorResult
+  - rsspecan_ConfigureTDSBSChannelTableMaxModulation
+  - rsspecan_ConfigureTDSUEChannelTableMaxModulation
+  - rsspecan_ConfigureTDSBSSyncToSlotMode
+  - rsspecan_ConfigureTDSUESEMLimits
+  - rsspecan_ConfigureTDSUESyncToSlotMode
+  - rsspecan_ConfigureWiMAXSTCMIMO
+  - rsspecan_ConfigureWiMAXAutoDemodulation
+  - rsspecan_ConfigureWiMAXSTCMIMODemodulation
+  - rsspecan_ConfigureWiMAXBurstBoosting
+  - rsspecan_ConfigureWiMAXZoneSTCMode
+  - rsspecan_ConfigureWiMAXZoneBurstSTCMode
+  - rsspecan_ConfigureWiMAXTTCSubframeLengthMeasure
+  - rsspecan_ConfigureWiMAXTTCSubframeLength
+  * Modified functions:
+  - rsspecan_ConfigureGSMK10Burst - added possibility to define user TSC
+  - rsspecan_ConfigureGSMK10Measurement - added Wide Spectrum
+  - rsspecan_ConfigureNoiseMeasurementMode  - added Single Frequency Single Sweep Measurement and Single Frequency Continuous Measurement
+  - rsspecan_ConfigureReferenceFixedPoint - fixed
+  - rsspecan_QueryPowerResults - added AOB
+  - rsspecan_ConfigureTriggerSource - added RFP
+  - rsspecan_ConfigureExternalGate - added RFP
+  - rsspecan_QueryFMStereoChannelTypeResults - added Cross Talk
+  - rsspecan_ConfigureVSAMarkerSearch - added Magnitude
+  - rsspecan_Set3GPPFDDBSMeasurement - added Time Alignment Error
+  - rsspecan_GetTDSBSResult - added Average RCDE of active channels
+  - rsspecan_GetTDSUEResult - added Average RCDE of active channels
+  - rsspecan_ConfigureWiMAXDemodulation - added new modulation detection modes
+  - rsspecan_ConfigureWiMAXZoneSpaceTimeCoding - added One Antenna (MIMO only)
+  - rsspecan_CreateWiMAXNewZoneBurst - added Modulation Auto
+  - rsspecan_ConfigureWiMAXZoneBurst - added Modulation Auto
+  - rsspecan_ConfigureWiMAXSpectrumMeasurement - added ETSI30254401,BW10M; ETSI30254401,BW5M
+  - rsspecan_ConfigureWiMAXSEMMeasurement - added ETSI EN 30254401 standard for 5MHz BW and ETSI EN 30254401 standard for 10MHz BW
+  - rsspecan_FileManagerOperations - added Delete File Immediate
+
+2010-07-27 Jiri Kominek
+  * Version 1.10.2
+  * Fixed rsidr_core for better 64bit support
+  * Distance to Fault measurement is no longer available for FSC
+  * Power meter mode is no longer available for FSC
+  * Fixed attributes
+  - RSSPECAN_ATTR_FREQUENCY_CENTER_LINK - added DIVT option
+  - RSSPECAN_ATTR_PMET_MODE - added wait for OPC
+
+2010-06-22 Jiri Kominek, Petr Kominek
+  * Version 1.10.1
+  * Added support of K40 option for FSV instrument  
+  * Fixed for 64-bit support
+
+2010-06-02 Martin Krcmar, Petr Marcalik
+  * Version 1.10.0
+  * Support for FSQ-K110 TETRA II version 4.50 added   
+  * Added:
+  - rsspecan_DTFMode
+  * Updates and fixes:                                                                                                                                          
+  - rsspecan_setStatusRegister
+  - rsspecan_getStatusRegister
+  - rsspecan_PWMMode - now supports FSH and FSC
+  - rsspecan_ConfigureSSADCPortsSettings - sequence of commands changed
+
+2010-04-16 Martin Krcmar
+  * Version 1.9.1
+  * Updates and fixes:                                                                                                                                          
+  - Makefile bug fixed
+
+2010-03-30 Martin Krcmar, Petr Marcalik
+  * Version 1.9.0
+  * Support for FSV-K70 version 1.40 added   
+  * Added functions/attributes:
+  - rsspecan_ConfigureDisplayZoom                                        
+  - rsspecan_YAxisAutoScale                                              
+  - rsspecan_ConfigureDigitalBasebandInputTriggerSource                  
+  - rsspecan_ConfigureDigitalBasebandInputTriggerParameters                                                                                  
+  - rsspecan_ConfigureVSAScreenCoupling                                  
+  - rsspecan_ConfigureVSAMarkerSearch                                    
+  - rsspecan_ConfigureVSAMarkerPeakSearch                                
+  - rsspecan_VSAAdjustReferenceLevelToFullScaleLevel                     
+  - rsspecan_ConfigureVSAFullScaleLevelUnit                              
+  - rsspecan_PresetVSAScreens                                            
+  - rsspecan_ConfigureVSABurstSearchAuto                                 
+  - rsspecan_ConfigureVSABurstSearchAutoConfiguration                    
+  - rsspecan_ConfigureVSAPatternSearchAutoConfiguration                                                                                       
+  - rsspecan_ConfigureVSASignalType                                      
+  - rsspecan_ConfigureVSAPatternSignalState                              
+  - rsspecan_ConfigureVSAPatternOffset                                   
+  - rsspecan_ConfigureVSATXFilter                                        
+  - rsspecan_ConfigureVSACompensation                                    
+  - rsspecan_ConfigureVSAMeasurementFilter                               
+  - rsspecan_ConfigureVSADisplayPointPerSymbol                           
+  - rsspecan_ConfigureVSACaptureOversampling                             
+  - rsspecan_ConfigureVSATraceEvaluation                                 
+  - rsspecan_ConfigureVSADisplayWindowState                              
+  - rsspecan_ConfigureVSAModulationAccuracy                              
+  - rsspecan_GetVSAAllResults
+  - rsspecan_ConfigureWiMAXFrameIDCellAuto
+  - rsspecan_ConfigureWiMAXFramePredefinedMap                                            
+  * Updates and fixes:                                                                                                                                          
+  - rsspecan_GetVSAResult
+  - rsspecan_ConfigureVSADisplayAlignment
+  - rsspecan_VSAImport
+  - rsspecan_VSAExport 
+  - rsspecan_ConfigureVSAFileExport
+  - rsspecan_ConfigureVSAFileImport
+  - rsspecan_ConfigureVSAEVMModulation
+  - rsspecan_ConfigureVSAEqualizerMode
+  - rsspecan_ConfigureVSAEqualizer
+  - rsspecan_VSAEqualizerOperations
+  - rsspecan_GetVSAModulationFilterCatalog
+  - rsspecan_ConfigureVSAModulationFilters
+  - rsspecan_ConfigureVSACompressionPointMeasurement
+  - rsspecan_GetVSACompressionPointResults
+  - rsspecan_ConfigureVSABurstSearchHysteresis
+  - rsspecan_ConfigureVSABurstSearch
+  - rsspecan_ConfigureVSAMultipleEvaluation
+  - rsspecan_VSASearchBurstInCaptureRam
+  - rsspecan_ConfigureVSAMultipleEvaluationZoom
+  - rsspecan_GetVSADigitalStandardCatalog
+  - rsspecan_VSADigitalStandardSave
+  - rsspecan_ConfigureVSAForceWBPath
+  - rsspecan_SetVSAFactoryDefaults
+  - rsspecan_ConfigureVSAModulation
+  - rsspecan_ConfigureVSADisplayYAxis
+  - rsspecan_ConfigureVSADisplayXAxis
+  - rsspecan_GetVSAPatternCatalog
+  - rsspecan_TraceIQSet
+  - rsspecan_RunReceiverMeasurement
+  - rsspecan_ConfigurePowerSensorPowerDisplay (panel modified)
+  
+2010-02-25 Marian Mindek, Martin Krcmar
+  * Version 1.8.0 
+  * Support for FSH 4/8 version 1.20 & 1.21 added
+  * K10 (GSM Measurement) no longer limited to FSV instrument  
+  * Updates and fixes
+  - rsspecan_GSMK10Mode
+  - added instrument checking (FSC) to attributes
+     
+2009-11-27 Martin Krcmar
+  * Version 1.7.0
+  * Support for FSV version 1.40 added
+  * Support for K7S (FM Stereo) added
+  * Added functions/attributes:
+  - rsspecan_ConfigureTraceIQGate
+  - rsspecan_ConfigureTraceIQDataDisplayType
+  - rsspecan_QueryTraceIQFilterBandwidth
+  - rsspecan_QueryExternalMixerRFStartStop
+  - rsspecan_ConfigureExternalMixerHandoverFrequency
+  - rsspecan_ConfigureExternalMixerRFOverrange
+  - rsspecan_ConfigureExternalMixerPresetBand
+  - rsspecan_ConfigureExternalMixerHighHarmonic
+  - rsspecan_ConfigureDigitalBasebandOutput
+  - rsspecan_ConfigureDigitalBasebandFullScaleLevel
+  - rsspecan_ConfigurePWMDutyCycle
+  - rsspecan_ConfigureGSMK10Synchronization
+  - rsspecan_ConfigureGSMK10DemodulationEqualTimeslotLength
+  - rsspecan_ConfigureGSMK10PVTFilter
+  - rsspecan_ConfigureGSMK10ModulationTransientSpectrum
+  - rsspecan_ConfigureGSMK10MultiCarrier
+  - rsspecan_ConfigureWLANFFTStartOffset
+  * Updates and fixes
+  - rsspecan_TraceIQExtendedBandwidth
+  - rsspecan_ConfigureExternalMixerEnabled
+  - rsspecan_ConfigureExternalMixerNumberOfPorts
+  - rsspecan_ConfigureExternalMixer
+  - rsspecan_ConfigureExternalMixerSignalIDMode
+  - rsspecan_ConfigureExternalMixerBias (function API redesigned)
+  - rsspecan_ConfigureExternalMixerConversionLoss (function API redesigned)
+  - rsspecan_ConfigureExternalMixerConversionLossTable (function removed)
+  - rsspecan_ConfigureExternalMixerLowPower
+  - rsspecan_CreateExternalMixerConversionLossTable
+  - rsspecan_ExternalMixerConversionLossTableSelect
+  - rsspecan_ExternalMixerConversionLossTableDelete
+  - rsspecan_ExternalMixerConversionLossTableCatalog
+  - rsspecan_PhaseNoisePeakSearchAuto
+  - rsspecan_ConfigureMeasuringReceiverRelativeLevelMeasurement
+  - rsspecan_ReadGSMK10MeasurementResults
+  - rsspecan_FetchGSMK10MeasurementResults
+  - rsspecan_Configure3GPPFDDBSChannelTableData
+  - rsspecan_Get3GPPBSCDPScramblingCodeResult
+  - rsspecan_Get3GPPBSCDPListEvaluationResult
+  - rsspecan_ConfigureWlanBasebandSignalLevel
+
+2009-10-30 Jiri Kominek
+  * Version 1.6.0
+  * Support for K100 and K102 added
+  * Fixed rsspecan_ConfigureSEMRangeRFAttenuation
+
+2009-10-01 Petr Kominek, Jiri Kominek
+  * Version 1.5.1
+  * Support for FSMR version 4.36 added, tested and debugged
+
+2009-08-10 Petr Kominek
+  * Version 1.5.0
+  * Support for FSH4/8 version 1.10 added
+  * Support for FSV version 1.20 added
+  * Support for FSMR version 4.36 added (untested betaversion)      
+
+2009-06-22 Martin Krcmar
+  * Version 1.4.0
+  * Support for FSUP (Signal Source Analyzer) instrument added
+  * Updates and fixes
+  - rsspecan_LXIInfo (deleted)        
+  - rsspecan_LXIInstrumentDescription (deleted)
+  - rsspecan_LXILANReset (deleted)
+  - rsspecan_LXIPassword (deleted)
+  - rsspecan_ConfigureFilterType  
+  - rsspecan_ConfigureLevel
+  - rsspecan_ConfigureUnitPower
+  - rsspecan_TraceIQAveraging
+  - rsspecan_ConfigureSubtractTraces
+  - rsspecan_StoreMarkerPeakList
+  - rsspecan_ConfigureReferenceOscillator
+  - rsspecan_ConfigureExternalMixerSignalIDMode
+  - rsspecan_ConfigureSESweepListFilterType
+  - rsspecan_ConfigureSESweepListPreamplifier
+  - rsspecan_ConfigureWiMAXZoneMatrix (renamed from rsspecan_ConfigureWiMAXZoneMartix)  
+  - rsspecan_ConfigureWiMAXZoneBurstMatrix (renamed from rsspecan_ConfigureWiMAXZoneBurstMartix)
+  - rsspecan_ServiceConfigurePulsedInput
+  - rsspecan_DataSetFileSelectItems
+  - rsspecan_setStatusRegister
+  - rsspecan_getStatusRegister
+  - rsspecan_ReadGsmModSpectrum (Status control help fixed)
+  - rsspecan_FetchGsmModSpectrum (Status control help fixed)
+  - rsspecan_ReadGsmTransSpectrum (Status control help fixed)
+  - rsspecan_FetchGsmTransSpectrum (Status control help fixed)
+  
+2009-04-28 Martin Krcmar
+  * Version 1.3.0:
+  * Driver update for Spectrum Analyzer firmware 4.40  
+  * Added functions/attributes:
+  - rsspecan_ConfigureFrequencyZeroSpan
+  - rsspecan_QuerySelectedReferenceOscillatorSource
+  - rsspecan_ConfigureReferenceOscillatorExternalPLLBandwidth
+  - rsspecan_QueryChannelPowerStandardCatalog
+  - rsspecan_ConfigureChannelPowerUserStandard
+  - rsspecan_ACPChannelPowerAdjustRefLevelOffset
+  - rsspecan_ACPAdjustReferenceLevelToChannelPower
+  - rsspecan_ConfigureSignalStatisticMeanPowerPosition
+  - rsspecan_ConfigureTOIPositioning
+  - rsspecan_QueryHDistBandwidthList
+  - rsspecan_QueryDigitalBasebandInputOutputConfiguration
+  - rsspecan_ConfigureVSAFileImport
+  - rsspecan_ConfigureWiMAXZoneMartix
+  - rsspecan_ConfigureWiMAXZoneBurstMartix
+  - rsspecan_ConfigureWiMAXTTCStart
+  - rsspecan_ConfigurePWMBarGraphView
+  * Updates and fixes:
+  - rsspecan_ConfigureMarkerZoomState
+  - rsspecan_ConfigureReferenceOscillator
+  - rsspecan_ConfigureIFPowerTriggerParameters
+  - rsspecan_InitiateSpurious
+  - rsspecan_InitiateSEMMeasurement
+  - rsspecan_ConfigureChannelPowerStandard
+  - rsspecan_ConfigurePowerChannelWeightingFilters
+  - rsspecan_ConfigureHDistMeasurement
+  - rsspecan_ConfigureSESweepListLimits
+  - rsspecan_ConfigureVSAModulation
+  - rsspecan_ConfigureVSAFileExport
+  - rsspecan_Get3GPPBSResult
+  - rsspecan_Get3GPPUEResult
+  - rsspecan_FetchWlanBurstAll
+  - rsspecan_ConfigureWiMAXSpectrumMeasurement
+  - rsspecan_ConfigureWiMAXSEMMeasurement
+  - rsspecan_FetchWiMAXBurstAll
+  - rsspecan_FetchWiMAXEVM
+  - rsspecan_WriteFromFileToInstrument
+  - rsspecan_setStatusRegister
+  - rsspecan_getStatusRegister
+  - rsspecan_ConfigureTransducerFactor  
+      
+2009-04-08 Martin Krcmar
+  * Version 1.2.1:
+  * Driver update for R&S ESL EMI Test Receiver firmware 1.82
+  * Added functions/attributes:
+  - rsspecan_ReadReceiverDetectorExt
+  - rsspecan_ReadScanMeasurementStatus
+  - rsspecan_ReadPeakResults
+  * Updates and fixes:
+  - rsspecan_ConfigureLimitLine
+  - rsspecan_ConfigureFinalReceiverDetector
+  - rsspecan_ConfigureReceiverDetector
+  - rsspecan_ConfigurePWMMeasurement
+  - rsspecan_DataSetFileSelectItems
+  - rsspecan_ConfigureWlanSEMMeasurement  
+  * Fixed rsidr_core - see rsidr_core.c for list of changes      
+
+2009-03-13 Martin Krcmar 
+  * Version 1.2.0:
+  * Support for FSH4/FSH8 added
+  * Updates and fixes:
+  - rsspecan_SetSANMode
+  - rsspecan_ConfigureFrequencyStepSize
+  - rsspecan_ConfigureLevel
+  - rsspecan_ConfigureTraceDetector
+  - rsspecan_MarkerSearch
+  - rsspecan_ConfigureDeltaMarker
+  - rsspecan_ConfigureDeltaMarkerPosition
+  - rsspecan_DeltaMarkerSearch
+  - rsspecan_QueryDeltaMarker
+  - rsspecan_ConfigureTrigger
+  - rsspecan_ConfigureDisplayLineState
+  - rsspecan_ConfigureDisplayLinePosition
+  - rsspecan_Initiate
+  - rsspecan_TraceIQAveraging - help updated
+  - rsspecan_InitAttributes    
+  * Fixed rsidr_core - see rsidr_core.c for list of changes
+
+2009-01-30 Martin Krcmar 
+  * Version 1.1.1:
+  * Bug fixed when reading out the trace I/Q data in rsspecan_dataReadTraceIQ
+  * Help fixed in rsspecan_TraceIQSet, rsspecan_ReadScanMeasurement
+        
+2009-01-07 Martin Krcmar
+  * Version 1.1.0:
+  * Driver update for Spectrum Analyzer firmware 4.30
+  * Added functions/attributes:
+  - rsspecan_TraceIQExtendedBandwidth
+  - rsspecan_ApplicationSetupRecovery
+  - rsspecan_ConfigureIFShift
+  - rsspecan_ConfigurePhaseFrequencyTolerance
+  - rsspecan_ConfigureVSAEVMOffsetState
+  - rsspecan_ConfigureTDSBSSyncToSlot
+  - rsspecan_ConfigureTDSBSUCPICH
+  - rsspecan_ConfigureTDSUESyncToSlot
+  - rsspecan_ConfigureTDSUEUCPICH
+  - rsspecan_ConfigureWiMAXNumberOfAntennas
+  - rsspecan_ConfigureWiMAXZoneSpaceTimeCoding
+  * Updates and fixes:
+  - rsspecan_ConfigureFilterType
+  - rsspecan_ConfigureSESweepListFilterType
+  - rsspecan_TracePhaseSettings
+  - rsspecan_Get3GPPBSResult
+  - rsspecan_Get3GPPUEResult
+  - rsspecan_ConfigureWiMAXStandard
+  - rsspecan_CreateWiMAXNewZoneBurst
+  - rsspecan_ConfigureWiMAXZoneBurst
+  - rsspecan_FetchWiMAXBurstPower
+        
+  * Added support for FSV Signal and Spectrum Analyzer
+  * Added functions/attributes:
+  - rsspecan_ConfigureFrequencyStepSizeAuto
+  - rsspecan_ConfigureFrequencyMode
+  - rsspecan_ConfigureHorizontalScale
+  - rsspecan_ConfigureSweepType
+  - rsspecan_ConfigureMarkerSearchLimitsZoom
+  - rsspecan_LXIInfo
+  - rsspecan_LXIInstrumentDescription
+  - rsspecan_LXILANReset
+  - rsspecan_LXIPassword
+  - rsspecan_ConfigureExternalGateTrace
+  - rsspecan_ConfigureDisplaySettings
+  - rsspecan_GetDisplayThemeCatalog
+  - rsspecan_ConfigureDisplayThemeSelect                                                          
+  - rsspecan_ConfigureDisplayMarkerTable
+  - rsspecan_HardcopyPrintNext
+  - rsspecan_HardcopyTimeDate
+  - rsspecan_ConfigureAutoAdjust
+  - rsspecan_QueryNdBQFactor
+  - rsspecan_ConfigurePowerChannelWeightingFilters
+  - rsspecan_TOISignalSearch
+  - rsspecan_ConfigureFastSEM
+  - rsspecan_StoreSEMPresetSettings
+  - rsspecan_ConfigureSEMUsedPowerClasses
+  - rsspecan_ConfigureSEMPowerClassCount
+  - rsspecan_ConfigureSEMPowerClassLimits
+  - rsspecan_ConfigureSEMPowerClassAllLimits
+  - rsspecan_QuerySEMPowerClassAllLimits
+  - rsspecan_ConfigureADemodZoomLength        
+  * Updates and fixes:
+  - rsspecan_QueryDeltaMarker
+  - rsspecan_ConfigureTriggerSource
+  - rsspecan_ConfigureIFPowerTriggerParameters
+  - rsspecan_ConfigureTVTrigger
+  - rsspecan_ConfigureExternalGate
+  - rsspecan_ConfigureRFInputCoupling
+  - rsspecan_ConfigureElectronicAttenuator
+  - rsspecan_ConfigurePreamplifierState
+  - rsspecan_InputProtectionReset
+  - rsspecan_ConfigureLimitLine
+  - rsspecan_ConfigureTransducerFactor
+  - rsspecan_GetTransducerFactorCatalog
+  - rsspecan_ReadYTrace
+  - rsspecan_FetchYTrace
+  - rsspecan_GetCurrentResults
+  - rsspecan_InitiateSEMMeasurement
+  - rsspecan_ConfigureMarkerNoiseMeasurement
+  - rsspecan_QueryMarkerNoiseMeasurementResult
+  - rsspecan_ConfigureMarkerFrequencyCounter
+  - rsspecan_QueryMarkerFrequencyCounterResult
+  - rsspecan_ConfigureListPowerAverageType
+  - rsspecan_ConfigureChannelPowerTrace
+  - rsspecan_ConfigureChannelPowerStandard
+  - rsspecan_QuerySignalStatisticResult
+  - rsspecan_ModulationDepthSignalSearch
+  - rsspecan_ConfigureHDistMeasurement
+  - rsspecan_ConfigurePWMExternalPowerTrigger
+  - rsspecan_Configure3GPPBSResultType
+  - rsspecan_ConfigureWlanStandard
+  - rsspecan_CreateWiMAXNewZone
+  - rsspecan_ConfigureWiMAXZone
+  - rsspecan_ServiceConfigureInput
+  - rsspecan_ServiceConfigurePulsedInput
+  - rsspecan_MemorySize
+  - rsspecan_ConfigureVerticalScale
+  - rsspecan_ConfigureSweepPoints
+  - rsspecan_ConfigureSignalTrack
+  - rsspecan_MarkerSearch
+  - rsspecan_MoveMarker
+  - rsspecan_SetInstrumentFromMarker
+  - rsspecan_LinkMarkerAndDeltamarker
+  - rsspecan_QueryMarker
+  - rsspecan_ProbabilityMarkerPosition
+  - rsspecan_ConfigureIFOutputSource
+  - rsspecan_ConfigureUnitPower
+  - rsspecan_ConfigureMarker
+  - rsspecan_ConfigureMarkerDemodulation
+  - rsspecan_ConfigureMarkerPeakList
+  - rsspecan_StoreMarkerPeakList
+  - rsspecan_QueryMarkerPeakListFound
+  - rsspecan_QueryMarkerPeakList
+  - rsspecan_ConfigureDeltaMarker
+  - rsspecan_ConfigureDeltaMarkerPosition
+  - rsspecan_DeltaMarkerSearch
+  - rsspecan_ConfigureSESweepListSweep
+  - rsspecan_ConfigureSESweepListLimits
+  - rsspecan_SEMMarkAllPeaks
+  - rsspecan_ConfigureSEMReferenceRange
+  - rsspecan_QuerySEMReferenceRangePosition
+  - rsspecan_ConfigureSEMPresetStandard
+  - rsspecan_RestoreSEMStandardFiles
+  - rsspecan_SEMSaveListToFile
+  - rsspecan_ConfigureADemodAFParam       
+
+  * Driver update for FSL Spectrum Analyzer firmware 1.90
+  * Added functions/attributes:
+  - rsspecan_ConfigureAttenuationMode
+  - rsspecan_ServiceVersionInfo
+  - rsspecan_NetworkMapDrive
+  - rsspecan_NetworkDisconnectDrive
+  - rsspecan_NetworkUnusedDrivesList
+  - rsspecan_NetworkUsedDrivesList
+  - rsspecan_NetworkShowFolderInfo
+  * Updates and fixes:
+  - rsspecan_ConfigureAveragingType
+  - rsspecan_ConfigureSubtractTraces
+  - rsspecan_ConfigureHardcopyDevice
+  - rsspecan_ConfigureSEM
+  - rsspecan_FileDirectoryPath        
+        
+2008-11-05 Martin Krcmar
+  * Version 1.0.1:
+  * Added functions/attributes:
+  - rsspecan_ReadScanMeasurement
+  - rsspecan_RunReceiverMeasurement
+        
+2008-10-06 Martin Krcmar
+  * Version 1.0.0:
+  * Initial release
