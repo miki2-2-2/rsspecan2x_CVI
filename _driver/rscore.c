@@ -8088,12 +8088,12 @@ Error:
 }
 
 /******************************************************************************************************/
-/*  RsCore_QueryBinaryOrAsciiFloatArraToUserBufferyWithOpc
+/*  RsCore_QueryBinaryOrAsciiFloatArraToUserBufferWithOpc
 	Same as RsCore_QueryBinaryOrAsciiFloatArrayWithOpc, but the response is copies to the user-allocated buffer
 	with limited size.
 	The responseArraySize can be set to NULL
 /******************************************************************************************************/
-ViStatus RsCore_QueryBinaryOrAsciiFloatArraToUserBufferyWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs,
+ViStatus RsCore_QueryBinaryOrAsciiFloatArraToUserBufferWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs,
 	ViInt32 userArraySize, ViReal64* userArray, ViInt32* responseArraySize)
 {
 	ViStatus error = VI_SUCCESS;

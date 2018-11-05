@@ -226,8 +226,7 @@ ViStatus rsspecan_dataReadTrace(ViSession instrSession, ViInt32 window, ViString
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC? %s", trace);
 	else
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC%ld? %s", window, trace);
-
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, &responseArray, noofPoints));
+		checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, &responseArray, noofPoints));
 	checkErr(rsspecan_CheckStatus(instrSession));
 	checkErr(RsCore_CopyToUserBufferBinData(instrSession, traceData, arrayLength * sizeof(ViReal64), responseArray, *noofPoints * sizeof(ViReal64)));
 
@@ -251,8 +250,7 @@ ViStatus rsspecan_dataReadTraceDynSize(ViSession instrSession, ViInt32 window, V
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC? %s", trace);
 	else
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC%ld? %s", window, trace);
-	
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, traceData, noofPoints));
+		checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, traceData, noofPoints));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:

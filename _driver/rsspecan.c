@@ -3799,7 +3799,7 @@ ViStatus _VI_FUNC rsspecan_QueryMarkerPeakList (ViSession instrSession,
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, peakListSelection), 5, "Peak List Selection");
         break;
     }
-	
+
 	checkErr(RsCore_QueryBinaryOrAsciiFloatArrayToUserBuffer(instrSession, cmd, arraySize, peakList, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -6422,7 +6422,7 @@ ViStatus _VI_FUNC rsspecan_DefineLimitLine(
     viCheckParm(RsCore_InvalidNullPointer(instrSession, xAxis), 5, "X Axis");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, amplitude), 6, "Amplitude");
 
-	snprintf (cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:LIM%ld:CONT ", limit);
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:LIM%ld:CONT ", limit);
 	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, cmd, xAxis, count));
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:LIM%ld:%s ", limit, limTypeArr [type]);
@@ -9090,7 +9090,7 @@ ViStatus _VI_FUNC rsspecan_Calibration (ViSession instrSession,
         checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
 
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_CALIBRATION, result),
-        		2, "Result");
+				2, "Result");
     }
     else
     {
@@ -9776,7 +9776,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureAutoAdjust (ViSession instrSession,
 
     if (RsCore_IsInstrumentModel(instrSession, "FSW"))
         sprintf (buffer, "FSW");
-    else 
+    else
 		sprintf (buffer, "FSV");
 
     switch (adjustSettings)
@@ -10369,7 +10369,6 @@ ViStatus _VI_FUNC rsspecan_GetCurrentResults(ViSession instrSession,
 	sscanf(response, "%Le,%Le", xValue, yValue);
 	checkErr(rsspecan_CheckStatus(instrSession));
 
-
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -10435,9 +10434,7 @@ ViStatus _VI_FUNC rsspecan_ReadTraceIQData (ViSession instrSession,
     checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckBeforeRead(instrSession, timeout));
-
-    checkErr(rsspecan_dataReadTraceIQ (instrSession, bufferSize, noofPoints,
-                    realPartsI, imaginaryPartsQ));
+    checkErr(rsspecan_dataReadTraceIQ (instrSession, bufferSize, noofPoints, realPartsI, imaginaryPartsQ));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -10467,8 +10464,8 @@ ViStatus _VI_FUNC rsspecan_FetchTraceIQData (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":FORM REAL,32;*CLS;:TRAC:IQ:DATA:MEM? %ld,%ld", offsetSamples, noofSamples);
-    checkErr(RsCore_Write(instrSession, cmd));
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":FORM REAL,32;:TRAC:IQ:DATA:MEM? %ld,%ld", offsetSamples, noofSamples);
+    checkErr(RsCore_QueryBinaryOrAsciiFloatArraToUserBuffer(instrSession, cmd));
 
     checkErr(rsspecan_dataReadTraceIQ (instrSession, bufferSize, noofPoints,
                     realPartsI, imaginaryPartsQ));
@@ -10478,95 +10475,6 @@ Error:
     return error;
 }
 
-/*****************************************************************************
- * Function:    Read Memory IQ Large Data
- * Purpose:     This function sets the transfer parameters and reads
- *              the data header.
- *****************************************************************************/
-ViStatus _VI_FUNC rsspecan_ReadMemoryIQLargeData (ViSession instrSession,
-                                                  ViInt32 window,
-                                                  ViUInt32  timeout,
-                                                  ViInt32 format,
-                                                  ViInt32 dataOrder,
-                                                  ViInt32 *no_ofPoints)
-{
-    ViStatus    error = VI_SUCCESS;
-    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViInt32     count = 0;
-    ViInt32     lenLength;
-
-    checkErr(RsCore_LockSession(instrSession));
-
-    viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
-    viCheckParm(RsCore_InvalidViInt32Range(instrSession, format, 0, 1),
-    		4, "Format");
-    viCheckParm(RsCore_InvalidViInt32Range(instrSession, dataOrder, 0, 2),
-    		5, "Data Order");
-
-    switch (format){
-        case RSSPECAN_VAL_FORMAT_ASC:
-            checkErr(RsCore_Write(instrSession, ":FORM ASC"));
-        break;
-        case RSSPECAN_VAL_FORMAT_REAL:
-            checkErr(RsCore_Write(instrSession, ":FORM REAL,32"));
-        break;
-    }
-
-    sprintf (buffer, "Win%ld", window);
-    if (!RsCore_IsInstrumentModel(instrSession, "FSL"))
-    {
-    	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_IQ_DATA_FORMAT, dataOrder),
-    			4, "Data Order");
-    }
-    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC%ld:IQ:DATA?", window);
-    checkErr(RsCore_Write(instrSession, cmd));
-    checkErr(rsspecan_CheckBeforeRead(instrSession, timeout));
-    switch (format){
-        case RSSPECAN_VAL_FORMAT_ASC:
-            count=-1;
-        break;
-        case RSSPECAN_VAL_FORMAT_REAL:
-            checkErr(viRead (instrSession, (ViPBuf)buffer, 2, (ViPUInt32) &count));
-            if (sscanf (buffer, "#%1ld", &lenLength) != 1)
-                viCheckErr(VI_ERROR_INV_RESPONSE);
-            checkErr(viRead (instrSession, (ViPBuf)buffer, lenLength, (ViPUInt32) &count));
-            buffer[lenLength]='\0';
-            if (sscanf (buffer, "%lu", &count) != 1)
-                viCheckErr(VI_ERROR_INV_RESPONSE);
-        break;
-    }
-    if (no_ofPoints) *no_ofPoints = count;
-
-Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
-}
-
-/*****************************************************************************
- * Function:    Read Memory IQ Large Data Block
- * Purpose:     This function will read I/Q trace data according format
- *              defined with function rsspecan_ReadMemoryIQLargeData.
- *****************************************************************************/
-ViStatus _VI_FUNC rsspecan_ReadMemoryIQLargeDataBlock (ViSession instrSession,
-                                                       ViInt32 bufferSize,
-                                                       ViChar returnedData[],
-                                                       ViInt32 *returnedCounts)
-{
-    ViStatus    error = VI_SUCCESS;
-    ViUInt32    count;
-
-    checkErr(RsCore_LockSession(instrSession));
-
-    error = viRead (instrSession, (ViPBuf)returnedData, bufferSize, &count);
-
-    if (returnedCounts)
-        *returnedCounts=count;
-
-Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
-}
 /*****************************************************************************
  * Function: Get Limit Check Result
  * Purpose:  This function queries the result of the limit check of the limit
@@ -12008,7 +11916,6 @@ ViStatus _VI_FUNC rsspecan_QueryACPAdjacentChannelLimitCheckResults (ViSession i
 	checkErr(RsCore_GetIndexOfToken(resultsString, ',', buf2, upperResult, NULL));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
-
 Error:
     (void)RsCore_UnlockSession(instrSession);
     return error;
@@ -13359,6 +13266,7 @@ ViStatus _VI_FUNC rsspecan_setStatusRegister (ViSession instrSession,
                 ViInt32 PTransition, ViInt32 NTransition)
 {
     ViStatus    error   = VI_SUCCESS;
+    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -13373,7 +13281,8 @@ ViStatus _VI_FUNC rsspecan_setStatusRegister (ViSession instrSession,
             viCheckParm(RsCore_InvalidViInt32Range(instrSession, selStatusReg, 0, 23),
             		3, "Questionable Register");
 
-            checkErr(viPrintf(instrSession, ":STAT:QUES%s:ENAB %ld;PTR %ld;NTR %ld\n", selStatusRegArr[selStatusReg], enable, PTransition, NTransition));
+            snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":STAT:QUES%s:ENAB %ld;PTR %ld;NTR %ld", selStatusRegArr[selStatusReg], enable, PTransition, NTransition);
+            checkErr(RsCore_Write(instrSession, cmd));
         break;
         case 2:
             viCheckParm(RsCore_InvalidViInt32Range(instrSession, enable, 0, 65535),
@@ -13383,7 +13292,8 @@ ViStatus _VI_FUNC rsspecan_setStatusRegister (ViSession instrSession,
             viCheckParm(RsCore_InvalidViInt32Range(instrSession, NTransition, 0, 65535),
             		6, "NTransition");
 
-            checkErr(viPrintf(instrSession, ":STAT:OPER:ENAB %ld;PTR %ld;NTR %ld\n", enable, PTransition, NTransition));
+            snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":STAT:OPER:ENAB %ld;PTR %ld;NTR %ld", enable, PTransition, NTransition);
+            checkErr(RsCore_Write(instrSession, cmd));
         break;
     }
 
@@ -13947,8 +13857,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureSESweepListPreamplifier (ViSession instrSess
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr (buffer, "B23") == NULL) && (strstr (buffer, "B24") == NULL) && (strstr (buffer, "B25") == NULL))
-        viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "B23|B24|B25"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, range, 1, 20),
     		2, "Range");
@@ -14683,7 +14592,7 @@ ViStatus _VI_FUNC rsspecan_ReadSEMListEvaluationResults (ViSession instrSession,
 
     pArray = malloc (values*sizeof (ViReal64));
     checkErr(RsCore_QueryBinaryOrAsciiFloatArrayToUserBuffer(instrSession, "TRAC:DATA? LIST", values, pArray, &retCnt));
-    
+
 	values = (retCnt>values)?values:retCnt;
     i=0;
     while (count<values)
@@ -15894,7 +15803,7 @@ ViStatus _VI_FUNC rsspecan_ServiceConfigureInput (ViSession instrSession,
 	if ((input == RSSPECAN_VAL_INPUT_CAL) && !(RsCore_IsInstrumentModel(instrSession, "FSL") || (rsspecan_IsFSV(instrSession))))
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_SERVICE_INPUT_LEVEL, level),
-			4, "Level");
+				4, "Level");
 	}
 
 Error:
@@ -16478,7 +16387,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureErrorChecking (ViSession instrSession,
 	RsCoreSessionPtr rsSession = NULL;
 
 	checkErr(RsCore_GetRsSession(instrSession, &rsSession));
-	
+
 	rsSession->optionChecking = optionChecking;
 	checkErr(RsCore_SetAttributeViBoolean(instrSession, "", RS_ATTR_QUERY_INSTRUMENT_STATUS, 0, statusChecking));
 	checkErr(RsCore_SetAttributeViBoolean(instrSession, "", RS_ATTR_RANGE_CHECK, 0, rangeChecking));
