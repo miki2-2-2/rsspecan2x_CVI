@@ -1770,34 +1770,6 @@ ViStatus _VI_FUNC rsspecan_TraceIQSet (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    //if (RsCore_InvalidViReal64Range (samplingRate, 10.0e3, 326.4e6) == VI_TRUE)
-    //    viCheckParm(RS_ERROR_INVALID_PARAMETER, 3, "Sampling Rate");
-    if ((RsCore_InvalidViInt32Range (triggerMode, 0, 4) == VI_TRUE)||(triggerMode==2))
-        viCheckParm(RS_ERROR_INVALID_PARAMETER, 4, "Trigger Mode");
-    viCheckParm(RsCore_InvalidViInt32Range(instrSession, triggerSlope, 0, 1),
-    		5, "Trigger Slope");
-
-    /*viCheckParm(RsCore_InvalidViReal64Range(instrSession, bandwidth, 10.0, 50.0e6), 6, "Bandwidth");
-    viCheckParm(RsCore_InvalidViInt32Range(instrSession, pretriggerSamples, -16744447, 65023), 7, "Pretrigger Samples");
-    if (strstr(buffer,"B102")!=NULL)
-    {
-        viCheckParm(RsCore_InvalidViInt32Range(instrSession, no_ofSamples, 1, 1409285632),
-        		8, "No Of Samples");
-    }
-    else
-    {
-        if (strstr(buffer,"B100")!=NULL)
-        {
-            viCheckParm(RsCore_InvalidViInt32Range(instrSession, no_ofSamples, 1, 469761536),
-            		8, "No Of Samples");
-        }
-        else
-        {
-            viCheckParm(RsCore_InvalidViInt32Range(instrSession, no_ofSamples, 1, 16776704),
-            		8, "No Of Samples");
-        }
-    }
-    */
     sprintf (cmd, "TRAC%ld:IQ:SET NORM,%.12lG,%.12lG,%s,%s,%ld,%ld\n",
             window, bandwidth, samplingRate, rsspecan_rngTriggerSource.rangeValues[triggerMode].cmdString,
             rsspecan_rngPolarity.rangeValues[triggerSlope].cmdString, pretriggerSamples, no_ofSamples);
@@ -4018,29 +3990,19 @@ Error:
                                                  ViInt32 *returnedValues)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViInt32     arrayLength = 0;
     ViReal64    *data = NULL;
-    ViInt32     retVal = 0;
-    ViInt32     i;
+	ViInt32     i, dataSize;
 
     checkErr(RsCore_LockSession(instrSession));
 
-    arrayLength = 3*noOfValues;
-    data = (ViReal64 *) malloc (sizeof(ViReal64)*arrayLength);
-    if (data == NULL)
-        return VI_ERROR_ALLOC;
+    checkErr(rsspecan_dataReadTraceDynSize(instrSession, 1, "FPE", &data, &dataSize));
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 1, "FPE", arrayLength,
-                    data, &retVal));
+	dataSize /= 3;
 
-    if (returnedValues)
-        *returnedValues = retVal / 3; // Three result arrays
+	if (returnedValues)
+		*returnedValues = dataSize; // Three result arrays
 
-    retVal = (retVal>arrayLength)?arrayLength:retVal;
-
-    retVal /=3;
-
-    for (i = 0; i < retVal; i++)
+    for (i = 0; i < dataSize; i++)
     {
         frequency[i] = data[i*3];
         level[i] = data[i*3+1];
@@ -6389,8 +6351,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureLimitLine(
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr (model, "FSL") != NULL)
+    if (RsCore_IsInstrumentModel(instrSession, "FSL"))
         tmp_units=15;
+
     if (rsspecan_IsFSV (instrSession))
         tmp_units=15;
 
@@ -16256,8 +16219,7 @@ ViStatus _VI_FUNC rsspecan_ServiceConfigureCombGenerator (ViSession instrSession
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr (model, "FSL") == NULL)
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
 
     sprintf (buffer, "Win%ld", window);
 
