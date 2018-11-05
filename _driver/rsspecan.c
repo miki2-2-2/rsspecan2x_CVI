@@ -96,20 +96,20 @@ static ViString messageTypeArr[] =  {"ALL", "INFO", "WARN", "ERR", "FAT", "MESS"
 ViStatus _VI_FUNC rsspecan_init (ViRsrc resourceName, ViBoolean IDQuery,
                                  ViBoolean resetDevice, ViSession *newInstrSession)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (newInstrSession == VI_NULL)
-        {
-        (void) Rs_SetErrorInfo (VI_NULL, VI_FALSE, RS_ERROR_INVALID_PARAMETER,
-                          VI_ERROR_PARAMETER4, "Null address for Instrument Handle");
-        checkErr( RS_ERROR_INVALID_PARAMETER);
-        }
+	if (newInstrSession == NULL)
+	{
+		(void)RsCore_SetErrorInfo(0, VI_FALSE, RS_ERROR_INVALID_PARAMETER,
+		                          VI_ERROR_PARAMETER4, "Null address for Instrument Handle");
 
-    checkErr( rsspecan_InitWithOptions (resourceName, IDQuery, resetDevice,
-                                      "QueryInstrStatus=1", newInstrSession));
+		checkErr(RS_ERROR_INVALID_PARAMETER);
+	}
+
+	checkErr(rsspecan_InitWithOptions(resourceName, IDQuery, resetDevice, "", newInstrSession));
 
 Error:
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -125,110 +125,96 @@ ViStatus _VI_FUNC rsspecan_InitWithOptions(
     ViSession      *newInstrSession
 )
 {
-    ViStatus                error = VI_SUCCESS;
-    ViChar                  newResourceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar                  newOptionString[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViBoolean               isLogicalName = 0;
-    ViSession               instrSession = 0, rmSession = 0;
-    RsAttrPropertiesPtr     *attrList=NULL;
-    RsRepCapPtr             repCapTable = NULL;
-    
-    if (newInstrSession == VI_NULL)
-        {
-        (void) Rs_SetErrorInfo (VI_NULL, VI_FALSE, RS_ERROR_INVALID_PARAMETER,
-                         VI_ERROR_PARAMETER5, "Null address for Instrument Handle");
-        checkErr( RS_ERROR_INVALID_PARAMETER);
-        }
+	ViStatus error = VI_SUCCESS;
+	ViSession instrSession = 0;
+	RsCoreSessionPtr rsSession = NULL;
 
-    /* Prepare resource manager session handle */
-    checkErr (viOpenDefaultRM (&rmSession));
+	if (newInstrSession == NULL)
+	{
+		(void)RsCore_SetErrorInfo(0, VI_FALSE, RS_ERROR_INVALID_PARAMETER, VI_ERROR_PARAMETER5,
+		                          "Null address for Instrument Handle");
+		checkErr(RS_ERROR_INVALID_PARAMETER);
+	}
 
-    /* Establish communication session with the instrument */
+	*newInstrSession = 0;
 
-    viCheckErr( viOpen (rmSession, resourceName, VI_NULL, VI_NULL, &instrSession));
-    
-    /* Configure VISA Formatted I/O */
-    viCheckErr( viSetAttribute (instrSession, VI_ATTR_TMO_VALUE, 5000 ));
-    viCheckErr( viSetBuf (instrSession, (ViUInt16) (VI_READ_BUF | VI_WRITE_BUF), 4000));
-    viCheckErr( viSetAttribute (instrSession, VI_ATTR_WR_BUF_OPER_MODE, VI_FLUSH_ON_ACCESS));
-    viCheckErr( viSetAttribute (instrSession, VI_ATTR_RD_BUF_OPER_MODE, VI_FLUSH_ON_ACCESS));
+	checkErr(RsCore_NewSpecificDriver(
+		resourceName, // VISA Resource Name
+		"rsspecan", // driver prefix
+		optionString, // Init Options string, is applied to the session settings
+		rsspecan_RsCoreAttributeList, // List of all attributes from the rsxxx_AttrPropertiesList
+		0, // WriteDelay
+		0, // ReadDelay
+		1000000, // IO Segment Size
+		RS_VAL_OPCWAIT_STBPOLLING, // OPC Wait Mode
+		RSSPECAN_OPC_TIMEOUT, // OPC timeout
+		5000, // VISA Timeout
+		600000, // Self-test timeout
+		RS_VAL_BIN_FLOAT_FORMAT_SINGLE_4BYTES, // BinaryFloatNumbersFormat
+		RS_VAL_BIN_INTEGER_FORMAT_INT32_4BYTES, // binaryIntegerNumbersFormat
+		&instrSession));
 
-    checkErr( Rs_GetInfoFromResourceName (resourceName,
-                                          (ViString)optionString,
-                                          newResourceName,
-                                          newOptionString,
-                                          &isLogicalName));
-    
-    ATTRLIST(attrList,rsspecan);  
-    checkErr( Rs_SpecificDriverNew (instrSession, "rsspecan", newOptionString, attrList));
-    
-    /* Build repeated capability table */
-    REPCAPTABLE(repCapTable,rsspecan);
-    checkErr( Rs_BuildRepCapTable (instrSession, repCapTable));
+	checkErr(RsCore_GetRsSession(instrSession, &rsSession));
 
-    /* With remote control via Ethernet, remote control is not automatically
-       set by means of a command. The instrument must be explicitly set to
-       the REMOTE state, e.g. by sending the intf command &GTR
-    */
-    /*- Reset instrument ----------------------------------------------------*/
-    if (resetDevice == VI_TRUE)
-    {
-        checkErr( rsspecan_reset (instrSession));
-    }
-    else  /*- Send Default Instrument Setup ---------------------------------*/
-        checkErr( rsspecan_DefaultInstrSetup (instrSession));
+	// No SCPI command has been sent yet.
+	// Call viClear before sending any SCPI command
+	checkErr(RsCore_ViClear(instrSession));
 
-    /*- Identification Query ------------------------------------------------*/
-    if (IDQuery == VI_TRUE)
-        {
-        ViChar rdBuffer[RSSPECAN_IO_BUFFER_SIZE] = "";
+	/* --- Here perform settings that are default for this driver,
+	but can be overwritten by the optionsString settings */
 
-        checkErr( Rs_GetAttribute (instrSession, VI_NULL, (ViAttr) RSSPECAN_ATTR_ID_QUERY_RESPONSE,
-                                   0, RSSPECAN_IO_BUFFER_SIZE, rdBuffer));
+	rsSession->autoSystErrQuery = VI_FALSE;
 
-        if (strncmp (rdBuffer, RSSPECAN_VALID_ID_RESPONSE_STRING, strlen(RSSPECAN_VALID_ID_RESPONSE_STRING)) != 0)
-            {
-            viCheckErr( VI_ERROR_FAIL_ID_QUERY);
-            }
-        }
+	// Parse option string and optionally sets the initial state of the following session attributes
+	checkErr(RsCore_ApplyOptionString(instrSession, optionString));
+	checkErr(RsCore_BuildRepCapTable(instrSession, rsspecan_RsCoreRepCapTable));
 
-    if (isLogicalName == VI_FALSE)
-        {
-        ViInt32 oldFlag = 0;
+	//Parameter idnModelFullName determines RS_ATTR_INSTRUMENT_MODEL value:
+	// VI_FALSE: RS_ATTR_INSTRUMENT_MODEL = "RTO"
+	// VI_TRUE: RS_ATTR_INSTRUMENT_MODEL = "RTO2044"
+	// This is important for CheckInstrumentModel() function used in all attributes and some hi-level functions
+	checkErr(RsCore_QueryAndParseIDNstring(instrSession, RSSPECAN_ATTR_ID_QUERY_RESPONSE, RSSPECAN_SIMULATION_ID_QUERY, VI_FALSE, NULL));
 
-        checkErr (Rs_GetAttributeFlags (instrSession, RS_ATTR_IO_RESOURCE_DESCRIPTOR, &oldFlag));
-        checkErr (Rs_SetAttributeFlags (instrSession, RS_ATTR_IO_RESOURCE_DESCRIPTOR, oldFlag & 0xfffb | 0x0010));
-        checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_IO_RESOURCE_DESCRIPTOR, 0, newResourceName));
-        }
-    
+	// Query OPT string, parse the options, remove the duplicates,
+	// sort them and store the result string to RS_ATTR_OPTIONS_LIST
+	checkErr(RsCore_QueryAndParseOPTstring(instrSession, RSSPECAN_SIMULATION_OPT_QUERY, RS_VAL_OPTIONS_PARSING_KEEP_AFTER_DASH));
 
-    if (isLogicalName == VI_TRUE)
-        checkErr( Rs_ApplyDefaultSetup (instrSession));
+	// Default Instrument Setup + optional *RST
+	if (resetDevice == VI_TRUE)
+	{
+		checkErr(rsspecan_reset(instrSession));
+	}
+	else
+	{
+		checkErr(rsspecan_DefaultInstrSetup(instrSession));
+	}
 
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_VISA_RM_SESSION, 0, &rmSession));
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_IO_SESSION, 0, &instrSession));
+	if (IDQuery == VI_TRUE)
+	{
+		checkErr(RsCore_FitsIDNpattern(instrSession, RSSPECAN_ATTR_ID_QUERY_RESPONSE, RSSPECAN_VALID_ID_RESPONSE_STRING, NULL));
+	}
 
-    /* Instrument session accessible by the end user is native VISA session,
-       or when simulated virtual instrument (vi) session. */
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
+	if (error < VI_SUCCESS)
+	{
+		if (error == RS_ERROR_INSTRUMENT_STATUS && rsSession->autoSystErrQuery == VI_FALSE)
+		{
+			rsSession->autoSystErrQuery = VI_TRUE;
+			(void)rsspecan_CheckStatus(instrSession);
+			rsSession->autoSystErrQuery = VI_FALSE;
+		}
 
-    if (error < VI_SUCCESS)
-    {
-        ViSession   rmSess = VI_NULL;
-        
-        (void) Rs_GetAttribute (instrSession, VI_NULL, RS_ATTR_VISA_RM_SESSION, 0, (ViInt32) sizeof (rmSess), &rmSess);
-        (void) Rs_Dispose (instrSession); 
-        if (instrSession != 0)
-            (void) viClose (instrSession);
-        (void) viClose (rmSess);
-    }
-    else
-    {
-        *newInstrSession = instrSession;
-    }
-    
-    return error;
+		if (instrSession != 0)
+			(void)RsCore_ViClose(instrSession);
+	}
+	else
+	{
+		*newInstrSession = instrSession;
+	}
+
+	return error;
 }
 
 /*===========================================================================*
@@ -9549,54 +9535,19 @@ Error:
                                                      ViString source,
                                                      ViString destination)
 {
-    ViStatus    error = VI_SUCCESS;
-    ViInt32     count = 0;
-    ViUInt32    ret_count = 0;
-    ViUInt32    length = 0;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    ViUInt16 intfc = VI_INTF_GPIB;     
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    if (!source)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Source");
-    if (!destination)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Destination");    
-    checkErr (viGetAttribute (instrSession, VI_ATTR_INTF_TYPE, &intfc));
-    switch (intfc)
-    {
-        case VI_INTF_ASRL: /* Serial intfc. */
-            viCheckErr( viSetAttribute (instrSession, VI_ATTR_ASRL_END_IN, VI_ASRL_END_NONE));
-        break;
-    }
-    viCheckErr( viSetAttribute (instrSession, VI_ATTR_TERMCHAR_EN, VI_FALSE));
-    
-    viCheckErr (viPrintf(instrSession, ":MMEMory:DATA? '%s'\n", source));
-    //Read header       
-    viCheckErr (viRead(instrSession, (ViPBuf)buffer, 2,  &ret_count));
-    if (sscanf (buffer, "#%1ld", &count) != 1)
-        checkErr(RS_ERROR_UNEXPECTED_RESPONSE); 
-    viCheckErr (viRead (instrSession, (ViPBuf)buffer, (ViUInt32) count, &ret_count));
-    if (sscanf (buffer, "%lu", &length)  != 1)
-        checkErr(RS_ERROR_UNEXPECTED_RESPONSE);     
-    viCheckErr(Rs_ReadToFile(instrSession, destination, (ViInt32) length, RS_VAL_TRUNCATE, &count)); 
-    //Read \n and \r
-    viCheckErr (viRead (instrSession, (ViPBuf)buffer, 2, &ret_count)); 
-    if (count!=(ViInt32) length)
-        checkErr(RS_ERROR_UNEXPECTED_RESPONSE);         
-    viSetAttribute (instrSession, VI_ATTR_TERMCHAR_EN, VI_TRUE);        
-    checkErr( rsspecan_CheckStatus (instrSession));
-  
+	ViStatus error = VI_SUCCESS;
+	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
+
+	checkErr(RsCore_LockSession(instrSession));
+
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "MMEMory:DATA? '%s'", source);
+	checkErr(RsCore_QueryBinaryDataBlockToFile(instrSession, cmd, destination, RS_VAL_TRUNCATE));
+
+	checkErr(rsspecan_CheckStatus(instrSession));
+
 Error:
-    viSetAttribute (instrSession, VI_ATTR_TERMCHAR_EN, VI_TRUE);
-    switch (intfc)
-    {
-        case VI_INTF_ASRL:
-            viSetAttribute (instrSession, VI_ATTR_ASRL_END_IN, VI_ASRL_END_TERMCHAR);
-        break;    
-    }  
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
-    
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*****************************************************************************
@@ -9609,43 +9560,19 @@ Error:
                                                       ViString source,
                                                       ViString destination)
 {
-    ViStatus    error = VI_SUCCESS;
-    ViInt32     count = 0;
-    ViUInt32    digits = 0;
-    FILE        *sourceFile = NULL;
-    ViUInt32    fileSize            = 0;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    if (!source)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Source");
-    if (!destination)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Destination");  
-        
-    /* Open source file from host controller */
-    if ((sourceFile = fopen (source, "rb")) == NULL)
-        viCheckErr(RS_ERROR_CANNOT_OPEN_FILE);
+	ViStatus error = VI_SUCCESS;
+	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
-    /* Get size of file */
-    (void) fseek (sourceFile, 0, SEEK_END);
-    fileSize = (ViUInt32) ftell (sourceFile);
-    (void) fseek (sourceFile, 0, SEEK_SET);
+	checkErr(RsCore_LockSession(instrSession));
 
-    /* Create command header */
-    digits = (ViUInt32) ((int)floor(log10((double)fileSize))) + 1;
-    viCheckErr (viPrintf (instrSession, ":MMEM:DATA '%s',#%ld%ld", destination, digits, fileSize));
-    
-    viCheckErr (Rs_WriteFromFile(instrSession, source, (ViInt32) fileSize, 0, &count));
-    if (count!=(ViInt32) fileSize)
-        viCheckErr (RS_ERROR_WRITING_FILE);     
-        
-    checkErr( rsspecan_CheckStatus (instrSession));
- 
- Error:
-    if (sourceFile) (void) fclose (sourceFile);
-    
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
-    
-    return error;
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "MMEM:DATA '%s',", destination);
+	checkErr(RsCore_WriteBinaryDataFromFile(instrSession, cmd, source));
+
+	checkErr(rsspecan_CheckStatus(instrSession));
+
+Error:
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*****************************************************************************
@@ -10847,35 +10774,65 @@ Error:
 ViStatus _VI_FUNC rsspecan_SetAttributeViInt32 (ViSession instrSession, ViString channelName,
                                                 ViUInt32 attributeId, ViInt32 value)
 {
-    return Rs_SetAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, &value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+
+	error = RsCore_SetAttributeViInt32(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /* ViReal64 */
 ViStatus _VI_FUNC rsspecan_SetAttributeViReal64 (ViSession instrSession, ViString channelName,
                                                  ViUInt32 attributeId, ViReal64 value)
 {
-     return Rs_SetAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, &value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+
+	error = RsCore_SetAttributeViReal64(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /* ViString */
 ViStatus _VI_FUNC rsspecan_SetAttributeViString (ViSession instrSession, ViString channelName,
                                                  ViUInt32 attributeId, ViString value)
 {
-    return Rs_SetAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+
+	error = RsCore_SetAttributeViString(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /* ViBoolean */
 ViStatus _VI_FUNC rsspecan_SetAttributeViBoolean (ViSession instrSession, ViString channelName,
                                                   ViUInt32 attributeId, ViBoolean value)
 {
-    return Rs_SetAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, &value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+
+	error = RsCore_SetAttributeViBoolean(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /* ViSession */
 ViStatus _VI_FUNC rsspecan_SetAttributeViSession (ViSession instrSession, ViString channelName,
                                                   ViUInt32 attributeId, ViSession value)
 {
-    return Rs_SetAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, &value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+
+	error = RsCore_SetAttributeViSession(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*****************************************************************************
@@ -10889,16 +10846,25 @@ ViStatus _VI_FUNC rsspecan_SetAttributeViSession (ViSession instrSession, ViStri
 ViStatus _VI_FUNC rsspecan_GetAttributeViInt32 (ViSession instrSession, ViString channelName,
                                                 ViUInt32 attributeId, ViInt32 *value)
 {
-    return Rs_GetAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL,
-                            (ViInt32) sizeof (ViInt32), (ViInt32 *)value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+	error = RsCore_GetAttributeViInt32(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /* ViReal64 */
 ViStatus _VI_FUNC rsspecan_GetAttributeViReal64 (ViSession instrSession, ViString channelName,
                                                  ViUInt32 attributeId, ViReal64 *value)
 {
-    return Rs_GetAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL,
-                            (ViInt32) sizeof (ViReal64), (ViReal64 *)value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+
+	error = RsCore_GetAttributeViReal64(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /* ViString */
@@ -10906,24 +10872,40 @@ ViStatus _VI_FUNC rsspecan_GetAttributeViString (ViSession instrSession, ViStrin
                                                  ViUInt32 attributeId, ViInt32 bufSize,
                                                  ViChar value[])
 {
-    return Rs_GetAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL,
-                            bufSize, value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+
+	error = RsCore_GetAttributeViString(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, bufSize,
+	                                    value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /* ViBoolean */
 ViStatus _VI_FUNC rsspecan_GetAttributeViBoolean (ViSession instrSession, ViString channelName,
                                                   ViUInt32 attributeId, ViBoolean *value)
 {
-    return Rs_GetAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL,
-                            (ViInt32) sizeof (ViBoolean), (ViBoolean *)value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+
+	error = RsCore_GetAttributeViBoolean(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /* ViSession */
 ViStatus _VI_FUNC rsspecan_GetAttributeViSession (ViSession instrSession, ViString channelName,
                                                   ViUInt32 attributeId, ViSession *value)
 {
-    return Rs_GetAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL,
-                            (ViInt32) sizeof (ViSession), (ViSession *)value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+
+	error = RsCore_GetAttributeViSession(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*****************************************************************************
@@ -10939,35 +10921,65 @@ ViStatus _VI_FUNC rsspecan_GetAttributeViSession (ViSession instrSession, ViStri
 ViStatus _VI_FUNC rsspecan_CheckAttributeViInt32 (ViSession instrSession, ViString channelName,
                                                   ViUInt32 attributeId, ViInt32 value)
 {
-    return Rs_CheckAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, &value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+
+	error = RsCore_CheckAttributeViInt32(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /* ViReal64 */
 ViStatus _VI_FUNC rsspecan_CheckAttributeViReal64 (ViSession instrSession, ViString channelName,
                                                    ViUInt32 attributeId, ViReal64 value)
 {
-    return Rs_CheckAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, &value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+
+	error = RsCore_CheckAttributeViReal64(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /* ViString */
 ViStatus _VI_FUNC rsspecan_CheckAttributeViString (ViSession instrSession, ViString channelName,
                                                    ViUInt32 attributeId, ViString value)
 {
-    return Rs_CheckAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+
+	error = RsCore_CheckAttributeViString(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /* ViBoolean */
 ViStatus _VI_FUNC rsspecan_CheckAttributeViBoolean (ViSession instrSession, ViString channelName,
                                                     ViUInt32 attributeId, ViBoolean value)
 {
-    return Rs_CheckAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, &value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+
+	error = RsCore_CheckAttributeViBoolean(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /* ViSession */
 ViStatus _VI_FUNC rsspecan_CheckAttributeViSession (ViSession instrSession, ViString channelName,
                                                     ViUInt32 attributeId, ViSession value)
 {
-    return Rs_CheckAttribute (instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, &value);
+	ViStatus error = VI_SUCCESS;
+	(void)RsCore_LockSession(instrSession);
+
+	error = RsCore_CheckAttributeViSession(instrSession, channelName, attributeId, RS_VAL_DIRECT_USER_CALL, value);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*****************************************************************************
@@ -10981,20 +10993,15 @@ ViStatus _VI_FUNC rsspecan_GetAttributeRepeatedCapabilityIds (ViSession instrSes
                                                             ViInt32 bufferSize,
                                                             ViChar _VI_FAR repeatedCapabilityIds[])
 {
-    ViStatus    error = VI_SUCCESS;
-    ViChar      repCapNameId[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViStatus error = VI_SUCCESS;
 
-    if (bufferSize <= 0)
-        viCheckParm(RS_ERROR_INVALID_PARAMETER, 3, "Buffer Size");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, bufferSize, 1, RS_MAX_SHORT_MESSAGE_BUF_SIZE),
+			3, "Buffer Size");
 
-    viCheckErr (Rs_GetAttributeRepCapNameId (instrSession, attributeID, repCapNameId));
-
-    strncpy (repeatedCapabilityIds, repCapNameId, RS_MAX_MESSAGE_BUF_SIZE);
-    repeatedCapabilityIds[(bufferSize > RS_MAX_MESSAGE_BUF_SIZE) ?
-        RS_MAX_MESSAGE_BUF_SIZE : bufferSize] = '\0';
+	checkErr(RsCore_GetAttributeRepCapNameIds(instrSession, attributeID, bufferSize, repeatedCapabilityIds));
 
 Error:
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -11010,23 +11017,19 @@ ViStatus _VI_FUNC rsspecan_GetAttributeRepeatedCapabilityIdNames (ViSession inst
                                                                 ViInt32 bufferSize,
                                                                 ViChar _VI_FAR repeatedCapabilityIdNames[])
 {
-    ViStatus    error = VI_SUCCESS;
-    ViChar      repCapName[3*RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViStatus error = VI_SUCCESS;
 
-    if (bufferSize <= 0)
-        viCheckParm(RS_ERROR_INVALID_PARAMETER, 4, "Buffer Size");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, bufferSize, 1, RS_MAX_SHORT_MESSAGE_BUF_SIZE),
+			4, "Buffer Size");
 
-    viCheckErr (Rs_GetAttributeRepCapName (instrSession,
-                                           attributeID,
-                                           repeatedCapabilityId,
-                                           repCapName));
-
-    strncpy (repeatedCapabilityIdNames, repCapName, 3*RS_MAX_MESSAGE_BUF_SIZE);
-    repeatedCapabilityIdNames[(bufferSize > 3*RS_MAX_MESSAGE_BUF_SIZE) ?
-        3*RS_MAX_MESSAGE_BUF_SIZE : bufferSize] = '\0';
+	checkErr(RsCore_GetAttributeRepCapNamesAll(instrSession,
+		attributeID,
+		repeatedCapabilityId,
+		bufferSize,
+		repeatedCapabilityIdNames));
 
 Error:
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -14373,18 +14376,20 @@ ViStatus _VI_FUNC rsspecan_QueryViBoolean (ViSession instrSession,
                                            ViString command, 
                                            ViBoolean *value)
 {
-    ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    if (strlen(command)==0)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Command");
-    if (value==VI_NULL)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Value");
-    viCheckErr (viQueryf (instrSession, "%s\n", "%d", command, value));
-    checkErr( rsspecan_CheckStatus (instrSession)); 
+	ViStatus error = VI_SUCCESS;
+
+	checkErr(RsCore_LockSession(instrSession));
+
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, (ViInt32)strlen(command), 1, 10000000), 2, "Command (null string length)");
+	viCheckParm(RsCore_InvalidNullPointer(instrSession, value), 3, "Value");
+
+	checkErr(RsCore_QueryViBoolean(instrSession, command, value));
+
+	checkErr(rsspecan_CheckStatus(instrSession));
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*****************************************************************************
@@ -14395,18 +14400,20 @@ ViStatus _VI_FUNC rsspecan_QueryViInt32 (ViSession instrSession,
                                          ViString command, 
                                          ViInt32 *value)
 {
-    ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    if (strlen(command)==0)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Command");
-    if (value==VI_NULL)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Value");
-    viCheckErr (viQueryf (instrSession, "%s\n", "%ld", command, value));
-    checkErr( rsspecan_CheckStatus (instrSession)); 
+	ViStatus error = VI_SUCCESS;
+
+	checkErr(RsCore_LockSession(instrSession));
+
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, (ViInt32)strlen(command), 1, 10000000), 2, "Command (null string length)");
+	viCheckParm(RsCore_InvalidNullPointer(instrSession, value), 3, "Value");
+
+	checkErr(RsCore_QueryViInt32(instrSession, command, value));
+
+	checkErr(rsspecan_CheckStatus(instrSession));
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*****************************************************************************
@@ -14417,18 +14424,20 @@ ViStatus _VI_FUNC rsspecan_QueryViReal64 (ViSession instrSession,
                                           ViString command, 
                                           ViReal64 *value)
 {
-    ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    if (strlen(command)==0)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Command");
-    if (value==VI_NULL)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Value");
-    viCheckErr (viQueryf (instrSession, "%s\n", "%le", command, value));
-    checkErr( rsspecan_CheckStatus (instrSession)); 
+	ViStatus error = VI_SUCCESS;
+
+	checkErr(RsCore_LockSession(instrSession));
+
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, (ViInt32)strlen(command), 1, 10000000), 2, "Command (null string length)");
+	viCheckParm(RsCore_InvalidNullPointer(instrSession, value), 3, "Value");
+
+	checkErr(RsCore_QueryViReal64(instrSession, command, value));
+
+	checkErr(rsspecan_CheckStatus(instrSession));
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 
@@ -14441,33 +14450,26 @@ ViStatus _VI_FUNC rsspecan_QueryViString (ViSession instrSession,
                                           ViInt32 bufferSize,
                                           ViChar _VI_FAR value[])
 {
-    ViStatus    error = VI_SUCCESS;
-    ViChar      *pbuffer = NULL;
-    ViUInt32        bytesRead;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL)); 
-    if (strlen(command)==0)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 2, "Command");
-    if (value==VI_NULL)
-        viCheckParm (RS_ERROR_INVALID_PARAMETER, 3, "Value");
-    viCheckErr (viPrintf (instrSession, "%s\n", command));
-    viCheckErr(Rs_ReadDataUnknownLength (instrSession, &pbuffer, &bytesRead));  
-    if (bytesRead>=(ViUInt32)bufferSize)
-    {
-        strncpy(value, pbuffer, (size_t) (bufferSize-1));
-        value[bufferSize-1]='\0';
-        error = (ViStatus) (bytesRead+1);
-    } 
-    else
-    {
-        strncpy(value, pbuffer, (size_t) bytesRead); 
-        value[bytesRead]='\0';   
-    }
-    checkErr( rsspecan_CheckStatus (instrSession)); 
+	ViStatus error = VI_SUCCESS;
+	ViChar* response = NULL;
+
+	checkErr(RsCore_LockSession(instrSession));
+
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, (ViInt32)strlen(command), 1, 10000000), 2, "Command (null string length)");
+	viCheckParm(RsCore_InvalidNullPointer(instrSession, value), 3, "Value");
+
+	checkErr(RsCore_QueryViStringUnknownLength(instrSession, command, &response));
+
+	checkErr(rsspecan_CheckStatus(instrSession));
+
+	checkErr(RsCore_CopyToUserBufferAsciiData(instrSession, value, bufferSize, response));
+
 Error:
-    if (pbuffer) free (pbuffer);
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
-    return error;
+	if (response)
+		free(response);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*Status Register Subsystem */
@@ -14833,17 +14835,17 @@ Error:
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_close (ViSession instrSession)
 {
-    ViStatus    error   = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    checkErr( rsspecan_RsClose (instrSession));
+	checkErr(RsCore_LockSession(instrSession));
+
+	checkErr(RsCore_ViClose(instrSession));
 
 Error:
+	(void)RsCore_Dispose(instrSession);
+	(void)RsCore_UnlockSession(instrSession);
 
-    (void) Rs_UnlockSession (instrSession, VI_NULL);
-    (void) Rs_Dispose (instrSession);
-
-    return error;
+	return error;
 }
 
 /*===========================================================================*
@@ -17659,23 +17661,25 @@ Error:
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_reset (ViSession instrSession)
 {
-    ViStatus    error   = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+	checkErr(RsCore_LockSession(instrSession));
 
-    if (Rs_Simulating(instrSession) == 0)                /* call only when locked */
-        {
-        viCheckErr( viPrintf (instrSession, "*RST\n"));
-        }
+	if (RsCore_Simulating(instrSession) == VI_FALSE)
+	{
+		checkErr(rsspecan_ClearStatus(instrSession));
+		checkErr(RsCore_Write(instrSession, "*RST"));
+		checkErr(RsCore_QueryViStringShort(instrSession, "*OPC?", NULL));
+	}
 
-    checkErr( rsspecan_DefaultInstrSetup (instrSession));
-    checkErr( rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_DefaultInstrSetup(instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 
-    (void) Rs_UnlockSession (instrSession, VI_NULL);
+	(void)RsCore_UnlockSession(instrSession);
 
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -17728,43 +17732,20 @@ Error:
 ViStatus _VI_FUNC rsspecan_self_test (ViSession instrSession, ViInt16 *testResult,
                                       ViChar testMessage[])
 {
-    ViStatus    error   = VI_SUCCESS;
-    ViChar response[10];
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+	ViStatus error = VI_SUCCESS;
 
-    if (testResult == NULL)
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Null address for Test Result");
-    if (testMessage == NULL)
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 3, "Null address for Test Message");
+	checkErr(RsCore_LockSession(instrSession));
 
-    if (Rs_Simulating(instrSession) == 0)                /* call only when locked */
-        {
-        checkErr (Rs_ClearBeforeRead(instrSession));
-        viCheckErr( viPrintf (instrSession, "*TST?;*OPC\n"));
-        viCheckErr( rsspecan_WaitForOPC (instrSession, 600000));  
-        viCheckErr( viScanf (instrSession, "%hd", testResult));
-        if (*testResult == 0)
-            strcpy (testMessage, "Self-Test Passed.");
-        else
-            strcpy (testMessage, "Self-Test Failed.");
-        
-        }
-    else
-        {
-        /* Simulate Self Test */
-        *testResult = 0;
-        strcpy (testMessage, "No error.");
-        }
+	viCheckParm(RsCore_InvalidNullPointer(instrSession, testResult), 2, "Null address for Test Result");
+	viCheckParm(RsCore_InvalidNullPointer(instrSession, testMessage), 3, "Null address for Test Message");
 
-    checkErr( rsspecan_CheckStatus (instrSession));
-        
-    checkErr (Rs_WriteInstrData(instrSession, "*ESR?\n"));
-    checkErr (Rs_ReadInstrData(instrSession, 10, response, NULL));
+	checkErr(RsCore_SelfTest(instrSession, testResult, 48, testMessage));
+
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*****************************************************************************
@@ -17806,23 +17787,22 @@ Error:
 ViStatus _VI_FUNC rsspecan_revision_query (ViSession instrSession, ViChar driverRev[],
                                            ViChar instrRev[])
 {
-    ViStatus    error   = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+	checkErr(RsCore_LockSession(instrSession));
 
-    if (driverRev == VI_NULL)
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Null address for Driver Revision");
-    if (instrRev == VI_NULL)
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 3, "Null address for Instrument Revision");
+	viCheckParm(RsCore_InvalidNullPointer(instrSession, driverRev), 2, "Null address for Driver Revision");
+	viCheckParm(RsCore_InvalidNullPointer(instrSession, instrRev), 3, "Null address for Instrument Revision");
 
-    checkErr( Rs_GetAttribute (instrSession, VI_NULL, RSSPECAN_ATTR_SPECIFIC_DRIVER_REVISION,
-                                        0, 256, driverRev));
-    checkErr( Rs_GetAttribute (instrSession, "", RSSPECAN_ATTR_INSTRUMENT_FIRMWARE_REVISION,
-                                        0, 256, instrRev));
+	checkErr(RsCore_GetAttributeViString(instrSession, NULL, RSSPECAN_ATTR_SPECIFIC_DRIVER_REVISION,
+		0, 256, driverRev));
+	checkErr(RsCore_GetAttributeViString(instrSession, "", RSSPECAN_ATTR_INSTRUMENT_FIRMWARE_REVISION,
+		0, 256, instrRev));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*****************************************************************************
@@ -17869,18 +17849,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureErrorChecking (ViSession instrSession,
                                                   ViBoolean rangeChecking,
                                                   ViBoolean statusChecking)
 {
-    ViStatus    error = VI_SUCCESS;
-    ViInt32     p2value         = 0;
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+	ViStatus error = VI_SUCCESS;
+	RsCoreSessionPtr rsSession = NULL;
 
-    sessionProperties -> optionChecking = optionChecking;
-    p2value = (ViInt32) statusChecking;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_QUERY_INSTRUMENT_STATUS, 0, &p2value));
-    p2value = (ViInt32) rangeChecking;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_RANGE_CHECK, 0, &p2value));
-    
+	checkErr(RsCore_GetRsSession(instrSession, &rsSession));
+	rsSession->optionChecking = optionChecking;
+	checkErr(RsCore_SetAttributeViBoolean(instrSession, "", RS_ATTR_QUERY_INSTRUMENT_STATUS, 0, statusChecking));
+	checkErr(RsCore_SetAttributeViBoolean(instrSession, "", RS_ATTR_RANGE_CHECK, 0, rangeChecking));
+
 Error:
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -17923,33 +17901,18 @@ Error:
 ViStatus _VI_FUNC rsspecan_error_query (ViSession instrSession, ViInt32 *errCode,
                                         ViChar errMessage[])
 {
-    ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RSSPECAN_IO_BUFFER_SIZE] = "";
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+	ViStatus error = VI_SUCCESS;
 
-    if (errCode == NULL)
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Null address for Error Code");
-    if (errMessage == NULL)
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 3, "Null address for Error Message");
+	checkErr(RsCore_LockSession(instrSession));
 
-    if (Rs_Simulating(instrSession) == 0)                /* call only when locked */
-        {
-        viCheckErr (rsspecan_GetAttributeViString( instrSession, "", RSSPECAN_ATTR_SYST_ERR, RSSPECAN_IO_BUFFER_SIZE, buffer));
-        if  (sscanf (buffer, "%ld,\"%256[^\"]", errCode, errMessage) != 2)
-            viCheckErr(RS_ERROR_UNEXPECTED_RESPONSE);
+	viCheckParm(RsCore_InvalidNullPointer(instrSession, errCode), 2, "Null address for Error Code");
+	viCheckParm(RsCore_InvalidNullPointer(instrSession, errMessage), 3, "Null address for Error Message");
 
-        }
-    else
-        {
-            /* Simulate Error Query */
-        *errCode = 0;
-        strcpy (errMessage, "No error.");
-        }
+	checkErr(RsCore_ErrorQueryAll(instrSession, errCode, 1024, errMessage));
 
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*****************************************************************************
@@ -18050,25 +18013,24 @@ Error:
 ViStatus _VI_FUNC rsspecan_error_message (ViSession instrSession, ViStatus errorCode,
                                           ViChar errorMessage[])
 {
-    ViStatus    error   = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    static      RsStringValueTable errorTable =
-        {
-            RSSPECAN_ERROR_CODES_AND_MSGS,
-            {VI_NULL, VI_NULL}
-        };
+	checkErr(RsCore_LockSession(instrSession));
 
-    (void) Rs_LockSession(instrSession, VI_NULL);
+	static RsCoreStringValueTable errorTable =
+	{
+		RSSPECAN_ERROR_CODES_AND_MSGS,
+		{0, NULL}
+	};
 
-        /* all VISA and RS error codes are handled as well as codes in the table */
-    if (errorMessage == VI_NULL)
-        viCheckParm( RS_ERROR_INVALID_PARAMETER, 3, "Null address for Error Message");
+	// all VISA and RS error codes are handled as well as codes in the table
+	viCheckParm(RsCore_InvalidNullPointer(instrSession, errorMessage), 3, "Null address for Error Message");
 
-    checkErr( Rs_GetSpecificDriverStatusDesc(instrSession, errorCode, errorMessage, errorTable));
+	checkErr(RsCore_GetSpecificDriverStatusDesc(instrSession, errorCode, errorMessage, 256, errorTable));
 
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 
@@ -18179,15 +18141,12 @@ Error:
 ViStatus _VI_FUNC rsspecan_SetTimeout (ViSession instrSession,
                                        ViUInt32 timeout)
 {
-    ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+	ViStatus error = VI_SUCCESS;
 
-    viCheckErr (rsspecan_SetOPCTimeout (instrSession, timeout));
-    
+	checkErr(RsCore_SetAttributeViInt32(instrSession, NULL, RS_ATTR_OPC_TIMEOUT, 0, (ViInt32)timeout));
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -18197,15 +18156,14 @@ Error:
 ViStatus _VI_FUNC rsspecan_GetTimeout (ViSession instrSession,
                                        ViUInt32 *timeout)
 {
-    ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
+	ViStatus error = VI_SUCCESS;
+	ViInt32 timeoutInt;
 
-    viCheckErr (rsspecan_GetOPCTimeout (instrSession, (ViInt32*) timeout));
-    
+	checkErr(RsCore_GetAttributeViInt32(instrSession, NULL, RS_ATTR_OPC_TIMEOUT, 0, &timeoutInt));
+	*timeout = (ViUInt32)timeoutInt;
+
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
-    return error;
+	return error;
 }
 
 /// HIFN This function specifies the minimum timeout value to use (in
@@ -18218,15 +18176,15 @@ Error:
 ViStatus _VI_FUNC rsspecan_SetVISATimeout(ViSession instrSession,
                                   ViUInt32 VISATimeout)
 {
-    ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, NULL));
+	ViStatus error = VI_SUCCESS;
 
-    viCheckErr( viSetAttribute (instrSession, VI_ATTR_TMO_VALUE, VISATimeout ));
-    
+	checkErr(RsCore_LockSession(instrSession));
+
+	checkErr(RsCore_SetVisaTimeout(instrSession, VISATimeout));
+
 Error:
-    (void) Rs_UnlockSession(instrSession, NULL);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /// HIFN This function returns the minimum timeout value to use (in
@@ -18239,15 +18197,15 @@ Error:
 ViStatus _VI_FUNC rsspecan_GetVISATimeout(ViSession instrSession,
                                   ViUInt32 *VISATimeout)
 {
-    ViStatus    error = VI_SUCCESS;
-    
-    checkErr( Rs_LockSession (instrSession, NULL));
+	ViStatus error = VI_SUCCESS;
 
-    viCheckErr( viGetAttribute (instrSession, VI_ATTR_TMO_VALUE, VISATimeout ));
-    
+	checkErr(RsCore_LockSession(instrSession));
+
+	checkErr(RsCore_GetVisaTimeout(instrSession, VISATimeout));
+
 Error:
-    (void) Rs_UnlockSession(instrSession, NULL);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*****************************************************************************
@@ -18280,17 +18238,16 @@ ViStatus _VI_FUNC rsspecan_ClearStatus(
     ViSession   instrSession
 )
 {
-    ViStatus  error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+	checkErr(RsCore_LockSession(instrSession));
 
-    checkErr (viClear(instrSession));
-    checkErr (viWrite (instrSession, (ViBuf) "*CLS\n", 5, NULL));
-    checkErr (rsspecan_CheckStatus (instrSession));
+	checkErr(RsCore_ClearStatus(instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /// HIFN  This function returns the ID Query response string.
@@ -18305,17 +18262,15 @@ ViStatus _VI_FUNC rsspecan_IDQueryResponse (ViSession instrSession,
                                          ViUInt32 bufferSize,
                                          ViChar IDQueryResponse[])
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (viWrite (instrSession, (ViBuf) "*IDN?\n", 6, NULL));
-    checkErr (viRead (instrSession, (ViBuf) IDQueryResponse, bufferSize, NULL));
-    checkErr (rsspecan_CheckStatus (instrSession));
+	checkErr(RsCore_LockSession(instrSession));
+
+	checkErr(rsspecan_QueryViString(instrSession, "*IDN?", 256, IDQueryResponse));
 
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /// HIFN  Stops further command processing until all commands sent before *WAI 
@@ -18328,15 +18283,15 @@ ViStatus _VI_FUNC rsspecan_ProcessAllPreviousCommands(
     ViSession   instrSession
 )
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
-    
-    checkErr (rsspecan_WriteInstrData (instrSession, "*WAI\n"));
-    
+	checkErr(RsCore_LockSession(instrSession));
+
+	checkErr(rsspecan_WriteInstrData(instrSession, "*WAI"));
+
 Error:
-    (void) Rs_UnlockSession (instrSession, VI_NULL);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /// HIFN  This function queries the OPC.
@@ -18350,17 +18305,15 @@ ViStatus _VI_FUNC rsspecan_QueryOPC(
     ViInt32*    opc
 )
 {
-    ViStatus  error = VI_SUCCESS;
-    ViChar      cmd[100] = "*OPC?\n";
+	ViStatus error = VI_SUCCESS;
 
-    checkErr (Rs_LockSession (instrSession, VI_NULL));
+	checkErr(RsCore_LockSession(instrSession));
 
-    viCheckErr (viWrite (instrSession, (ViBuf) cmd, (ViUInt32) strlen (cmd), NULL));
-    viCheckErr (viRead (instrSession, (ViBuf) cmd, 100UL, NULL));
-    sscanf (cmd, "%ld", opc);
+	checkErr(rsspecan_QueryViInt32(instrSession, "*OPC?", OPC));
+
 Error:
-    Rs_UnlockSession(instrSession, VI_NULL);    
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /// HIFN  This function sets fast sweep mode.
@@ -18395,111 +18348,26 @@ ViStatus _VI_FUNC rsspecan_GetError (ViSession instrSession,
                                      ViInt32 bufferSize,
                                      ViChar description[])
 {
-    ViStatus    error       = VI_SUCCESS;
-    ViStatus    primary     = VI_SUCCESS,
-                secondary   = VI_SUCCESS;
-    ViChar      elaboration[RS_MAX_MESSAGE_BUF_SIZE]    = "";
-    ViChar      errorMessage[RS_MAX_MESSAGE_BUF_SIZE]  = "";
-    ViChar     *appendPoint = errorMessage;
-    ViInt32     actualSize  = 0;
-    ViBoolean   locked      = VI_FALSE;
-    RsSessionPropertiesPtr  sessionProperties = Rs_ViSession (instrSession);
+	ViStatus error = VI_SUCCESS;
 
-    /* Lock Session */
-    checkErr( Rs_LockSession(instrSession, &locked));
+	// Lock Session - do not jump to the end, even with invalid instrSession the function continues further
+	(void)(RsCore_LockSession(instrSession));
 
-    /* Test for nulls and acquire error data */
-    if (bufferSize != 0)
-    {
-        if (errorCode == VI_NULL)
-        {
-            viCheckParm( RS_ERROR_INVALID_PARAMETER, 2, "Null address for Error");
-        }
-        if (sessionProperties == NULL)
-        {
-            primary = VI_ERROR_RSRC_NFOUND;
-            secondary = 0;
-        }
-        else
-        {
-            checkErr( Rs_GetErrorInfo (instrSession, &primary, &secondary, elaboration));
-        }
-    }
+	// Test for nulls and acquire error data
+	viCheckParm(RsCore_InvalidNullPointer(instrSession, errorCode), 2, "Null address for Error");
+	viCheckParm(RsCore_InvalidNullPointer(instrSession, description), 4, "Null address for Description");
 
-    else
-        {
-            if (sessionProperties == NULL)
-            {
-                (void) Rs_UnlockSession (instrSession, &locked);
-                return 1024;
-            }
-            else
-            {
-                checkErr( Rs_GetAttribute (instrSession, VI_NULL, RS_ATTR_ERROR_ELABORATION, 0, 256, elaboration));
-                checkErr( Rs_GetAttribute (instrSession, VI_NULL, RS_ATTR_SECONDARY_ERROR, 0, (ViInt32) sizeof (secondary), &secondary));
-                checkErr( Rs_GetAttribute (instrSession, VI_NULL, RS_ATTR_PRIMARY_ERROR, 0, (ViInt32) sizeof (primary), &primary));
-            }
-        }
-
-    /* Format data */
-    if (primary != VI_SUCCESS)
-        {
-        ViChar msg[256] = "";
-        checkErr( rsspecan_error_message (instrSession, primary, msg));
-        appendPoint += sprintf(appendPoint, "Primary Error: (Hex 0x%08X) %s\n", (unsigned int) primary, msg);
-        }
-
-    if (secondary != VI_SUCCESS)
-        {
-        ViChar msg[256] = "";
-        checkErr( rsspecan_error_message (instrSession, secondary, msg));
-        appendPoint += sprintf(appendPoint, "Secondary Error: (Hex 0x%08X) %s\n", (unsigned int) secondary, msg);
-        }
-
-    if (strlen (elaboration) > 0)
-        {
-        sprintf(appendPoint, "Elaboration: %s", elaboration);
-        }
-
-    actualSize = (ViInt32) (strlen(errorMessage) + 1);
-
-    /* Prepare return values */
-    if (bufferSize == 0)
-        {
-        error = (ViStatus) actualSize;
-        }
-    else
-        {
-        if (bufferSize > 0)
-            {
-            if (actualSize > bufferSize)
-                {
-                error = actualSize;
-                actualSize = bufferSize;
-                }
-            }
-        if (description == VI_NULL)
-            {
-            viCheckParm( RS_ERROR_INVALID_PARAMETER, 4, "Null address for Description");
-            }
-        memcpy(description, errorMessage, (size_t)(actualSize-1));
-        description[actualSize-1] = '\0';
-        }
-
-    if (errorCode)
-        {
-        *errorCode = primary;
-        }
+	checkErr(RsCore_GetErrorCompleteDescription(instrSession, &rsspecan_error_message, errorCode, bufferSize, description));
 
 Error:
-    /* Unlock Session */
-    (void) Rs_UnlockSession (instrSession, &locked);
-    return error;
+	// Unlock Session
+	(void)RsCore_UnlockSession(instrSession);  // IGNORE: ERROR!!! Missing Lock
+	return error;
 }
 
 ViStatus _VI_FUNC rsspecan_ClearError (ViSession instrSession)
 {
-    return Rs_ClearErrorInfo (instrSession);
+	return RsCore_ClearErrorInfo(instrSession);
 }
 
 /*****************************************************************************
@@ -18514,22 +18382,35 @@ ViStatus _VI_FUNC rsspecan_ClearError (ViSession instrSession)
 
 ViStatus _VI_FUNC rsspecan_WriteInstrData (ViSession instrSession, ViString writeBuffer)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr( Rs_LockSession (instrSession, VI_NULL));
-    
-    viCheckErr( Rs_WriteInstrData (instrSession, writeBuffer));
-    error = RS_WARN_UNKNOWN_INSTRUMENT_STATUS;
+	checkErr(RsCore_LockSession(instrSession));
+
+	error = RsCore_Write(instrSession, writeBuffer);
 
 Error:
-    (void) Rs_UnlockSession(instrSession, VI_NULL);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 ViStatus _VI_FUNC rsspecan_ReadInstrData (ViSession instrSession, ViInt32 numBytes,
                                           ViChar rdBuf[], ViUInt32 *bytesRead)
 {
-    return Rs_ReadInstrData (instrSession, numBytes, rdBuf, bytesRead);
+	ViStatus error = VI_SUCCESS;
+	ViChar* responseString = NULL;
+
+	checkErr(RsCore_LockSession(instrSession));
+
+	checkErr(RsCore_ReadViStringUnknownLength(instrSession, &responseString));
+	checkErr(RsCore_CopyToUserBufferAsciiData(instrSession, rdBuf, numBytes, responseString));
+	*bytesRead = (ViUInt32)strlen(responseString);
+
+Error:
+	if (responseString)
+		free(responseString);
+
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*****************************************************************************

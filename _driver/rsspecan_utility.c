@@ -21,168 +21,53 @@ ViStatus rsspecan_CheckStatusCallback (ViSession io);
  *****************************************************************************/
 ViStatus rsspecan_InitAttributes (ViSession instrSession)
 {
-    ViStatus    error           = VI_SUCCESS;
-    ViInt32     p2value         = 0;
-    void        *p2void;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE],
-                revision[RS_MAX_MESSAGE_BUF_SIZE],
-                manufacturer[RS_MAX_MESSAGE_BUF_SIZE],
-                model[RS_MAX_MESSAGE_BUF_SIZE],
-                tmp_model[RS_MAX_MESSAGE_BUF_SIZE],
-                idQ[RS_MAX_MESSAGE_BUF_SIZE],
-                options_list[RS_MAX_MESSAGE_BUF_SIZE];
+	ViStatus error = VI_SUCCESS;
 
-    buffer[RS_MAX_MESSAGE_BUF_SIZE -1] = 0;
+	// Instrument Identification
+	//Parameter idnModelFullName determines RS_ATTR_INSTRUMENT_MODEL value:
+	// VI_FALSE: RS_ATTR_INSTRUMENT_MODEL = "RTO"
+	// VI_TRUE: RS_ATTR_INSTRUMENT_MODEL = "RTO2044"
+	// This is important for CheckInstrumentModel() function used in all attributes and some hi-level functions
+	checkErr(RsCore_QueryAndParseIDNstring(instrSession, RSSPECAN_ATTR_ID_QUERY_RESPONSE, RSSPECAN_SIMULATION_ID_QUERY, VI_FALSE, NULL));
 
-    /*- Misc -*/
+	// Query OPT string, parse the options, remove the duplicates,
+	// sort them and store the result string to RS_ATTR_OPTIONS_LIST
+	checkErr(RsCore_QueryAndParseOPTstring(instrSession, RSSPECAN_SIMULATION_OPT_QUERY, RS_VAL_OPTIONS_PARSING_KEEP_AFTER_DASH));
 
-    if (!Rs_Simulating(instrSession))
-        {
-        /* Instrument identification */
-        viCheckErr (viQueryf (instrSession, "*IDN?\n", "%[^\r\n]", idQ));
-        idQ[RS_MAX_MESSAGE_BUF_SIZE - 1] = 0;
-        checkErr (Rs_SetAttribute (instrSession, "", RSSPECAN_ATTR_ID_QUERY_RESPONSE, 0, idQ));
-        
-        /* Option(s) string */
-        viCheckErr (viQueryf (instrSession, "*OPT?\n", "%[^\r\n]", options_list));
-        options_list[RS_MAX_MESSAGE_BUF_SIZE - 1] = 0;
-        }
-    else /* Simulating */
-        {
-        /* Instrument identification */
-        strncpy (idQ, RSSPECAN_SIMULATION_ID_QUERY, RS_MAX_MESSAGE_BUF_SIZE - 1);
-        checkErr (Rs_SetAttribute (instrSession, "", RSSPECAN_ATTR_ID_QUERY_RESPONSE, 0, idQ));
-        
-        /* Option(s) string */
-        strncpy (options_list, RSSPECAN_SIMULATION_OPT_QUERY, RS_MAX_MESSAGE_BUF_SIZE - 1);
-        }
+	// - Class Driver Identification
+	checkErr(RsCore_SetAttributeViString(instrSession, "", RS_ATTR_CLASS_DRIVER_DESCRIPTION, 0, RSSPECAN_CLASS_DRIVER_DESCRIPTION));
+	checkErr(RsCore_SetAttributeViString(instrSession, "", RS_ATTR_CLASS_DRIVER_PREFIX, 0, RSSPECAN_CLASS_DRIVER_PREFIX));
+	checkErr(RsCore_SetAttributeViString(instrSession, "", RS_ATTR_CLASS_DRIVER_VENDOR, 0, RSSPECAN_CLASS_DRIVER_VENDOR));
+	checkErr(RsCore_SetAttributeViString(instrSession, "", RS_ATTR_CLASS_DRIVER_REVISION, 0, RSSPECAN_CLASS_DRIVER_REVISION));
+	checkErr(RsCore_SetAttributeViInt32(instrSession, "", RS_ATTR_CLASS_DRIVER_CLASS_SPEC_MAJOR_VERSION, 0, RSSPECAN_CLASS_SPEC_MAJOR_VERSION));
+	checkErr(RsCore_SetAttributeViInt32(instrSession, "", RS_ATTR_CLASS_DRIVER_CLASS_SPEC_MINOR_VERSION, 0, RSSPECAN_CLASS_SPEC_MINOR_VERSION));
 
-    /*- Inherent Instrument Specific Attributes ----------------------------*/
+	// - Driver Identification
+	checkErr(RsCore_SetAttributeViString(instrSession, "", RS_ATTR_SPECIFIC_DRIVER_DESCRIPTION, 0, RSSPECAN_SPECIFIC_DRIVER_DESCRIPTION));
+	checkErr(RsCore_SetAttributeViString(instrSession, "", RS_ATTR_SPECIFIC_DRIVER_PREFIX, 0, RSSPECAN_SPECIFIC_DRIVER_PREFIX));
+	checkErr(RsCore_SetAttributeViString(instrSession, "", RS_ATTR_SPECIFIC_DRIVER_LOCATOR, 0, RSSPECAN_SPECIFIC_DRIVER_LOCATOR));
+	checkErr(RsCore_SetAttributeViString(instrSession, "", RS_ATTR_SPECIFIC_DRIVER_VENDOR, 0, RSSPECAN_SPECIFIC_DRIVER_VENDOR));
 
-    /*- User Options -*/
+	checkErr(RsCore_SetAttributeViInt32(instrSession, "", RS_ATTR_SPECIFIC_DRIVER_CLASS_SPEC_MAJOR_VERSION, 0, RSSPECAN_CLASS_SPEC_MAJOR_VERSION));
+	checkErr(RsCore_SetAttributeViInt32(instrSession, "", RS_ATTR_SPECIFIC_DRIVER_CLASS_SPEC_MINOR_VERSION, 0, RSSPECAN_CLASS_SPEC_MINOR_VERSION));
 
-    /*
-    RS_ATTR_RANGE_CHECK             ... Rs_SpecificDriverNew
-    RS_ATTR_QUERY_INSTRUMENT_STATUS ... Rs_SpecificDriverNew
-    RS_ATTR_CACHE                   ... Rs_SpecificDriverNew
-    RS_ATTR_SIMULATE                ... Rs_SpecificDriverNew
-    RS_ATTR_RECORD_COERCIONS        ... not supported
-    RS_ATTR_INTERCHANGE_CHECK       ... not supported
-    RS_ATTR_SPY                     ... not supported
-    RS_ATTR_USE_SPECIFIC_SIMULATION ... not supported
-    */
+	// - Driver Capabilities
+	checkErr(RsCore_SetAttributeViString(instrSession, "", RS_ATTR_SUPPORTED_INSTRUMENT_MODELS, 0, RSSPECAN_SUPPORTED_INSTRUMENT_MODELS));
+	checkErr(RsCore_SetAttributeViString(instrSession, "", RS_ATTR_GROUP_CAPABILITIES, 0, RSSPECAN_GROUP_CAPABILITIES));
+	checkErr(RsCore_SetAttributeViString(instrSession, "", RS_ATTR_FUNCTION_CAPABILITIES, 0, RSSPECAN_FUNCTION_CAPABILITIES));
 
-    /*- Class Driver Identification -*/
+	// - Version Info
+	checkErr(RsCore_SetAttributeViInt32(instrSession, "", RS_ATTR_SPECIFIC_DRIVER_MAJOR_VERSION, 0, RSSPECAN_MAJOR_VERSION));
+	checkErr(RsCore_SetAttributeViInt32(instrSession, "", RS_ATTR_SPECIFIC_DRIVER_MINOR_VERSION, 0, RSSPECAN_MINOR_VERSION));
+	checkErr(RsCore_SetAttributeViInt32(instrSession, "", RS_ATTR_SPECIFIC_DRIVER_MINOR_MINOR_VERSION, 0, RSSPECAN_MINOR_MINOR_VERSION));
 
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_CLASS_DRIVER_DESCRIPTION, 0, RSSPECAN_CLASS_DRIVER_DESCRIPTION));
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_CLASS_DRIVER_PREFIX, 0, RSSPECAN_CLASS_DRIVER_PREFIX));
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_CLASS_DRIVER_VENDOR, 0, RSSPECAN_CLASS_DRIVER_VENDOR));
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_CLASS_DRIVER_REVISION, 0, RSSPECAN_CLASS_DRIVER_REVISION));
-    p2value = RSSPECAN_CLASS_SPEC_MAJOR_VERSION;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_CLASS_DRIVER_CLASS_SPEC_MAJOR_VERSION, 0, &p2value));
-    p2value = RSSPECAN_CLASS_SPEC_MINOR_VERSION;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_CLASS_DRIVER_CLASS_SPEC_MINOR_VERSION, 0, &p2value));
+	checkErr(RsCore_SetAttributeViInt32(instrSession, "", RS_ATTR_CLASS_DRIVER_MAJOR_VERSION, 0, RSSPECAN_CLASS_SPEC_MAJOR_VERSION));
+	checkErr(RsCore_SetAttributeViInt32(instrSession, "", RS_ATTR_CLASS_DRIVER_MINOR_VERSION, 0, RSSPECAN_CLASS_SPEC_MINOR_VERSION));
 
-    /*- Driver Identification -*/
-                                                        
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_SPECIFIC_DRIVER_DESCRIPTION, 0, RSSPECAN_SPECIFIC_DRIVER_DESCRIPTION));
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_SPECIFIC_DRIVER_PREFIX, 0, RSSPECAN_SPECIFIC_DRIVER_PREFIX));
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_SPECIFIC_DRIVER_LOCATOR, 0, RSSPECAN_SPECIFIC_DRIVER_LOCATOR));
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_SPECIFIC_DRIVER_VENDOR, 0, RSSPECAN_SPECIFIC_DRIVER_VENDOR));
-
-    sprintf (buffer, 
-             "Driver: %s %d.%d.%d, Compiler: %s %3.2f, "
-             "Components: RSEngine %.2f, VISA-Spec %.2f",
-             RSSPECAN_SPECIFIC_DRIVER_PREFIX,
-             RSSPECAN_MAJOR_VERSION, RSSPECAN_MINOR_VERSION, RSSPECAN_MINOR_MINOR_VERSION,
-             RS_COMPILER_NAME, RS_COMPILER_VER_NUM, 
-             RS_ENGINE_MAJOR_VERSION + RS_ENGINE_MINOR_VERSION/10.0, 
-             Rs_ConvertVISAVer(VI_SPEC_VERSION));
-
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_SPECIFIC_DRIVER_REVISION, 0, buffer));
-    p2value = RSSPECAN_CLASS_SPEC_MAJOR_VERSION;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_SPECIFIC_DRIVER_CLASS_SPEC_MAJOR_VERSION, 0, &p2value));
-    p2value = RSSPECAN_CLASS_SPEC_MINOR_VERSION;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_SPECIFIC_DRIVER_CLASS_SPEC_MINOR_VERSION, 0, &p2value));
-
-    /*- Driver Capabilities -*/
-                                   
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_SUPPORTED_INSTRUMENT_MODELS, 0, RSSPECAN_SUPPORTED_INSTRUMENT_MODELS));
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_GROUP_CAPABILITIES, 0, RSSPECAN_GROUP_CAPABILITIES));
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_FUNCTION_CAPABILITIES, 0, RSSPECAN_FUNCTION_CAPABILITIES));
-    /* RS_ATTR_CHANNEL_COUNT        ... Rs_BuildRepCapTable */
-
-    /*- Driver Setup -*/
-
-    /* RS_ATTR_DRIVER_SETUP         ... Rs_SpecificDriverNew */
-
-    /*- Instrument Identification -*/
-
-    checkErr (Rs_GetAttribute (instrSession, "", RSSPECAN_ATTR_ID_QUERY_RESPONSE, 0, RSSPECAN_IO_BUFFER_SIZE, idQ));
-    sscanf (idQ, "%[^,], %[^,],%*[^,], %256[^\n]", manufacturer, tmp_model, revision); // added 2 spaces in the parsing string
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_INSTRUMENT_MANUFACTURER, 0, manufacturer));
-    sscanf (tmp_model,"%[^-0-9]",model); // added number elimination
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_INSTRUMENT_MODEL, 0, model));
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_INSTRUMENT_FIRMWARE_REVISION, 0, revision));
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_OPTIONS_LIST, 0, options_list));
-
-    /*- Advanced Session Information -*/
-                                  
-    /*  
-    RS_ATTR_IO_RESOURCE_DESCRIPTOR  ... rsspecan_InitWithOptions
-    RS_ATTR_LOGICAL_NAME            ... not supported
-    */
-
-    /*- Inherent Vendor Specific Attributes --------------------------------*/
-
-    /*- Error Info -*/
-
-    /*
-    RS_ATTR_PRIMARY_ERROR           ... Rs_SetErrorInfo
-    RS_ATTR_SECONDARY_ERROR         ... Rs_SetErrorInfo
-    RS_ATTR_ERROR_ELABORATION       ... Rs_SetErrorInfo
-    */
-
-    /*- Session I/O -*/
-
-    /*
-    RS_ATTR_VISA_RM_SESSION         ... rsspecan_RsInit
-    RS_ATTR_IO_SESSION              ... Rs_UpdateIOSession
-    RS_ATTR_IO_SESSION_TYPE         ... not supported
-    */
-
-    /*- Version Info -*/                     
-
-    p2value = RSSPECAN_MAJOR_VERSION;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_SPECIFIC_DRIVER_MAJOR_VERSION, 0, &p2value));
-    p2value = RSSPECAN_MINOR_VERSION;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_SPECIFIC_DRIVER_MINOR_VERSION, 0, &p2value));
-    p2value = RSSPECAN_MINOR_MINOR_VERSION;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_SPECIFIC_DRIVER_MINOR_MINOR_VERSION, 0, &p2value));
-    p2value = RSSPECAN_CLASS_SPEC_MAJOR_VERSION;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_CLASS_DRIVER_MAJOR_VERSION, 0, &p2value));
-    p2value = RSSPECAN_CLASS_SPEC_MINOR_VERSION;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_CLASS_DRIVER_MINOR_VERSION, 0, &p2value));
-    p2value = RS_ENGINE_MAJOR_VERSION;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_ENGINE_MAJOR_VERSION, 0, &p2value));
-    p2value = RS_ENGINE_MINOR_VERSION;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_ENGINE_MINOR_VERSION, 0, &p2value));
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_ENGINE_REVISION, 0, RS_ENGINE_REVISION));
-
-    /*- Session Callbacks -*/                
-
-#pragma warning( push )
-#pragma warning( disable : 4152)
-    p2void = rsspecan_WaitForOPCCallback;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_OPC_CALLBACK, 0, &p2void));
-    p2void = rsspecan_CheckStatusCallback;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_CHECK_STATUS_CALLBACK, 0, &p2void));
-    p2value = RSSPECAN_OPC_TIMEOUT;
-    checkErr (Rs_SetAttribute (instrSession, "", RS_ATTR_OPC_TIMEOUT, 0, &p2value));
-#pragma warning( pop )
+	checkErr(RsCore_SetSpecificDriverRevision(instrSession, RS_ATTR_SPECIFIC_DRIVER_REVISION));
 
 Error:
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -229,15 +114,15 @@ Error:
  *****************************************************************************/
 ViStatus rsspecan_CheckStatus (ViSession instrSession)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (Rs_QueryInstrStatus (instrSession) && !Rs_Simulating (instrSession))
-        {
-        checkErr( rsspecan_CheckStatusCallback (instrSession));
-        }
+	if (RsCore_QueryInstrStatus(instrSession) && !RsCore_Simulating(instrSession))
+	{
+		checkErr(RsCore_CheckStatus(instrSession, VI_SUCCESS));
+	}
 
 Error:
-    return error;
+	return error;
 }
 
 /*****************************************************************************
