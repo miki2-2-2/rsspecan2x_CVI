@@ -16041,8 +16041,6 @@ ViStatus _VI_FUNC rsspecan_NetworkMapDrive (ViSession instrSession,
         p2buf += sprintf (p2buf, ",'%s','%s',%s", userName, password, switchArr[reconnectAtLogon]);
     }
 
-    p2buf += sprintf (p2buf, "\n");
-
     checkErr(RsCore_Write(instrSession, buffer));
 
     checkErr(rsspecan_CheckStatus (instrSession));

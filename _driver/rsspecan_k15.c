@@ -358,7 +358,6 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsAM (ViSession instrSession,
 {
 	ViStatus	error = VI_SUCCESS;
 	ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE]="";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -391,7 +390,6 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsTHD (ViSession instrSession,
 {
 	ViStatus	error = VI_SUCCESS;
 	ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE]="";
 
     checkErr(RsCore_LockSession(instrSession));
 

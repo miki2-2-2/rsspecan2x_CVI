@@ -2147,7 +2147,6 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkEVMVersusCarrierTrace(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-	ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2200,7 +2199,6 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkEVMVersusSymbolTrace(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2235,7 +2233,6 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkEVMVersusSubframeTrace(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2272,7 +2269,6 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkSEMTrace(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2318,7 +2314,6 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkACLRTrace(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2355,7 +2350,6 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkInbandEmissionTrace(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2406,7 +2400,6 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkPowerSpectrumTrace(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2447,7 +2440,6 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkChannelFlatnessTrace(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2502,7 +2494,6 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkChannelGroupDelayTrace(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2557,7 +2548,6 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkChannelFlatnessDifferenceTrace(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2753,7 +2743,6 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkCCDF(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
