@@ -87,7 +87,7 @@ ViStatus _VI_FUNC rsspecan_GetVSADigitalStandardCatalog(ViSession   instrSession
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS%ld:DDEM:STAN:CAT?", window);
     checkErr(rsspecan_QueryViString(instrSession, cmd, bufferSize, digitalStandardsList));
-    
+
 	if (numberofDigitalStandards)
 		*numberofDigitalStandards = strlen(digitalStandardsList);
 
@@ -457,7 +457,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAModulationFilters(ViSession  instrSession
     checkErr(RsCore_LockSession(instrSession));
 
 	if (rsspecan_IsFSV (instrSession))
+	{
 		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS%ld:DDEM:FILT:MOD '%s','%s','%s'", window, txFilter, receiveFilter, measFilter);
     checkErr(RsCore_Write(instrSession, cmd));
@@ -494,7 +496,9 @@ ViStatus _VI_FUNC rsspecan_GetVSAModulationFilterCatalog(ViSession  instrSession
     checkErr(RsCore_LockSession(instrSession));
 
 	if (rsspecan_IsFSV (instrSession))
+	{
 		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K70"));
 
@@ -1263,7 +1267,9 @@ ViStatus _VI_FUNC rsspecan_GetVSACompressionPointResults(ViSession  instrSession
     checkErr(RsCore_LockSession(instrSession));
 
 	if (rsspecan_IsFSV (instrSession))
+	{
 		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 4, "Results");
     snprintf (repCap, RS_REPCAP_BUF_SIZE, "C%ld", window);

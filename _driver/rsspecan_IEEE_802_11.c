@@ -1627,7 +1627,7 @@ ViStatus _VI_FUNC rsspecan_FetchWlanSymbolCount (ViSession instrSession,
 	ViStatus    error = VI_SUCCESS;
 
     checkErr(RsCore_LockSession(instrSession));
-	
+
 	checkErr(RsCore_QueryIntegerArrayToUserBuffer(instrSession, "FETC:SYMB:COUN?", arraySize, symbolCount, noOfValues));
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1837,7 +1837,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanPowerResults (ViSession instrSession,
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, powerMeasurement, RSSPECAN_VAL_MEAS_POW_ACP, RSSPECAN_VAL_MEAS_POW_PPOW),
 			3, "Power Measurement");
 
-	snprintf (cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:POW:RES? %s", window, powerMeasurementArr[powerMeasurement]);
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:POW:RES? %s", window, powerMeasurementArr[powerMeasurement]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
 	checkErr(rsspecan_CheckStatus (instrSession));
 

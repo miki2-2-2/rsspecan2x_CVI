@@ -822,7 +822,7 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoDifferenceFrequencyDistortionResult(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    
+
 	checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7S"));
@@ -898,7 +898,7 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoMeasurementResults(
 		thd[i] = data[j++];
 		modulationFrequency[i] = data[j++];
 	}
-	
+
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
@@ -961,7 +961,7 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoChannelTypeAllResults(
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7S"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_FSM_CHAN_TYPE_LEFT, RSSPECAN_VAL_FSM_CHAN_TYPE_PILOT),
-		3, "Channel Type");
+			3, "Channel Type");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MARK:FUNC:SFM:%s:RES? ALL", ChannelTypeArr[channelType]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 32001, result, NULL));

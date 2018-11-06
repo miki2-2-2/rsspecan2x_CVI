@@ -541,7 +541,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACNMeasurementFrequencies (ViSession ins
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K20"));
-	
+
 	viCheckParm(RsCore_InvalidViBooleanRange(instrSession, state), 3, "State");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, tableRow, 1, 10),
     		2, "Table Row");

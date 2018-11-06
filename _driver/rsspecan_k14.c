@@ -132,7 +132,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramDisplayParameters (ViSession inst
 	if (RsCore_IsInstrumentModel(instrSession, "FSL"))
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_SPEM_SIZE, size),
-			3, "Size");
+				3, "Size");
 	}
 
 Error:
@@ -1008,7 +1008,9 @@ ViStatus _VI_FUNC rsspecan_GetSpectrogramTimeStamp (ViSession instrSession,
     checkErr(RsCore_LockSession(instrSession));
 
     if (!RsCore_IsInstrumentModel(instrSession, "FSL") && !rsspecan_IsFSV (instrSession))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K14"));
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K160R"));
@@ -1057,7 +1059,9 @@ ViStatus _VI_FUNC rsspecan_ReadSpectrogramTraceData (ViSession instrSession,
     checkErr(RsCore_LockSession(instrSession));
 
     if (!RsCore_IsInstrumentModel(instrSession, "FSL") && !rsspecan_IsFSV (instrSession))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K14"));
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K160R"));

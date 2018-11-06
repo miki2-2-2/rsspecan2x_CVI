@@ -108,7 +108,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmDemodulation (ViSession instrSession,
 	}
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_CHAN_TSC, midamble),
     		8, "Midamble");
-    
+
 	switch (midamble){
         case RSSPECAN_VAL_GSM_TSC_AB0:
         case RSSPECAN_VAL_GSM_TSC_AB1:
@@ -1068,7 +1068,8 @@ ViStatus _VI_FUNC rsspecan_FetchGsmExtendedSlotPtempRef (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX), 2, "Array Size");
+    viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
+    		2, "Array Size");
 
 	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "FETC:BURS:PTEM:REF:ECON:IMM?", &data, &dataSize));
 	checkErr(rsspecan_CheckStatus(instrSession));

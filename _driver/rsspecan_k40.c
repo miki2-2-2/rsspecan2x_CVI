@@ -567,7 +567,6 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseSpotNoiseSettings(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-	ViChar		buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -622,7 +621,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseAnalyzerSettings(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    
+
     checkErr(RsCore_LockSession(instrSession));
 
 	if (RsCore_HasInstrumentOptions(instrSession, "B2"))
@@ -999,7 +998,6 @@ ViStatus _VI_FUNC rsspecan_DefinePhaseLimitLine(
     viCheckParm(RsCore_InvalidNullPointer(instrSession, xAxis), 5, "X Axis");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, amplitude), 6, "Amplitude");
 
-
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:LIM%ld:CONT ", limit);
 	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, cmd, xAxis, count));
 
@@ -1009,7 +1007,6 @@ ViStatus _VI_FUNC rsspecan_DefinePhaseLimitLine(
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1451,10 +1448,10 @@ ViStatus _VI_FUNC rsspecan_ReadPhaseTraceData(
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, sourceTrace, 0, 2),
     		2, "Source Trace");
-	
+
 	if (noofPoints)
 		dataSize = *noofPoints;
-	
+
 	sprintf(trace, "TRACE%ld", sourceTrace + 1);
 	data = (ViReal64*)malloc(dataSize * sizeof(ViReal64) * 2);
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, trace, dataSize * 2, data, &retCnt));
@@ -1531,7 +1528,7 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseResidualUserResults (ViSession instrSession
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FETC:PNO:USER%ld:%s?", userRange, fetchPhaseArr[modifier]);
     checkErr(RsCore_QueryViReal64(instrSession, cmd, value));
-    
+
 	checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -1575,7 +1572,7 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseSpurs(
 	{
 		if (dataSize > *noofPoints)
 			dataSize = *noofPoints;
-		
+
 		*noofPoints = retCnt;
 	}
 

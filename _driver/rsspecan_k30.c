@@ -185,7 +185,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseFrequencyTable(
         *p2buffer = '\0';
         *--p2buffer = '\n';
     }
-	
+
 	checkErr(RsCore_Write(instrSession, buffer));
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -320,13 +320,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseAnalyzerSettings(
     if (RsCore_HasInstrumentOptions(instrSession, "B2"))
     {
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_INP_PRES_STAT, preselector),
-    			10, "Pre-selector");
+				10, "Pre-selector");
     }
 
 	if (RsCore_HasInstrumentOptions(instrSession, "B25|B2|B22"))
     {
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_INP_GAIN_STAT, preamplifier),
-    		11, "Pre-amplifier");
+				11, "Pre-amplifier");
     }
 
 Error:
@@ -595,6 +595,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseENRCommonMode (ViSession instrSession,
 
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_ENR_COMMON_MODE, commonMode),
     		2, "Common Mode");
+
 Error:
 	(void)RsCore_UnlockSession(instrSession);
 	return error;
@@ -1190,7 +1191,7 @@ ViStatus _VI_FUNC rsspecan_DefineNoiseLimitLine(
     viCheckParm(RsCore_InvalidNullPointer(instrSession, amplitude), 7, "Amplitude");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%d", limit);
-    
+
 	if (RsCore_IsInstrumentModel(instrSession, "FSW"))
     {
     	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_NOISE_CALC_LIM_TRAC, resultType),

@@ -1638,17 +1638,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanIQMeasurementParameters(ViSession   inst
                                                                 ViInt32 filter)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_WLAN_SRAT, sampleRate),
     		2, "Sample Rate");
-    
+
 	if (RsCore_HasInstrumentOptions(instrSession, "B72"))
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_FLAT, filter),
-			3, "Filter");
+				3, "Filter");
 	}
 
 Error:

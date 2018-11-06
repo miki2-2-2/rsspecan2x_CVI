@@ -712,7 +712,6 @@ ViStatus rsspecan_IQSrateFMU_RangeTableCallback(ViSession instrSession, ViConstS
 ViStatus rsspecan_DetectorType_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     if (RsCore_IsInstrumentModel(instrSession, "FMU|FSW"))
         *rangeTable = &rsspecan_rngDetectorTypeFMURangeTable;

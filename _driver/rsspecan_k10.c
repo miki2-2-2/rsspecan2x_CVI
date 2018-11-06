@@ -1588,7 +1588,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10SpectrumReferencePower (ViSession instrSes
 			strcpy (cmd, "READ:WSP:MOD:REF?");
 			break;
     }
-	
+
 	checkErr(RsCore_QueryFloatArrayToUserBufferWithOpc(instrSession, cmd, 0, 3, data, NULL));
 	*level1 = data[0];
 	*level2 = data[1];

@@ -2694,7 +2694,9 @@ ViStatus _VI_FUNC rsspecan_VSAImport(ViSession  instrSession,
     checkErr(RsCore_LockSession(instrSession));
 
 	if (rsspecan_IsFSV (instrSession))
+	{
 		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, RSSPECAN_VAL_VSA_IMPEXP_STANDARDS, RSSPECAN_VAL_VSA_IMPEXP_EQUALIZERS),
 			2, "Type");
@@ -2733,7 +2735,9 @@ ViStatus _VI_FUNC rsspecan_VSAExport(ViSession  instrSession,
     checkErr(RsCore_LockSession(instrSession));
 
 	if (rsspecan_IsFSV (instrSession))
+	{
 		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, RSSPECAN_VAL_VSA_IMPEXP_STANDARDS, RSSPECAN_VAL_VSA_IMPEXP_EQUALIZERS),
 			2, "Type");
@@ -2826,7 +2830,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAFileImport (ViSession instrSession,
     checkErr(RsCore_LockSession(instrSession));
 
 	if (rsspecan_IsFSV (instrSession))
+	{
 		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, fileName), 2, "File Name");
 
@@ -3977,7 +3983,9 @@ ViStatus _VI_FUNC rsspecan_GetVSAAllResults (ViSession instrSession,
     checkErr(RsCore_LockSession(instrSession));
 
     if (!rsspecan_IsFSV (instrSession))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K70"));
 
@@ -4147,7 +4155,10 @@ ViStatus _VI_FUNC rsspecan_QueryVSAModulationAccuracyStatisticResults(
 
     checkErr(RsCore_LockSession(instrSession));
 
-	if (!rsspecan_IsFSV (instrSession)) checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	if (!rsspecan_IsFSV (instrSession))
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 4),
 			3, "Marker");

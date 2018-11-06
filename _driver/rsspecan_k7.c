@@ -971,7 +971,6 @@ ViStatus _VI_FUNC rsspecan_GetADemodResultValues(
 
     checkErr(RsCore_LockSession(instrSession));
 
-
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, demodulationType, 0, 8),
@@ -980,7 +979,7 @@ ViStatus _VI_FUNC rsspecan_GetADemodResultValues(
     		3, "Result Type");
     viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 4, "Timeout");
 
-    snprintf (cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SENS:ADEM:%s:RES? %s", ADEMTypeArr[demodulationType], resultTypeArr[resultType]);
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SENS:ADEM:%s:RES? %s", ADEMTypeArr[demodulationType], resultTypeArr[resultType]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, resultValues, returnedValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
@@ -1100,18 +1099,18 @@ ViStatus _VI_FUNC rsspecan_GetADemodMarkerMeasValue(
     ViInt32     attrs[] = {RSSPECAN_ATTR_FMDEM_AFR_RES,RSSPECAN_ATTR_FMDEM_FERR_RES,
                            RSSPECAN_ATTR_FMDEM_SIN_RES, RSSPECAN_ATTR_FMDEM_THD_RES,
                            RSSPECAN_ATTR_FMDEM_CARR_RES};
-    
+
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, markerNumber, 1, 4),
-    		2, "Marker Number");
+			2, "Marker Number");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 0, 4),
     		3, "Measurement");
     if (RsCore_IsInstrumentModel(instrSession, "FSL") || rsspecan_IsFSV (instrSession))
     {
         tmp_trace=6;
     }
-	
+
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, tmp_trace),
 			4, "Trace");
 

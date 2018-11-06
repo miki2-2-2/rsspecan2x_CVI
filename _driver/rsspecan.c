@@ -1820,7 +1820,7 @@ ViStatus _VI_FUNC rsspecan_TraceIQMaximumBandwidthExtension (ViSession instrSess
 
     checkErr(RsCore_LockSession(instrSession));
 
-	viCheckParm(rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_IQ_MAX_BANDWIDTH_EXTENSION, state),
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_IQ_MAX_BANDWIDTH_EXTENSION, state),
 			2, "State");
 
 Error:
@@ -4707,8 +4707,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureTriggerSource (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((triggerSource > RSSPECAN_VAL_TRG_IQP) && !rsspecan_IsFSV (instrSession))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	if ((triggerSource > RSSPECAN_VAL_TRG_IQP) && !rsspecan_IsFSV(instrSession))
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
     sprintf (buffer, "Win%ld", window);
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_TRIGGER_SOURCE, triggerSource),
@@ -6746,7 +6748,7 @@ ViStatus _VI_FUNC rsspecan_GetActiveLimitLines (ViSession instrSession,
 	checkErr(rsspecan_CheckStatus(instrSession));
 	RsCore_TrimString(pbuffer, RS_VAL_TRIM_WHITESPACES_AND_SINGLE_QUOTES);
 	checkErr(RsCore_CopyToUserBufferAsciiData(instrSession, activeLimitLines, stringSize, pbuffer));
-	
+
 	if (returnedStringLength)
 		*returnedStringLength = strlen(pbuffer);
 
@@ -7291,7 +7293,9 @@ ViStatus _VI_FUNC rsspecan_GetDisplayThemeCatalog (ViSession instrSession,
     checkErr(RsCore_LockSession(instrSession));
 
     if (!rsspecan_IsFSV (instrSession))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, bufferSize, 0, INT_MAX),
     		3, "Buffer Size");
@@ -7370,7 +7374,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureDisplayZoom (ViSession instrSession,
     checkErr(RsCore_LockSession(instrSession));
 
     if (!rsspecan_IsFSV (instrSession))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
     viCheckParm(RsCore_InvalidViReal64Range(instrSession, x1, 0.0, 100.0), 4, "x1");
     viCheckParm(RsCore_InvalidViReal64Range(instrSession, y1, 0.0, 100.0), 5, "y1");
@@ -7705,8 +7711,7 @@ ViStatus _VI_FUNC rsspecan_QueryWindowIndex (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    snprintf (cmd, RS_MAX_MESSAGE_BUF_SIZE, "LAY:IDEN? '%s'", windowName);
-
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "LAY:IDEN? '%s'", windowName);
     checkErr(RsCore_QueryViString(instrSession, cmd, response));
     pbuff = strtok (response, ",\n");
     *index = atol(pbuff);
@@ -10387,7 +10392,7 @@ ViStatus _VI_FUNC rsspecan_ReadTraceIQData (ViSession instrSession,
 	}
 
     checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, &data, &dataSize));
-	
+
 	dataSize /= 2;
 
 	if (noofPoints)
@@ -10444,7 +10449,7 @@ ViStatus _VI_FUNC rsspecan_FetchTraceIQData (ViSession instrSession,
 	{
 		checkErr(RsCore_Write(instrSession, ":FORM REAL,32;:TRAC:IQ:DATA:FORM IQP"));
 	}
-	
+
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "TRAC:IQ:DATA:MEM? %ld,%ld", offsetSamples, noofSamples);
 	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, &data, &dataSize));
 
@@ -12898,8 +12903,10 @@ ViStatus _VI_FUNC rsspecan_QueryHDistBandwidthList (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (rsspecan_IsFSV (instrSession))
-        return RS_ERROR_INSTRUMENT_MODEL;
+	if (rsspecan_IsFSV(instrSession))
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
     		2, "Array Size");
@@ -14556,7 +14563,7 @@ ViStatus _VI_FUNC rsspecan_ReadSEMListEvaluationResults (ViSession instrSession,
         reserved1[i] = data[j++];
         reserved2[i] = data[j++];
     }
-    
+
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -15562,7 +15569,7 @@ ViStatus _VI_FUNC rsspecan_QueryMSRAAllAnalysisInterval (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    snprintf (cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MSRA:WIND%ld:MIV?", window);
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MSRA:WIND%ld:MIV?", window);
 	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, &data, &dataSize));
 
 	dataSize /= 2;
@@ -16134,7 +16141,7 @@ ViStatus _VI_FUNC rsspecan_reset (ViSession instrSession)
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(RsCore_Write(instrSession, "*RST"));
+	checkErr(RsCore_Write(instrSession, "*RST")); // TODO: Check double write
 	checkErr(RsCore_QueryViInt32(instrSession, "*OPC?", NULL));
 
 	checkErr(rsspecan_DefaultInstrSetup(instrSession));
