@@ -16848,11 +16848,27 @@ Error:
 	return error;
 }
 
+/// HIFN  Calls SYST:ERR? automatically in CheckStatus() when Instrument Status Error is detected
+/// HIRET Returns the status code of this operation.
+/// HIPAR instrSession/The ViSession handle that you obtain from the rsrfsiggen_init or
+/// HIPAR instrSession/rsxxx_InitWithOptions function.  The handle identifies a particular
+/// HIPAR instrSession/instrument session
+ViStatus _VI_FUNC rsspecan_ConfigureAutoSystemErrQuery(ViSession instrSession,
+	ViBoolean autoSystErrQuery)
+{
+	ViStatus error = VI_SUCCESS;
+	RsCoreSessionPtr rsSession = NULL;
+
+	checkErr(RsCore_GetRsSession(instrSession, &rsSession));
+	rsSession->autoSystErrQuery = autoSystErrQuery;
+
+Error:
+	return error;
+}
+
 /*****************************************************************************
  *-------------------- Utility Functions (Not Exported) ---------------------*
  *****************************************************************************/
-
-
 
 
 /*****************************************************************************
@@ -16876,4 +16892,3 @@ Error:
 /*****************************************************************************
  *------------------- End Instrument Driver Source Code ---------------------*
  *****************************************************************************/
-

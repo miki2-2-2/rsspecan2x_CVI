@@ -190,6 +190,8 @@
     <ClCompile Include="..\_driver\rsspecan_utility.c" />
     <ClCompile Include="..\_driver\rsspecan_vsa.c" />
     <ClCompile Include="rsspecan_2x_VS_Cpp_project.cpp" />
+    <ClCompile Include="TestFile_Utilities.c" />
+    <ClCompile Include="TestFile_DriverFunctions.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\_driver\ChangeLog" />
@@ -204,6 +206,8 @@
     <ClInclude Include="..\_driver\rsspecan.h" />
     <ClInclude Include="..\_driver\rsspecan_attributes.h" />
     <ClInclude Include="..\_driver\rsspecan_utility.h" />
+    <ClInclude Include="TestFile_DriverFunctions.h" />
+    <ClInclude Include="TestFile_Utilities.h" />
     <ClInclude Include="visa.h" />
     <ClInclude Include="visatype.h" />
   </ItemGroup>

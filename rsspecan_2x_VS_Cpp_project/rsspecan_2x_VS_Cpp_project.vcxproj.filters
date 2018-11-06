@@ -127,6 +127,12 @@
     <ClCompile Include="..\_driver\rscore.c">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="TestFile_Utilities.c">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="TestFile_DriverFunctions.c">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\_driver\ChangeLog">
@@ -165,6 +171,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\_driver\rscore.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="TestFile_Utilities.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="TestFile_DriverFunctions.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

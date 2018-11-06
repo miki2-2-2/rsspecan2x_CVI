@@ -9764,7 +9764,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMDutyCycle (ViSession instrumentHandle,
                                                   ViReal64 dutyCycleValue);
 ViStatus _VI_FUNC rsspecan_ConfigurePowerSensorAssignment
              (ViSession instrumentHandle, ViBoolean autoAssignment,
-              ViString placeholder, ViString type, ViString interface,
+              ViString placeholder, ViString type, ViString intf,
               ViString serialNumber);
 ViStatus _VI_FUNC rsspecan_QueryPowerSensorCount (ViSession instrumentHandle,
                                                   ViInt32* powerSensorCount);
@@ -13310,7 +13310,9 @@ ViStatus _VI_FUNC rsspecan_QueryOPC(ViSession instrSession, ViInt32* opc);
 ViStatus _VI_FUNC rsspecan_IDQueryResponse (ViSession Instrument_Handle, ViUInt32 Buffer_Size, ViChar _VI_FAR ID_Query_Response[]);
 ViStatus _VI_FUNC rsspecan_ProcessAllPreviousCommands (ViSession Instrument_Handle);
 ViStatus _VI_FUNC rsspecan_ClearStatus (ViSession Instrument_Handle);
-
+ViStatus _VI_FUNC rsspecan_ConfigureAutoSystemErrQuery(ViSession instrSession, ViBoolean autoSystErrQuery);
+ViStatus _VI_FUNC rsspecan_GetVISATimeout(ViSession instrSession, ViUInt32* VISATimeout);
+ViStatus _VI_FUNC rsspecan_SetVISATimeout(ViSession instrSession, ViUInt32 VISATimeout);
 /****************************************************************************
  *---------------------------- End Include File ----------------------------*
  ****************************************************************************/
