@@ -382,7 +382,7 @@ ViStatus _VI_FUNC rsspecan_Query3GPPFDDUEChannelTableCatalog(ViSession   instrSe
     		3, "Buffer Size");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTablesList), 4, "Channel Table List");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CONF:WCDP:MS:CTAB:CAT?", &buf)); // TODO: Check the response processing
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CONF:WCDP:MS:CTAB:CAT?", &buf));
     checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
 
     checkErr(rsspecan_CheckStatus (instrSession));

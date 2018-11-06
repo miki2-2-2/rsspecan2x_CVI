@@ -565,9 +565,6 @@ ViStatus _VI_FUNC rsspecan_GetBTOPowerOfChannels (ViSession instrSession,
                                                   ViInt32 *returnedValues)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar*     pbuffer = NULL;
-    ViChar*     pstring_value;
-    ViInt32     i;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -577,25 +574,7 @@ ViStatus _VI_FUNC rsspecan_GetBTOPowerOfChannels (ViSession instrSession,
     		2, "Array Size");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, power), 3, "Power List");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CALC:BTO:ACLR:LIST?", &pbuffer)); // TODO: Check the response processing
-    pstring_value = strtok(pbuffer, ",");
-
-    i=0;
-    while (pstring_value)
-    {
-        if (i < arraySize)
-        {
-            sscanf(pstring_value, "%le", &power[i]);
-        }
-        pstring_value = strtok(NULL, ",");
-        i++;
-    }
-
-    free(pbuffer);
-
-    if (returnedValues)
-        *returnedValues = i;
-
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, ":CALC:BTO:ACLR:LIST?", arraySize, power, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -915,9 +894,6 @@ ViStatus _VI_FUNC rsspecan_GetBTOSEPowerOfAdjacentChannels (ViSession instrSessi
                                                           ViInt32 *returnedValues)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar*     pbuffer = NULL;
-    ViChar*     pstring_value;
-    ViInt32     i;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -927,25 +903,7 @@ ViStatus _VI_FUNC rsspecan_GetBTOSEPowerOfAdjacentChannels (ViSession instrSessi
     		2, "Array Size");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, power), 3, "Power List");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CALC:BTO:IBS?", &pbuffer)); // TODO: Check the response processing
-    pstring_value = strtok(pbuffer, ",");
-
-    i=0;
-    while (pstring_value)
-    {
-        if (i < arraySize)
-        {
-            sscanf(pstring_value, "%le", &power[i]);
-        }
-        pstring_value = strtok(NULL, ",");
-        i++;
-    }
-
-    free(pbuffer);
-
-    if (returnedValues)
-        *returnedValues = i;
-
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, ":CALC:BTO:IBS?", arraySize, power, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:

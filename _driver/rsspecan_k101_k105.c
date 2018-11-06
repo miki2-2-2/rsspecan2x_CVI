@@ -2627,32 +2627,33 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkConstellationDiagram(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViReal64    *pBuffer = NULL;
-    ViInt32     i;
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViReal64*   data = NULL;
+	ViInt32		dataSize, i;
+	ViInt32		j = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K101|K105"));
 
-    pBuffer = (ViReal64*) malloc (sizeof(ViReal64) * bufferSize * 2);
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "TRAC? TRACE1", &data, &dataSize));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, "TRACE1", bufferSize * 2, pBuffer, noofPoints));
+	dataSize /= 2;
 
-    *noofPoints /= 2;
+	if (noofPoints)
+		*noofPoints = dataSize;
 
-    for ( i = 0; i < *noofPoints && i < bufferSize; i++ )
-    {
-        realParts_I[i] = pBuffer[2*i];
-        imaginaryParts_Q[i] = pBuffer[2*i + 1];
-    }
+	if (dataSize > bufferSize)
+		dataSize = bufferSize;
 
-    if ( pBuffer )
-        free(pBuffer);
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+	for (i = 0; i < dataSize; i++)
+	{
+		realParts_I[i] = data[j++];
+		imaginaryParts_Q[i] = data[j++];
+	}
 
 Error:
+	if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -2693,32 +2694,33 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkDFTPrecodedConstellation(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViReal64    *pBuffer = NULL;
-    ViInt32     i;
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViReal64*   data = NULL;
+	ViInt32		dataSize, i;
+	ViInt32		j = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K101|K105"));
 
-    pBuffer = (ViReal64*) malloc (sizeof(ViReal64) * bufferSize * 2);
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "TRAC? TRACE1", &data, &dataSize));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, "TRACE1", bufferSize * 2, pBuffer, noofPoints));
+	dataSize /= 2;
 
-    *noofPoints /= 2;
+	if (noofPoints)
+		*noofPoints = dataSize;
 
-    for ( i = 0; i < *noofPoints && i < bufferSize; i++ )
-    {
-        realParts_I[i] = pBuffer[2*i];
-        imaginaryParts_Q[i] = pBuffer[2*i + 1];
-    }
+	if (dataSize > bufferSize)
+		dataSize = bufferSize;
 
-    if ( pBuffer )
-        free(pBuffer);
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+	for (i = 0; i < dataSize; i++)
+	{
+		realParts_I[i] = data[j++];
+		imaginaryParts_Q[i] = data[j++];
+	}
 
 Error:
+	if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -2878,7 +2880,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkBitstream(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *pBuffer = NULL, *pValue = NULL;
+    ViChar      *pBuffer = NULL, *pValue;
     ViInt32     nType = 0;
     ViUInt32    ret_cnt = 0;
     ViInt32     nIndexSymbol = 0, nCurrentSymbol = 0;

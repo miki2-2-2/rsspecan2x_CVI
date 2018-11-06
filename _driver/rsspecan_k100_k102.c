@@ -834,11 +834,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPHICHEnhancedTestModels (ViSessio
 {
 	ViStatus	error = VI_SUCCESS;
 
+	checkErr(RsCore_LockSession(instrSession));
+
     viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PHICH_ENHANCED_TEST_MODELS, PHICHTDDM_i1),
     		2, "PHICH TDD m_i=1");
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);  // TODO: ERROR!!! Missing Lock
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1672,8 +1674,6 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementACPResult (ViSession instr
                                                                  ViReal64 result[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar*     pbuffer = NULL;
-    ViChar*     pstring_value;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1682,26 +1682,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementACPResult (ViSession instr
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 5, 5),
     		2, "Array size");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CALC1:MARK:FUNC:POW:RES?", &pbuffer)); // TODO: Check the response processing
-
-    pstring_value = strtok(pbuffer, ",");
-    sscanf(pstring_value,"%le",&result[0]);
-
-    pstring_value = strtok(NULL, ",");
-    sscanf(pstring_value,"%le",&result[1]);
-
-    pstring_value = strtok(NULL, ",");
-    sscanf(pstring_value,"%le",&result[2]);
-
-    pstring_value = strtok(NULL, ",");
-    sscanf(pstring_value,"%le",&result[3]);
-
-    pstring_value = strtok(NULL, ",");
-    sscanf(pstring_value,"%le",&result[4]);
-
-    if (pbuffer)
-        free(pbuffer);
-
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC1:MARK:FUNC:POW:RES?", arraySize, result, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -2198,30 +2179,31 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkConstellationDiagram (ViSession instrS
                                                                 ViReal64 imaginaryParts_Q[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViReal64    *pBuffer = NULL;
-    ViInt32     i;
+	ViReal64*   data = NULL;
+	ViInt32		dataSize, i;
+	ViInt32		j = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
-    pBuffer = (ViReal64*)malloc(sizeof(ViReal64)*bufferSize*2);
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, ":TRAC?", &data, &dataSize));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, "", bufferSize*2,
-                    pBuffer, noofPoints));
+	dataSize /= 2;
 
-    *noofPoints /= 2;
+	if (noofPoints)
+		*noofPoints = dataSize;
 
-    for ( i = 0; i < *noofPoints && i < bufferSize; i++ )
-    {
-        realParts_I[i] = pBuffer[2*i];
-        imaginaryParts_Q[i] = pBuffer[2*i + 1];
-    }
+	if (dataSize > bufferSize)
+		dataSize = bufferSize;
 
-    if ( pBuffer )
-        free(pBuffer);
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+	for (i = 0; i < dataSize; i++)
+	{
+		realParts_I[i] = data[j++];
+		imaginaryParts_Q[i] = data[j++];
+	}
 
 Error:
+	if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -2281,73 +2263,38 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkAllocationSummary (ViSession instrSess
                                                              ViInt32 *noofValues)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *pBuffer = NULL, *pValue = NULL;
-    ViInt32     nType = 0;
-    ViUInt32     ret_cnt = 0;
+	ViReal64*   data = NULL;
+	ViInt32		dataSize, i;
+	ViInt32		j = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K100|K102"));
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "TRACE?", &pBuffer)); // TODO: Check the response processing
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "TRACE?", &data, &dataSize));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
-    *noofValues = 0;
-    pValue = strtok(pBuffer, ",");
+	dataSize /= 7;
 
-    nType = 0;
+	if (noofValues)
+		*noofValues = dataSize;
 
-    while ( pValue )
-    {
+	if (dataSize > arraySize)
+		dataSize = arraySize;
 
-        if ( *noofValues >= arraySize )
-        {
-            viCheckParm(RS_ERROR_INVALID_PARAMETER, 2, "Array Size");
-            break;
-        }
-        else
-        {
-            switch ( nType )
-            {
-                case 0:
-                    subframeNumber[*noofValues] = atoi(pValue);
-                    break;
-                case 1:
-                    allocationID[*noofValues] = atoi(pValue);
-                    break;
-                case 2:
-                    number_ofRB[*noofValues] = atoi(pValue);
-                    break;
-                case 3:
-                    offsetRB[*noofValues] = atoi(pValue);
-                    break;
-                case 4:
-                    modulation[*noofValues] = atoi(pValue);
-                    break;
-                case 5:
-                    power[*noofValues] = atof(pValue);
-                    break;
-                case 6:
-                    EVM[*noofValues] = atof(pValue);
-                    break;
-            }
-
-            nType++;
-            if ( nType > 6 )
-            {
-                nType = 0;
-                (*noofValues)++;
-            }
-
-            pValue = strtok(NULL, ",");
-        }
-    }
-
-    if ( pBuffer )
-        free(pBuffer);
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+	for (i = 0; i < dataSize; i++)
+	{
+		subframeNumber[i] = (ViInt32)data[j++];
+		allocationID[i] = (ViInt32)data[j++];
+		number_ofRB[i] = (ViInt32)data[j++];
+		offsetRB[i] = (ViInt32)data[j++];
+		modulation[i] = (ViInt32)data[j++];
+		power[i] = data[j++];
+		EVM[i] = data[j++];
+	}
 
 Error:
+	if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -2368,7 +2315,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkBitstream (ViSession instrSession,
                                                      ViInt32 *noofValues)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *pBuffer = NULL, *pValue = NULL;
+    ViChar      *pBuffer = NULL, *pValue;
     ViInt32     nType = 0;
     ViUInt32     ret_cnt = 0;
     ViInt32     nIndexSymbol = 0, nCurrentSymbol = 0;
@@ -2379,7 +2326,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkBitstream (ViSession instrSession,
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K100|K102"));
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "TRACE?", &pBuffer)); // TODO: Check the response processing
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "TRACE?", &pBuffer));
 
     *noofValues = 0;
     pValue = strtok(pBuffer, ",");
@@ -2447,9 +2394,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkBitstream (ViSession instrSession,
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if ( pBuffer )
-        free(pBuffer);
-
+    if ( pBuffer ) free(pBuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }

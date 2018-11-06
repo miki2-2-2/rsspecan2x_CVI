@@ -1330,8 +1330,8 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultTableTiming (ViSession instrSessi
                                                             ViInt32 scaling)
 {
 	ViStatus    error   = VI_SUCCESS;
-    ViChar      cmd [100] = "";
-	ViChar*     p2buf = NULL;
+    ViChar      cmd [RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar*     p2buf;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1341,11 +1341,9 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultTableTiming (ViSession instrSessi
 			5, "Scaling");
 
 	if (window == 0)
-		p2buf = cmd + sprintf (cmd, "CALC:TABL:TIM:%s %s", PulseTimingParameterArr[parameter],
-															PulseOnOffArr[visibility]);
+		p2buf = cmd + sprintf (cmd, "CALC:TABL:TIM:%s %s", PulseTimingParameterArr[parameter], PulseOnOffArr[visibility]);
 	else
-    	p2buf = cmd + sprintf (cmd, "CALC%ld:TABL:TIM:%s %s", window, PulseTimingParameterArr[parameter],
-															PulseOnOffArr[visibility]);
+    	p2buf = cmd + sprintf (cmd, "CALC%ld:TABL:TIM:%s %s", window, PulseTimingParameterArr[parameter], PulseOnOffArr[visibility]);
 	if ((parameter != RSSPECAN_VAL_PULSE_RESULT_TIMING_DCYC) && (parameter != RSSPECAN_VAL_PULSE_RESULT_TIMING_DRAT))
 	{
 		if (parameter == RSSPECAN_VAL_PULSE_RESULT_TIMING_PRF)
@@ -1714,9 +1712,6 @@ ViStatus _VI_FUNC rsspecan_QueryPulseIDs (ViSession instrSession,
 {
 	ViStatus    error = VI_SUCCESS;
 	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar*     pbuffer = NULL;
-    ViChar*     pstring_value;
-    ViInt32     cnt = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1725,19 +1720,7 @@ ViStatus _VI_FUNC rsspecan_QueryPulseIDs (ViSession instrSession,
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, queryRange, 1, 2), 2, "Query Range");
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS:PULS:ID? %s", PulseQueryRangeArr[queryRange]);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
-
-    pstring_value = strtok(pbuffer, ",");
-    while (pstring_value)
-	{
-        if (cnt<arraySize)
-            sscanf (pstring_value,"%ld",&pulseIDs[cnt]);
-        pstring_value = strtok(NULL, ",");
-        cnt++;
-    }
-    if (pbuffer) free(pbuffer);
-
-    *returnedValues = cnt;
+    checkErr(RsCore_QueryIntegerArrayToUserBuffer(instrSession, cmd, arraySize, pulseIDs, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -1762,9 +1745,6 @@ ViStatus _VI_FUNC rsspecan_QueryPulseNumbers (ViSession instrSession,
 {
 	ViStatus    error = VI_SUCCESS;
 	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar*     pbuffer = NULL;
-    ViChar*     pstring_value;
-    ViInt32     cnt = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1773,19 +1753,7 @@ ViStatus _VI_FUNC rsspecan_QueryPulseNumbers (ViSession instrSession,
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, queryRange, 1, 2), 2, "Query Range");
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS:PULS:NUMB? %s", PulseQueryRangeArr[queryRange]);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
-
-    pstring_value = strtok(pbuffer, ",");
-    while (pstring_value)
-	{
-        if (cnt<arraySize)
-            sscanf (pstring_value, "%ld", &pulseNumbers[cnt]);
-        pstring_value = strtok (NULL, ",");
-        cnt++;
-    }
-    if (pbuffer) free (pbuffer);
-
-    *returnedValues = cnt;
+	checkErr(RsCore_QueryIntegerArrayToUserBuffer(instrSession, cmd, arraySize, pulseNumbers, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -1814,9 +1782,6 @@ ViStatus _VI_FUNC rsspecan_QueryPulseResultPower (ViSession instrSession,
 {
 	ViStatus    error = VI_SUCCESS;
 	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar*     pbuffer = NULL;
-    ViChar*     pstring_value;
-    ViInt32     cnt = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1835,18 +1800,8 @@ ViStatus _VI_FUNC rsspecan_QueryPulseResultPower (ViSession instrSession,
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS:PULS:POW:%s%s? %s", PulsePowerResultArr[parameter],
 										PulseResultTypeArr[resultType], PulseQueryRangeArr[queryRange]);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
-
-    pstring_value = strtok (pbuffer, ",");
-    while (pstring_value){
-        if (cnt<arraySize)
-            sscanf (pstring_value, "%le", &results[cnt]);
-        pstring_value = strtok (NULL, ",");
-        cnt++;
-    }
-    if (pbuffer) free (pbuffer);
-
-    *returnedValues = cnt;
+	
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -1875,9 +1830,6 @@ ViStatus _VI_FUNC rsspecan_QueryPulseResultTiming (ViSession instrSession,
 {
 	ViStatus    error = VI_SUCCESS;
 	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar*     pbuffer = NULL;
-    ViChar*     pstring_value;
-    ViInt32     cnt = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1896,19 +1848,7 @@ ViStatus _VI_FUNC rsspecan_QueryPulseResultTiming (ViSession instrSession,
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS:PULS:TIM:%s%s? %s", PulseTimingParameterArr[parameter],
 										PulseResultTypeArr[resultType], PulseQueryRangeArr[queryRange]);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
-
-    pstring_value = strtok (pbuffer, ",");
-    while (pstring_value)
-	{
-        if (cnt<arraySize)
-            sscanf (pstring_value, "%le", &results[cnt]);
-        pstring_value = strtok (NULL, ",");
-        cnt++;
-    }
-    if (pbuffer) free (pbuffer);
-
-    *returnedValues = cnt;
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -1937,9 +1877,6 @@ ViStatus _VI_FUNC rsspecan_QueryPulseResultFrequency (ViSession instrSession,
 {
 	ViStatus    error = VI_SUCCESS;
 	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar*     pbuffer = NULL;
-    ViChar*     pstring_value;
-    ViInt32     cnt = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1958,19 +1895,7 @@ ViStatus _VI_FUNC rsspecan_QueryPulseResultFrequency (ViSession instrSession,
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS:PULS:FREQ:%s%s? %s", PulseFreqParameterArr[parameter],
 										PulseResultTypeArr[resultType], PulseQueryRangeArr[queryRange]);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
-
-    pstring_value = strtok (pbuffer, ",");
-    while (pstring_value)
-	{
-        if (cnt<arraySize)
-            sscanf (pstring_value, "%le", &results[cnt]);
-        pstring_value = strtok (NULL, ",");
-        cnt++;
-    }
-    if (pbuffer) free (pbuffer);
-
-    *returnedValues = cnt;
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -1999,9 +1924,6 @@ ViStatus _VI_FUNC rsspecan_QueryPulseResultPhase (ViSession instrSession,
 {
 	ViStatus    error = VI_SUCCESS;
 	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar*     pbuffer = NULL;
-    ViChar*     pstring_value;
-    ViInt32     cnt = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2020,18 +1942,7 @@ ViStatus _VI_FUNC rsspecan_QueryPulseResultPhase (ViSession instrSession,
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS:PULS:PHAS:%s%s? %s", PulsePhaseParameterArr[parameter],
 										PulseResultTypeArr[resultType], PulseQueryRangeArr[queryRange]);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
-
-    pstring_value = strtok (pbuffer, ",");
-    while (pstring_value){
-        if (cnt<arraySize)
-            sscanf (pstring_value, "%le", &results[cnt]);
-        pstring_value = strtok (NULL, ",");
-        cnt++;
-    }
-    if (pbuffer) free (pbuffer);
-
-    *returnedValues = cnt;
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:

@@ -1163,11 +1163,12 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10MeasurementResults(
     ViStatus    error = VI_SUCCESS;
     ViChar  buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViInt32     old_timeout = 0;
-    viCheckParm(result == NULL, 5, "Result");
+    
+	checkErr(RsCore_LockSession(instrSession));
+
+	viCheckParm(result == NULL, 5, "Result");
     checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
     checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
-
-    checkErr(RsCore_LockSession(instrSession));
 
     switch ( measurement )
     {
@@ -1240,9 +1241,10 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10MeasurementResults(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar  buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    viCheckParm(result == NULL, 5, "Result");
-
+    
     checkErr(RsCore_LockSession(instrSession));
+
+	viCheckParm(result == NULL, 5, "Result");
 
     switch ( measurement )
     {
@@ -1718,12 +1720,12 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10ModulationSpectrumResults (ViSession instr
         }
         cnt++;
     }
-    if (pbuffer) free(pbuffer);
 
     *num_ofResults=cnt;
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
+	if (pbuffer) free(pbuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1782,13 +1784,13 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10TransientSpectrumResults (ViSession instrSe
         }
         cnt++;
     }
-    if (pbuffer) free(pbuffer);
 
     *num_ofResults=cnt;
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
+	if (pbuffer) free(pbuffer);
+	(void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1983,13 +1985,13 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10WideSpectrumResults (ViSession instrSessio
         }
         cnt++;
     }
-    if (pbuffer) free(pbuffer);
 
     *numOfResults=cnt;
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
+	if (pbuffer) free(pbuffer);
+	(void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -2027,6 +2029,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10WideSpectrumGating (ViSession instrSession,
 	*gateLength = atof (p2buf);
 
 Error:
+	if (pbuffer) free(pbuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }

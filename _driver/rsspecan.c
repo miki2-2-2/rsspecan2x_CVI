@@ -5401,7 +5401,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFrequencyMaskShape (ViSession instrSession,
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
+    (void)RsCore_UnlockSession(instrSession);  // TODO: Missing free(p2buf)
     return error;
 }
 
@@ -7719,7 +7719,7 @@ ViStatus _VI_FUNC rsspecan_QueryWindowIndex (ViSession instrSession,
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
+    (void)RsCore_UnlockSession(instrSession);  // TODO: Missing free(pbuff)
     return error;
 }
 
@@ -7892,7 +7892,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTransducerFactor (ViSession instrSession,
 
 Error:
     if (p2buf) free (p2buf);
-    (void)RsCore_UnlockSession(instrSession);
+    (void)RsCore_UnlockSession(instrSession);  // TODO: Missing free(pbuf)
     return error;
 }
 
@@ -8670,7 +8670,7 @@ ViStatus _VI_FUNC rsspecan_FileDirectoryPath (ViSession instrSession,
 	checkErr(rsspecan_QueryViString(instrSession, cmd, bufferSize, output));
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
+    (void)RsCore_UnlockSession(instrSession);  // TODO: Missing free(pbuffer)
     return error;
 }
 

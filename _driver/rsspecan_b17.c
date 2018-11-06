@@ -47,11 +47,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandInputCoupling (ViSession inst
 {
     ViStatus    error = VI_SUCCESS;
 
+	checkErr(RsCore_LockSession(instrSession));
+
     viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_COUPLING, basebandInputCoupling),
     		2, "Baseband Input Coupling");
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);  // TODO: ERROR!!! Missing Lock
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 

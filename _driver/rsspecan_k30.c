@@ -161,7 +161,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseFrequencyTable(
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
     ViChar      buffer[4*RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *p2buffer = NULL;
+	ViChar      *p2buffer = buffer;
     ViUInt32    retCnt    = 0;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -169,9 +169,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseFrequencyTable(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, numberOfValues, 1, 100),
     		2, "Number Of Values");
 
-    p2buffer = buffer;
-
-    p2buffer += sprintf (p2buffer, "SENS:FREQ:LIST:DATA ");
+    p2buffer += sprintf (p2buffer, "SENS:FREQ:LIST:DATA");
 
     if (numberOfValues > 0)
     {
@@ -513,15 +511,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseENRTable(
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
     ViChar      buffer[4*RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *p2buffer = NULL;
+    ViChar      *p2buffer = buffer;
     ViUInt32    retCnt          = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, numberOfValues, 1, 100),
     		2, "Number Of Values");
-
-    p2buffer = buffer;
 
     p2buffer += sprintf (p2buffer, "SENS:CORR:ENR:TABL:DATA ");
 
@@ -702,15 +698,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseLossInputTable(
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
     ViChar      cmd[4*RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *p2buffer = NULL;
+    ViChar      *p2buffer = cmd;
     ViUInt32    retCnt          = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, numberOfValues, 1, 100),
     		2, "Number Of Values");
-
-    p2buffer = cmd;
 
     p2buffer += sprintf (p2buffer, "SENS:CORR:LOSS:INP:TABL ");
 
@@ -814,15 +808,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseLossOutputTable(
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
     ViChar      cmd[4*RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *p2buffer = NULL;
+    ViChar      *p2buffer = cmd;
     ViUInt32    retCnt          = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, numberOfValues, 1, 100),
     		2, "Number Of Values");
-
-    p2buffer = cmd;
 
     p2buffer += sprintf (p2buffer, "SENS:CORR:LOSS:OUTP:TABL ");
 

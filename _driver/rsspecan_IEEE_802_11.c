@@ -1925,7 +1925,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanACPChannLimitCheckResults(ViSession     instrS
     ViStatus    error = VI_SUCCESS;
 	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 	ViChar      response[RS_MAX_MESSAGE_BUF_SIZE];
-	ViChar      *p2buf = NULL;
+	ViChar      *p2buf;
 
     checkErr(RsCore_LockSession(instrSession));
 

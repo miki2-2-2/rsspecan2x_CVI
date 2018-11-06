@@ -1257,12 +1257,12 @@ ViStatus _VI_FUNC rsspecan_FetchGsmModSpectrum (ViSession instrSession,
         }
         cnt++;
     }
-    if (pbuffer) free(pbuffer);
 
     *num_ofResults=cnt;
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
+	if (pbuffer) free(pbuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1407,13 +1407,13 @@ ViStatus _VI_FUNC rsspecan_FetchGsmTransSpectrum (ViSession instrSession,
         }
         cnt++;
     }
-    if (pbuffer) free(pbuffer);
 
     *num_ofResults=cnt;
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    (void) (void)RsCore_UnlockSession(instrSession);
+	if (pbuffer) free(pbuffer);
+	(void) (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
