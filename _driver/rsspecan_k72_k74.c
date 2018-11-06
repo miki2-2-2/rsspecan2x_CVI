@@ -106,7 +106,6 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPBSMeasurement(ViSession instrSession,
                                                         ViInt32 timingOffset)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -130,7 +129,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPBSMeasurement(ViSession instrSession,
     viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_NORMALIZE, normalize),
     		7, "Normalize");
 
-    if ((strstr(model,"FSL")!=NULL) || (strstr (buffer, "K74") != NULL))
+    if (RsCore_IsInstrumentModel(instrSession, "FSL") || (RsCore_HasInstrumentOptions(instrSession, "K74")))
     {
             viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_HSDPAUPA_STATE, hsdpaupa),
             		8, "HSDPA/UPA");
@@ -144,7 +143,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPBSMeasurement(ViSession instrSession,
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_ANTENNA, antenna),
 			10, "Antenna");
 
-    if ((strstr(model,"FSL")==NULL))
+    if (RsCore_IsInstrumentModel(instrSession, "FSL"))
     {
         viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_POW_DIFFERENCE, powerDifference),
         		11, "Power Difference");
@@ -271,16 +270,6 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPBSResultType(ViSession instrSession,
     ViStatus    error = VI_SUCCESS;
 
     checkErr(RsCore_LockSession(instrSession));
-
-    if (strstr (model, "FSL") != NULL)
-    {
-        if ((RsCore_InvalidViInt32Range (resultType, RSSPECAN_VAL_3GBS_RES_CDP,
-                                        RSSPECAN_VAL_3GBS_RES_CTAB) ||
-                                        (resultType==RSSPECAN_VAL_3GBS_RES_CDEP)) == VI_TRUE)
-        {
-            viCheckParm(RS_ERROR_INVALID_PARAMETER, 2, "Result Type");
-        }
-    }
 
     switch (resultType)
     {
@@ -461,10 +450,12 @@ ViStatus _VI_FUNC rsspecan_Query3GPPTAERBTSNumber (ViSession instrSession,
 {
 	ViStatus	error = VI_SUCCESS;
 
+	checkErr(RsCore_LockSession(instrSession));
+
 	checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GPP_TAER_BTS_NUMBER, numberOfBTS));
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);  // TODO: ERROR!!! Missing Lock
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -666,11 +657,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDBSChannelTableData (ViSession instrSe
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr(buffer,"FSL")!=NULL)
-    {
-        viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
-    }
-
+	checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K72|K74"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
@@ -708,18 +695,14 @@ ViStatus _VI_FUNC rsspecan_Query3GPPFDDBSChannelTableCatalog(ViSession   instrSe
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr(buffer,"FSL")!=NULL)
-    {
-        viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
-    }
-
+	checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K72|K74"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, bufferSize, 0, INT_MAX),
     		3, "Buffer Size");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTablesList), 4, "Channel Table List");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CONF:WCDP:CTAB:CAT?", &buf)); // TODO: Check the response processing
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CONF:WCDP:CTAB:CAT?", &buf));
     checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
 
     checkErr(rsspecan_CheckStatus (instrSession));
@@ -899,41 +882,28 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSCDPResult(ViSession instrSession,
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar      buf[RS_MAX_MESSAGE_BUF_SIZE];
-    ViInt32     i;
-    ViChar      *buffer = NULL;
-    ViChar      *pbuff = NULL;
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K72|K74|K44"));
 
-    if ((strstr(buf,"K44")==NULL)) {
+    if (!RsCore_HasInstrumentOptions(instrSession, "K44"))
+	{
         viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, 0, 3),
         		2, "Type");
-        }
-    else {
+    }
+    else
+	{
         viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, 0, 5),
         		2, "Type");
-        }
+    }
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 0, INT_MAX),
     		3, "Array Size");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 4, "Results");
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MARK:FUNC:POW:RES? %s", result3GBSCDPArr[type]);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buffer)); // TODO: Check the response processing
-
-    pbuff = strtok (buffer, ",");
-    i = 0;
-    do{
-        if (i<arraySize) results[i] = atof (pbuff);
-        pbuff = strtok (NULL, ",");
-        i++;
-    }while(pbuff != NULL);
-
-    if (returnedValues) *returnedValues = i;
-
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -954,14 +924,13 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSCDPScramblingCodeResult (ViSession instrSess
                                                              ViInt32 *returnedValues)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar*     pbuffer = NULL;
-    ViChar*     pstring_value = NULL;
-    ViInt32     idx=0;
-    ViChar      buf[RS_MAX_MESSAGE_BUF_SIZE];
+	ViReal64*   data = NULL;
+	ViInt32		dataSize, i;
+	ViInt32		j = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr (buf, "FSL") == NULL) && !rsspecan_IsFSV (instrSession))
+    if (!RsCore_IsInstrumentModel(instrSession, "FSL") && !rsspecan_IsFSV (instrSession))
     {
         checkErr(RS_ERROR_INSTRUMENT_MODEL);
     }
@@ -970,38 +939,27 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSCDPScramblingCodeResult (ViSession instrSess
     viCheckParm(RsCore_InvalidNullPointer(instrSession, scrambingCode), 3, "Scrambling Code");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, power), 4, "WiPowerdow");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "*CLS;:CDP:LCODe:SEAR:LIST?", &pbuffer)); // TODO: Check the response processing
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, ":CDP:LCODe:SEAR:LIST?", &data, &dataSize));
 
-    if (strlen(pbuffer) > 1)
-    {
-        pstring_value = strtok(pbuffer, ",");
+	dataSize /= 3;
 
-        while (pstring_value)
-        {
-            if (idx<arraySize)
-            {
-                //sscanf (pstring_value, "%ld,%[^,],%Le", &scrambingCode[idx], buf, &power[idx]);
-                scrambingCode[idx] = atoi (pstring_value);
-                pstring_value = strtok(NULL, ",");
-                pstring_value = strtok(NULL, ",");
-                power[idx] = atof (pstring_value);
-                pstring_value = strtok(NULL, ",");
-            }
-            //pstring_value = strtok(NULL, ",");
-            //pstring_value = strtok(NULL, ",");
-            //pstring_value = strtok(NULL, ",");
-            idx++;
-        }
-    }
-    if (returnedValues)
-    {
-        *returnedValues=idx;
-    }
+	if (returnedValues)
+		*returnedValues = dataSize;
+
+	if (dataSize > arraySize)
+		dataSize = arraySize;
+
+	for (i = 0; i < dataSize; i++)
+	{
+		scrambingCode[i] = (ViInt32)data[j++];
+		j++;
+		power[i] = data[j++];
+	}
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (pbuffer) free(pbuffer);
+    if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1026,20 +984,14 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSCDPListEvaluationResult (ViSession instrSess
                                                              ViReal64 reserved2[],
                                                              ViInt32 *returnedValues)
 {
-    ViStatus    error   = VI_SUCCESS;
-    //ViChar      *buffer = NULL;
-    //ViChar      *pbuf=NULL;
-    ViInt32     count=0;
-    ViUInt32    retCnt;
-    ViUInt32     i;
-    ViChar      buf[RS_MAX_MESSAGE_BUF_SIZE];
-    ViReal64    *values = NULL;
-    ViInt32     arrayLength,
-                actualPoints;
+	ViStatus	error = VI_SUCCESS;
+	ViReal64*     data = NULL;
+	ViInt32		dataSize, i;
+	ViInt32		j = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr (buf, "FSL") == NULL) && !rsspecan_IsFSV (instrSession))
+    if (!RsCore_IsInstrumentModel(instrSession, "FSL") && !rsspecan_IsFSV (instrSession))
     {
         checkErr(RS_ERROR_INSTRUMENT_MODEL);
     }
@@ -1058,39 +1010,34 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSCDPListEvaluationResult (ViSession instrSess
     viCheckParm(RsCore_InvalidNullPointer(instrSession, reserved1), 11, "Reserved 1");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, reserved2), 12, "Reserved 2");
 
-    arrayLength = noOfValues*11;
-    values = malloc(arrayLength*sizeof (ViReal64));
-    //checkErr(RsCore_Write(instrSession, "TRAC:DATA? LIST"));
-    //checkErr(Rs_ReadDataUnknownLength(instrSession, &buffer, &retCnt));
-    //For R&S FSL are values returned in REAL,32 format
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, "LIST", arrayLength,
-                    values, &actualPoints));
-    count=0;
-    i=0;
-    retCnt=(arrayLength<actualPoints)?arrayLength: actualPoints;
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "TRAC:DATA? LIST", &data, &dataSize));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
-    do{
-        rangeNumber[count] = values[i++];
-        startFrequency[count] = values[i++];
-        stopFrequency[count] = values[i++];
-        resolutionBandwidth[count] = values[i++];
-        frequency[count] = values[i++];
-        powerAbs[count] = values[i++];
-        powerRel[count] = values[i++];
-        delta[count] = values[i++];
-        limitCheck[count] = (ViInt32) values[i++];
-        reserved1[count] = values[i++];
-        reserved2[count] = values[i++];
-        count++;
-    }while (i<retCnt);
+	dataSize /= 11;
 
-    if (returnedValues)
-        *returnedValues = actualPoints/11;
+	if (returnedValues)
+		*returnedValues = dataSize;
 
-    checkErr(rsspecan_CheckStatus (instrSession));
+	if (dataSize > noOfValues)
+		dataSize = noOfValues;
+
+	for (i = 0; i < dataSize; i++)
+	{
+		rangeNumber[i] = data[j++];
+		startFrequency[i] = data[j++];
+		stopFrequency[i] = data[j++];
+		resolutionBandwidth[i] = data[j++];
+		frequency[i] = data[j++];
+		powerAbs[i] = data[j++];
+		powerRel[i] = data[j++];
+		delta[i] = data[j++];
+		limitCheck[i] = (ViInt32)data[j++];
+		reserved1[i] = data[j++];
+		reserved2[i] = data[j++];
+	}
 
 Error:
-    if (values) free(values);
+	if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1113,8 +1060,7 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSTimeAlignmentErrorResult (ViSession instrSes
         viCheckParm(RS_ERROR_INVALID_PARAMETER, 2, "Type");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, result), 3, "Result");
 
-    checkErr(viQueryf(instrSession, "CALC:MARK:FUNC:TAER:RES? TAER\n","%le", result));
-
+    checkErr(RsCore_QueryViReal64(instrSession, "CALC:MARK:FUNC:TAER:RES? TAER", result));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:

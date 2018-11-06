@@ -586,7 +586,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanBasebandSignalLevel (ViSession instrSess
 
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      options[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -596,8 +595,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanBasebandSignalLevel (ViSession instrSess
     viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_WLAN_POW_AUTO_SWE_TIME, autoLevelTime),
     		3, "Auto Level Time");
 
-    if (!autoLevel && (strstr (options, "K91") != NULL) &&
-		((strstr (model, "FSL")==NULL) && !rsspecan_IsFSV (instrSession)))
+    if (!autoLevel && RsCore_HasInstrumentOptions(instrSession, "K91") &&
+		(!RsCore_IsInstrumentModel(instrSession, "FSL") && !rsspecan_IsFSV (instrSession)))
     {
         viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_WLAN_POW_EXP_IQ, signalLevel),
         		4, "Signal Level");
@@ -657,7 +656,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanRFSignalLevel(ViSession   instrSession,
 
     viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_WLAN_POW_AUTO_SWE_TIME, autoLevelTime),
     		3, "Auto Level Time");
-    if ((!autoLevel) && (strstr(model, "FMU") == NULL))
+    if ((!autoLevel) && (!RsCore_IsInstrumentModel(instrSession, "FMU")))
     {
         viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_ATTENUATION, rfAtt),
         		5, "RF Att");
@@ -937,7 +936,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanDemodulation(ViSession   instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    is_k91 = (strstr (options, "K91") != NULL);
+	is_k91 = RsCore_HasInstrumentOptions(instrSession, "K91");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, minNumberofDataSymbols, 1, 1366),
     		8, "Min Number of Data Symbols");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, maxNumberofDataSymbols, 1, 1366),
@@ -1112,19 +1111,13 @@ ViStatus _VI_FUNC rsspecan_GetWlanFilterCatalog(ViSession   instrSession,
                                             ViInt32*    returnedLength)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *buff;
-    ViUInt32     count=0;
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K90|K91"));
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "DEM:FILT:CAT?", &buff)); // TODO: Check the response processing
-    if (bufferSize != 0)
-    {
-        strncpy(filterList, buff, (bufferSize > (ViInt32)count) ? count : bufferSize);
-    }
-    if (returnedLength) *returnedLength = count;
-    checkErr(rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_QueryViString(instrSession, "DEM:FILT:CAT?", bufferSize, filterList));
+    if (returnedLength)
+		*returnedLength = strlen(filterList);
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -1574,10 +1567,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanConstellationMeasurement(ViSession   ins
                     		3, "Carrier Selection");
                 break;
                 case RSSPECAN_VAL_SELECTION_NUM:
-                    if (RsCore_InvalidViInt32Range (carrierNumber, -26, 26) || (carrierNumber == 0))
-                    {
-                        viCheckParm(RS_ERROR_INVALID_PARAMETER, 4, "Carrier Number");
-                    }
                     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_CONS_CARR_SEL_NR, carrierNumber),
                     		4, "Carrier Number");
                 break;
@@ -1655,9 +1644,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanIQMeasurementParameters(ViSession   inst
 
     viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_WLAN_SRAT, sampleRate),
     		2, "Sample Rate");
-    if (strstr (buffer, "B72"))
-        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_FLAT, filter),
-        		3, "Filter");
+    
+	if (RsCore_HasInstrumentOptions(instrSession, "B72"))
+	{
+		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_FLAT, filter),
+			3, "Filter");
+	}
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -1704,10 +1696,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanACPMeasurement(ViSession   instrSession,
                                                 ViReal64    values[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *pbuffer;
-    ViInt32     maxIdx = 12;
-    ViInt32     i;
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1719,17 +1708,8 @@ ViStatus _VI_FUNC rsspecan_GetWlanACPMeasurement(ViSession   instrSession,
     		4, "Mode");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, values), 5, "Values");
 
-    checkErr(viQueryf (instrSession, ":CALC%ld:MARK%ld:FUNC:POW:RES:%s?\n","%s", window, marker, ACPMeas[mode], buffer));
-
-    pbuffer = strtok(buffer, ",");
-    i=0;
-
-    while ((pbuffer) && (i < maxIdx))
-    {
-        values[i++] = atof (pbuffer);
-        pbuffer = strtok(NULL, ",");
-    }
-
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":CALC%ld:MARK%ld:FUNC:POW:RES:%s?", window, marker, ACPMeas[mode]);
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 12, values, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:

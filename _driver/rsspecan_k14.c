@@ -118,20 +118,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramDisplayParameters (ViSession inst
 {
     ViInt32     win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld", win);
+    snprintf (repCap, RS_REPCAP_BUF_SIZE, "Win%ld", win);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_SPEM_COLOR, color),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_SPEM_COLOR, color),
     		2, "Color");
 
-    if (strstr (model, "FSL"))
-        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_SPEM_SIZE, size),
-        		3, "Size");
+	if (RsCore_IsInstrumentModel(instrSession, "FSL"))
+	{
+		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_SPEM_SIZE, size),
+			3, "Size");
+	}
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -999,56 +1001,43 @@ ViStatus _VI_FUNC rsspecan_GetSpectrogramTimeStamp (ViSession instrSession,
                                               ViInt32 *returnedValues)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar*     pbuffer = NULL;
-    ViInt32     i;
-    ViChar*     pstring_value;
-    ViChar      buffer [RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViInt32*     data = NULL;
+    ViInt32     i, dataSize, j = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr (buffer, "FSL") == NULL) && !rsspecan_IsFSV (instrSession))
+    if (!RsCore_IsInstrumentModel(instrSession, "FSL") && !rsspecan_IsFSV (instrSession))
         checkErr(RS_ERROR_INSTRUMENT_MODEL);
 
-    if (strstr (buffer, "K14") == NULL)
-        checkErr(RS_ERROR_INSTRUMENT_OPTION);
-
-    if (strstr (buffer, "K160R") == NULL)
-        checkErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K14"));
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K160R"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, frame, 0, 1),
     		2, "Frame");
 
-    checkErr(viPrintf(instrSession, ":CALC:SPEC:TST:DATA? %s\n", (frame==0)?"CURR":"ALL"));
-    checkErr(Rs_ReadDataUnknownLength(instrSession, &pbuffer, NULL));
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":CALC:SPEC:TST:DATA? %s", (frame == 0) ? "CURR" : "ALL");
+	checkErr(RsCore_QueryAsciiViInt32Array(instrSession, cmd, &data, &dataSize));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
-    pstring_value = strtok (pbuffer, ",");
-    i = 0;
-    while (pstring_value)
-    {
-        if (i < arraySize){
-            part1[i] = atol (pstring_value);
-            pstring_value = strtok (NULL, ",");
-            part2[i] = atol (pstring_value);
-            pstring_value = strtok (NULL, ",");
-            part3[i] = atol (pstring_value);
-            pstring_value = strtok (NULL, ",");
-            part4[i] = atol (pstring_value);
-            pstring_value = strtok (NULL, ",");
-        }
-        else
-        {
-             pstring_value = strtok (NULL, ",");
-             pstring_value = strtok (NULL, ",");
-             pstring_value = strtok (NULL, ",");
-             pstring_value = strtok (NULL, ",");
-        }
-        i++;
-    };
-    if (returnedValues) *returnedValues = i;
+	dataSize /= 4;
 
-    checkErr(rsspecan_CheckStatus (instrSession));
+	if (returnedValues)
+		*returnedValues = dataSize;
+
+	if (dataSize > arraySize)
+		dataSize = arraySize;
+
+	for (i = 0; i < dataSize; i++)
+	{
+		part1[i] = data[j++];
+		part2[i] = data[j++];
+		part3[i] = data[j++];
+		part4[i] = data[j++];
+	}
 
 Error:
+	if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1067,14 +1056,11 @@ ViStatus _VI_FUNC rsspecan_ReadSpectrogramTraceData (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr (buffer, "FSL") == NULL) && !rsspecan_IsFSV (instrSession))
+    if (!RsCore_IsInstrumentModel(instrSession, "FSL") && !rsspecan_IsFSV (instrSession))
         checkErr(RS_ERROR_INSTRUMENT_MODEL);
 
-    if (strstr (buffer, "K14") == NULL)
-        checkErr(RS_ERROR_INSTRUMENT_OPTION);
-
-    if (strstr (buffer, "K160R") == NULL)
-        checkErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K14"));
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K160R"));
 
     sprintf (buffer, "SPEC");
     checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize,
@@ -1100,34 +1086,24 @@ ViStatus _VI_FUNC rsspecan_ReadPersistenceSpectrumTraceData (ViSession instrSess
                                                              ViInt32 *returnedValues)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
-    ViInt32     old_timeout = -1;
+    ViChar      trace[RS_MAX_MESSAGE_BUF_SIZE]="";
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr (buffer, "FSL") == NULL) && !rsspecan_IsFSV (instrSession))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+    if (!RsCore_IsInstrumentModel(instrSession, "FSL") && !rsspecan_IsFSV (instrSession))
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
-    if (strstr (buffer, "K14") == NULL)
-        checkErr(RS_ERROR_INSTRUMENT_OPTION);
-
-    if (strstr (buffer, "K160R") == NULL)
-        checkErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K14"));
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K160R"));
 
     viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
 
-    checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-    checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
-
-    sprintf (buffer, "PSP");
-
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize, results, returnedValues));
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+    checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "TRAC? PSP", arraySize, results, returnedValues));
+    checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-    if (old_timeout >= 0)
-        rsspecan_SetOPCTimeout (instrSession, old_timeout);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1145,34 +1121,24 @@ ViStatus _VI_FUNC rsspecan_ReadMaxholdTraceData (ViSession instrSession,
                                                  ViInt32 *returnedValues)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
-    ViInt32     old_timeout = -1;
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if ((strstr (buffer, "FSL") == NULL) && !rsspecan_IsFSV (instrSession))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	if (!RsCore_IsInstrumentModel(instrSession, "FSL") && !rsspecan_IsFSV(instrSession))
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
-    if (strstr (buffer, "K14") == NULL)
-        checkErr(RS_ERROR_INSTRUMENT_OPTION);
-
-    if (strstr (buffer, "K160R") == NULL)
-        checkErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K14"));
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K160R"));
 
     viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
 
-    checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-    checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
-
-    sprintf (buffer, "HMAX");
-
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize, results, returnedValues));
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "TRAC? HMAX", arraySize, results, returnedValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (old_timeout >= 0)
-        rsspecan_SetOPCTimeout (instrSession, old_timeout);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1188,21 +1154,17 @@ ViStatus _VI_FUNC rsspecan_GetSpectrogramXAxisScaling (ViSession instrSession,
 {
     ViInt32     win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
-    ViChar      *pbuffer;
-    ViChar      *pbuff;
-    ViInt32     i = 0;
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (!rsspecan_IsFSV (instrSession))
-        checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	if (!rsspecan_IsFSV(instrSession))
+	{
+		checkErr(RS_ERROR_INSTRUMENT_MODEL);
+	}
 
-    if (strstr (buffer, "K14") == NULL)
-        checkErr(RS_ERROR_INSTRUMENT_OPTION);
-
-    if (strstr (buffer, "K160R") == NULL)
-        checkErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K14"));
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K160R"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, frame, RSSPECAN_VAL_SPECM_FRAME_CURRENT, RSSPECAN_VAL_SPECM_FRAME_ALL),
     		2, "Frame");
@@ -1212,20 +1174,8 @@ ViStatus _VI_FUNC rsspecan_GetSpectrogramXAxisScaling (ViSession instrSession,
 
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    checkErr(viPrintf(instrSession, "CALC%ld:SPEC:X:DATA? %s\n", win,
-        (frame == RSSPECAN_VAL_SPECM_FRAME_CURRENT) ? "CURR" : "ALL"));
-
-    checkErr(Rs_ReadDataUnknownLength (instrSession, &pbuffer, NULL));
-
-    pbuff = strtok (pbuffer, ",");
-
-    while((pbuff != NULL) && (i < arraySize))
-    {
-        xAxis[i++] = atof (pbuff);
-        pbuff = strtok (NULL, ",");
-    }
-
-    if (returnedValues) *returnedValues = i;
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:SPEC:X:DATA? %s", win, (frame == RSSPECAN_VAL_SPECM_FRAME_CURRENT) ? "CURR" : "ALL");
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, xAxis, returnedValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 

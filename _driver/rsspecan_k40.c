@@ -579,7 +579,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseSpotNoiseSettings(
     viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "SN1", RSSPECAN_ATTR_PHASE_CALC_SNO_STAT, enable),
     		2, "Enable");
 
-    if (strstr (buffer, "FSW") != NULL)
+    if (RsCore_IsInstrumentModel(instrSession, "FSW"))
 	{
         viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "SN2", RSSPECAN_ATTR_PHASE_CALC_SNO_STAT, enable),
         		2, "Enable");
@@ -622,17 +622,16 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseAnalyzerSettings(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
-
+    
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr (buffer, "B2,") != NULL)
+	if (RsCore_HasInstrumentOptions(instrSession, "B2"))
     {
         viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_INP_PRES_STAT, preselector),
         		2, "Pre-selector");
     }
 
-    if ((strstr (buffer, "B23") != NULL) && ((strstr (buffer, "B25") != NULL) || (strstr (buffer, "B2,") != NULL)))
+    if (RsCore_HasInstrumentOptions(instrSession, "B25|B2|B22"))
     {
         viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_INP_GAIN_STAT, preamplifier),
         		3, "Pre-amplifier");
@@ -987,9 +986,7 @@ ViStatus _VI_FUNC rsspecan_DefinePhaseLimitLine(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      *pbuffer= NULL;
-    ViChar      *p2buf;
-    ViInt32     i;
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1002,32 +999,16 @@ ViStatus _VI_FUNC rsspecan_DefinePhaseLimitLine(
     viCheckParm(RsCore_InvalidNullPointer(instrSession, xAxis), 5, "X Axis");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, amplitude), 6, "Amplitude");
 
-    viCheckAlloc (pbuffer = (ViChar*) malloc (count * 20 + 200));
 
-    p2buf = pbuffer + sprintf (pbuffer, "CALC:LIM%ld:CONT ", limit);
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:LIM%ld:CONT ", limit);
+	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, cmd, xAxis, count));
 
-    for (i = 0; i < count; i++)
-        p2buf += sprintf (p2buf, "%le,", xAxis[i]);
-
-    *p2buf = '\0';
-    *--p2buf = '\n';
-
-    checkErr(viWrite (instrSession, (ViBuf) pbuffer, (ViUInt32) strlen (pbuffer), NULL));
-
-    p2buf = pbuffer + sprintf (pbuffer, "CALC:LIM%ld:%s ", limit, limTypeArr [type]);
-
-    for (i = 0; i < count; i++)
-        p2buf += sprintf (p2buf, "%le,", amplitude[i]);
-
-    *p2buf = '\0';
-    *--p2buf = '\n';
-
-    checkErr(viWrite (instrSession, (ViBuf) pbuffer, (ViUInt32) strlen (pbuffer), NULL));
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:LIM%ld:%s ", limit, limTypeArr[type]);
+	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, cmd, xAxis, count));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (pbuffer) free (pbuffer);
 
     (void)RsCore_UnlockSession(instrSession);
     return error;
@@ -1461,55 +1442,38 @@ ViStatus _VI_FUNC rsspecan_ReadPhaseTraceData(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViInt32     retCnt  = 0;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar*     pbuffer = NULL;
-    ViInt32     cnt     = 0;
+    ViChar      trace[RS_MAX_MESSAGE_BUF_SIZE];
 	ViReal64*	data = NULL;
-	ViInt32		i = 0;
+	ViInt32		i, j = 0, retCnt;
+	ViInt32     dataSize = 32001;
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, sourceTrace, 0, 2),
     		2, "Source Trace");
+	
+	if (noofPoints)
+		dataSize = *noofPoints;
+	
+	sprintf(trace, "TRACE%ld", sourceTrace + 1);
+	data = (ViReal64*)malloc(dataSize * sizeof(ViReal64) * 2);
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, trace, dataSize * 2, data, &retCnt));
 
-	sprintf (buffer, "TRACE%ld", sourceTrace + 1);
+	retCnt /= 2;
 
-    if (*noofPoints != NULL)
-    {
-		data = (ViReal64*) malloc (*noofPoints * sizeof (ViReal64) * 2);
+	if (noofPoints)
+		*noofPoints = retCnt;
 
-    	checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, *noofPoints * 2,  data, &retCnt));
-
-		while (cnt < (*noofPoints))
-	    {
-	        traceDataX[cnt] = data[i++];
-	        traceDataY[cnt++] = data[i++];
-	    }
-	}
-	else
+	for (i = 0; i < retCnt; i++)
 	{
-		data = (ViReal64*) malloc (<DELETED DATA_BUFFER_SIZE> * sizeof (ViReal64) * 2);
-
-		checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, <DELETED DATA_BUFFER_SIZE>,  data, &retCnt));
-
-		while (cnt < (retCnt / 2))
-	    {
-	        traceDataX[cnt] = data[i++];
-	        traceDataY[cnt++] = data[i++];
-	    }
+		traceDataX[i] = data[j++];
+		traceDataY[i] = data[j++];
 	}
-
-    *noofPoints = cnt;
-
-    if (pbuffer) free(pbuffer);
-
-    if ((error = rsspecan_CheckStatus (instrSession)) < 0)
-        return error;
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
+	if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1526,7 +1490,6 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseResidualResults(
 {
     ViStatus    error   = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar*     pbuffer = NULL;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1534,11 +1497,7 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseResidualResults(
     		2, "Modifier");
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FETC:PNO:%s?", fetchPhaseArr[modifier]);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
-
-    sscanf(pbuffer,"%le",value);
-
-    if (pbuffer) free(pbuffer);
+    checkErr(RsCore_QueryViReal64(instrSession, cmd, value));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1562,7 +1521,6 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseResidualUserResults (ViSession instrSession
 {
 	ViStatus    error   = VI_SUCCESS;
 	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar*     pbuffer = NULL;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1572,13 +1530,9 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseResidualUserResults (ViSession instrSession
     		3, "Modifier");
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FETC:PNO:USER%ld:%s?", userRange, fetchPhaseArr[modifier]);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
-
-    sscanf(pbuffer,"%le",value);
-
-    if (pbuffer) free(pbuffer);
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+    checkErr(RsCore_QueryViReal64(instrSession, cmd, value));
+    
+	checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -1603,50 +1557,36 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseSpurs(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViUInt32    retCnt  = 0;
-    ViChar*     pbuffer = NULL;
-    ViChar*     pstring_value;
-    ViInt32     cnt     = 0;
+	ViInt32		retCnt  = 0;
+	ViReal64*     data = NULL;
+	ViInt32     i, j = 0, dataSize;
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K40"));
 
-    if (*noofPoints != NULL)
-    {
-		checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FETC:PNO:SPUR?", &pbuffer)); // TODO: Check the response processing
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "FETC:PNO:SPUR?", &data, &retCnt));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
-		pstring_value = strtok (pbuffer, ",");
+	retCnt /= 2;
+	dataSize = retCnt;
 
-		while (pstring_value != NULL && cnt < (*noofPoints))
-	    {
-	        frequencyValues[cnt] = atof (pstring_value);
-			pstring_value = strtok (NULL, ",");
-	        levelValues[cnt++] = atof (pstring_value);
-			pstring_value = strtok (NULL, ",");
-	    }
-	}
-	else
+	if (noofPoints)
 	{
-		checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FETC:PNO:SPUR?", &pbuffer)); // TODO: Check the response processing
-
-		pstring_value = strtok (pbuffer, ",");
-
-		while (pstring_value != NULL && cnt < ((ViInt32)retCnt / 2))
-	    {
-	        frequencyValues[cnt] = atof (pstring_value);
-			pstring_value = strtok (NULL, ",");
-	        levelValues[cnt++] = atof (pstring_value);
-			pstring_value = strtok (NULL, ",");
-	    }
+		if (dataSize > *noofPoints)
+			dataSize = *noofPoints;
+		
+		*noofPoints = retCnt;
 	}
 
-    *noofPoints = cnt;
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+	for (i = 0; i < dataSize; i++)
+	{
+		frequencyValues[i] = data[j++];
+		levelValues[i] = data[j++];
+	}
 
 Error:
-    if (pbuffer) free(pbuffer);
+	if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1857,40 +1797,17 @@ ViStatus _VI_FUNC rsspecan_GetPhaseDecadeSpotNoiseResult (ViSession instrSession
 {
 	ViStatus    error = VI_SUCCESS;
     ViChar*     pbuffer = NULL;
-    ViChar*     pstring_value;
     ViInt32     cnt = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K40"));
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CALC:SNO:DEC:X?", &pbuffer)); // TODO: Check the response processing
-
+    checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC:SNO:DEC:X?", arraySize, horizontalPosition, returnedValues));
 	checkErr(rsspecan_CheckStatus (instrSession));
 
-	pstring_value = strtok (pbuffer, ",");
-    while (pstring_value && cnt<arraySize)
-	{
-    	sscanf (pstring_value, "%le", &horizontalPosition[cnt++]);
-        pstring_value = strtok (NULL, ",");
-    }
-
-	if (pbuffer) free (pbuffer);
-	cnt = 0;
-
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CALC:SNO:DEC:Y?", &pbuffer)); // TODO: Check the response processing
-
-    pstring_value = strtok (pbuffer, ",");
-    while (pstring_value && cnt<arraySize)
-	{
-        sscanf (pstring_value, "%le", &verticalPosition[cnt++]);
-        pstring_value = strtok (NULL, ",");
-    }
-    if (pbuffer) free (pbuffer);
-
-    *returnedValues = cnt;
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC:SNO:DEC:Y?", arraySize, verticalPosition, returnedValues));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);

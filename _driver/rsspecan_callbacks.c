@@ -551,9 +551,8 @@ Error:
 ViStatus rsspecan_IQSrate_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
-    if (!(strstr (buffer, "B72")))
+    if (!RsCore_HasInstrumentOptions(instrSession, "B72"))
         *rangeTable = &rsspecan_rngIQSRate;
     else
         *rangeTable = &rsspecan_rngIQSRateB72;
@@ -813,4 +812,22 @@ Error:
 		free(cmd);
 
 	return error;
+}
+
+/*****************************************************************************
+* Function: rsspecan_WimaxZoneToUse_ReadCallback
+* Purpose:  This function overrides standard calback funtion.
+*****************************************************************************/
+ViStatus rsspecan_WimaxZoneToUse_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
+{
+	return RsCore_ReadCallback(instrSession, repCapName, attr);
+}
+
+/*****************************************************************************
+* Function: rsspecan_WimaxZoneToUse_WriteCallback
+* Purpose:  This function overrides standard calback funtion.
+*****************************************************************************/
+ViStatus rsspecan_WimaxZoneToUse_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
+{
+	return RsCore_WriteCallback(instrSession, repCapName, attr, value);
 }

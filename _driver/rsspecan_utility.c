@@ -175,7 +175,7 @@ ViStatus rsspecan_SetOPCTimeout(ViSession   instrSession, ViInt32 timeout)
 {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr(Rs_SetAttribute (instrSession, NULL, RS_ATTR_OPC_TIMEOUT, 0, &timeout));
+    checkErr(RsCore_SetAttributeViInt32(instrSession, NULL, RS_ATTR_OPC_TIMEOUT, 0, timeout));
 
 Error:
     return error;
@@ -189,7 +189,7 @@ ViStatus rsspecan_GetOPCTimeout(ViSession   instrSession, ViInt32 *timeout)
 {
     ViStatus    error = VI_SUCCESS;
 
-    checkErr(Rs_GetAttribute (instrSession, NULL, RS_ATTR_OPC_TIMEOUT, 0, (unsigned int) sizeof(timeout), timeout));
+    checkErr(RsCore_GetAttributeViInt32(instrSession, NULL, RS_ATTR_OPC_TIMEOUT, 0, timeout));
 
 Error:
     return error;
@@ -200,13 +200,7 @@ Error:
 /// HIPAR instrSession/Session.
 ViBoolean rsspecan_IsFSV (ViSession instrSession)
 {
-    ViChar      model [RS_MAX_MESSAGE_BUF_SIZE] = "FSV";
-
-    rsspecan_GetAttributeViString (instrSession, "",
-                                               RS_ATTR_INSTRUMENT_MODEL,
-                                               RS_MAX_MESSAGE_BUF_SIZE, model);
-    return ((strstr (model, "FSV") != NULL) || (strstr (model, "FSW") != NULL) || (strstr (model, "FSVR") != NULL));
-
+	return RsCore_IsInstrumentModel(instrSession, "FSV|FSW|FSVR");
 }
 
 /*===========================================================================*/
@@ -223,12 +217,17 @@ ViStatus rsspecan_dataReadTrace(ViSession instrSession, ViInt32 window, ViString
 	checkErr(RsCore_Write(instrSession, ":FORM REAL,32"));
 
 	if (window == 0)
+	{
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC? %s", trace);
+	}
 	else
+	{
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC%ld? %s", window, trace);
-		checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, &responseArray, noofPoints));
+	}
+
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, &responseArray, noofPoints));
 	checkErr(rsspecan_CheckStatus(instrSession));
-	checkErr(RsCore_CopyToUserBufferBinData(instrSession, traceData, arrayLength * sizeof(ViReal64), responseArray, *noofPoints * sizeof(ViReal64)));
+	checkErr(RsCore_CopyToUserBufferViReal64Array(instrSession, traceData, arrayLength, responseArray, *noofPoints));
 
 Error:
 	if (responseArray) free(responseArray);

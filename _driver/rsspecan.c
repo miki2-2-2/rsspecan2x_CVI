@@ -1820,9 +1820,8 @@ ViStatus _VI_FUNC rsspecan_TraceIQMaximumBandwidthExtension (ViSession instrSess
 
     checkErr(RsCore_LockSession(instrSession));
 
-    viCheckErrElab( rsspecan_SetAttributeViBoolean (instrSession, "",
-                                                RSSPECAN_ATTR_IQ_MAX_BANDWIDTH_EXTENSION,
-                                                state), "State");
+	viCheckParm(rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_IQ_MAX_BANDWIDTH_EXTENSION, state),
+			2, "State");
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -12570,7 +12569,7 @@ ViStatus _VI_FUNC rsspecan_QuerySignalStatisticResult (ViSession instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (strstr (buffer, "FSL"))
+    if (RsCore_IsInstrumentModel(instrSession, "FSL"))
         trace_range=4;
 
     if (rsspecan_IsFSV (instrSession))
@@ -13024,8 +13023,6 @@ ViStatus _VI_FUNC rsspecan_GetBurstPowerSequence (ViSession instrSession,
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-	ViReal64 *data = NULL;
-	ViInt32	dataSize = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -13044,15 +13041,14 @@ ViStatus _VI_FUNC rsspecan_GetBurstPowerSequence (ViSession instrSession,
     viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 11, "Timeout");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, burstPowerResults), 12, "Burst Power Results");
 
-    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "*CLS;:SENS%ld:MPOW:SEQ? %.12lf,%.12lf,%.12lf,%s,%.12lf,%.12lf,%s,%ld;*OPC", window, analyzerFrequencyHz,resolutionBandwidthHz,measTimes,rsspecan_rngTriggerSource.rangeValues[triggerSource].cmdString,
-    triggerLevel,triggerOffsets,measTypeArr[type_ofMeas], no_ofMeasurements);
-    checkErr(RsCore_QueryBinaryOrAsciiFloatArrayWithOpc(instrSession, cmd, timeout, &data, &dataSize));
-	checkErr(RsCore_CopyToUserBufferViReal64Array(instrSession, burstPowerResults, no_ofMeasurements, data, dataSize));
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SENS%ld:MPOW:SEQ? %.12lf,%.12lf,%.12lf,%s,%.12lf,%.12lf,%s,%ld",
+		window, analyzerFrequencyHz,resolutionBandwidthHz,measTimes,rsspecan_rngTriggerSource.rangeValues[triggerSource].cmdString,
+		triggerLevel,triggerOffsets,measTypeArr[type_ofMeas], no_ofMeasurements);
+    checkErr(RsCore_QueryFloatArrayToUserBufferWithOpc(instrSession, cmd, timeout, no_ofMeasurements, burstPowerResults, NULL));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-	if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }

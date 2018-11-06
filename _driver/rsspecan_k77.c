@@ -160,7 +160,7 @@ ViStatus _VI_FUNC rsspecan_TDSUEAdaptSignalAutoLevelTime(ViSession  instrSession
 
     checkErr(RsCore_LockSession(instrSession));
 
-    checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_ADAPT_SIGN_AUT_LEVEL_TIME, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_TDUE_ADAPT_SIGN_AUT_LEVEL_TIME, NULL));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -186,7 +186,7 @@ ViStatus _VI_FUNC rsspecan_TDSUECDPLevelAdjust(ViSession    instrSession,
     viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
     checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
     checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
-    checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_CDP_LEV_ADJUST, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_TDUE_CDP_LEV_ADJUST, NULL));
 
 Error:
     if (old_timeout >= 0)
@@ -402,7 +402,6 @@ ViStatus _VI_FUNC rsspecan_GetTDSUEChannelTableCatalog(ViSession    instrSession
                                                         ViChar      channelTablesList[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViUInt32    retCnt;
     ViChar      *buf=NULL;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -413,19 +412,16 @@ ViStatus _VI_FUNC rsspecan_GetTDSUEChannelTableCatalog(ViSession    instrSession
     		3, "Buffer Size");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTablesList), 4, "Channel Table List");
 
-	if ((strstr (model, "FSW") == NULL))
+	if (!RsCore_IsInstrumentModel(instrSession, "FSW"))
 	{
-    	checkErr(RsCore_Write(instrSession, ":CONF:CDP:CTAB:CAT?"));
+    	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CONF:CDP:CTAB:CAT?", &buf));
 	}
 	else
 	{
-		checkErr(RsCore_Write(instrSession, ":CONF:CDP:MS:CTAB:CAT?"));
+		checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CONF:CDP:MS:CTAB:CAT?", &buf));
 	}
 
-    checkErr(Rs_ReadDataUnknownLength(instrSession, &buf, &retCnt));
-
     checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
-
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:

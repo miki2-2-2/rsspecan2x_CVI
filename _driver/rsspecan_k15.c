@@ -367,8 +367,7 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsAM (ViSession instrSession,
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, AMFrequency, 0, 4),
 			4, "AM Frequency");
 
-	if (strstr (option, "K15") == NULL)
-        checkErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K15"));
 
     sprintf (buffer, "CALC1:AVI:AM:DEPT? '%s'", avionicsSummary[AMDepth]);
 
@@ -403,8 +402,7 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsTHD (ViSession instrSession,
         viCheckParm(RS_ERROR_INVALID_PARAMETER, 2, "THD");
     }
 
-	if (strstr (option, "K15") == NULL)
-        checkErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K15"));
 
     sprintf (buffer, "CALC1:AVI:THD:RES? '%s'", avionicsSummary[THD]);
 

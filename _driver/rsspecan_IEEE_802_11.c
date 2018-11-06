@@ -1138,7 +1138,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanAllLimits(ViSession   instrSession,
     		3, "Limit");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, values), 4, "Values");
 
-	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":CALC%ld:LIM%ld:BURS:ALL?", "%s", window, limit);
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":CALC%ld:LIM%ld:BURS:ALL?", window, limit);
     checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 12, values, NULL));
 
     checkErr(rsspecan_CheckStatus (instrSession));
@@ -1335,36 +1335,12 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstAll(ViSession   instrSession,
                                              ViInt32*    returnedValues)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *pbuffer;
-    ViInt32     i;
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K90|K91"));
 
-    checkErr(RsCore_QueryViString(instrSession, "FETC:BURS:ALL?", buffer)); // TODO: Check the response processing
-
-    pbuffer = strtok(buffer, ",");
-    i=0;
-    if (results)
-    {
-        while (pbuffer)
-        {
-            results[i++] = atof (pbuffer);
-            pbuffer = strtok(NULL, ",");
-        }
-    }
-    else
-    {
-        while (pbuffer)
-        {
-            i++;
-            pbuffer = strtok(NULL, ",");
-         }
-    }
-    if (returnedValues) *returnedValues=i;
-
+    checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:ALL?", 32001, results, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -1649,22 +1625,10 @@ ViStatus _VI_FUNC rsspecan_FetchWlanSymbolCount (ViSession instrSession,
                                                  ViInt32 *noOfValues)
 {
 	ViStatus    error = VI_SUCCESS;
-	ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-	ViChar      *pbuffer;
-	int 		i = 0;
 
     checkErr(RsCore_LockSession(instrSession));
-
-	checkErr(RsCore_QueryViString(instrSession, "FETC:SYMB:COUN?", buffer)); // TODO: Check the response processing
-
-	pbuffer = strtok(buffer, ",");
-
-	while (pbuffer && i<arraySize)
-    {
-        symbolCount[i++] = atol (pbuffer);
-		pbuffer = strtok(NULL, ",\n");
-    }
-	if (noOfValues) *noOfValues = i;
+	
+	checkErr(RsCore_QueryIntegerArrayToUserBuffer(instrSession, "FETC:SYMB:COUN?", arraySize, symbolCount, noOfValues));
 	checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -1866,29 +1830,15 @@ ViStatus _VI_FUNC rsspecan_GetWlanPowerResults (ViSession instrSession,
                                                 ViInt32 *returnedValues)
 {
 	ViStatus    error = VI_SUCCESS;
-	ViChar      command[RS_MAX_MESSAGE_BUF_SIZE] = "";
-	ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-	ViChar      *pbuffer;
-	int 		i = 0;
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, powerMeasurement, RSSPECAN_VAL_MEAS_POW_ACP, RSSPECAN_VAL_MEAS_POW_PPOW),
 			3, "Power Measurement");
 
-	sprintf (command, "CALC%ld:MARK:FUNC:POW:RES? %s", window, powerMeasurementArr[powerMeasurement]);
-	checkErr(viQueryf (instrSession, command, "%s", buffer));
-
-	pbuffer = strtok(buffer, ",");
-
-	while (pbuffer && i<arraySize)
-    {
-        results[i++] = atof (pbuffer);
-		pbuffer = strtok(NULL, ",\n");
-    }
-
-	if (*returnedValues) *returnedValues = i;
-
+	snprintf (cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:POW:RES? %s", window, powerMeasurementArr[powerMeasurement]);
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
 	checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -1973,7 +1923,8 @@ ViStatus _VI_FUNC rsspecan_GetWlanACPChannLimitCheckResults(ViSession     instrS
                                                     ViInt32        results[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViChar      response[RS_MAX_MESSAGE_BUF_SIZE];
 	ViChar      *p2buf = NULL;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -1985,14 +1936,15 @@ ViStatus _VI_FUNC rsspecan_GetWlanACPChannLimitCheckResults(ViSession     instrS
 
     switch (channelType){
         case RSSPECAN_VAL_WLAN_ACP_ADJ:
-            checkErr(viQueryf(instrSession, "CALC%ld:LIM%ld:ACP:ACH:RES?\n", "%s", window, limit, buffer));
+			snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM%ld:ACP:ACH:RES?", window, limit);
         break;
         case RSSPECAN_VAL_WLAN_ACP_ALT:
-            checkErr(viQueryf(instrSession, "CALC%ld:LIM%ld:ACP:ALT:RES?\n", "%s", window, limit, buffer));
+			snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM%ld:ACP:ALT:RES?", window, limit);
         break;
     }
 
-	p2buf = strtok (buffer, ",\n\r");
+	checkErr(RsCore_QueryViString(instrSession, cmd, response));
+	p2buf = strtok (response, ",\n\r");
 
 	if (strcmp (p2buf, "PASSED") == 0)
 		results[0] = 1;
@@ -2021,10 +1973,8 @@ ViStatus _VI_FUNC rsspecan_GetWlanAllLimitCheckResults(ViSession instrSession,
                                                     ViInt32 results[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViInt32     maxIdx = 12;
-    ViChar      *pbuffer;
-    ViInt32     i;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2033,16 +1983,8 @@ ViStatus _VI_FUNC rsspecan_GetWlanAllLimitCheckResults(ViSession instrSession,
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
     		3, "Limit");
 
-    checkErr(viQueryf (instrSession, "CALC%ld:LIM%ld:BURS:ALL:RESULT?\n","%s", window, limit, buffer));
-
-    i=0;
-    pbuffer = strtok(buffer, ",");
-    while ((pbuffer) && (i < maxIdx))
-    {
-        results[i++] = atol (pbuffer);
-        pbuffer = strtok(NULL, ",");
-    }
-
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM%ld:BURS:ALL:RESULT?", window, limit);
+	checkErr(RsCore_QueryIntegerArrayToUserBuffer(instrSession, cmd, 12, results, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:

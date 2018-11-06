@@ -131,7 +131,7 @@ ViStatus _VI_FUNC rsspecan_TDSBSAdaptSignalAutoLevelTime(ViSession  instrSession
 
     checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
     checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
-    checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDBS_ADAPT_SIGN_AUT_LEVEL_TIME, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_TDBS_ADAPT_SIGN_AUT_LEVEL_TIME, NULL));
 
 Error:
     if (old_timeout > 0)

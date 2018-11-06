@@ -688,7 +688,7 @@ ViStatus _VI_FUNC rsspecan_GetVSAModulationMappingCatalog(ViSession     instrSes
     viCheckParm(RsCore_InvalidNullPointer(instrSession, mappingsList), 5, "Mapping List");
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SENS%ld:DDEM:MAPP:CAT?", window);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf)); // TODO: Check the response processing
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf));
     checkErr(RsCore_ParseCatalog(buf, bufferSize, mappingsList, numberofMappings));
 
     checkErr(rsspecan_CheckStatus (instrSession));
@@ -1257,30 +1257,15 @@ ViStatus _VI_FUNC rsspecan_GetVSAPatternFound(ViSession instrSession,
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViUInt32    retCnt;
-    ViChar      *buf=NULL;
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K70"));
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SENS%ld:DDEM:SEAR:SYNC:FOUN?", window);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf)); // TODO: Check the response processing
-
-    if ((ViInt32)retCnt>bufferSize)
-    {
-        strncpy(found, buf, bufferSize);
-        error = retCnt;
-    }
-	else
-    {
-        strcpy(found, buf);
-    }
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+    checkErr(rsspecan_QueryViString(instrSession, cmd, bufferSize, found));
 
 Error:
-    if (buf) free(buf);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1307,8 +1292,7 @@ ViStatus _VI_FUNC rsspecan_GetVSAPatternCatalog(ViSession   instrSession,
                                                 ViChar      patternsList[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViUInt32    retCnt = 0;
+    ViChar		cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViChar      *buf=NULL;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -1322,10 +1306,8 @@ ViStatus _VI_FUNC rsspecan_GetVSAPatternCatalog(ViSession   instrSession,
     viCheckParm(RsCore_InvalidNullPointer(instrSession, patternsList), 6, "Patterns List");
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS%ld:DDEM:SEAR:SYNC:CAT? %s", window, VSACatPatternArr[selection]);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf)); // TODO: Check the response processing
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf));
     checkErr(RsCore_ParseCatalog(buf, bufferSize, patternsList, numberofPatterns));
-
-	patternsList[retCnt] = '\0';
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1654,16 +1636,11 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAStatisticCount (ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-// TODO: ERROR!!! Missing Unlock
-
-// TODO: ERROR!!! Missing Unlock
-
-// TODO: ERROR!!! Missing Unlock
-
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_VSA_STATISTIC_COUNT, statisticCount),
     		2, "Statistic Count");
 
 Error:
+	(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 
@@ -1686,16 +1663,11 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAResultRangeNumber (ViSession instrSession
 
 	checkErr(RsCore_LockSession(instrSession));
 
-// TODO: ERROR!!! Missing Unlock
-
-// TODO: ERROR!!! Missing Unlock
-
-// TODO: ERROR!!! Missing Unlock
-
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_VSA_RESULT_RANGE_NUMBER, resultRangeNumber),
     		2, "Result Range Number");
 
 Error:
+	(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 
@@ -1720,12 +1692,6 @@ ViStatus _VI_FUNC rsspecan_GetVSACurrentStatisticsCounter (ViSession instrSessio
 
     checkErr(RsCore_LockSession(instrSession));
 
-// TODO: ERROR!!! Missing Unlock
-
-// TODO: ERROR!!! Missing Unlock
-
-// TODO: ERROR!!! Missing Unlock
-
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, evaluationType, RSSPECAN_VAL_VSA_EVAL_STATISTICS, RSSPECAN_VAL_VSA_EVAL_CAPTURE),
 			2, "Evaluation Type");
 	viCheckParm(RsCore_GetAttributeRepCapName (instrSession,
@@ -1739,6 +1705,7 @@ ViStatus _VI_FUNC rsspecan_GetVSACurrentStatisticsCounter (ViSession instrSessio
     		3, "Current Counter");
 
 Error:
+	(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 
@@ -2510,12 +2477,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSADisplayYAxisStatisticMeasurement (ViSessi
 
     checkErr(RsCore_LockSession(instrSession));
 
-// TODO: ERROR!!! Missing Unlock
-
-// TODO: ERROR!!! Missing Unlock
-
-// TODO: ERROR!!! Missing Unlock
-
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MEAS_STAT_Y_UNIT, yUnit),
     		2, "Y Unit");
 
@@ -2526,6 +2487,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSADisplayYAxisStatisticMeasurement (ViSessi
     		4, "Y Axis Min Value");
 
 Error:
+	(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 
@@ -3982,14 +3944,13 @@ ViStatus _VI_FUNC rsspecan_GetVSAResult(ViSession   instrSession,
     if ((modifier == RSSPECAN_VAL_VSA_MODIF_NONE) || (modifier == RSSPECAN_VAL_VSA_MODIF_FSV_CURR))
 	{
         snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:%s?", window, VSAResultArr[type]);
-        checkErr(RsCore_QueryViReal64(instrSession, cmd, result));
 	}
     else
 	{
-        checkErr(viQueryf(instrSession, "CALC%ld:MARK:FUNC:%s? %s\n", "%le", window,
-			                                               VSAResultArr[type], VSAModifierArr[modifier], result));
+		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:%s? %s", window, VSAResultArr[type], VSAModifierArr[modifier]);
 	}
 
+	checkErr(RsCore_QueryViReal64(instrSession, cmd, result));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -4012,10 +3973,6 @@ ViStatus _VI_FUNC rsspecan_GetVSAAllResults (ViSession instrSession,
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar      *pbuffer = NULL,
-                *p2buf = NULL,
-                *p2buf2 = NULL;
-	ViInt32     i;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -4027,28 +3984,8 @@ ViStatus _VI_FUNC rsspecan_GetVSAAllResults (ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 3, "Results");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:DDEM:STAT:ALL?", window);
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
-    p2buf = pbuffer;
-    p2buf2 = pbuffer;
-    i=0;
-    while (p2buf2){
-        p2buf2=strchr (p2buf, ',');
-        if (((p2buf2-p2buf)==0)||(strlen(p2buf)<=1))
-        {
-                results[i]=RS_VAL_NAN_VI_REAL64;
-        }
-        else
-        {
-            sscanf (p2buf, "%le", &results[i]);
-        }
-        i++;
-        if (p2buf2)
-        {
-            p2buf = p2buf2+1;
-        }
-    }
-
-checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 32001, results, NULL));
+	checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -4081,7 +4018,8 @@ ViStatus _VI_FUNC rsspecan_ReadVSATraceData(ViSession   instrSession,
 
     checkErr(RsCore_LockSession(instrSession));
 
-	if (strstr (model, "FSQ") != NULL) maxTrace = RSSPECAN_VAL_TRACE_4;
+	if (RsCore_IsInstrumentModel(instrSession, "FSQ"))
+		maxTrace = RSSPECAN_VAL_TRACE_4;
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, sourceTrace, RSSPECAN_VAL_TRACE_1, maxTrace),
     		3, "Source Trace");
@@ -4231,8 +4169,7 @@ ViStatus _VI_FUNC rsspecan_QueryVSAModulationAccuracyStatisticResults(
 																				 marker,
 																				 measTypeArr[measurementType],
 																				 VSAStatisticArr[statistic]);
-	checkErr(RsCore_Write(instrSession, cmd));
-	checkErr(viScanf(instrSession, "%f", value));
+	checkErr(RsCore_QueryViReal64(instrSession, cmd, value));
 	checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:

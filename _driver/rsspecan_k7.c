@@ -84,7 +84,7 @@ ViStatus _VI_FUNC rsspecan_SelectADemodResult (ViSession instrSession,
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7"));
-    if ((strstr(model,"FSL")!=NULL) || rsspecan_IsFSV (instrSession))
+    if (RsCore_IsInstrumentModel(instrSession, "FSL") || rsspecan_IsFSV (instrSession))
     {
         tmp_trace=6;
         tmp_mode=11;
@@ -210,8 +210,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodSet(
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7"));
 
-    if (strstr(model,"FSL")!=NULL)
+    if (RsCore_IsInstrumentModel(instrSession, "FSL"))
         rec_len=480001;
+
     viCheckParm(RsCore_InvalidViReal64Range(instrSession, sampleRate, 122.0703125, 32.0e+6), 2, "Sample Rate");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, recordLength, 1, rec_len),
     		3, "Record Length");
@@ -263,7 +264,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodResultType(
 		resultTypeArr[resultTypes[4]],resultTypeArr[resultTypes[5]]);
 	}
 	else
-		if ((strstr(model,"FSL")==NULL))
+		if (!RsCore_IsInstrumentModel(instrSession, "FSL"))
 	    {
 	        sprintf (buffer, "SENS:ADEM:%s:TYPE %s,%s,%s",
 	            ADEMTypeArr[demodulationType], resultTypeArr[resultTypes[0]],
@@ -966,19 +967,10 @@ ViStatus _VI_FUNC rsspecan_GetADemodResultValues(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViUInt32    num, len, points_to_output;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar*     pbuffer = NULL;
-    ViReal32*   p = NULL;
-    ViUInt32    i = 0;
+    ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-// TODO: ERROR!!! Missing Unlock
-
-// TODO: ERROR!!! Missing Unlock
-
-// TODO: ERROR!!! Missing Unlock
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7"));
 
@@ -988,32 +980,13 @@ ViStatus _VI_FUNC rsspecan_GetADemodResultValues(
     		3, "Result Type");
     viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 4, "Timeout");
 
-    sprintf (buffer, ":FORM REAL,32;*CLS;:SENS:ADEM:%s:RES? %s;*OPC\n",
-             ADEMTypeArr[demodulationType], resultTypeArr[resultType]);
-
-    checkErr(RsCore_Write(instrSession, buffer));
-    checkErr(rsspecan_WaitForOPC (instrSession, timeout));
-
-    checkErr(rsspecan_readDataBlock (instrSession, &pbuffer, &len));
+    snprintf (cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SENS:ADEM:%s:RES? %s", ADEMTypeArr[demodulationType], resultTypeArr[resultType]);
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, resultValues, returnedValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
-    num = len/4;
-    p = (ViReal32*)pbuffer;
-    points_to_output = ((ViUInt32)arraySize > num) ? num : arraySize;
-
-    for (i=0; i<points_to_output; i++)
-        resultValues[i] = (ViReal64) p[i];
-
-    if (returnedValues)
-        *returnedValues = num;
-
 Error:
-    (void)RsCore_UnlockSession(instrSession);
-
-    if (pbuffer)
-        free (pbuffer);
-
+	(void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -1075,8 +1048,7 @@ ViStatus _VI_FUNC rsspecan_GetADemodMarkerModulationValue(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+	ViChar      repCap[RS_REPCAP_BUF_SIZE];
     ViInt32		tmp_trace = 3;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -1090,7 +1062,7 @@ ViStatus _VI_FUNC rsspecan_GetADemodMarkerModulationValue(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, detectorType, 0, 3),
     		4, "Detector Type");
 
-    if ((strstr(model,"FSL")!=NULL) || rsspecan_IsFSV (instrSession))
+    if (RsCore_IsInstrumentModel(instrSession, "FSL") || rsspecan_IsFSV (instrSession))
     {
         tmp_trace=6;
     }
@@ -1098,17 +1070,9 @@ ViStatus _VI_FUNC rsspecan_GetADemodMarkerModulationValue(
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, tmp_trace),
 			5, "Trace");
 
-/*
-    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "*CLS;:CALC:MARK%ld:FUNC:ADEM:%s:RES%ld? %s", markerNumber,
-                                                                                         ADEMTypeArr [demodulationType],
-                                                                                         trace,
-
-    checkErr(viScanf (instrSession, "%le", value);
-    checkErr(RsCore_Write(instrSession, cmd));
-*/
-    sprintf (buffer,"M%ld,Analog%s,TR%ld,ResDet%s",
+    snprintf (repCap, RS_REPCAP_BUF_SIZE, "M%ld,Analog%s,TR%ld,ResDet%s",
         markerNumber,ADEMTypeArr[demodulationType], trace,detectorTypeArr[detectorType]);
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_ADEM_SUMM_RES, value),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_ADEM_SUMM_RES, value),
     		6, "Value");
 
 Error:
@@ -1130,30 +1094,31 @@ ViStatus _VI_FUNC rsspecan_GetADemodMarkerMeasValue(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buf1[RS_MAX_MESSAGE_BUF_SIZE];
+	ViChar      repCap[RS_REPCAP_BUF_SIZE];
     ViInt32     attribute;
 	ViInt32		tmp_trace = 3;
     ViInt32     attrs[] = {RSSPECAN_ATTR_FMDEM_AFR_RES,RSSPECAN_ATTR_FMDEM_FERR_RES,
                            RSSPECAN_ATTR_FMDEM_SIN_RES, RSSPECAN_ATTR_FMDEM_THD_RES,
                            RSSPECAN_ATTR_FMDEM_CARR_RES};
-    viCheckParm(RsCore_InvalidViInt32Range(instrSession, markerNumber, 1, 4),
+    
+	checkErr(RsCore_LockSession(instrSession));
+
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, markerNumber, 1, 4),
     		2, "Marker Number");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 0, 4),
     		3, "Measurement");
-    if ((strstr(model,"FSL")!=NULL) || rsspecan_IsFSV (instrSession))
+    if (RsCore_IsInstrumentModel(instrSession, "FSL") || rsspecan_IsFSV (instrSession))
     {
         tmp_trace=6;
     }
+	
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, tmp_trace),
 			4, "Trace");
 
-    checkErr(RsCore_LockSession(instrSession));
-
     attribute = attrs[measurement];
 
-    sprintf (buf1,"M%ld,TR%ld", markerNumber, trace);
-
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buf1, attribute, value),
+	snprintf(repCap, RS_REPCAP_BUF_SIZE, "M%ld,TR%ld", markerNumber, trace);
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, attribute, value),
     		6, "Value");
 
 Error:

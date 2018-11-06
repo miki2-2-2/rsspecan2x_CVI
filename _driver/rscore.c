@@ -8,7 +8,7 @@
 
 Modification History:
 
-3.00, (build 32) 2018-11-05 Miloslav Macko
+3.00, (build 33) 2018-11-06 Miloslav Macko
 	- Reviewed and reworked to reflect the features of LabVIEW and IVI.NET core
 	- Incompatible with rsidr_core 2.xx, therefore the file name and function prefixes change to be able to co-exist with rsidr_core 2.xx :
 	- File names changed to rscore.h and rscore.c
@@ -4214,7 +4214,7 @@ Error:
 		error = VI_SUCCESS;
 
 	if (error == VI_ERROR_TMO)
-		RsCoreInt_SpecifyVisaError(instrSession, error, "Rs_ReadDataUnknownLength", NULL);
+		RsCoreInt_SpecifyVisaError(instrSession, error, "RsCoreInt_ReadDataKnownLengthToFile", NULL);
 
 	return error;
 }
@@ -8202,7 +8202,7 @@ Error:
 	(it uses RsCore_QueryBinaryOrAsciiFloatArray)
 	If the userBufferLength is smaller than read-out dataCount, the function only copies
 	the maximum provided count of the data and returns positive error number that equals the dataCount.
-	actualPointsCount is allowed to be NULL
+	actualPointsCount can be set to NULL
 /******************************************************************************************************/
 ViStatus RsCore_QueryFloatArrayToUserBuffer(ViSession instrSession,
 										ViConstString query,

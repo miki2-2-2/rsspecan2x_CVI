@@ -76,7 +76,6 @@ ViStatus _VI_FUNC rsspecan_GetVSADigitalStandardCatalog(ViSession   instrSession
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar      *buff;
     ViUInt32    count=0;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -87,12 +86,11 @@ ViStatus _VI_FUNC rsspecan_GetVSADigitalStandardCatalog(ViSession   instrSession
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K70"));
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS%ld:DDEM:STAN:CAT?", window);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buff)); // TODO: Check the response processing
-    if (bufferSize != 0)
-    {
-        strncpy(digitalStandardsList, buff, (bufferSize > (ViInt32)count) ? count : bufferSize);
-    }
-    if (numberofDigitalStandards) *numberofDigitalStandards = count;
+    checkErr(rsspecan_QueryViString(instrSession, cmd, bufferSize, digitalStandardsList));
+    
+	if (numberofDigitalStandards)
+		*numberofDigitalStandards = strlen(digitalStandardsList);
+
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -505,7 +503,7 @@ ViStatus _VI_FUNC rsspecan_GetVSAModulationFilterCatalog(ViSession  instrSession
     viCheckParm(RsCore_InvalidNullPointer(instrSession, modulationFiltersList), 5, "Modulation Filter List");
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SENS%ld:DDEM:FILT:CAT?", window);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf)); // TODO: Check the response processing
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf));
     checkErr(RsCore_ParseCatalog(buf, bufferSize, modulationFiltersList, numberofFilters));
 
     checkErr(rsspecan_CheckStatus (instrSession));
@@ -1258,8 +1256,9 @@ ViStatus _VI_FUNC rsspecan_GetVSACompressionPointResults(ViSession  instrSession
                                                         ViReal64    results[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViReal64    tmp_real = 0.0;
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViChar      repCap[RS_REPCAP_BUF_SIZE];
+	ViReal64	aux;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1267,21 +1266,21 @@ ViStatus _VI_FUNC rsspecan_GetVSACompressionPointResults(ViSession  instrSession
 		checkErr(RS_ERROR_INSTRUMENT_MODEL);
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 4, "Results");
-    sprintf (buffer, "C%ld", window);
+    snprintf (repCap, RS_REPCAP_BUF_SIZE, "C%ld", window);
 
     checkErr(rsspecan_CheckStatus (instrSession));
     switch (type){
         case RSSPECAN_VAL_VSA_CPOINT_PSHIFT:
-            checkErr(rsspecan_GetAttributeViReal64 (instrSession, buffer, RSSPECAN_ATTR_VSA_CPOINT_PHASE_SHIFT, &tmp_real));
-            results[0]=tmp_real;
+            checkErr(rsspecan_GetAttributeViReal64 (instrSession, repCap, RSSPECAN_ATTR_VSA_CPOINT_PHASE_SHIFT, &aux));
+            results[0]= aux;
         break;
         case RSSPECAN_VAL_VSA_CPOINT_POWER:
-            checkErr(rsspecan_GetAttributeViReal64 (instrSession, buffer, RSSPECAN_ATTR_VSA_CPOINT_POWER, &tmp_real));
-            results[0]=tmp_real;
+            checkErr(rsspecan_GetAttributeViReal64 (instrSession, repCap, RSSPECAN_ATTR_VSA_CPOINT_POWER, &aux));
+            results[0]= aux;
         break;
         case RSSPECAN_VAL_VSA_CPOINT_DATA:
-            checkErr(viQueryf(instrSession, "CALC%ld:MARK:FUNC:CPO:DATA?\n","%#lf",
-            window, results));
+			snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:CPO:DATA?", window);
+			checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 8, results, NULL));
         break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, type), 3, "Type");

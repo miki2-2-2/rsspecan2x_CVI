@@ -822,25 +822,13 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoDifferenceFrequencyDistortionResult(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar      *buffer = NULL;
-    ViChar      *pbuff = NULL;
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
-
-    checkErr(RsCore_LockSession(instrSession));
+    
+	checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7S"));
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:DFD:RES?", window);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buffer)); // TODO: Check the response processing
-
-    pbuff = strtok (buffer, ",");
-
-    differenceFrequencyDistortion[0] = atof (pbuff);
-
-    pbuff = strtok (NULL, ",");
-
-    differenceFrequencyDistortion[1] = atof (pbuff);
-
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 2, differenceFrequencyDistortion, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -861,24 +849,13 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoIntermodulationDistortionResult(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar      *buffer = NULL;
-    ViChar      *pbuff = NULL;
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7S"));
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:IMD:RES?", window);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buffer)); // TODO: Check the response processing
-
-    pbuff = strtok (buffer, ",");
-
-    intermodulationDistortion[0] = atof (pbuff);
-
-    pbuff = strtok (NULL, ",");
-
-    intermodulationDistortion[1] = atof (pbuff);
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 2, intermodulationDistortion, NULL));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -901,45 +878,31 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoMeasurementResults(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *buffer = NULL;
-    ViChar      *pbuff = NULL;
-    ViInt32     i = 0;
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViReal64*   data = NULL;
+	ViInt32		dataSize, i;
+	ViInt32		j = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7S"));
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CALC:MARK:FUNC:SFM:RES? SUMM", &buffer)); // TODO: Check the response processing
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "CALC:MARK:FUNC:SFM:RES? SUMM", &data, &dataSize));
 
-    pbuff = strtok (buffer, ",");
+	dataSize /= 5;
 
-    while (pbuff)
-    {
-        absoluteDeviation[i] = atof (pbuff);
-
-        pbuff = strtok (NULL, ",");
-
-        relativeDeviation[i] = atof (pbuff);
-
-        pbuff = strtok (NULL, ",");
-
-        sinad[i] = atof (pbuff);
-
-        pbuff = strtok (NULL, ",");
-
-        thd[i] = atof (pbuff);
-
-        pbuff = strtok (NULL, ",");
-
-        modulationFrequency[i++] = atof (pbuff);
-
-        pbuff = strtok (NULL, ",");
-    }
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+	for (i = 0; i < dataSize; i++)
+	{
+		absoluteDeviation[i] = data[j++];
+		relativeDeviation[i] = data[j++];
+		sinad[i] = data[j++];
+		thd[i] = data[j++];
+		modulationFrequency[i] = data[j++];
+	}
+	
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
+	if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -990,28 +953,18 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoChannelTypeAllResults(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *buffer = NULL;
-    ViChar      *pbuff = NULL;
-    ViInt32     i = 0;
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    channelType;
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
     window;
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7S"));
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CALC:MARK:FUNC:SFM:%s:RES? ALL", &buffer)); // TODO: Check the response processing
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_FSM_CHAN_TYPE_LEFT, RSSPECAN_VAL_FSM_CHAN_TYPE_PILOT),
+		3, "Channel Type");
 
-    pbuff = strtok (buffer, ",");
-
-    while (pbuff)
-    {
-        result[i++] = atof (pbuff);
-
-        pbuff = strtok (NULL, ",");
-    }
-
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MARK:FUNC:SFM:%s:RES? ALL", ChannelTypeArr[channelType]);
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 32001, result, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -1036,20 +989,9 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoResultValues(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViUInt32    num, len, points_to_output;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar*     pbuffer = NULL;
-    ViReal32*   p = NULL;
-    ViUInt32    i = 0;
-    ViChar      option[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
-
-// TODO: ERROR!!! Missing Unlock
-
-// TODO: ERROR!!! Missing Unlock
-
-// TODO: ERROR!!! Missing Unlock
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7S"));
 
@@ -1061,32 +1003,12 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoResultValues(
     		4, "Trace Mode");
     viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 5, "Timeout");
 
-    sprintf (buffer, ":FORM REAL,32;*CLS;:SENS:SFM:%s:%s:RES? %s;*OPC\n",
-             ChannelTypeArr[channelType], resultTypeArr[measurementType], traceModesArr[traceMode]);
-
-    checkErr(RsCore_Write(instrSession, buffer));
-    checkErr(rsspecan_WaitForOPC (instrSession, timeout));
-
-    checkErr(rsspecan_readDataBlock (instrSession, &pbuffer, &len));
-
+    snprintf (cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SENS:SFM:%s:%s:RES? %s", ChannelTypeArr[channelType], resultTypeArr[measurementType], traceModesArr[traceMode]);
+	checkErr(RsCore_QueryFloatArrayToUserBufferWithOpc(instrSession, cmd, timeout, arraySize, resultValues, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
-
-    num = len/4;
-    p = (ViReal32*)pbuffer;
-    points_to_output = ((ViUInt32)arraySize > num) ? num : arraySize;
-
-    for (i=0; i<points_to_output; i++)
-        resultValues[i] = (ViReal64) p[i];
-
-    if (returnedValues)
-        *returnedValues = num;
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
-
-    if (pbuffer)
-        free (pbuffer);
-
     return error;
 }
 

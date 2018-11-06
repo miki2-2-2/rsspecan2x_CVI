@@ -2023,8 +2023,6 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementACLRResult(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar*     pbuffer = NULL;
-    ViChar*     pstring_value;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2033,26 +2031,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementACLRResult(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 5, 5),
     		2, "Array size");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CALC1:MARK:FUNC:POW:RES?", &pbuffer)); // TODO: Check the response processing
-
-    pstring_value = strtok(pbuffer, ",");
-    sscanf(pstring_value,"%le",&result[0]);
-
-    pstring_value = strtok(NULL, ",");
-    sscanf(pstring_value,"%le",&result[1]);
-
-    pstring_value = strtok(NULL, ",");
-    sscanf(pstring_value,"%le",&result[2]);
-
-    pstring_value = strtok(NULL, ",");
-    sscanf(pstring_value,"%le",&result[3]);
-
-    pstring_value = strtok(NULL, ",");
-    sscanf(pstring_value,"%le",&result[4]);
-
-    if (pbuffer)
-        free(pbuffer);
-
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC1:MARK:FUNC:POW:RES?", arraySize, result, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -2130,9 +2109,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkDetectedCyclicPrefix(
 
     checkErr(RsCore_LockSession(instrSession));
 
-    checkErr(RsCore_Write(instrSession, "FETC:CYCP?"));
-
-	viCheckErr(viRead (instrSession, (ViBuf) buffer, 10, NULL));
+    checkErr(RsCore_QueryViString(instrSession, "FETC:CYCP?", buffer));
 
 	if (strncmp (buffer, "NORM", 4) == 0)
 		*result = 0;
@@ -2835,73 +2812,38 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkAllocationSummary(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *pBuffer = NULL, *pValue = NULL;
-    ViInt32     nType = 0;
-    ViUInt32     ret_cnt = 0;
+	ViReal64*     data = NULL;
+	ViInt32		dataSize, i;
+	ViInt32		j = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K101|K105"));
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "TRACE? TRACE1", &pBuffer)); // TODO: Check the response processing
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "CALC1:MARK:FUNC:POW:RES?", &data, &dataSize));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
-    *noofValues = 0;
-    pValue = strtok(pBuffer, ",");
+	dataSize /= 7;
 
-    nType = 0;
+	if (noofValues)
+		*noofValues = dataSize;
 
-    while ( pValue )
-    {
+	if (dataSize > arraySize)
+		dataSize = arraySize;
 
-        if ( *noofValues >= arraySize )
-        {
-            viCheckParm(RS_ERROR_INVALID_PARAMETER, 2, "Array Size");
-            break;
-        }
-        else
-        {
-            switch ( nType )
-            {
-                case 0:
-                    subframeNumber[*noofValues] = atoi(pValue);
-                    break;
-                case 1:
-                    allocationID[*noofValues] = atoi(pValue);
-                    break;
-                case 2:
-                    numberofRB[*noofValues] = atoi(pValue);
-                    break;
-                case 3:
-                    offsetRB[*noofValues] = atoi(pValue);
-                    break;
-                case 4:
-                    modulation[*noofValues] = atoi(pValue);
-                    break;
-                case 5:
-                    power[*noofValues] = atof(pValue);
-                    break;
-                case 6:
-                    EVM[*noofValues] = atof(pValue);
-                    break;
-            }
-
-            nType++;
-            if ( nType > 6 )
-            {
-                nType = 0;
-                (*noofValues)++;
-            }
-
-            pValue = strtok(NULL, ",");
-        }
-    }
-
-    if ( pBuffer )
-        free(pBuffer);
-
-    checkErr(rsspecan_CheckStatus (instrSession));
+	for (i = 0; i < dataSize; i++)
+	{
+		subframeNumber[i] = (ViInt32)data[j++];
+		allocationID[i] = (ViInt32)data[j++];
+		numberofRB[i] = (ViInt32)data[j++];
+		offsetRB[i] = (ViInt32)data[j++];
+		modulation[i] = (ViInt32)data[j++];
+		power[i] = data[j++];
+		EVM[i] = data[j++];
+	}
 
 Error:
+	if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -2948,7 +2890,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkBitstream(
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K101|K105"));
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "TRACE? TRACE1", &pBuffer)); // TODO: Check the response processing
+    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "TRACE? TRACE1", &pBuffer));
 
     *noofValues = 0;
     pValue = strtok(pBuffer, ",");
@@ -2983,7 +2925,6 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkBitstream(
                     break;
                 case 3: // stream
                     sscanf(pValue, "%x", &nSymbolValue);
-                    //bitStreams[nIndexSymbol + nCurrentSymbol] = (ViChar) nSymbolValue;
 					p2bitStreams += sprintf (p2bitStreams, "%d", nSymbolValue);
 
                     nCurrentSymbol++;
@@ -3009,9 +2950,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkBitstream(
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if ( pBuffer )
-        free(pBuffer);
-
+    if ( pBuffer ) free(pBuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }

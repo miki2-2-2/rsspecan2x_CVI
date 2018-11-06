@@ -754,28 +754,13 @@ ViStatus _VI_FUNC rsspecan_GetTETRAResultSummaryLimitsAll(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *buffer = NULL;
-    ViChar      *pbuff = NULL;
-    ViInt32     i;
 
     checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FETC:BURS:PVTT:ALL?", &buffer)); // TODO: Check the response processing
-
-    pbuff = strtok (buffer, ",");
-    i = 0;
-    do{
-        if (i<arraySize) limitValues[i] = atof (pbuff);
-        pbuff = strtok (NULL, ",");
-        i++;
-    }while(pbuff != NULL);
-
-    if (returnedValues) *returnedValues = i;
-
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:PVTT:ALL?", arraySize, limitValues, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (buffer) free(buffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1030,14 +1015,14 @@ ViStatus _VI_FUNC rsspecan_ReadTETRATraceData(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-	sprintf (buffer, "TRACE%ld", trace);
+	snprintf (traceName, RS_MAX_MESSAGE_BUF_SIZE, "TRACE%ld", trace);
 
-    checkErr(rsspecan_dataReadTrace (instrSession, window, buffer, arraySize,
-                    				    traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, window, traceName, arraySize, traceData, noofValues));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -1061,14 +1046,13 @@ ViStatus _VI_FUNC rsspecan_ReadTETRABitstream(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-	sprintf (buffer, "TRACE%ld", trace);
-
-	checkErr(rsspecan_dataAsciiReadTrace (instrSession, window, buffer, arraySize,
-                    				         traceData, noofValues));
+	snprintf(traceName, RS_MAX_MESSAGE_BUF_SIZE, "TRACE%ld", trace);
+	checkErr(rsspecan_dataReadTrace(instrSession, window, traceName, arraySize, traceData, noofValues));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -1155,23 +1139,10 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAMeasurementResultsAll(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *pbuffer,
-                *pbuf;
-	ViInt32     i = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FETC:BURS:SUMT:ALL?", &pbuffer)); // TODO: Check the response processing
-
-	pbuf = strtok (pbuffer, ",");
-	while (pbuf != NULL && i < arraySize)
-	{
-		result[i++] = atof (pbuf);
-		pbuf = strtok (NULL, ",");
-	}
-
-	*returnedValues = i;
-
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:PVTT:ALL?", arraySize, result, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -1193,9 +1164,6 @@ ViStatus _VI_FUNC rsspecan_FetchTETRASubcarrierMeanPower(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *buffer = NULL;
-    ViChar      *pbuff = NULL;
-    ViInt32     i;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1205,38 +1173,25 @@ ViStatus _VI_FUNC rsspecan_FetchTETRASubcarrierMeanPower(
     switch (measurementType)
 	{
 		case RSSPECAN_VAL_TETRA_MEAS_MIN:
-			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCMP:MIN?"));
+			checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:SUMT:SCMP:MIN?", arraySize, result, returnedValues));
 			break;
 
 		case RSSPECAN_VAL_TETRA_MEAS_MAX:
-			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCMP:MAX?"));
+			checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:SUMT:SCMP:MAX?", arraySize, result, returnedValues));
 			break;
 
 		case RSSPECAN_VAL_TETRA_MEAS_AVER:
-			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCMP:AVER?"));
+			checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:SUMT:SCMP:AVER?", arraySize, result, returnedValues));
 			break;
 
 		case RSSPECAN_VAL_TETRA_MEAS_CURR:
-			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCMP?"));
+			checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:SUMT:SCMP?", arraySize, result, returnedValues));
 			break;
 	}
-
-	checkErr(Rs_ReadDataUnknownLength (instrSession, &buffer, NULL));
-
-    pbuff = strtok (buffer, ",");
-    i = 0;
-    do{
-        if (i<arraySize) result[i] = atof (pbuff);
-        pbuff = strtok (NULL, ",");
-        i++;
-    }while(pbuff != NULL);
-
-    if (returnedValues) *returnedValues = i;
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (buffer) free(buffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1255,9 +1210,6 @@ ViStatus _VI_FUNC rsspecan_FetchTETRASubcarrierReferencePower(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *buffer = NULL;
-    ViChar      *pbuff = NULL;
-    ViInt32     i;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1267,38 +1219,25 @@ ViStatus _VI_FUNC rsspecan_FetchTETRASubcarrierReferencePower(
     switch (measurementType)
 	{
 		case RSSPECAN_VAL_TETRA_MEAS_MIN:
-			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCRP:MIN?"));
+			checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:SUMT:SCRP:MIN?", arraySize, result, returnedValues));
 			break;
 
 		case RSSPECAN_VAL_TETRA_MEAS_MAX:
-			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCRP:MAX?"));
+			checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:SUMT:SCRP:MAX?", arraySize, result, returnedValues));
 			break;
 
 		case RSSPECAN_VAL_TETRA_MEAS_AVER:
-			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCRP:AVER?"));
+			checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:SUMT:SCRP:AVER?", arraySize, result, returnedValues));
 			break;
 
 		case RSSPECAN_VAL_TETRA_MEAS_CURR:
-			checkErr(RsCore_Write(instrSession, "FETC:BURS:SUMT:SCRP?"));
+			checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:SUMT:SCRP?", arraySize, result, returnedValues));
 			break;
 	}
-
-	checkErr(Rs_ReadDataUnknownLength (instrSession, &buffer, NULL));
-
-    pbuff = strtok (buffer, ",");
-    i = 0;
-    do{
-        if (i<arraySize) result[i] = atof (pbuff);
-        pbuff = strtok (NULL, ",");
-        i++;
-    }while(pbuff != NULL);
-
-    if (returnedValues) *returnedValues = i;
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (buffer) free(buffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1361,28 +1300,13 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAPVTMeasurementAll(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *buffer = NULL;
-    ViChar      *pbuff = NULL;
-    ViInt32     i;
 
     checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "FETC:BURS:PVTT:ALL?", &buffer)); // TODO: Check the response processing
-
-    pbuff = strtok (buffer, ",");
-    i = 0;
-    do{
-        if (i<arraySize) results[i] = atof (pbuff);
-        pbuff = strtok (NULL, ",");
-        i++;
-    }while(pbuff != NULL);
-
-    if (returnedValues) *returnedValues = i;
-
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:PVTT:ALL?", arraySize, results, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (buffer) free(buffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1559,28 +1483,13 @@ ViStatus _VI_FUNC rsspecan_GetTETRAResultSummaryLimitCheckResultsAll(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *buffer = NULL;
-    ViChar      *pbuff = NULL;
-    ViInt32     i;
 
     checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CALC:LIM:BURS:ALL:RES?", &buffer)); // TODO: Check the response processing
-
-    pbuff = strtok (buffer, ",");
-    i = 0;
-    do{
-        if (i<arraySize) results[i] = atol (pbuff);
-        pbuff = strtok (NULL, ",");
-        i++;
-    }while(pbuff != NULL);
-
-    if (returnedValues) *returnedValues = i;
-
+	checkErr(RsCore_QueryIntegerArrayToUserBuffer(instrSession, "CALC:LIM:BURS:ALL:RES?", arraySize, results, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (buffer) free(buffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }

@@ -2062,11 +2062,10 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10MagnitudeCaptureResults (ViSession instrSe
                                                               ViInt32 *numOfResults)
 {
 	ViStatus error = VI_SUCCESS;
-    ViChar   buffer [150] = "";
-    ViChar*  ext_buf = NULL;
-    ViChar*  p2buf;
-    ViUInt32 ret_cnt = 0;
-    ViInt32  i = 0;
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViReal64*     data = NULL;
+	ViInt32		dataSize, i;
+	ViInt32		j = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2076,25 +2075,26 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10MagnitudeCaptureResults (ViSession instrSe
     viCheckParm(position == NULL, 3, "Position");
 	viCheckParm(length == NULL, 3, "Length");
 
-    sprintf (buffer, "FETC:MCAP:SLOT:%s?", GSMMAgnitudeResultArr[resultType]);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, buffer, &ext_buf)); // TODO: Check the response processing
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FETC:MCAP:SLOT:%s?", GSMMAgnitudeResultArr[resultType]);
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, &data, &dataSize));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
-    p2buf = strtok (ext_buf, ",\n");
-    if (p2buf == NULL)
-        return RS_ERROR_UNEXPECTED_RESPONSE;
+	dataSize /= 2;
 
-    while ((p2buf != NULL) && (i<arraySize))
-    {
-        position[i] = atof (p2buf);
-		p2buf = strtok (NULL, ",\n");
-		length[i++] = atof (p2buf);
-        p2buf = strtok (NULL, ",\n");
-    }
-    if (numOfResults) *numOfResults=i;
+	if (numOfResults)
+		*numOfResults = dataSize;
 
-    checkErr(rsspecan_CheckStatus (instrSession));
+	if (dataSize > arraySize)
+		dataSize = arraySize;
+
+	for (i = 0; i < dataSize; i++)
+	{
+		position[i] = data[j++];
+		length[i] = data[j++];
+	}
 
 Error:
+	if (data) free(data);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }

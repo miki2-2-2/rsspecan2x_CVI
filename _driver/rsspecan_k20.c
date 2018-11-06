@@ -535,20 +535,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACNMeasurementFrequencies (ViSession ins
                                                                     ViReal64 span)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-    if (strstr (buffer, "K20") == NULL)
-        viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
-
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K20"));
+	
+	viCheckParm(RsCore_InvalidViBooleanRange(instrSession, state), 3, "State");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, tableRow, 1, 10),
     		2, "Table Row");
-    viCheckParm(RsCore_InvalidViBooleanRange(instrSession, state), 3, "State");
 
-    checkErr(viPrintf(instrSession, ":ATV:CN:TABL%ld:MFR %ld,%.12lf,%.12lf\n",
-        tableRow, (state==VI_FALSE)?0:1, centerFrequency, span));
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":ATV:CN:TABL%ld:MFR %ld,%.12lf,%.12lf\n", tableRow, (state==VI_FALSE)?0:1, centerFrequency, span);
+	checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -644,20 +643,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACSOMeasurementFrequencies (ViSession in
                                                                     ViReal64 span)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-    if (strstr (buffer, "K20") == NULL)
-        viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K20"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, tableRow, 1, 10),
     		2, "Table Row");
     viCheckParm(RsCore_InvalidViBooleanRange(instrSession, state), 3, "State");
 
-    checkErr(viPrintf(instrSession, ":ATV:CSO:TABL%ld:MFR %ld,%.12lf,%.12lf\n",
-        tableRow, (state==VI_FALSE)?0:1, centerFrequency, span));
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":ATV:CSO:TABL%ld:MFR %ld,%.12lf,%.12lf", tableRow, (state==VI_FALSE)?0:1, centerFrequency, span);
+	checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -773,21 +771,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACTBMeasurementFrequencies (ViSession in
                                                                     ViReal64 span)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-    if (strstr (buffer, "K20") == NULL)
-        viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K20"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, tableRow, 1, 10),
     		2, "Table Row");
     viCheckParm(RsCore_InvalidViBooleanRange(instrSession, state), 3, "State");
 
-    checkErr(viPrintf(instrSession, ":ATV:CTB:TABL%ld:MFR %ld,%.12lf,%.12lf\n",
-        tableRow, (state==VI_FALSE)?0:1, centerFrequency, span));
-
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":ATV:CTB:TABL%ld:MFR %ld,%.12lf,%.12lf\n", tableRow, (state==VI_FALSE)?0:1, centerFrequency, span);
+	checkErr(RsCore_Write(instrSession, cmd));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -1674,37 +1670,18 @@ ViStatus _VI_FUNC rsspecan_QueryCATVACarrierAllResults (ViSession instrSession,
                                                    ViReal64 results[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *pbuffer = NULL,
-                *p2buf = NULL;
-    ViInt32     i;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-	if (strstr(buffer, "K20") == NULL)
-		viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K20"));
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 2, "Results");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CALC:ATV:RES:CARR? ALL", &pbuffer)); // TODO: Check the response processing
-    p2buf = strtok (pbuffer, ",");
-    for (i=0;i<6;i++)
-    {
-        if (p2buf)
-        {
-            sscanf (p2buf,"%le",&results[i]);
-            p2buf = strtok (NULL, ",");
-        }
-        else
-        {
-            checkErr(RS_ERROR_UNEXPECTED_RESPONSE);
-        }
-    }
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC:ATV:RES:CARR? ALL", 6, results, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (pbuffer) free(pbuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1768,47 +1745,21 @@ ViStatus _VI_FUNC rsspecan_QueryCATVACarrierAllRatioResults (ViSession instrSess
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar      *pbuffer=NULL,
-                *p2buf=NULL,
-                *p2buf2=NULL;
-    ViInt32     i;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-	if (strstr(buffer, "K20") == NULL)
-		viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K20"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 2, 4),
     		2, "Measurement");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 3, "Results");
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":CALC:ATV:RES:%s? ALL", rsspecan_rngCatvAtvMeas.rangeValues[measurement].cmdString);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
-    p2buf = pbuffer;
-    p2buf2 = pbuffer;
-    i=0;
-    while (p2buf2){
-        p2buf2=strchr (p2buf, ',');
-        if (((p2buf2-p2buf)==0)||(strlen(p2buf)<=1))
-        {
-                results[i]=RS_VAL_NAN_VI_REAL64;
-        }
-        else
-        {
-            sscanf (p2buf, "%le", &results[i]);
-        }
-        i++;
-        if (p2buf2)
-        {
-            p2buf = p2buf2+1;
-        }
-    }
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 32001, results, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (pbuffer) free(pbuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -1877,44 +1828,18 @@ ViStatus _VI_FUNC rsspecan_QueryCATVAVisionAllModulationResults (ViSession instr
                                                             ViReal64 results[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *pbuffer = NULL,
-                *p2buf = NULL,
-                *p2buf2 = NULL;
-    ViInt32     i;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-	if (strstr(buffer, "K20") == NULL)
-		viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K20"));
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 2, "Results");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CALC:ATV:RES:VMOD? ALL", &pbuffer)); // TODO: Check the response processing
-    p2buf = pbuffer;
-    p2buf2 = pbuffer;
-    i=0;
-    while (p2buf2){
-        p2buf2=strchr (p2buf, ',');
-        if (((p2buf2-p2buf)==0)||(strlen(p2buf)<=1))
-        {
-                results[i]=RS_VAL_NAN_VI_REAL64;
-        }
-        else
-        {
-            sscanf (p2buf, "%le", &results[i]);
-        }
-        i++;
-        if (p2buf2)
-        {
-            p2buf = p2buf2+1;
-        }
-    }
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC:ATV:RES:VMOD? ALL", 32001, results, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (pbuffer) free(pbuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -2209,44 +2134,18 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDOverviewAllResults (ViSession instrSession,
                                                          ViReal64 results[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *pbuffer = NULL,
-                *p2buf = NULL,
-                *p2buf2 = NULL;
-    ViInt32     i;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-	if (strstr(buffer, "K20") == NULL)
-		viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K20"));
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 2, "Results");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CALC:DTV:RES? ALL", &pbuffer)); // TODO: Check the response processing
-    p2buf = pbuffer;
-    p2buf2 = pbuffer;
-    i=0;
-    while (p2buf2){
-        p2buf2=strchr (p2buf, ',');
-        if (((p2buf2-p2buf)==0)||(strlen(p2buf)<=1))
-        {
-                results[i]=RS_VAL_NAN_VI_REAL64;
-        }
-        else
-        {
-            sscanf (p2buf, "%le", &results[i]);
-        }
-        i++;
-        if (p2buf2)
-        {
-            p2buf = p2buf2+1;
-        }
-    }
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, ":CALC:DTV:RES? ALL", 32001, results, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (pbuffer) free(pbuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -2307,44 +2206,18 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDModulationErrorsAllResults (ViSession instr
                                                                  ViReal64 results[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      *pbuffer = NULL,
-                *p2buf = NULL,
-                *p2buf2 = NULL;
-    ViInt32     i;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-	if (strstr(buffer, "K20") == NULL)
-		viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K20"));
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 2, "Results");
 
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CALC:DTV:RES? ALL", &pbuffer)); // TODO: Check the response processing
-    p2buf = pbuffer;
-    p2buf2 = pbuffer;
-    i=0;
-    while (p2buf2){
-        p2buf2=strchr (p2buf, ',');
-        if (((p2buf2-p2buf)==0)||(strlen(p2buf)<=1))
-        {
-                results[i]=RS_VAL_NAN_VI_REAL64;
-        }
-        else
-        {
-            sscanf (p2buf, "%le", &results[i]);
-        }
-        i++;
-        if (p2buf2)
-        {
-            p2buf = p2buf2+1;
-        }
-    }
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, ":CALC:DTV:RES? ALL", 32001, results, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (pbuffer) free(pbuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -2391,47 +2264,21 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDSignalStatisticsAllResults (ViSession instr
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar      *pbuffer = NULL,
-                *p2buf = NULL,
-                *p2buf2 = NULL;
-    ViInt32     i;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSL"));
-	if (strstr(buffer, "K20") == NULL)
-		viCheckErr(RS_ERROR_INSTRUMENT_OPTION);
+	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K20"));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, traceNumber, 1, 4),
     		2, "Measurement");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 3, "Results");
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":CALC:STAT:RES%ld? ALL", traceNumber);
-    checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &pbuffer)); // TODO: Check the response processing
-    p2buf = pbuffer;
-    p2buf2 = pbuffer;
-    i=0;
-    while (p2buf2){
-        p2buf2=strchr (p2buf, ',');
-        if (((p2buf2-p2buf)==0)||(strlen(p2buf)<=1))
-        {
-                results[i]=RS_VAL_NAN_VI_REAL64;
-        }
-        else
-        {
-            sscanf (p2buf, "%le", &results[i]);
-        }
-        i++;
-        if (p2buf2)
-        {
-            p2buf = p2buf2+1;
-        }
-    }
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 32001, results, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (pbuffer) free(pbuffer);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
