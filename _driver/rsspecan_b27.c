@@ -21,50 +21,50 @@
 /* Function: Configure FM Demodulation Analog  State
 /* Purpose:  This function switches FM demodulation on or off.
 /*===========================================================================*/
-ViStatus _VI_FUNC rsspecan_ConfigureFMDemodAnalogState(ViSession  instrSession,
-                                                       ViInt32     window,
-                                                       ViBoolean   state)
+ViStatus _VI_FUNC rsspecan_ConfigureFMDemodAnalogState(ViSession instrSession,
+                                                       ViInt32 window,
+                                                       ViBoolean state)
 {
-    ViStatus    error = VI_SUCCESS;
-    ViChar      repCap[RS_REPCAP_BUF_SIZE];
+	ViStatus error = VI_SUCCESS;
+	ViChar repCap[RS_REPCAP_BUF_SIZE];
 
-    checkErr(RsCore_LockSession(instrSession));
+	checkErr(RsCore_LockSession(instrSession));
 
-    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
+	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FM_STATE, state),
-    		3, "State");
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FM_STATE, state),
+		3, "State");
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure FM Demodulation Analog  Lowpass Filter
 /* Purpose:  This function configures the AF lowpass filters.
 /*===========================================================================*/
-ViStatus _VI_FUNC rsspecan_ConfigureFMDemodAnalogLowpassFilter(ViSession  instrSession,
-                                                               ViInt32     window,
-                                                               ViBoolean   AFLowpass,
-                                                               ViReal64    frequency)
+ViStatus _VI_FUNC rsspecan_ConfigureFMDemodAnalogLowpassFilter(ViSession instrSession,
+                                                               ViInt32 window,
+                                                               ViBoolean AFLowpass,
+                                                               ViReal64 frequency)
 {
-    ViStatus    error = VI_SUCCESS;
-    ViChar      repCap[RS_REPCAP_BUF_SIZE];
+	ViStatus error = VI_SUCCESS;
+	ViChar repCap[RS_REPCAP_BUF_SIZE];
 
-    checkErr(RsCore_LockSession(instrSession));
+	checkErr(RsCore_LockSession(instrSession));
 
-    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
+	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FM_LPAS_MAN, AFLowpass),
-    		3, "Lowpass Auto");
-    if (AFLowpass)
-        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FM_LPAS_FILTER, frequency),
-        		4, "Frequency");
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FM_LPAS_MAN, AFLowpass),
+		3, "Lowpass Auto");
+	if (AFLowpass)
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FM_LPAS_FILTER, frequency),
+		4, "Frequency");
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*===========================================================================*/
@@ -72,49 +72,49 @@ Error:
 /* Purpose:  This function configures the AF highpass filters.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_ConfigureFMDemodAnalogHighpassFilter(ViSession instrSession,
-                                                                ViInt32   window,
-                                                                ViReal64  frequency)
+                                                                ViInt32 window,
+                                                                ViReal64 frequency)
 {
-    ViStatus    error = VI_SUCCESS;
-    ViChar      repCap[RS_REPCAP_BUF_SIZE];
+	ViStatus error = VI_SUCCESS;
+	ViChar repCap[RS_REPCAP_BUF_SIZE];
 
-    checkErr(RsCore_LockSession(instrSession));
+	checkErr(RsCore_LockSession(instrSession));
 
-    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
+	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FM_HPAS_FILTER, frequency),
-    		3, "Frequency");
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FM_HPAS_FILTER, frequency),
+		3, "Frequency");
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure FM Demodulation Analog  Range
 /* Purpose:  This function configures the AF demodulation range.
 /*===========================================================================*/
-ViStatus _VI_FUNC rsspecan_ConfigureFMDemodAnalogRange(ViSession  instrSession,
-                                                       ViInt32     window,
-                                                       ViBoolean   spanAutoMan,
-                                                       ViReal64    span)
+ViStatus _VI_FUNC rsspecan_ConfigureFMDemodAnalogRange(ViSession instrSession,
+                                                       ViInt32 window,
+                                                       ViBoolean spanAutoMan,
+                                                       ViReal64 span)
 {
-    ViStatus    error = VI_SUCCESS;
-    ViChar      repCap[RS_REPCAP_BUF_SIZE];
+	ViStatus error = VI_SUCCESS;
+	ViChar repCap[RS_REPCAP_BUF_SIZE];
 
-    checkErr(RsCore_LockSession(instrSession));
+	checkErr(RsCore_LockSession(instrSession));
 
-    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
+	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FM_SPAN_MAN, spanAutoMan),
-    		3, "Span Auto/Manual");
-    if (spanAutoMan)
-        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FM_SPAN, span),
-        		4, "Span");
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FM_SPAN_MAN, spanAutoMan),
+		3, "Span Auto/Manual");
+	if (spanAutoMan)
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FM_SPAN, span),
+		4, "Span");
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*****************************************************************************

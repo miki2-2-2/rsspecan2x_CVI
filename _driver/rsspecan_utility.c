@@ -17,7 +17,7 @@
  * Function: rsspecan_InitAttributes
  * Purpose:  This function inits attributes to the desired values if needed.
  *****************************************************************************/
-ViStatus rsspecan_InitAttributes (ViSession instrSession)
+ViStatus rsspecan_InitAttributes(ViSession instrSession)
 {
 	ViStatus error = VI_SUCCESS;
 
@@ -79,24 +79,24 @@ Error:
  *
  *           Note:  Call this function only when the session is locked.
  *****************************************************************************/
-ViStatus rsspecan_DefaultInstrSetup (ViSession instrSession)
+ViStatus rsspecan_DefaultInstrSetup(ViSession instrSession)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 	RsCoreSessionPtr rsSession = NULL;
 
 	checkErr(RsCore_GetRsSession(instrSession, &rsSession));
 
-    // Set all the attributes to the default state. Do not update inherent attributes!
-    checkErr(RsCore_ApplyAttributeDefaults (instrSession, VI_FALSE));
+	// Set all the attributes to the default state. Do not update inherent attributes!
+	checkErr(RsCore_ApplyAttributeDefaults (instrSession, VI_FALSE));
 
-    // Init attributes
-    checkErr(rsspecan_InitAttributes (instrSession));
+	// Init attributes
+	checkErr(rsspecan_InitAttributes (instrSession));
 
 	rsSession->fastSweepInstrument = 0;
 	checkErr(RsCore_ResetRegistersEseSre(instrSession));
 
 Error:
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -111,7 +111,7 @@ Error:
  *
  *           Note:  Call this function only when the session is locked.
  *****************************************************************************/
-ViStatus rsspecan_CheckStatus (ViSession instrSession)
+ViStatus rsspecan_CheckStatus(ViSession instrSession)
 {
 	ViStatus error = VI_SUCCESS;
 
@@ -129,76 +129,76 @@ Error:
 /* Purpose:  Parse Limit Line Catalog returned from instrument and removes   */
 /*           from it all unneeded parameters from this list.                 */
 /*===========================================================================*/
-ViStatus rsspecan_ParseLimitLineCatalog(ViChar *buffer, ViInt32 size, ViChar *catalogList, ViInt32 *nbValues)
+ViStatus rsspecan_ParseLimitLineCatalog(ViChar* buffer, ViInt32 size, ViChar* catalogList, ViInt32* nbValues)
 {
-    ViStatus    rsspecan_status = VI_SUCCESS;
-    ViChar*     plist_of_files = 0;
-    ViChar*     ptag = NULL;
-    ViChar*     pend = NULL;
-    ViInt32     i = 0;
+	ViStatus rsspecan_status = VI_SUCCESS;
+	ViChar* plist_of_files = 0;
+	ViChar* ptag = NULL;
+	ViChar* pend = NULL;
+	ViInt32 i = 0;
 
-    if (*buffer != '\0')
-    {
-        sscanf(buffer, "%*ld,%*ld,%[^\r\n]", buffer);
-        plist_of_files = (ViChar*)malloc(strlen (buffer)+1);
-        pend = plist_of_files;
-        *pend = '\0';
-        ptag = strtok(buffer, ",");
-        while (ptag != NULL && rsspecan_status == VI_SUCCESS)
-        {
-            i++;
-            pend += sprintf(pend, "%s,", ptag+1);
-            ptag = strtok(NULL, ",");
-            if (ptag == NULL)
-                rsspecan_status = RS_ERROR_INVALID_VALUE;
-            else
-                ptag = strtok(NULL, ",");
-        }
-    }
+	if (*buffer != '\0')
+	{
+		sscanf(buffer, "%*ld,%*ld,%[^\r\n]", buffer);
+		plist_of_files = (ViChar*)malloc(strlen(buffer) + 1);
+		pend = plist_of_files;
+		*pend = '\0';
+		ptag = strtok(buffer, ",");
+		while (ptag != NULL && rsspecan_status == VI_SUCCESS)
+		{
+			i++;
+			pend += sprintf(pend, "%s,", ptag + 1);
+			ptag = strtok(NULL, ",");
+			if (ptag == NULL)
+				rsspecan_status = RS_ERROR_INVALID_VALUE;
+			else
+				ptag = strtok(NULL, ",");
+		}
+	}
 
-    *--pend = '\0';
+	*--pend = '\0';
 
-    if (nbValues) *nbValues = i;
+	if (nbValues) *nbValues = i;
 
-    strncpy(catalogList, plist_of_files, size);
+	strncpy(catalogList, plist_of_files, size);
 
-    free(plist_of_files);
+	free(plist_of_files);
 
-    return rsspecan_status;
+	return rsspecan_status;
 }
 
 /*===========================================================================*/
 /* Function: Set OPC Timeout                                                 */
 /* Purpose:  Sets new OPC timeout                                            */
 /*===========================================================================*/
-ViStatus rsspecan_SetOPCTimeout(ViSession   instrSession, ViInt32 timeout)
+ViStatus rsspecan_SetOPCTimeout(ViSession instrSession, ViInt32 timeout)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr(RsCore_SetAttributeViInt32(instrSession, NULL, RS_ATTR_OPC_TIMEOUT, 0, timeout));
+	checkErr(RsCore_SetAttributeViInt32(instrSession, NULL, RS_ATTR_OPC_TIMEOUT, 0, timeout));
 
 Error:
-    return error;
+	return error;
 }
 
 /*===========================================================================*/
 /* Function: Get OPC Timeout                                                 */
 /* Purpose:  Gets new OPC timeout                                            */
 /*===========================================================================*/
-ViStatus rsspecan_GetOPCTimeout(ViSession   instrSession, ViInt32 *timeout)
+ViStatus rsspecan_GetOPCTimeout(ViSession instrSession, ViInt32* timeout)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr(RsCore_GetAttributeViInt32(instrSession, NULL, RS_ATTR_OPC_TIMEOUT, 0, timeout));
+	checkErr(RsCore_GetAttributeViInt32(instrSession, NULL, RS_ATTR_OPC_TIMEOUT, 0, timeout));
 
 Error:
-    return error;
+	return error;
 }
 
 /// HIFN Returns true for all FSV compatible instruments
 /// HIRET Returns true for all FSV compatible instruments
 /// HIPAR instrSession/Session.
-ViBoolean rsspecan_IsFSV (ViSession instrSession)
+ViBoolean rsspecan_IsFSV(ViSession instrSession)
 {
 	return RsCore_IsInstrumentModel(instrSession, "FSV|FSW|FSVR");
 }
@@ -210,9 +210,9 @@ ViBoolean rsspecan_IsFSV (ViSession instrSession)
 /*===========================================================================*/
 ViStatus rsspecan_dataReadTrace(ViSession instrSession, ViInt32 window, ViString trace, ViInt32 arrayLength, ViReal64 traceData[], ViPInt32 noofPoints)
 {
-	ViStatus    error = VI_SUCCESS;
-	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
-	ViReal64    *responseArray = NULL;
+	ViStatus error = VI_SUCCESS;
+	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViReal64* responseArray = NULL;
 
 	checkErr(RsCore_Write(instrSession, ":FORM REAL,32"));
 
@@ -233,6 +233,7 @@ Error:
 	if (responseArray) free(responseArray);
 	return error;
 }
+
 /*===========================================================================*/
 /* Function: Read Trace Data Dynamic size                                    */
 /* Purpose:  This function reads out trace data from the instrument.         */
@@ -240,8 +241,8 @@ Error:
 /*===========================================================================*/
 ViStatus rsspecan_dataReadTraceDynSize(ViSession instrSession, ViInt32 window, ViString trace, ViReal64** traceData, ViInt32* noofPoints)
 {
-	ViStatus    error = VI_SUCCESS;
-	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViStatus error = VI_SUCCESS;
+	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
 	checkErr(RsCore_Write(instrSession, ":FORM REAL,32"));
 
@@ -249,7 +250,7 @@ ViStatus rsspecan_dataReadTraceDynSize(ViSession instrSession, ViInt32 window, V
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC? %s", trace);
 	else
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC%ld? %s", window, trace);
-		checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, traceData, noofPoints));
+	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, traceData, noofPoints));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:

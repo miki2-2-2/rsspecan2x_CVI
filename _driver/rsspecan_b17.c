@@ -21,19 +21,19 @@
 /* Function: Configure Digital Baseband Input
 /* Purpose:  This function configures digital baseband input.
 /*===========================================================================*/
-ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandInput (ViSession instrSession,
-                                                          ViInt32 basebandInputs)
+ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandInput(ViSession instrSession,
+                                                         ViInt32 basebandInputs)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr(RsCore_LockSession(instrSession));
+	checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BB_INPUT_SELECTION, basebandInputs),
-    		2, "Baseband Inputs");
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BB_INPUT_SELECTION, basebandInputs),
+		2, "Baseband Inputs");
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 
@@ -42,19 +42,19 @@ Error:
 /// HIPAR instrSession/This control accepts the Instrument Handle returned by the Initialize function to select the desired instrument driver session.
 /// HIPAR basebandInputCoupling/If enabled, the reference level for digital input is adjusted to the full scale level automatically if the fullscale level changes.
 
-ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandInputCoupling (ViSession instrSession,
-                                                                  ViBoolean basebandInputCoupling)
+ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandInputCoupling(ViSession instrSession,
+                                                                 ViBoolean basebandInputCoupling)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
 	checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_COUPLING, basebandInputCoupling),
-    		2, "Baseband Input Coupling");
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_COUPLING, basebandInputCoupling),
+		2, "Baseband Input Coupling");
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /// HIFN  This function activates/deactivates auto set of digital baseband input parameters.
@@ -63,46 +63,46 @@ Error:
 /// HIPAR autoRange/This control activates/deactivates the automatically adjust of digital in full scale.
 /// HIPAR autoSampleRate/This control activates/deactivates the automatically adjust of digital in sample rate.
 
-ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandInputParametersAuto (ViSession instrSession,
-                                                                        ViBoolean autoRange,
-                                                                        ViBoolean autoSampleRate)
+ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandInputParametersAuto(ViSession instrSession,
+                                                                       ViBoolean autoRange,
+                                                                       ViBoolean autoSampleRate)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr(RsCore_LockSession(instrSession));
+	checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_RANGE_AUTO, autoRange),
-    		2, "Digital Input Range Auto");
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_RANGE_AUTO, autoRange),
+		2, "Digital Input Range Auto");
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_SAMPLE_RATE_AUTO, autoSampleRate),
-    		3, "Auto Sample Rate");
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_SAMPLE_RATE_AUTO, autoSampleRate),
+		3, "Auto Sample Rate");
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure Digital Baseband Input Parameters
 /* Purpose:  This function configures digital baseband input parameters.
 /*===========================================================================*/
-ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandInputParameters (ViSession instrSession,
-                                                                    ViReal64 range,
-                                                                    ViReal64 sampleRate)
+ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandInputParameters(ViSession instrSession,
+                                                                   ViReal64 range,
+                                                                   ViReal64 sampleRate)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr(RsCore_LockSession(instrSession));
+	checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_RANGE, range),
-    		2, "Range");
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_RANGE, range),
+		2, "Range");
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_SRATE, sampleRate),
-    		3, "Sample Rate");
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_SRATE, sampleRate),
+		3, "Sample Rate");
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*===========================================================================*/
@@ -110,38 +110,38 @@ Error:
 /* Purpose:  This function configures the IQ data output of the Digital
 /*           Baseband interface.
 /*===========================================================================*/
-ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandOutput (ViSession instrSession,
-                                                           ViBoolean output)
+ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandOutput(ViSession instrSession,
+                                                          ViBoolean output)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr(RsCore_LockSession(instrSession));
+	checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_DIGITAL_BASEBAND_OUTPUT_STATE, output),
-    		2, "Output");
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_DIGITAL_BASEBAND_OUTPUT_STATE, output),
+		2, "Output");
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*===========================================================================*/
 /* Function: Configure Digital Baseband Full Scale Level
 /* Purpose:  This function configures the full scale level.
 /*===========================================================================*/
-ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandFullScaleLevel (ViSession instrSession,
-                                                                   ViReal64 fullScaleLevel)
+ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandFullScaleLevel(ViSession instrSession,
+                                                                  ViReal64 fullScaleLevel)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr(RsCore_LockSession(instrSession));
+	checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_BASEBAND_FULL_SCALE_LEVEL, fullScaleLevel),
-    		2, "Full Scale Level");
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_BASEBAND_FULL_SCALE_LEVEL, fullScaleLevel),
+		2, "Full Scale Level");
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*****************************************************************************
@@ -152,34 +152,34 @@ Error:
  *           number of this device, the port name and the sample rate,
  *           separated by comma, e.g. "AMU200A,100266,Out A, 80000000.0".
  *****************************************************************************/
-ViStatus _VI_FUNC rsspecan_QueryDigitalBasebandInputOutputConfiguration (ViSession instrSession,
-                                                                         ViInt32 digitalBasebandSelect,
-                                                                         ViInt32 arraySize,
-                                                                         ViChar configuration[])
+ViStatus _VI_FUNC rsspecan_QueryDigitalBasebandInputOutputConfiguration(ViSession instrSession,
+                                                                        ViInt32 digitalBasebandSelect,
+                                                                        ViInt32 arraySize,
+                                                                        ViChar configuration[])
 {
-    ViStatus    error = VI_SUCCESS;
-    ViAttr      attr = 0;
+	ViStatus error = VI_SUCCESS;
+	ViAttr attr = 0;
 
-    checkErr(RsCore_LockSession(instrSession));
+	checkErr(RsCore_LockSession(instrSession));
 
-    switch (digitalBasebandSelect)
-    {
-        case RSSPECAN_VAL_DIQ_IN:
-            attr = RSSPECAN_ATTR_QUERY_DIGITAL_INPUT_CONF;
-        break;
-        case RSSPECAN_VAL_DIQ_OUT:
-            attr = RSSPECAN_ATTR_QUERY_DIGITAL_OUTPUT_CONF;
-        break;
-        default:
-            viCheckParm(RsCore_InvalidViInt32Value(instrSession, digitalBasebandSelect), 2, "Digital Baseband Select");
-    }
+	switch (digitalBasebandSelect)
+	{
+	case RSSPECAN_VAL_DIQ_IN:
+		attr = RSSPECAN_ATTR_QUERY_DIGITAL_INPUT_CONF;
+		break;
+	case RSSPECAN_VAL_DIQ_OUT:
+		attr = RSSPECAN_ATTR_QUERY_DIGITAL_OUTPUT_CONF;
+		break;
+	default:
+		viCheckParm(RsCore_InvalidViInt32Value(instrSession, digitalBasebandSelect), 2, "Digital Baseband Select");
+	}
 
-    checkErr(rsspecan_GetAttributeViString (instrSession, "", attr,
-                                               arraySize, configuration));
+	checkErr(rsspecan_GetAttributeViString (instrSession, "", attr,
+		arraySize, configuration));
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*===========================================================================*/
@@ -188,18 +188,18 @@ Error:
 /*           sweep
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandInputTriggerSource
-             (ViSession instrSession, ViInt32 triggerSource)
+(ViSession instrSession, ViInt32 triggerSource)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr(RsCore_LockSession(instrSession));
+	checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_DIGITAL_BASEBAND_INPUT_TRIGGER_SOURCE, triggerSource),
-    		2, "Trigger Source");
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_DIGITAL_BASEBAND_INPUT_TRIGGER_SOURCE, triggerSource),
+		2, "Trigger Source");
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
 
 /*===========================================================================*/
@@ -209,21 +209,19 @@ Error:
 /*           Baseband Power.
 /*===========================================================================*/
 ViStatus _VI_FUNC rsspecan_ConfigureDigitalBasebandInputTriggerParameters
-             (ViSession instrSession, ViReal64 triggerLevel, ViReal64 holdoff)
+(ViSession instrSession, ViReal64 triggerLevel, ViReal64 holdoff)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr(RsCore_LockSession(instrSession));
+	checkErr(RsCore_LockSession(instrSession));
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_BASEBAND_INPUT_TRIGGER_LEVEL, triggerLevel),
-    		2, "Trigger Level");
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_BASEBAND_INPUT_TRIGGER_LEVEL, triggerLevel),
+		2, "Trigger Level");
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_BASEBAND_INPUT_TRIGGER_HOLDOFF, holdoff),
-    		3, "Holdoff");
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_BASEBAND_INPUT_TRIGGER_HOLDOFF, holdoff),
+		3, "Holdoff");
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);
-    return error;
+	(void)RsCore_UnlockSession(instrSession);
+	return error;
 }
-
-

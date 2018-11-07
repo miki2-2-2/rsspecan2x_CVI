@@ -38,7 +38,7 @@ ViStatus rsspecan_doubleQuotedString_WriteCallback(ViSession instrSession, ViCon
  *****************************************************************************/
 ViStatus rsspecan_empty_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
 {
-    return VI_SUCCESS;
+	return VI_SUCCESS;
 }
 
 /*===========================================================================*/
@@ -125,27 +125,27 @@ ViStatus rsspecan_Item1Item2Itemx_ReadCallback(ViSession instrSession, ViConstSt
 	return RsCore_ReadCallback(instrSession, repCapName, attr);
 }
 
- /*****************************************************************************
- * Function: rsspecan_quotedInt_ReadCallback
- * Purpose:  This function overrides standard calback funtion. Reads int
- *           returned with apostrophes
- *****************************************************************************/
- ViStatus rsspecan_quotedInt_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
+/*****************************************************************************
+* Function: rsspecan_quotedInt_ReadCallback
+* Purpose:  This function overrides standard calback funtion. Reads int
+*           returned with apostrophes
+*****************************************************************************/
+ViStatus rsspecan_quotedInt_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
 {
-    return rsspecan_quotedString_ReadCallback(instrSession, repCapName, attr);
+	return rsspecan_quotedString_ReadCallback(instrSession, repCapName, attr);
 }
 
- /*****************************************************************************
-  * Function: rsspecan_DeltaMarkerReferenceMarker_ReadCallback
-  * Purpose:  This function overrides standard calback funtion.
-  *****************************************************************************/
- ViStatus rsspecan_DeltaMarkerReferenceMarker_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
- {
-	 ViStatus error = VI_SUCCESS;
+/*****************************************************************************
+ * Function: rsspecan_DeltaMarkerReferenceMarker_ReadCallback
+ * Purpose:  This function overrides standard calback funtion.
+ *****************************************************************************/
+ViStatus rsspecan_DeltaMarkerReferenceMarker_ReadCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr)
+{
+	ViStatus error = VI_SUCCESS;
 
-	 //TODO: Implement
-	 return error;
- }
+	//TODO: Implement
+	return error;
+}
 
 /*****************************************************************************
  *- Write Callbacks ---------------------------------------------------------*
@@ -158,7 +158,7 @@ ViStatus rsspecan_Item1Item2Itemx_ReadCallback(ViSession instrSession, ViConstSt
  *****************************************************************************/
 ViStatus rsspecan_empty_WriteCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, void* value)
 {
-    return VI_SUCCESS;
+	return VI_SUCCESS;
 }
 
 /*****************************************************************************
@@ -217,7 +217,7 @@ ViStatus rsspecan_outputSelectionCallback_WriteCallback(ViSession instrSession, 
 
 	if (attr->dataType != RS_VAL_STRING)
 		checkErr(RsCore_GenerateInvalidDataTypeError(instrSession, attr->dataType,
-			"rsspecan_outputSelectionCallback_WriteCallback: Data type must be RS_VAL_STRING"));
+		"rsspecan_outputSelectionCallback_WriteCallback: Data type must be RS_VAL_STRING"));
 
 	if (strcmp((char*)value, "FOC") == 0)
 	{
@@ -344,9 +344,9 @@ Error:
 	return error;
 }
 
- /*****************************************************************************
- *- Check Callbacks ---------------------------------------------------------*
- *****************************************************************************/
+/*****************************************************************************
+*- Check Callbacks ---------------------------------------------------------*
+*****************************************************************************/
 
 /*****************************************************************************
  *- Coerce Callbacks --------------------------------------------------------*
@@ -361,187 +361,188 @@ Error:
  * Function: rsspecan_EVMCalculation_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_EVMCalculation_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
- {
-    ViStatus    error = VI_SUCCESS;
+ViStatus rsspecan_EVMCalculation_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
+{
+	ViStatus error = VI_SUCCESS;
 
-    if (rsspecan_IsFSV(instrSession))
-    {
-        *rangeTable = &rsspecan_rngVSAModulationEVMCalcFSV;
-    }
-    else
-    {
-        *rangeTable = &rsspecan_rngVSAModulationEVMCalc;
-    }
+	if (rsspecan_IsFSV(instrSession))
+	{
+		*rangeTable = &rsspecan_rngVSAModulationEVMCalcFSV;
+	}
+	else
+	{
+		*rangeTable = &rsspecan_rngVSAModulationEVMCalc;
+	}
 
-    return error;
- }
+	return error;
+}
 
- /*****************************************************************************
- * Function: rsspecan_SpectrogramHistoryDepth_RangeTableCallback
- * Purpose:  This function overrides standard calback funtion.
- *****************************************************************************/
- ViStatus rsspecan_SpectrogramHistoryDepth_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
- {
-    ViStatus    error = VI_SUCCESS;
+/*****************************************************************************
+* Function: rsspecan_SpectrogramHistoryDepth_RangeTableCallback
+* Purpose:  This function overrides standard calback funtion.
+*****************************************************************************/
+ViStatus rsspecan_SpectrogramHistoryDepth_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
+{
+	ViStatus error = VI_SUCCESS;
 
-    if (RsCore_IsInstrumentModel(instrSession, "FSVR"))
-    {
-        *rangeTable = &rsspecan_rngSpemHistoryBuffDepthFSVR;
-    }
-    else if (RsCore_IsInstrumentModel(instrSession, "FSV"))
-    {
-        *rangeTable = &rsspecan_rngSpemHistoryBuffDepthFSV;
-    }
-    else
-    {
-        *rangeTable = &rsspecan_rngSpemHistoryBuffDepth;
-    }
+	if (RsCore_IsInstrumentModel(instrSession, "FSVR"))
+	{
+		*rangeTable = &rsspecan_rngSpemHistoryBuffDepthFSVR;
+	}
+	else if (RsCore_IsInstrumentModel(instrSession, "FSV"))
+	{
+		*rangeTable = &rsspecan_rngSpemHistoryBuffDepthFSV;
+	}
+	else
+	{
+		*rangeTable = &rsspecan_rngSpemHistoryBuffDepth;
+	}
 
-    return error;
- }
+	return error;
+}
 
 /*****************************************************************************
  * Function: rsspecan_XAxisQuantize_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_XAxisQuantize_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
- {
-    ViStatus    error = VI_SUCCESS;
-
-    if (RsCore_IsInstrumentModel(instrSession, "FSV"))
-    {
-        *rangeTable = &rsspecan_rngVSAConfDisplayXQuantizeFSV;
-    }
-    else
-    {
-        *rangeTable = &rsspecan_rngVSAConfDisplayXQuantize;
-    }
-
-    return error;
- }
-
- /*****************************************************************************
- * Function: rsspecan_TraceRange_RangeTableCallback
- * Purpose:  This function overrides standard calback funtion.
- *****************************************************************************/
- ViStatus rsspecan_TraceRange_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
+ViStatus rsspecan_XAxisQuantize_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (RsCore_IsInstrumentModel(instrSession, "FSV|FSL"))
-    {
-        *rangeTable = &rsspecan_rngFslTrace;
-    }
-    else
-    {
-        *rangeTable = &rsspecan_rngTrace;
-    }
+	if (RsCore_IsInstrumentModel(instrSession, "FSV"))
+	{
+		*rangeTable = &rsspecan_rngVSAConfDisplayXQuantizeFSV;
+	}
+	else
+	{
+		*rangeTable = &rsspecan_rngVSAConfDisplayXQuantize;
+	}
 
-    return error;
+	return error;
+}
+
+/*****************************************************************************
+* Function: rsspecan_TraceRange_RangeTableCallback
+* Purpose:  This function overrides standard calback funtion.
+*****************************************************************************/
+ViStatus rsspecan_TraceRange_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
+{
+	ViStatus error = VI_SUCCESS;
+
+	if (RsCore_IsInstrumentModel(instrSession, "FSV|FSL"))
+	{
+		*rangeTable = &rsspecan_rngFslTrace;
+	}
+	else
+	{
+		*rangeTable = &rsspecan_rngTrace;
+	}
+
+	return error;
 };
 
- /*****************************************************************************
- * Function: rsspecan_AmpUnit_RangeTableCallback
- * Purpose:  This function overrides standard calback funtion.
- *****************************************************************************/
+/*****************************************************************************
+* Function: rsspecan_AmpUnit_RangeTableCallback
+* Purpose:  This function overrides standard calback funtion.
+*****************************************************************************/
 ViStatus rsspecan_AmpUnit_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
- {
-   ViStatus    error = VI_SUCCESS;
+{
+	ViStatus error = VI_SUCCESS;
 
-    if (RsCore_IsInstrumentModel(instrSession, "FSL"))
-    {
-        *rangeTable = &rsspecan_rngFslAmplitudeUnitsRangeTable;
-    }
-    else
-    {
-        *rangeTable = &rsspecan_rngAmplitudeUnitsRangeTable;
-    }
+	if (RsCore_IsInstrumentModel(instrSession, "FSL"))
+	{
+		*rangeTable = &rsspecan_rngFslAmplitudeUnitsRangeTable;
+	}
+	else
+	{
+		*rangeTable = &rsspecan_rngAmplitudeUnitsRangeTable;
+	}
 
-    return error;
- }
+	return error;
+}
 
 /*****************************************************************************
  * Function: rsspecan_PowStandard_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_PowStandard_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
+ViStatus rsspecan_PowStandard_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (RsCore_IsInstrumentModel(instrSession, "FSL"))
-    {
-        *rangeTable = &rsspecan_rngFslMeasPowerStandard;
-    }
-    else if (RsCore_IsInstrumentModel(instrSession, "FSV"))
-    {
-        *rangeTable = &rsspecan_rngFsvMeasPowerStandard;
-    }
-    else
-    {
-        *rangeTable = &rsspecan_rngMeasPowerStandard;
-    }
+	if (RsCore_IsInstrumentModel(instrSession, "FSL"))
+	{
+		*rangeTable = &rsspecan_rngFslMeasPowerStandard;
+	}
+	else if (RsCore_IsInstrumentModel(instrSession, "FSV"))
+	{
+		*rangeTable = &rsspecan_rngFsvMeasPowerStandard;
+	}
+	else
+	{
+		*rangeTable = &rsspecan_rngMeasPowerStandard;
+	}
 
-    return error;
+	return error;
 }
 
 /*****************************************************************************
  * Function: rsspecan_ExtMixerHarmonic_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_ExtMixerHarmonic_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
- {
-    ViStatus    error = VI_SUCCESS;
-
-    if (RsCore_IsInstrumentModel(instrSession, "FSV"))
-    {
-        *rangeTable = &rsspecan_rngExtMixerHarmonicFSV;
-    }
-    else
-    {
-        *rangeTable = &rsspecan_rngExtMixerHarmonic;
-    }
-
-    return error;
- }
-
- /*****************************************************************************
- * Function: rsspecan_BtoChannel_RangeTableCallback
- * Purpose:  This function overrides standard calback funtion.
- *****************************************************************************/
- ViStatus rsspecan_BtoChannel_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
+ViStatus rsspecan_ExtMixerHarmonic_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
-    ViInt32     region;
+	ViStatus error = VI_SUCCESS;
 
-    checkErr(rsspecan_GetAttributeViInt32(instrSession,"", RSSPECAN_ATTR_BTO_GEOG, &region));
-    switch (region){
-        case RSSPECAN_BTO_GEOG_EUR:
-        case RSSPECAN_BTO_GEOG_USA:
-            *rangeTable = &rsspecan_rngBtoChannel;
-        break;
-        case RSSPECAN_BTO_GEOG_FRAN:
-            *rangeTable = &rsspecan_rngBtoChannelFranc;
-        break;
-    }
+	if (RsCore_IsInstrumentModel(instrSession, "FSV"))
+	{
+		*rangeTable = &rsspecan_rngExtMixerHarmonicFSV;
+	}
+	else
+	{
+		*rangeTable = &rsspecan_rngExtMixerHarmonic;
+	}
+
+	return error;
+}
+
+/*****************************************************************************
+* Function: rsspecan_BtoChannel_RangeTableCallback
+* Purpose:  This function overrides standard calback funtion.
+*****************************************************************************/
+ViStatus rsspecan_BtoChannel_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
+{
+	ViStatus error = VI_SUCCESS;
+	ViInt32 region;
+
+	checkErr(rsspecan_GetAttributeViInt32(instrSession,"", RSSPECAN_ATTR_BTO_GEOG, &region));
+	switch (region)
+	{
+	case RSSPECAN_BTO_GEOG_EUR:
+	case RSSPECAN_BTO_GEOG_USA:
+		*rangeTable = &rsspecan_rngBtoChannel;
+		break;
+	case RSSPECAN_BTO_GEOG_FRAN:
+		*rangeTable = &rsspecan_rngBtoChannelFranc;
+		break;
+	}
 
 Error:
-    return error;
+	return error;
 };
 
 ViStatus rsspecan_C2kSetCount_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
-    ViChar     mode[RS_MAX_MESSAGE_LEN]="";
+	ViStatus error = VI_SUCCESS;
+	ViChar mode[RS_MAX_MESSAGE_LEN] = "";
 
-    checkErr(rsspecan_GetAttributeViString(instrSession,"", RSSPECAN_ATTR_GET_INSTR_MODE, RS_MAX_MESSAGE_LEN, mode));
-    if ((strcmp(mode,"BC2K") == 0) || (strcmp(mode,"M2CK") == 0))
-        *rangeTable = &rsspecan_rngC2KSetCount;
-    else
-        *rangeTable = &rsspecan_rngBDOSetCount;
+	checkErr(rsspecan_GetAttributeViString(instrSession,"", RSSPECAN_ATTR_GET_INSTR_MODE, RS_MAX_MESSAGE_LEN, mode));
+	if ((strcmp(mode, "BC2K") == 0) || (strcmp(mode, "M2CK") == 0))
+		*rangeTable = &rsspecan_rngC2KSetCount;
+	else
+		*rangeTable = &rsspecan_rngBDOSetCount;
 
 Error:
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -550,14 +551,14 @@ Error:
  *****************************************************************************/
 ViStatus rsspecan_IQSrate_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (!RsCore_HasInstrumentOptions(instrSession, "B72"))
-        *rangeTable = &rsspecan_rngIQSRate;
-    else
-        *rangeTable = &rsspecan_rngIQSRateB72;
+	if (!RsCore_HasInstrumentOptions(instrSession, "B72"))
+		*rangeTable = &rsspecan_rngIQSRate;
+	else
+		*rangeTable = &rsspecan_rngIQSRateB72;
 
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -566,18 +567,18 @@ ViStatus rsspecan_IQSrate_RangeTableCallback(ViSession instrSession, ViConstStri
  *****************************************************************************/
 ViStatus rsspecan_AvgType_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (RsCore_IsInstrumentModel(instrSession, "FSV|FSL"))
-    {
-        *rangeTable = &rsspecan_rngAvgTypeFSV;
-    }
-    else
-    {
-        *rangeTable = &rsspecan_rngAvgType;
-    }
+	if (RsCore_IsInstrumentModel(instrSession, "FSV|FSL"))
+	{
+		*rangeTable = &rsspecan_rngAvgTypeFSV;
+	}
+	else
+	{
+		*rangeTable = &rsspecan_rngAvgType;
+	}
 
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -586,22 +587,22 @@ ViStatus rsspecan_AvgType_RangeTableCallback(ViSession instrSession, ViConstStri
  *****************************************************************************/
 ViStatus rsspecan_InpAmpEattMan_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
 	if (RsCore_IsInstrumentModel(instrSession, "FSV"))
-    {
-        *rangeTable = &rsspecan_rngInpAmptEattManFSV;
-    }
+	{
+		*rangeTable = &rsspecan_rngInpAmptEattManFSV;
+	}
 	else if (RsCore_IsInstrumentModel(instrSession, "FSW"))
-    {
-        *rangeTable = &rsspecan_rngInpAmptEattManFSW;
-    }
+	{
+		*rangeTable = &rsspecan_rngInpAmptEattManFSW;
+	}
 	else
-    {
-        *rangeTable = &rsspecan_rngInpAmptEattMan;
-    }
+	{
+		*rangeTable = &rsspecan_rngInpAmptEattMan;
+	}
 
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -610,18 +611,18 @@ ViStatus rsspecan_InpAmpEattMan_RangeTableCallback(ViSession instrSession, ViCon
  *****************************************************************************/
 ViStatus rsspecan_AdemSpecBW_FSV_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (RsCore_IsInstrumentModel(instrSession, "FSV"))
-    {
-        *rangeTable = &rsspecan_rngAdemBandResFSV;
-    }
-    else
-    {
-        *rangeTable = &rsspecan_rngAdemBandRes;
-    }
+	if (RsCore_IsInstrumentModel(instrSession, "FSV"))
+	{
+		*rangeTable = &rsspecan_rngAdemBandResFSV;
+	}
+	else
+	{
+		*rangeTable = &rsspecan_rngAdemBandRes;
+	}
 
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -630,18 +631,18 @@ ViStatus rsspecan_AdemSpecBW_FSV_RangeTableCallback(ViSession instrSession, ViCo
  *****************************************************************************/
 ViStatus rsspecan_ZoneType_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (RsCore_IsInstrumentModel(instrSession, "FSV"))
-    {
-        *rangeTable = &rsspecan_rngWiMAXZoneTypeFSV;
-    }
-    else
-    {
-        *rangeTable = &rsspecan_rngWiMAXZoneType;
-    }
+	if (RsCore_IsInstrumentModel(instrSession, "FSV"))
+	{
+		*rangeTable = &rsspecan_rngWiMAXZoneTypeFSV;
+	}
+	else
+	{
+		*rangeTable = &rsspecan_rngWiMAXZoneType;
+	}
 
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -650,18 +651,18 @@ ViStatus rsspecan_ZoneType_RangeTableCallback(ViSession instrSession, ViConstStr
  *****************************************************************************/
 ViStatus rsspecan_SEListRangeFilterType_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (RsCore_IsInstrumentModel(instrSession, "FSV"))
-    {
-        *rangeTable = &rsspecan_rngListFiltTypeFSV;
-    }
-    else
-    {
-        *rangeTable = &rsspecan_rngListFiltType;
-    }
+	if (RsCore_IsInstrumentModel(instrSession, "FSV"))
+	{
+		*rangeTable = &rsspecan_rngListFiltTypeFSV;
+	}
+	else
+	{
+		*rangeTable = &rsspecan_rngListFiltType;
+	}
 
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -670,18 +671,18 @@ ViStatus rsspecan_SEListRangeFilterType_RangeTableCallback(ViSession instrSessio
  *****************************************************************************/
 ViStatus rsspecan_HCopyLanguage_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (RsCore_IsInstrumentModel(instrSession, "FSV|FSL"))
-    {
-        *rangeTable = &rsspecan_rngHcopyDeviceLangFSL;
-    }
-    else
-    {
-        *rangeTable = &rsspecan_rngHcopyDeviceLang;
-    }
+	if (RsCore_IsInstrumentModel(instrSession, "FSV|FSL"))
+	{
+		*rangeTable = &rsspecan_rngHcopyDeviceLangFSL;
+	}
+	else
+	{
+		*rangeTable = &rsspecan_rngHcopyDeviceLang;
+	}
 
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -690,19 +691,19 @@ ViStatus rsspecan_HCopyLanguage_RangeTableCallback(ViSession instrSession, ViCon
  *****************************************************************************/
 ViStatus rsspecan_IQSrateFMU_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (!RsCore_IsInstrumentModel(instrSession, "FMU|FSQ"))
-    {
-        *rangeTable = &rsspecan_rngIQSRate;
+	if (!RsCore_IsInstrumentModel(instrSession, "FMU|FSQ"))
+	{
+		*rangeTable = &rsspecan_rngIQSRate;
 
-        if (RsCore_HasInstrumentOptions(instrSession, "B72") || RsCore_IsInstrumentModel(instrSession, "FSV") && RsCore_HasInstrumentOptions(instrSession, "B72"))
-            *rangeTable = &rsspecan_rngIQSRateB72;
-    }
-    else
-        *rangeTable = &rsspecan_rngIQSRateFMU;
+		if (RsCore_HasInstrumentOptions(instrSession, "B72") || RsCore_IsInstrumentModel(instrSession, "FSV") && RsCore_HasInstrumentOptions(instrSession, "B72"))
+			*rangeTable = &rsspecan_rngIQSRateB72;
+	}
+	else
+		*rangeTable = &rsspecan_rngIQSRateFMU;
 
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -711,16 +712,16 @@ ViStatus rsspecan_IQSrateFMU_RangeTableCallback(ViSession instrSession, ViConstS
  *****************************************************************************/
 ViStatus rsspecan_DetectorType_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (RsCore_IsInstrumentModel(instrSession, "FMU|FSW"))
-        *rangeTable = &rsspecan_rngDetectorTypeFMURangeTable;
-    else if (RsCore_IsInstrumentModel(instrSession, "FSV"))
-        *rangeTable = &rsspecan_rngDetectorTypeESLRangeTable;
-    else
-        *rangeTable = &rsspecan_rngDetectorTypeRangeTable;
+	if (RsCore_IsInstrumentModel(instrSession, "FMU|FSW"))
+		*rangeTable = &rsspecan_rngDetectorTypeFMURangeTable;
+	else if (RsCore_IsInstrumentModel(instrSession, "FSV"))
+		*rangeTable = &rsspecan_rngDetectorTypeESLRangeTable;
+	else
+		*rangeTable = &rsspecan_rngDetectorTypeRangeTable;
 
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -729,14 +730,14 @@ ViStatus rsspecan_DetectorType_RangeTableCallback(ViSession instrSession, ViCons
  *****************************************************************************/
 ViStatus rsspecan_BBInput_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (!RsCore_IsInstrumentModel(instrSession, "FMU"))
-        *rangeTable = &rsspecan_rngBBInput;
-    else
-        *rangeTable = &rsspecan_rngBBInputFMU;
+	if (!RsCore_IsInstrumentModel(instrSession, "FMU"))
+		*rangeTable = &rsspecan_rngBBInput;
+	else
+		*rangeTable = &rsspecan_rngBBInputFMU;
 
-    return error;
+	return error;
 }
 
 /*****************************************************************************
@@ -745,34 +746,34 @@ ViStatus rsspecan_BBInput_RangeTableCallback(ViSession instrSession, ViConstStri
  *****************************************************************************/
 ViStatus rsspecan_TriggerRFLevel_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (!RsCore_IsInstrumentModel(instrSession, "FSV"))
-        *rangeTable = &rsspecan_rngTrigRFPowerLevel;
-    else
-        *rangeTable = &rsspecan_rngTrigRFPowerLevelFSV;
+	if (!RsCore_IsInstrumentModel(instrSession, "FSV"))
+		*rangeTable = &rsspecan_rngTrigRFPowerLevel;
+	else
+		*rangeTable = &rsspecan_rngTrigRFPowerLevelFSV;
 
-    return error;
+	return error;
 }
 
 /*****************************************************************************
  * Function: rsspecan_TraceRange_RangeTableCallback
  * Purpose:  This function overrides standard calback funtion.
  *****************************************************************************/
- ViStatus rsspecan_NoiseMarkerAssign_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
+ViStatus rsspecan_NoiseMarkerAssign_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
-    ViStatus    error = VI_SUCCESS;
+	ViStatus error = VI_SUCCESS;
 
-    if (RsCore_IsInstrumentModel(instrSession, "FSW"))
-    {
-        *rangeTable = &rsspecan_rngNoiseMarkerAssignFSW;
-    }
-    else
-    {
-        *rangeTable = &rsspecan_rngNoiseMarkerAssign;
-    }
+	if (RsCore_IsInstrumentModel(instrSession, "FSW"))
+	{
+		*rangeTable = &rsspecan_rngNoiseMarkerAssignFSW;
+	}
+	else
+	{
+		*rangeTable = &rsspecan_rngNoiseMarkerAssign;
+	}
 
-    return error;
+	return error;
 }
 
 /*****************************************************************************
