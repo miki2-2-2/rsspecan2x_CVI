@@ -162,7 +162,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseFrequencyTable(
     ViInt32     i = 0;
 	ViChar      cmd[4 * RS_MAX_MESSAGE_BUF_SIZE] = "";
 	ViChar      *p2buffer = cmd;
-    ViUInt32    retCnt    = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -512,7 +511,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseENRTable(
     ViInt32     i = 0;
     ViChar      cmd[4*RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViChar      *p2buffer = cmd;
-    ViUInt32    retCnt          = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -699,7 +697,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseLossInputTable(
     ViInt32     i = 0;
     ViChar      cmd[4*RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViChar      *p2buffer = cmd;
-    ViUInt32    retCnt          = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -809,7 +806,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseLossOutputTable(
     ViInt32     i = 0;
     ViChar      cmd[4*RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViChar      *p2buffer = cmd;
-    ViUInt32    retCnt          = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 

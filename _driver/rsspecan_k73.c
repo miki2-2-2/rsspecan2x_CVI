@@ -322,7 +322,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableData(ViSession  instrSe
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
     		2, "Array Size");
- 
+
 	pbuffer += sprintf (pbuffer, "CONF:WCDP:MS:CTAB:DATA %ld,%ld,%ld,%ld,%d,%.12f",
                 codeClass[i], codeNumber[i], channelMapping[i], pilotLength[i], status[i] == VI_FALSE ? 0 : 1, cdpRelative[i]);
 

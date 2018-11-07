@@ -717,7 +717,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAResultSummaryLimitsAll(
 	ViStatus    error = VI_SUCCESS;
 
 	checkErr(RsCore_LockSession(instrSession));
-	
+
 	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, "CALC:LIM:BURS:ALL ", limitValues, arraySize));
 
 	checkErr(rsspecan_CheckStatus (instrSession));

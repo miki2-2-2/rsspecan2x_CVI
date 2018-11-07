@@ -1126,8 +1126,6 @@ ViStatus _VI_FUNC rsspecan_GetWlanAllLimits(ViSession   instrSession,
 {
     ViStatus    error = VI_SUCCESS;
 	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViInt32     maxIdx = 12;
-    ViInt32     i=0;
 
     checkErr(RsCore_LockSession(instrSession));
 

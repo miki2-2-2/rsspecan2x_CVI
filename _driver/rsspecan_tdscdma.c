@@ -602,7 +602,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSBSChannelTableData(ViSession instrSession
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
     		2, "Array Size");
-   
+
 	pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,%ld,%d,%ld,%ld",
                 channelType[i], codeClass[i], codeNumber[i], modulationType[i], midambleShift[i], status[i],
                 reserved1[i], reserved2[i]);
@@ -610,7 +610,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSBSChannelTableData(ViSession instrSession
         pbuffer += sprintf (pbuffer, ",%ld,%ld,%ld,%ld,%ld,%d,%ld,%ld",
                 channelType[i], codeClass[i], codeNumber[i], modulationType[i], midambleShift[i], status[i],
                 reserved1[i], reserved2[i]);
-    
+
 	checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));

@@ -76,7 +76,6 @@ ViStatus _VI_FUNC rsspecan_GetVSADigitalStandardCatalog(ViSession   instrSession
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViUInt32    count=0;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -490,7 +489,6 @@ ViStatus _VI_FUNC rsspecan_GetVSAModulationFilterCatalog(ViSession  instrSession
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViUInt32    retCnt = 0;
     ViChar      *buf=NULL;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -880,7 +878,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAMeasurementResults(ViSession instrSession
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultDisplay, RSSPECAN_VAL_RESULT_DISP_FREQ_ABS, RSSPECAN_VAL_RESULT_DISP_EYE_Q),
     		4, "Result Display");
 
-    sprintf (repCap, "C%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld", window);
     sprintf (repCap2, "Win%ld", window);
     switch (measurementSignal){
         case RSSPECAN_VAL_VSA_DATA_SIGNAL_MEAS:
@@ -946,9 +944,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAMeasurementResults(ViSession instrSession
 			if (!spectrum)
 			{
 				viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_MEAS_STAT_CCDF_STATE, statistics),
-					6, "Statistics");
+						6, "Statistics");
 			}
-        
+
 		break;
     }
 
@@ -975,7 +973,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAErrorResults(ViSession   instrSession,
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultDisplay, RSSPECAN_VAL_RESULT_DISP_FREQ_ABS, RSSPECAN_VAL_RESULT_DISP_EVM),
     		4, "Result Display");
-    sprintf (repCap, "C%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld", window);
     sprintf (repCap2, "Win%ld", window);
     switch (resultDisplay)
 	{
@@ -1163,7 +1161,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSARawSignal(ViSession  instrSession,
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultDisplay, RSSPECAN_VAL_RESULT_DISP_FREQ_ABS, RSSPECAN_VAL_RESULT_DISP_MAGN_RAW),
     		3, "Result Display");
-    sprintf (repCap, "C%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld", window);
     sprintf (repCap2, "Win%ld", window);
     checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_VSA_RESULT, RSSPECAN_VAL_RESULT_TCAP));
     switch (resultDisplay){

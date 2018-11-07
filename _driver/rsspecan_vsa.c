@@ -676,7 +676,6 @@ ViStatus _VI_FUNC rsspecan_GetVSAModulationMappingCatalog(ViSession     instrSes
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViUInt32    retCnt = 0;
     ViChar      *buf=NULL;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -3312,7 +3311,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSACaptureBuffer(
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (repCap, "C%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld", window);
 	sprintf (repCapWin, "Win%ld", window);
 
 	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_VSA_RESULT, RSSPECAN_VAL_RESULT_TCAP));
@@ -3369,7 +3368,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAMeasurementSignal(
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (repCap, "C%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld", window);
 	sprintf (repCapWin, "Win%ld", window);
 
 	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_VSA_RESULT, RSSPECAN_VAL_RESULT_XTIM_DDEM_MEAS));
@@ -3510,7 +3509,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAErrorVector(
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (repCap, "C%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld", window);
 	sprintf (repCapWin, "Win%ld", window);
 
 	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_VSA_RESULT, RSSPECAN_VAL_RESULT_XTIM_DDEM_ERR_VECT));
@@ -3560,7 +3559,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAModulationErrors(
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (repCap, "C%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld", window);
 	sprintf (repCapWin, "Win%ld", window);
 
 	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_VSA_RESULT, RSSPECAN_VAL_RESULT_XTIM_DDEM_ERR_MPH));
@@ -3577,12 +3576,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAModulationErrors(
 
 		case RSSPECAN_VAL_VSA_RESULT_DISP_FREQ_ERR_ABS:
 			checkErr(rsspecan_SetAttributeViInt32(instrSession, repCapWin, RSSPECAN_ATTR_VSA_RESULT_FORMAT, RSSPECAN_VAL_VSA_RESULT_FORMAT_FREQ));
-			checkErr(rsspecan_SetAttributeViInt32 (instrSession, repCapWin, RSSPECAN_ATTR_DISP_AMPLITUDE_GRID_MODE, RSSPECAN_VAL_ABS))
+			checkErr(rsspecan_SetAttributeViInt32 (instrSession, repCapWin, RSSPECAN_ATTR_DISP_AMPLITUDE_GRID_MODE, RSSPECAN_VAL_ABS)) // TODO: Check semicolon
         break;
 
 		case RSSPECAN_VAL_VSA_RESULT_DISP_FREQ_ERR_REL:
 			checkErr(rsspecan_SetAttributeViInt32(instrSession, repCapWin, RSSPECAN_ATTR_VSA_RESULT_FORMAT, RSSPECAN_VAL_VSA_RESULT_FORMAT_FREQ));
-			checkErr(rsspecan_SetAttributeViInt32 (instrSession, repCapWin, RSSPECAN_ATTR_DISP_AMPLITUDE_GRID_MODE, RSSPECAN_VAL_REL))
+			checkErr(rsspecan_SetAttributeViInt32 (instrSession, repCapWin, RSSPECAN_ATTR_DISP_AMPLITUDE_GRID_MODE, RSSPECAN_VAL_REL)) // TODO: Check semicolon
         break;
 
 		default:
@@ -3636,7 +3635,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAModulationAccuracyAdditional (ViSession i
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (repCap, "C%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld", window);
 	sprintf (repCapWin, "Win%ld", window);
 
 	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_VSA_RESULT, RSSPECAN_VAL_RESULT_MACC));

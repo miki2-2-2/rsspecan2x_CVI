@@ -538,7 +538,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLAN_MIMO_UDFSpatialMappingStream (ViSession
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
-    sprintf (repCap, "TX%ld", TX);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "TX%ld", TX);
 
     viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_MIMO_UDFSPATIAL_MAPPING_TIME_SHIFT, timeShift),
     		6, "Time Shift");

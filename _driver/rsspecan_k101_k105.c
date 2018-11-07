@@ -2870,7 +2870,6 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkBitstream(
     ViStatus    error = VI_SUCCESS;
     ViChar      *pBuffer = NULL, *pValue;
     ViInt32     nType = 0;
-    ViUInt32    ret_cnt = 0;
     ViInt32     nIndexSymbol = 0, nCurrentSymbol = 0;
     ViInt32     nSymbols = 0;
     ViInt32     nSymbolValue;

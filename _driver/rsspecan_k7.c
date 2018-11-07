@@ -1010,7 +1010,7 @@ ViStatus _VI_FUNC rsspecan_GetADemodOffset(
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultType, 0, 1),
     		2, "Result Type");
-    
+
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "FMOff%s", fmOffsetArr[resultType]);
 
     viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_ADEM_FM_OFFSET, value),

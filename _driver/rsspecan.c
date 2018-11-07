@@ -1298,13 +1298,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseSource (ViSession instrSession,
                                                  ViBoolean noiseSource)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_NOISE_SOURCE_STATE, noiseSource),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_NOISE_SOURCE_STATE, noiseSource),
     		2, "Noise Source");
 
 Error:
@@ -8304,16 +8304,16 @@ ViStatus _VI_FUNC rsspecan_HardcopyPrintNext (ViSession instrSession,
                                               ViInt32 device)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, device, 1, 2),
     		2, "Device");
 
-    sprintf (buffer, "DE%ld", device);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "DE%ld", device);
 
-    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_HCOPY_PRINT_NEXT, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_HCOPY_PRINT_NEXT, NULL));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
