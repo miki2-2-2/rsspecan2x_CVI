@@ -49,12 +49,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANYIGFilter(ViSession instrSession,
                                                     ViBoolean   yigFilter)
 {
     ViStatus    error = VI_SUCCESS;
-   ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+   ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_AMPL_YIG_FILTER, yigFilter),
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_AMPL_YIG_FILTER, yigFilter),
     		2, "YIG Filter");
 
 Error:
@@ -124,7 +124,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANSTCMIMO (ViSession instrSession,
                                                  ViInt32 configuration)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -133,15 +133,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANSTCMIMO (ViSession instrSession,
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, configuration, RSSPECAN_VAL_WLAN_ANTENNA1, RSSPECAN_VAL_WLAN_ANTENNA4),
 			5, "Configuration");
 
-    sprintf (buffer, "AntMatrix%ld", rxAnalyzer);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "AntMatrix%ld", rxAnalyzer);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_WLAN_ANALYZER_STATE, antennaState),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_WLAN_ANALYZER_STATE, antennaState),
     		3, "Antenna State");
 
-    viCheckParm(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_WLAN_ANALYZER_ADDRESS, analyzerIPAddress),
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_WLAN_ANALYZER_ADDRESS, analyzerIPAddress),
     		4, "Analyzer IP Address");
 
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_WLAN_ANTENNA_CONFIGURATION, configuration),
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_ANTENNA_CONFIGURATION, configuration),
 			5, "Configuration");
 
 Error:
@@ -483,7 +483,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLAN_MIMO_UDFSpatialMappingAntenna (ViSessio
                                                                         ViReal64 imaginaryValues[],
                                                                         ViReal64 timeShift)
 {
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViStatus    error   = VI_SUCCESS;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -491,17 +491,11 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLAN_MIMO_UDFSpatialMappingAntenna (ViSessio
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, TX, 1, 4),
     		2, "TX");
 
-/*	if (RsCore_InvalidViInt32Range ( sizeof(realValues)/sizeof(ViReal64) , lenIdx, lenIdx) == VI_TRUE)
-        viCheckParm(RS_ERROR_INVALID_PARAMETER, 3, "Real Values");
-
-	if (RsCore_InvalidViInt32Range ( sizeof(imaginaryValues)/sizeof(ViReal64) , lenIdx, lenIdx) == VI_TRUE)
-        viCheckParm(RS_ERROR_INVALID_PARAMETER, 4, "Imaginary Values");
-*/
-	sprintf (buffer, "CONF:WLAN:SMAP:TX%ld %.12lG,%.12lG, %.12lG,%.12lG, %.12lG,%.12lG, %.12lG,%.12lG, %.12lG\n",
+	sprintf (cmd, "CONF:WLAN:SMAP:TX%ld %.12lG,%.12lG, %.12lG,%.12lG, %.12lG,%.12lG, %.12lG,%.12lG, %.12lG\n",
 		TX, realValues[0], imaginaryValues[0],realValues[1], imaginaryValues[1],
 		realValues[2], imaginaryValues[2], realValues[3], imaginaryValues[3], timeShift);
 
-    checkErr(RsCore_Write(instrSession, buffer));
+    checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -527,8 +521,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLAN_MIMO_UDFSpatialMappingStream (ViSession
                                                                        ViReal64 imaginaryValue,
                                                                        ViReal64 timeShift)
 {
-	ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      sbuffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
+	ViChar      repCap[RS_REPCAP_BUF_SIZE];
     ViStatus    error   = VI_SUCCESS;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -538,16 +532,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLAN_MIMO_UDFSpatialMappingStream (ViSession
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, stream, 1, 4),
     		3, "Stream");
 
-	sprintf (buffer, "CONF:WLAN:SMAP:TX%ld:STR%ld %.12lG,%.12lG\n",
-		TX, stream, realValue, imaginaryValue);
+	snprintf (cmd, RS_REPCAP_BUF_SIZE, "CONF:WLAN:SMAP:TX%ld:STR%ld %.12lG,%.12lG", TX, stream, realValue, imaginaryValue);
 
-    checkErr(RsCore_Write(instrSession, buffer));
+    checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
-    sprintf (sbuffer, "TX%ld", TX);
+    sprintf (repCap, "TX%ld", TX);
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, sbuffer, RSSPECAN_ATTR_WLAN_MIMO_UDFSPATIAL_MAPPING_TIME_SHIFT, timeShift),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_MIMO_UDFSPATIAL_MAPPING_TIME_SHIFT, timeShift),
     		6, "Time Shift");
 
 Error:
@@ -684,18 +677,18 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANMarkerEnabled(ViSession instrSession,
                                                         ViInt32     trace)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 1),
     		3, "Marker");
 
-    sprintf (buffer, "Win%ld,M%ld", window, marker);
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_MARKER_ENABLED, markerEnabled),
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_MARKER_ENABLED, markerEnabled),
     		4, "Marker Enabled");
     if (markerEnabled == VI_TRUE)
-        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_MARKER_TRACE, trace),
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_MARKER_TRACE, trace),
         		5, "Trace");
 
 Error:
@@ -714,7 +707,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanMarkPosition(ViSession   instrSession,
                                                     ViReal64 value)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -722,14 +715,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanMarkPosition(ViSession   instrSession,
     		3, "Marker");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, position, RSSPECAN_VAL_WLAN_POS_X, RSSPECAN_VAL_WLAN_POS_Y),
     		4, "Position");
-    sprintf (buffer, "Win%ld,M%ld", window, marker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
     switch (position){
         case RSSPECAN_VAL_WLAN_POS_X:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_MARKER_POSITION, value),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_MARKER_POSITION, value),
             		5, "Value");
         break;
         case RSSPECAN_VAL_WLAN_POS_Y:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_WLAN_MARK_Y, value),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_MARK_Y, value),
             		5, "Value");
         break;
     }
@@ -751,7 +744,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanMarkerPositionConstellation(ViSession   
                                                                     ViInt32 position)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -759,14 +752,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanMarkerPositionConstellation(ViSession   
     		3, "Marker");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, RSSPECAN_VAL_WLAN_CONS_SYM, RSSPECAN_VAL_WLAN_CONS_CARR),
     		4, "Type");
-    sprintf (buffer, "C%ld,M%ld", window, marker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,M%ld", window, marker);
     switch (type){
         case RSSPECAN_VAL_WLAN_CONS_SYM:
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_WLAN_MARK_SYMB, position),
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_MARK_SYMB, position),
             		5, "Position");
         break;
         case RSSPECAN_VAL_WLAN_CONS_CARR:
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_WLAN_MARK_CARR, position),
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_MARK_CARR, position),
             		5, "Position");
         break;
     }
@@ -797,14 +790,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanMarkerZoom(ViSession instrSession,
                                                     ViReal64 zoomRatio)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 1),
     		3, "Marker");
-    sprintf (buffer, "Win%ld", window);
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_MARKER_ZOOM, zoomRatio),
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_MARKER_ZOOM, zoomRatio),
     		4, "Zoom Ratio");
 
 Error:
@@ -865,7 +858,7 @@ ViStatus _VI_FUNC rsspecan_SetWlanMarkerPeak(ViSession   instrSession,
                                             ViInt32 position)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -873,14 +866,14 @@ ViStatus _VI_FUNC rsspecan_SetWlanMarkerPeak(ViSession   instrSession,
     		3, "Marker");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, position, RSSPECAN_VAL_MARKER_SEARCH_HIGHEST, RSSPECAN_VAL_MARKER_SEARCH_MINIMUM),
     		4, "Position");
-    sprintf (buffer, "Win%ld,M%ld", window, marker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
 
     switch (position){
         case RSSPECAN_VAL_MARKER_SEARCH_MINIMUM:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_MIN, ""));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MARKER_SEARCH_MIN, ""));
         break;
         case RSSPECAN_VAL_MARKER_SEARCH_HIGHEST:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_PEAK, ""));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MARKER_SEARCH_PEAK, ""));
         break;
     }
 
@@ -898,12 +891,12 @@ ViStatus _VI_FUNC rsspecan_WlanDisableAllMarkers(ViSession  instrSession,
                                                     ViInt32 window)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
-    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_AOFF, NULL));
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
+    checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MARKER_AOFF, NULL));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -1213,7 +1206,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanPLCPLimit(ViSession   instrSession,
                                                     ViReal64    value)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1225,27 +1218,27 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanPLCPLimit(ViSession   instrSession,
     {
         viCheckParm(RS_ERROR_INVALID_PARAMETER, 5, "Mode");
     }
-    sprintf (buffer, "C%ld,L%ld", window, limit);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,L%ld", window, limit);
     switch (mode){
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            strcat (buffer, ",Max");
+            strcat (repCap, ",Max");
         break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            strcat (buffer, ",Aver");
+            strcat (repCap, ",Aver");
         break;
     }
 
     switch (limitType){
         case RSSPECAN_VAL_WLAN_LIM_RTIME:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_WLAN_TRIS, value),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_TRIS, value),
             		6, "Value");
         break;
         case RSSPECAN_VAL_WLAN_LIM_FTIME:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_WLAN_TFAL, value),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_TFAL, value),
             		6, "Value");
         break;
         case RSSPECAN_VAL_WLAN_LIM_EVM:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_WLAN_EVM, value),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_EVM, value),
             		6, "Value");
         break;
     }
@@ -1270,7 +1263,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanACPChannelLimit(ViSession     instrSession,
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1279,14 +1272,14 @@ ViStatus _VI_FUNC rsspecan_GetWlanACPChannelLimit(ViSession     instrSession,
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_WLAN_ACP_ADJ, RSSPECAN_VAL_WLAN_ACP_ALT),
     		4, "Channel Type");
 
-    sprintf (buffer, "C%ld,L%ld", window, limit);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,L%ld", window, limit);
     switch (channelType){
         case RSSPECAN_VAL_WLAN_ACP_ADJ:
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_WLAN_ACP_ADJ, value),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_ACP_ADJ, value),
             		6, "Value");
         break;
         case RSSPECAN_VAL_WLAN_ACP_ALT:
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_WLAN_ACP_ALT, value),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_ACP_ALT, value),
             		6, "Value");
         break;
     }
@@ -1308,7 +1301,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanSpectrumMaxOverstepping(ViSession     instrSes
                                                             ViReal64*   value)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1317,14 +1310,14 @@ ViStatus _VI_FUNC rsspecan_GetWlanSpectrumMaxOverstepping(ViSession     instrSes
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_FREQ, RSSPECAN_VAL_POW),
     		4, "Channel Type");
 
-    sprintf (buffer, "C%ld,L%ld", window, limit);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,L%ld", window, limit);
     switch (channelType){
         case RSSPECAN_VAL_FREQ:
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_WLAN_SPEC_MASK_X, value),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_SPEC_MASK_X, value),
             		6, "Value");
         break;
         case RSSPECAN_VAL_POW:
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_WLAN_SPEC_MASK_Y, value),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_SPEC_MASK_Y, value),
             		6, "Value");
         break;
     }
@@ -1788,7 +1781,7 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstTime(ViSession     instrSession,
                                                 ViReal64*   value)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1796,13 +1789,13 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstTime(ViSession     instrSession,
     		2, "Time");
     switch (mode){
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
         break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
         break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
         break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, mode), 3, "Mode");
@@ -1810,11 +1803,11 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstTime(ViSession     instrSession,
 
     switch (time){
         case RSSPECAN_VAL_WLAN_TIME_FALL:
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_WLAN_FETC_TFAL, value),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETC_TFAL, value),
             		3, "Value");
         break;
         case RSSPECAN_VAL_WLAN_TIME_RISE:
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_WLAN_FETC_TRIS, value),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETC_TRIS, value),
             		3, "Value");
         break;
     }
@@ -1835,26 +1828,26 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstErrorRateForPilots (ViSession instrSess
                                                              ViReal64 *value)
 {
 	ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
 	switch (mode)
 	{
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
         break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
         break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
         break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, mode), 2, "Mode");
     }
 
-	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_WLAN_FETC_BERPILOT, value),
+	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETC_BERPILOT, value),
 			3, "Value");
 
 Error:
@@ -1910,7 +1903,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanPLCPLimitCheckResult(ViSession   instrSession,
                                                     ViInt32*    result)
 {
     ViStatus    error = VI_SUCCESS;
-     ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+     ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1918,13 +1911,13 @@ ViStatus _VI_FUNC rsspecan_GetWlanPLCPLimitCheckResult(ViSession   instrSession,
     		3, "Limit");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, limitType, RSSPECAN_VAL_WLAN_LIM_RTIME, RSSPECAN_VAL_WLAN_LIM_EVM),
     		4, "Limit Type");
-    sprintf (buffer, "C%ld,L%ld", window, limit);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,L%ld", window, limit);
     switch (mode){
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            strcat (buffer, ",Max");
+            strcat (repCap, ",Max");
         break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            strcat (buffer, ",Aver");
+            strcat (repCap, ",Aver");
         break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, mode), 5, "Mode");
@@ -1932,15 +1925,15 @@ ViStatus _VI_FUNC rsspecan_GetWlanPLCPLimitCheckResult(ViSession   instrSession,
 
     switch (limitType){
         case RSSPECAN_VAL_WLAN_LIM_RTIME:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_WLAN_TRIS_RES, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_TRIS_RES, result),
             		6, "Result");
         break;
         case RSSPECAN_VAL_WLAN_LIM_FTIME:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_WLAN_TFAL_RES, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_TFAL_RES, result),
             		6, "Result");
         break;
         case RSSPECAN_VAL_WLAN_LIM_EVM:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_WLAN_EVM_RES, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_EVM_RES, result),
             		6, "Result");
         break;
     }
@@ -1964,7 +1957,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanACPChannLimitCheckResult(ViSession     instrSe
                                                     ViInt32*        result)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1973,14 +1966,14 @@ ViStatus _VI_FUNC rsspecan_GetWlanACPChannLimitCheckResult(ViSession     instrSe
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_WLAN_ACP_ADJ, RSSPECAN_VAL_WLAN_ACP_ALT),
     		4, "Channel Type");
 
-    sprintf (buffer, "C%ld,L%ld", window, limit);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,L%ld", window, limit);
     switch (channelType){
         case RSSPECAN_VAL_WLAN_ACP_ADJ:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_WLAN_ACP_ADJ_RES, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_ACP_ADJ_RES, result),
             		6, "Result");
         break;
         case RSSPECAN_VAL_WLAN_ACP_ALT:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_WLAN_ACP_ALT_RES, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_ACP_ALT_RES, result),
             		6, "Result");
         break;
     }

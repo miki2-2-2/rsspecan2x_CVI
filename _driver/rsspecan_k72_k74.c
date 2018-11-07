@@ -415,7 +415,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPTAERBTSCarrier (ViSession instrSession,
                                                         ViInt32 scramblingCode)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -424,15 +424,15 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPTAERBTSCarrier (ViSession instrSession,
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, antenna, 1, 2),
     		3, "Antenna");
 
-	sprintf (buffer, "CT%ld,AT%ld", carrier, antenna);
+	snprintf(repCap, RS_REPCAP_BUF_SIZE, "CT%ld,AT%ld", carrier, antenna);
 
-	checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_3GPP_TAER_CPICH_CODE_NUMBER, CPICHCodeNumber));
-	checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_3GPP_TAER_ANTENNA_PATTERN, CPICHPattern));
+	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_3GPP_TAER_CPICH_CODE_NUMBER, CPICHCodeNumber));
+	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_3GPP_TAER_ANTENNA_PATTERN, CPICHPattern));
 
-	sprintf (buffer, "CT%ld", carrier);
+	snprintf(repCap, RS_REPCAP_BUF_SIZE, "CT%ld", carrier);
 
-	checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_3GPP_TAER_FREQUENCY_OFFSET, frequencyOffset));
-	checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_3GPP_TAER_SCRAMBLING_CODE, scramblingCode));
+	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_3GPP_TAER_FREQUENCY_OFFSET, frequencyOffset));
+	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_3GPP_TAER_SCRAMBLING_CODE, scramblingCode));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -470,24 +470,24 @@ ViStatus _VI_FUNC rsspecan_Set_3GPPTAERBTSOperation (ViSession instrSession,
                                                   ViInt32 operation)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, carrier, 1, 23),
     		2, "Carrier");
 
-	sprintf (buffer, "CT%ld", carrier);
+	snprintf(repCap, RS_REPCAP_BUF_SIZE, "CT%ld", carrier);
 
 	switch(operation){
         case RSSPECAN_VAL_3GPP_BTS_NUMBER_INSERT:
-			checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_3GPP_TAER_BTS_NUMBER_INSERT, NULL));
+			checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_3GPP_TAER_BTS_NUMBER_INSERT, NULL));
         break;
         case RSSPECAN_VAL_3GPP_BTS_NUMBER_DELETE:
-			checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_3GPP_TAER_BTS_NUMBER_DELETE, NULL));
+			checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_3GPP_TAER_BTS_NUMBER_DELETE, NULL));
         break;
         case RSSPECAN_VAL_3GPP_BTS_NUMBER_DELETE_ALL:
-			checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_3GPP_TAER_BTS_NUMBER_DELETE_ALL, NULL));
+			checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_3GPP_TAER_BTS_NUMBER_DELETE_ALL, NULL));
         break;
 	}
 
@@ -652,8 +652,8 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDBSChannelTableData (ViSession instrSe
 {
     ViStatus    error = VI_SUCCESS;
     ViInt32     i=0;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *pbuffer;
+    ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      *pbuffer = cmd;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -662,7 +662,6 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDBSChannelTableData (ViSession instrSe
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
     		2, "Array Size");
-    pbuffer = buffer;
     pbuffer += sprintf (pbuffer, "CONF:WCDP:CTAB:DATA %ld,%ld,%d,%ld,%ld,%d,%ld,%.12f",
                 codeClass[i], codeNumber[i], TFCI[i], timingOffset[i], pilotLength[i], channelType[i],
                 status[i], CDPRelative[i]);
@@ -670,7 +669,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDBSChannelTableData (ViSession instrSe
         pbuffer += sprintf (pbuffer, ",%ld,%ld,%d,%ld,%ld,%d,%ld,%.12f",
             codeClass[i], codeNumber[i], TFCI[i], timingOffset[i], pilotLength[i], channelType[i],
                 status[i], CDPRelative[i]);
-    checkErr(RsCore_Write(instrSession, buffer));
+    checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -721,7 +720,7 @@ ViStatus _VI_FUNC rsspecan_Set3GPPBSMarkerToChannel(ViSession   instrSession,
                                                     ViInt32 channel)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -730,12 +729,12 @@ ViStatus _VI_FUNC rsspecan_Set3GPPBSMarkerToChannel(ViSession   instrSession,
 
     switch (channel){
         case RSSPECAN_VAL_3GPP_MARKER_CPICH:
-            sprintf (buffer, "C%ld,Cpich", window);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_3GBS_MARKER_TO_CHANNEL, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,Cpich", window);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_3GBS_MARKER_TO_CHANNEL, NULL));
         break;
         case RSSPECAN_VAL_3GPP_MARKER_PCCPCH:
-            sprintf (buffer, "C%ld,Pccpch", window);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_3GBS_MARKER_TO_CHANNEL, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,Pccpch", window);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_3GBS_MARKER_TO_CHANNEL, NULL));
         break;
     }
 
@@ -753,7 +752,7 @@ ViStatus _VI_FUNC rsspecan_Set3GPPBSDeltaMarkerToChannel (ViSession instrSession
                                                           ViInt32 channel)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -762,12 +761,12 @@ ViStatus _VI_FUNC rsspecan_Set3GPPBSDeltaMarkerToChannel (ViSession instrSession
 
     switch (channel){
         case RSSPECAN_VAL_3GPP_MARKER_CPICH:
-            sprintf (buffer, "C%ld,Cpich", window);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_3GBS_REFERENCE_MARKER_TO_CHANNEL, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,Cpich", window);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_3GBS_REFERENCE_MARKER_TO_CHANNEL, NULL));
         break;
         case RSSPECAN_VAL_3GPP_MARKER_PCCPCH:
-            sprintf (buffer, "C%ld,Pccpch", window);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_3GBS_REFERENCE_MARKER_TO_CHANNEL, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,Pccpch", window);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_3GBS_REFERENCE_MARKER_TO_CHANNEL, NULL));
         break;
     }
 

@@ -124,12 +124,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureAvionicsInput (ViSession instrSession,
                                                    ViInt32 window, ViInt32 input)
 {
 	ViStatus	error = VI_SUCCESS;
-	ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_AVI_INPUT, input),
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_AVI_INPUT, input),
     		3, "Input");
 
 Error:
@@ -147,17 +147,17 @@ ViStatus _VI_FUNC rsspecan_ConfigureAvionicsDemodulationBandwidth (ViSession ins
                                                                    ViReal64 demodulationBandwidth)
 {
 	ViStatus	error = VI_SUCCESS;
-	ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_AVI_DEMOD_BWID_AUTO, dbAuto),
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_AVI_DEMOD_BWID_AUTO, dbAuto),
     		3, "Auto");
 
     if (dbAuto == VI_FALSE)
 	{
-		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_AVI_DEMOD_BWID, demodulationBandwidth),
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_AVI_DEMOD_BWID, demodulationBandwidth),
 				4, "Demodulation Bandwidth");
 	}
 
@@ -357,7 +357,7 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsAM (ViSession instrSession,
                                             ViReal64 *AMFrequencyResult)
 {
 	ViStatus	error = VI_SUCCESS;
-	ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -368,13 +368,11 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsAM (ViSession instrSession,
 
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K15"));
 
-    sprintf (buffer, "CALC1:AVI:AM:DEPT? '%s'", avionicsSummary[AMDepth]);
+    sprintf (cmd, "CALC1:AVI:AM:DEPT? '%s'", avionicsSummary[AMDepth]);
+	checkErr(rsspecan_QueryViReal64 (instrSession, cmd, AMDepthResult));
 
-	checkErr(rsspecan_QueryViReal64 (instrSession, buffer, AMDepthResult));
-
-    sprintf (buffer, "CALC1:AVI:AM:FREQ? '%s'", avionicsSummary[AMFrequency]);
-
-	checkErr(rsspecan_QueryViReal64 (instrSession, buffer, AMFrequencyResult));
+    sprintf (cmd, "CALC1:AVI:AM:FREQ? '%s'", avionicsSummary[AMFrequency]);
+	checkErr(rsspecan_QueryViReal64 (instrSession, cmd, AMFrequencyResult));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -389,7 +387,7 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsTHD (ViSession instrSession,
                                              ViInt32 THD, ViReal64 *THDResult)
 {
 	ViStatus	error = VI_SUCCESS;
-	ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
+	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -402,9 +400,8 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsTHD (ViSession instrSession,
 
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K15"));
 
-    sprintf (buffer, "CALC1:AVI:THD:RES? '%s'", avionicsSummary[THD]);
-
-	checkErr(rsspecan_QueryViReal64 (instrSession, buffer, THDResult));
+    sprintf (cmd, "CALC1:AVI:THD:RES? '%s'", avionicsSummary[THD]);
+	checkErr(rsspecan_QueryViReal64 (instrSession, cmd, THDResult));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);

@@ -160,8 +160,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseFrequencyTable(
 {
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
-    ViChar      buffer[4*RS_MAX_MESSAGE_BUF_SIZE] = "";
-	ViChar      *p2buffer = buffer;
+	ViChar      cmd[4 * RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      *p2buffer = cmd;
     ViUInt32    retCnt    = 0;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -184,7 +184,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseFrequencyTable(
         *--p2buffer = '\n';
     }
 
-	checkErr(RsCore_Write(instrSession, buffer));
+	checkErr(RsCore_Write(instrSession, cmd));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -510,8 +510,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseENRTable(
 {
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
-    ViChar      buffer[4*RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *p2buffer = buffer;
+    ViChar      cmd[4*RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      *p2buffer = cmd;
     ViUInt32    retCnt          = 0;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -532,7 +532,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseENRTable(
         *p2buffer = '\0';
         *--p2buffer = '\n';
     }
-	checkErr(RsCore_Write(instrSession, buffer));
+	checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1052,15 +1052,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseTraceMemoryDisplay (ViSession instrSess
                                                              ViBoolean state)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, memory, 1, 3),
     		2, "Memory");
 
-    sprintf (buffer, "MEM%ld", memory);
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_NOISE_DISP_TRACE_MEM, state),
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "MEM%ld", memory);
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_NOISE_DISP_TRACE_MEM, state),
     		3, "State");
 
 Error:
@@ -1101,15 +1101,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureXAxisFrequencyDisplay (ViSession instrSessio
                                                            ViInt32 frequency)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementResults, 1, 2),
     		2, "Measurement Results");
 
-    sprintf (buffer, "TR%ld", measurementResults);
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_NOISE_DISP_X_AXIS, frequency),
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "TR%ld", measurementResults);
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_NOISE_DISP_X_AXIS, frequency),
     		3, "Frequency");
 
 Error:
@@ -1510,15 +1510,15 @@ ViStatus _VI_FUNC rsspecan_SaveNoiseTraceDataToMemory (ViSession instrSession,
                                                        ViInt32 memory)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, memory, 1, 3),
     		2, "Memory");
 
-    sprintf (buffer, "MEM%ld", memory);
-    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_NOISE_ARRAY_MEMORY, NULL));
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "MEM%ld", memory);
+    checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_NOISE_ARRAY_MEMORY, NULL));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -1540,16 +1540,16 @@ ViStatus _VI_FUNC rsspecan_AssignMarkerToTrace (ViSession instrSession,
                                                 ViInt32 trace)
 {
 	ViStatus	error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 16),
 			3, "Marker");
 
-	sprintf (buffer, "C%ld,M%ld", window, marker);
+	snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,M%ld", window, marker);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_NOISE_ASSIGN_MARKER_TO_TRACE, trace),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_NOISE_ASSIGN_MARKER_TO_TRACE, trace),
     		4, "Trace");
 
 Error:
@@ -1572,7 +1572,7 @@ ViStatus _VI_FUNC rsspecan_QueryNoiseMarkerAmplitude (ViSession instrSession,
                                              ViReal64 *markerAmplitude)
 {
 	ViStatus	error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -1581,9 +1581,9 @@ ViStatus _VI_FUNC rsspecan_QueryNoiseMarkerAmplitude (ViSession instrSession,
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultType, RSSPECAN_VAL_NOISE_LIM_LINE_TYPE_GAIN, RSSPECAN_VAL_NOISE_LIM_LINE_TYPE_NUNC),
     		4, "Result Type");
 
-	sprintf (buffer, "Win%ld,M%ld,%s", window, marker, markerResultArr[resultType]);
+	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld,%s", window, marker, markerResultArr[resultType]);
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_NOISE_MARKER_AMPLITUDE, markerAmplitude),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_NOISE_MARKER_AMPLITUDE, markerAmplitude),
     		4, "markerAmplitude");
 
 Error:

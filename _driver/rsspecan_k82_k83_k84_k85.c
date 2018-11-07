@@ -33,16 +33,16 @@ ViStatus _VI_FUNC rsspecan_AdjustC2KSettings(ViSession  instrSession,
                                              ViUInt32   timeout)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
     ViInt32     old_timeout = -1;
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 4, "Timeout");
-    sprintf (buffer, "Win%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
     checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
     checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
-    checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_C2K_ACH_PRES, adjustSettings));
+    checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_C2K_ACH_PRES, adjustSettings));
 
 Error:
     if (old_timeout >= 0)
@@ -62,16 +62,16 @@ ViStatus _VI_FUNC rsspecan_AdjustC2KReferenceLevel(ViSession    instrSession,
                                                    ViUInt32     timeout)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
     ViInt32     old_timeout = -1;
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
-    sprintf (buffer, "Win%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
     checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
     checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
-    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_C2K_ADJUST_REF_LEVEL, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_C2K_ADJUST_REF_LEVEL, NULL));
 
 Error:
     if (old_timeout >= 0)
@@ -192,13 +192,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KSignalStatisticsPercentMarker(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld,M%ld", window, marker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
 
-    checkErr(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_C2K_PERCENT_MARKER, percentMarker));
+    checkErr(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_C2K_PERCENT_MARKER, percentMarker));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -477,7 +477,7 @@ ViStatus _VI_FUNC rsspecan_ReadC2KTraceData(
 {
     ViStatus    error   = VI_SUCCESS;
     ViChar      *exBuf = NULL;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -487,8 +487,8 @@ ViStatus _VI_FUNC rsspecan_ReadC2KTraceData(
     		3, "Source Trace");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, actualPoints), 5, "Actual Points");
 
-    sprintf (buffer, "TRACE%ld", sourceTrace);
-    checkErr(rsspecan_dataReadTrace (instrSession, window, buffer, arrayLength,
+    sprintf (traceName, "TRACE%ld", sourceTrace);
+    checkErr(rsspecan_dataReadTrace (instrSession, window, traceName, arrayLength,
                     values, actualPoints));
 
     checkErr(rsspecan_CheckStatus (instrSession));
@@ -550,8 +550,7 @@ ViStatus _VI_FUNC rsspecan_ReadC2KCDPTraceData(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      *exBuf = NULL;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -561,14 +560,13 @@ ViStatus _VI_FUNC rsspecan_ReadC2KCDPTraceData(
         viCheckParm(RS_ERROR_INVALID_PARAMETER, 3, "Source Trace");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, actualPoints), 5, "Actual Points");
 
-    sprintf (buffer, "%s", traceC2KArr[sourceTrace]);
-    checkErr(rsspecan_dataReadTrace (instrSession, window, buffer, arrayLength,
+    sprintf (traceName, "%s", traceC2KArr[sourceTrace]);
+    checkErr(rsspecan_dataReadTrace (instrSession, window, traceName, arrayLength,
                     values, actualPoints));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    if (exBuf) free (exBuf);
     (void)RsCore_UnlockSession(instrSession);
     return error;
 }
@@ -733,8 +731,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KChannelTableData(
 {
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *pbuffer;
+    ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      *pbuffer = cmd;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -742,7 +740,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KChannelTableData(
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
     		10, "Num of Elements");
-    pbuffer = buffer;
     pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%ld,%.12f",
                 channelType[i], codeClass[i], codeNumber[i], radioConfiguration[i], status[i],
                 cdpRelative[i]);
@@ -752,7 +749,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KChannelTableData(
             channelType[i], codeClass[i], codeNumber[i], radioConfiguration[i], status[i],
                 cdpRelative[i]);
 
-    checkErr(RsCore_Write(instrSession, buffer));
+    checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1213,8 +1210,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KChannelTableData(
 {
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *pbuffer;
+    ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      *pbuffer = cmd;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1223,7 +1220,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KChannelTableData(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
     		10, "Num of Elements");
 
-    pbuffer = buffer;
     pbuffer += sprintf (pbuffer,  "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%ld,%.12f",
                 channelType[i], codeClass[i], codeNumber[i], mapping[i], status[i],
                 cdpRelative[i]);
@@ -1233,7 +1229,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KChannelTableData(
             channelType[i], codeClass[i], codeNumber[i], mapping[i], status[i],
                 cdpRelative[i]);
 
-    checkErr(RsCore_Write(instrSession, buffer));
+    checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1689,8 +1685,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOChannelTableData(
 {
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *pbuffer;
+    ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      *pbuffer = cmd;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1699,7 +1695,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOChannelTableData(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
     		10, "Num of Elements");
 
-    pbuffer = buffer;
     pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%ld,%.12f",
                 channelType[i], codeClass[i], codeNumber[i], modulation[i], status[i],
                 cdpRelative[i]);
@@ -1709,7 +1704,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOChannelTableData(
             channelType[i], codeClass[i], codeNumber[i], modulation[i], status[i],
                 cdpRelative[i]);
 
-    checkErr(RsCore_Write(instrSession, buffer));
+    checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2160,8 +2155,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOChannelTableData(
 {
     ViStatus    error   = VI_SUCCESS;
     ViInt32     i = 0;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *pbuffer;
+    ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      *pbuffer = cmd;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2170,7 +2165,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOChannelTableData(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
     		10, "Num of Elements");
 
-    pbuffer = buffer;
     pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,%ld,0,%ld,0",
                 channelType[i], codeClass[i], codeNumber[i], mapping[i], activity[i],
                 status[i]);
@@ -2180,7 +2174,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOChannelTableData(
             channelType[i], codeClass[i], codeNumber[i], mapping[i], activity[i],
                 status[i]);
 
-    checkErr(RsCore_Write(instrSession, buffer));
+    checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 

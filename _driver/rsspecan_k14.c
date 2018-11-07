@@ -31,15 +31,15 @@ ViStatus _VI_FUNC rsspecan_SpectrogramMode (ViSession instrSession,
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar   repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld", win);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", win);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_SPEM_STATE, state),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_SPEM_STATE, state),
     		2, "State");
 
 Error:
@@ -92,15 +92,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramSweep (ViSession instrSession,
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar   repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld", win);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", win);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_SWEEP_MODE_CONTINUOUS, continuous),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_SWEEP_MODE_CONTINUOUS, continuous),
     		2, "Continuous");
 
 Error:
@@ -152,24 +152,24 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramColors (ViSession instrSession,
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar   repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld", win);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", win);
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_SPEM_SHAPE, shape),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_SPEM_SHAPE, shape),
     		2, "Shape");
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_SPEM_COLOR_STYLE, colorStyle),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_SPEM_COLOR_STYLE, colorStyle),
     		3, "Color Style");
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_SPEM_COLOR_LOW, colorLower),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_SPEM_COLOR_LOW, colorLower),
     		4, "Color Lower");
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_SPEM_COLOR_UPPER, colorUpper),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_SPEM_COLOR_UPPER, colorUpper),
     		5, "Color Upper");
 
 Error:
@@ -207,24 +207,24 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramMeasurementParameters (ViSession 
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar   repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld", win);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", win);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_SPEM_HDEP, historyDepth),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_SPEM_HDEP, historyDepth),
     		2, "History Depth");
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_SPEM_TIME_STAMP_STATE, timeStamp),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_SPEM_TIME_STAMP_STATE, timeStamp),
     		3, "Time Stamp");
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_SPEM_FRAME_COUNT, frameCount),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_SPEM_FRAME_COUNT, frameCount),
     		4, "Frame Count");
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_SPEM_CONTINUOUS, continueFrame),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_SPEM_CONTINUOUS, continueFrame),
     		5, "Continue Frame");
 
 Error:
@@ -244,15 +244,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramSelectedFrame (ViSession instrSes
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar   repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld", win);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", win);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_SPEM_FRAME_SELECT, frame_number),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_SPEM_FRAME_SELECT, frame_number),
     		2, "Frame number");
 
 Error:
@@ -268,15 +268,15 @@ ViStatus _VI_FUNC rsspecan_SpectrogramClear (ViSession instrSession)
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar   repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld", win);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", win);
 
-    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_CLEAR, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_CLEAR, NULL));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -293,16 +293,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramFFTWindow (ViSession instrSession
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar   repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL,
         RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld", win);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", win);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_SPEM_FFT_WINDOW, FFTWindowType),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_SPEM_FFT_WINDOW, FFTWindowType),
     		2, "FFT Window Type");
 
 Error:
@@ -320,7 +320,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramMarkerFrameNumber (ViSession inst
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar   repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -328,9 +328,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramMarkerFrameNumber (ViSession inst
     		2, "Marker Number");
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,M%ld",win, markerNumber);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", win, markerNumber);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_SPEM_MARK_FRAME_NUMBER, frameNumber),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_SPEM_MARK_FRAME_NUMBER, frameNumber),
     		3, "Frame Number");
 
 Error:
@@ -348,7 +348,7 @@ ViStatus _VI_FUNC rsspecan_GetSpectrogramMarkerFrameNumber (ViSession instrSessi
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -356,9 +356,9 @@ ViStatus _VI_FUNC rsspecan_GetSpectrogramMarkerFrameNumber (ViSession instrSessi
     		2, "Marker Number");
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,M%ld",win, markerNumber);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", win, markerNumber);
 
-    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_SPEM_MARK_FRAME_NUMBER, frameNumber),
+    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_SPEM_MARK_FRAME_NUMBER, frameNumber),
     		3, "Frame Number");
 
 Error:
@@ -376,7 +376,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramMarkerSearchArea (ViSession instr
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -384,9 +384,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramMarkerSearchArea (ViSession instr
     		2, "Marker Number");
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,M%ld",win, markerNumber);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", win, markerNumber);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_AREA, searchArea),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_AREA, searchArea),
     		3, "Search Area");
 
 Error:
@@ -404,7 +404,7 @@ ViStatus _VI_FUNC rsspecan_SpectrogramMarkerSearch (ViSession instrSession,
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -414,75 +414,75 @@ ViStatus _VI_FUNC rsspecan_SpectrogramMarkerSearch (ViSession instrSession,
     		3, "Search Mode");
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,M%ld", win, markerNumber);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", win, markerNumber);
 
     switch (searchMode){
         case RSSPECAN_VAL_SPECM_MARK_MAX_PEAK:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_PEAK, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MARKER_SEARCH_PEAK, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_MAX_NEXT:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_PEAK_NEXT, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MARKER_SEARCH_PEAK_NEXT, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_MAX_LEFT:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_PEAK_LEFT, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MARKER_SEARCH_PEAK_LEFT, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_MAX_RIGHT:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_PEAK_RIGHT, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MARKER_SEARCH_PEAK_RIGHT, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_MIN_PEAK:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_MIN, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MARKER_SEARCH_MIN, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_MIN_NEXT:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_MIN_NEXT, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MARKER_SEARCH_MIN_NEXT, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_MIN_LEFT:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_MIN_LEFT, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MARKER_SEARCH_MIN_LEFT, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_MIN_RIGHT:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_MIN_RIGHT, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MARKER_SEARCH_MIN_RIGHT, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MAX_PEAK:
-            sprintf (buffer, "Win%ld,M%ld,Max,Peak", win, markerNumber);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld,Max,Peak", win, markerNumber);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MAX_NEXT:
-            sprintf (buffer, "Win%ld,M%ld,Max,Next", win, markerNumber);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld,Max,Next", win, markerNumber);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MAX_ABOVE:
-            sprintf (buffer, "Win%ld,M%ld,Max,Above", win, markerNumber);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld,Max,Above", win, markerNumber);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MAX_BELOW:
-            sprintf (buffer, "Win%ld,M%ld,Max,Below", win, markerNumber);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld,Max,Below", win, markerNumber);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MIN_PEAK:
-            sprintf (buffer, "Win%ld,M%ld,Min,Peak",win, markerNumber);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld,Min,Peak", win, markerNumber);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MIN_NEXT:
-            sprintf (buffer, "Win%ld,M%ld,Min,Next", win, markerNumber);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld,Min,Next", win, markerNumber);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MIN_ABOVE:
-            sprintf (buffer, "Win%ld,M%ld,Min,Above", win,markerNumber);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld,Min,Above", win,markerNumber);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MIN_BELOW:
-            sprintf (buffer, "Win%ld,M%ld,Min,Below", win, markerNumber);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld,Min,Below", win, markerNumber);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_XY_MAX:
-            sprintf (buffer, "Win%ld,M%ld,Max", win, markerNumber);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_XY, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld,Max", win, markerNumber);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_XY, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_XY_MIN:
-            sprintf (buffer, "Win%ld,M%ld,Min", win, markerNumber);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_XY, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld,Min", win, markerNumber);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_MARKER_SEARCH_XY, NULL));
         case RSSPECAN_VAL_SPECM_MARK_Y_TRIGGER:
-            sprintf (buffer, "Win%ld,DM%ld", win, markerNumber);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_Y_TRIGGER, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld", win, markerNumber);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MARKER_SEARCH_Y_TRIGGER, NULL));
         break;
     }
 
@@ -501,7 +501,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramDeltaMarkerFrameNumber (ViSession
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -509,9 +509,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramDeltaMarkerFrameNumber (ViSession
     		2, "Marker Number");
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,DM%ld",win, deltaMarkerNumber);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld", win, deltaMarkerNumber);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_SPEM_DELT_FRAME_NUMBER, frameNumber),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_SPEM_DELT_FRAME_NUMBER, frameNumber),
     		3, "Frame Number");
 
 Error:
@@ -528,7 +528,7 @@ ViStatus _VI_FUNC rsspecan_GetSpectrogramDeltaMarkerFrameNumber (ViSession instr
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -536,9 +536,9 @@ ViStatus _VI_FUNC rsspecan_GetSpectrogramDeltaMarkerFrameNumber (ViSession instr
     		2, "Delta Marker");
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,DM%ld",win, deltaMarker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld", win, deltaMarker);
 
-    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_SPEM_DELT_FRAME_NUMBER, frameNumber),
+    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_SPEM_DELT_FRAME_NUMBER, frameNumber),
     		3, "Frame Number");
 
 Error:
@@ -556,7 +556,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramDeltaMarkerSearchArea (ViSession 
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -564,8 +564,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramDeltaMarkerSearchArea (ViSession 
     		2, "Delta Marker");
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,DM%ld",win, deltaMarker);
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_SPEM_DELT_SEARCH_AREA, searchArea),
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld", win, deltaMarker);
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_SPEM_DELT_SEARCH_AREA, searchArea),
     		3, "Search Area");
 
 Error:
@@ -585,18 +585,18 @@ ViStatus _VI_FUNC rsspecan_ConfigurePersistenceSpectrumParameters (ViSession ins
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar   repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,TR%ld",win,trace);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,TR%ld", win,trace);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_PSPEM_STATE, enablePersistence),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_PSPEM_STATE, enablePersistence),
     		2, "Enable Persistence");
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PSPEM_DURATION, duration),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PSPEM_DURATION, duration),
     		3, "Duration");
 
      viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PSPEM_GRAN, granularity),
@@ -619,24 +619,24 @@ ViStatus _VI_FUNC rsspecan_ConfigurePersistenceSpectrumDisplayParameters (ViSess
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar   repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld",win);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", win);
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PSPEM_SHAPE, shape),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PSPEM_SHAPE, shape),
     		3, "Shape");
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PSPEM_COLOR_STYLE, style),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PSPEM_COLOR_STYLE, style),
     		4, "Style");
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PSPEM_COLOR_LOWER, colorLower),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PSPEM_COLOR_LOWER, colorLower),
     		5, "Color Lower");
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PSPEM_COLOR_UPPER, colorUpper),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PSPEM_COLOR_UPPER, colorUpper),
     		5, "Color Upper");
 
 Error:
@@ -694,15 +694,15 @@ ViStatus _VI_FUNC rsspecan_ConfigurePersistenceSpectrumTraceStyle (ViSession ins
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar   repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,TR%ld",win,trace);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,TR%ld", win,trace);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PSPEM_TRACE_STYLE, symbol),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PSPEM_TRACE_STYLE, symbol),
     		2, "Symbol");
 
 Error:
@@ -722,20 +722,20 @@ ViStatus _VI_FUNC rsspecan_ConfigurePersistenceSpectrumMaxholdIntensity (ViSessi
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar   repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,TR%ld",win,trace);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,TR%ld", win,trace);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_PSPEM_MAXH_TRACE, enableMaxhold),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_PSPEM_MAXH_TRACE, enableMaxhold),
     		3, "Enable Maxhold");
 
     if (enableMaxhold == VI_TRUE)
     {
-        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PSPEM_MAXH_INTENS, intensity),
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PSPEM_MAXH_INTENS, intensity),
         		4, "Intensity");
     }
 
@@ -776,7 +776,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePersistenceSpectrumMarkerPosition (ViSession
 {
     ViInt32     win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -784,9 +784,9 @@ ViStatus _VI_FUNC rsspecan_ConfigurePersistenceSpectrumMarkerPosition (ViSession
     		2, "Marker Number");
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,M%ld", win, marker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", win, marker);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PSPEM_MARKER_POSITION, markerPostion),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PSPEM_MARKER_POSITION, markerPostion),
     		3, "Marker Postion");
 
 Error:
@@ -810,7 +810,7 @@ ViStatus _VI_FUNC rsspecan_QueryPersistenceMarkerZAxis (ViSession instrSession,
 {
     ViInt32     win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -818,9 +818,9 @@ ViStatus _VI_FUNC rsspecan_QueryPersistenceMarkerZAxis (ViSession instrSession,
     		2, "Marker Number");
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,M%ld", win, marker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", win, marker);
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_QUERY_PSPEM_MARKER_Z_AXIS, zAxis),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_QUERY_PSPEM_MARKER_Z_AXIS, zAxis),
     		3, "Z-Axis");
 
 Error:
@@ -844,7 +844,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePersistenceSpectrumDeltaMarkerPosition (ViSe
 {
     ViInt32     win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -852,9 +852,9 @@ ViStatus _VI_FUNC rsspecan_ConfigurePersistenceSpectrumDeltaMarkerPosition (ViSe
     		2, "Marker Number");
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,DM%ld", win, marker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld", win, marker);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PSPEM_DELTA_MARKER_POSITION, deltaMarkerPostion),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PSPEM_DELTA_MARKER_POSITION, deltaMarkerPostion),
     		3, "Delta Marker Postion");
 
 Error:
@@ -873,7 +873,7 @@ ViStatus _VI_FUNC rsspecan_QueryPersistenceDeltaMarkerZAxis (ViSession instrSess
 {
     ViInt32     win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -881,9 +881,9 @@ ViStatus _VI_FUNC rsspecan_QueryPersistenceDeltaMarkerZAxis (ViSession instrSess
     		2, "Marker Number");
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,DM%ld", win, deltaMarker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld", win, deltaMarker);
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_QUERY_PSPEM_DELTA_Z_AXIS, zAxis),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_QUERY_PSPEM_DELTA_Z_AXIS, zAxis),
     		3, "Z-Axis");
 
 Error:
@@ -901,7 +901,7 @@ ViStatus _VI_FUNC rsspecan_SpectrogramDeltaMarkerSearch (ViSession instrSession,
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -911,76 +911,76 @@ ViStatus _VI_FUNC rsspecan_SpectrogramDeltaMarkerSearch (ViSession instrSession,
     		3, "Search Mode");
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld,DM%ld", win, deltaMarker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld", win, deltaMarker);
 
     switch (searchMode){
         case RSSPECAN_VAL_SPECM_MARK_MAX_PEAK:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_REFERENCE_MARKER_PEAK, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_MARKER_PEAK, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_MAX_NEXT:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_REFERENCE_MARKER_PEAK_NEXT, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_MARKER_PEAK_NEXT, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_MAX_LEFT:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_REFERENCE_MARKER_PEAK_NEXT_LEFT, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_MARKER_PEAK_NEXT_LEFT, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_MAX_RIGHT:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_REFERENCE_MARKER_PEAK_NEXT_RIGHT, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_MARKER_PEAK_NEXT_RIGHT, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_MIN_PEAK:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_REFERENCE_MARKER_MIN, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_MARKER_MIN, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_MIN_NEXT:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_REFERENCE_MARKER_MIN_NEXT, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_MARKER_MIN_NEXT, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_MIN_LEFT:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_REFERENCE_MARKER_MIN_NEXT_LEFT, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_MARKER_MIN_NEXT_LEFT, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_MIN_RIGHT:
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_REFERENCE_MARKER_MIN_NEXT_RIGHT, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_MARKER_MIN_NEXT_RIGHT, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MAX_PEAK:
-            sprintf (buffer, "Win%ld,DM%ld,Max,Peak", win, deltaMarker);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld,Max,Peak", win, deltaMarker);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MAX_NEXT:
-            sprintf (buffer, "Win%ld,DM%ld,Max,Next", win, deltaMarker);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld,Max,Next", win, deltaMarker);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MAX_ABOVE:
-            sprintf (buffer, "Win%ld,DM%ld,Max,Above", win, deltaMarker);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld,Max,Above", win, deltaMarker);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MAX_BELOW:
-            sprintf (buffer, "Win%ld,DM%ld,Max,Below", win, deltaMarker);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld,Max,Below", win, deltaMarker);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MIN_PEAK:
-            sprintf (buffer, "Win%ld,DM%ld,Min,Peak", win, deltaMarker);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld,Min,Peak", win, deltaMarker);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MIN_NEXT:
-            sprintf (buffer, "Win%ld,DM%ld,Min,Next", win, deltaMarker);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld,Min,Next", win, deltaMarker);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MIN_ABOVE:
-            sprintf (buffer, "Win%ld,DM%ld,Min,Above", win, deltaMarker);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld,Min,Above", win, deltaMarker);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_Y_MIN_BELOW:
-            sprintf (buffer, "Win%ld,DM%ld,Min,Below", win, deltaMarker);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld,Min,Below", win, deltaMarker);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_DELT_SEARCH_Y, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_XY_MAX:
-            sprintf (buffer, "Win%ld,DM%ld,Max", win, deltaMarker);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_DELT_SEARCH_XY, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld,Max", win, deltaMarker);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_DELT_SEARCH_XY, NULL));
         break;
         case RSSPECAN_VAL_SPECM_MARK_XY_MIN:
-            sprintf (buffer, "Win%ld,DM%ld,Min", win, deltaMarker);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SPEM_DELT_SEARCH_XY, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld,Min", win, deltaMarker);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SPEM_DELT_SEARCH_XY, NULL));
 			break;
         case RSSPECAN_VAL_SPECM_MARK_Y_TRIGGER:
-            sprintf (buffer, "Win%ld,DM%ld", win, deltaMarker);
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_REFERENCE_MARKER_Y_TRIGGER, NULL));
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld", win, deltaMarker);
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_MARKER_Y_TRIGGER, NULL));
     	break;
     }
     checkErr(rsspecan_CheckStatus (instrSession));
@@ -1054,7 +1054,6 @@ ViStatus _VI_FUNC rsspecan_ReadSpectrogramTraceData (ViSession instrSession,
                                            ViInt32 *returnedValues)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1066,8 +1065,7 @@ ViStatus _VI_FUNC rsspecan_ReadSpectrogramTraceData (ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K14"));
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K160R"));
 
-    sprintf (buffer, "SPEC");
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize,
+    checkErr(rsspecan_dataReadTrace (instrSession, 0, "SPEC", arraySize,
                     results, returnedValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
@@ -1291,13 +1289,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramResultDisplayMode (ViSession inst
 {
     ViInt32  win = 1;
     ViStatus    error = VI_SUCCESS;
-    ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar   repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_SPEM_WINDOW, &win));
 
-    sprintf (buffer, "Win%ld",win);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", win);
     switch (resultDisplay)
     {
         case RSSPECAN_VAL_PSPEM:
@@ -1306,7 +1304,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureSpectrogramResultDisplayMode (ViSession inst
         case RSSPECAN_VAL_POWER_TIME:
         case RSSPECAN_VAL_PVT_WATER:
 
-        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_RESULT_DISPLAY, resultDisplay),
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_RESULT_DISPLAY, resultDisplay),
         		2, "Result Display");
         break;
         default:

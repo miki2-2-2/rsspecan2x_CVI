@@ -561,35 +561,35 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10Burst(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar  buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar  repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, slot, 0, 7),
     		3, "Slot");
 
-    sprintf(buffer, "GSMS%ld", slot);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld", slot);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_SLOT_STATE, active),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_SLOT_STATE, active),
     		3, "Active");
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_TYPE_BURST, burstType),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_TYPE_BURST, burstType),
     		4, "Burst Type");
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_PCL, pcl),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_PCL, pcl),
     		5, "PCL");
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_MOD, modulation),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_MOD, modulation),
     		6, "Modulation");
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_TSC, tsc),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_TSC, tsc),
     		8, "TSC");
     switch (burstType)
     {
         case RSSPECAN_VAL_GSM_K10_BURST_NORMAL:
             break;
         case RSSPECAN_VAL_GSM_K10_BURST_HIGHER_RATE:
-            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_FILTER, filter),
+            viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_FILTER, filter),
             		7, "Filter");
             break;
 		case RSSPECAN_VAL_GSM_K10_BURST_ACCESS:
@@ -616,16 +616,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10UserTSC (ViSession instrSession,
 												   ViString userTSC)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar  	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar  	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, slot, 0, 7),
     		2, "Slot");
 
-    sprintf(buffer, "GSMS%ld", slot);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld", slot);
 
-    viCheckParm(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_TSC_USER_VALUE, userTSC),
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_TSC_USER_VALUE, userTSC),
     		3, "User TSC");
 
 Error:
@@ -653,29 +653,29 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10AccessBurst (ViSession instrSession,
                                                        ViString userTSC)
 {
 	ViStatus	error = VI_SUCCESS;
-	ViChar  	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar  	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, slot, 0, 7),
     		2, "Slot");
 
-    sprintf(buffer, "GSMS%ld", slot);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld", slot);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_SLOT_STATE, active),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_SLOT_STATE, active),
     		3, "Active");
 
-	checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_TYPE_BURST, RSSPECAN_VAL_GSM_K10_BURST_ACCESS));
+	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_TYPE_BURST, RSSPECAN_VAL_GSM_K10_BURST_ACCESS));
 
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_TIMING_ADVANCE, timingAdvance),
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_TIMING_ADVANCE, timingAdvance),
 			4, "Timing Advance");
 
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_SYNC, sync),
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_SYNC, sync),
 			5, "Sync");
 
 	if(sync == RSSPECAN_VAL_SYNC_USER)
 	{
-		viCheckParm(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_TSC_USER_VALUE, userTSC),
+		viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_TSC_USER_VALUE, userTSC),
 				6, "User TSC");
 	}
 
@@ -711,45 +711,45 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10AQPSKBurst (ViSession instrSession,
 													  ViString subchannel2UserTSC)
 {
 	ViStatus	error = VI_SUCCESS;
-	ViChar  	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-	ViChar  	buffer2[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar  	repCap[RS_REPCAP_BUF_SIZE];
+	ViChar  	repCap2[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, slot, 0, 7),
     		2, "Slot");
 
-    sprintf(buffer, "GSMS%ld", slot);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld", slot);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_SLOT_STATE, active),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_SLOT_STATE, active),
     		3, "Active");
 
-	checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_TYPE_BURST, RSSPECAN_VAL_GSM_K10_BURST_NORMAL));
-	checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_MOD, RSSPECAN_VAL_GSM_K10_MOD_AQPSK));
+	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_TYPE_BURST, RSSPECAN_VAL_GSM_K10_BURST_NORMAL));
+	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_MOD, RSSPECAN_VAL_GSM_K10_MOD_AQPSK));
 
-	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_SCPIR, SCPIR),
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_SCPIR, SCPIR),
 			4, "SCPIR");
 
-	strcpy (buffer2, buffer);
-	strcat (buffer, ",Sub1");
+	strcpy (repCap2, repCap);
+	strcat (repCap, ",Sub1");
 
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_SUBCH_TSC, subchannel1TSC),
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_SUBCH_TSC, subchannel1TSC),
 			5, "Subchannel 1 TSC");
 
 	if(subchannel1TSC == RSSPECAN_VAL_TSC_SLOT_USER)
 	{
-		viCheckParm(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_BURST_SUBCH_TSC_USER_VALUE, subchannel1UserTSC),
+		viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_SUBCH_TSC_USER_VALUE, subchannel1UserTSC),
 				6, "Subchannel 1 User TSC");
 	}
 
-	strcat (buffer2, ",Sub2");
+	strcat (repCap2, ",Sub2");
 
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer2, RSSPECAN_ATTR_GSM_K10_BURST_SUBCH_TSC, subchannel2TSC),
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap2, RSSPECAN_ATTR_GSM_K10_BURST_SUBCH_TSC, subchannel2TSC),
 			7, "Subchannel 2 TSC");
 
 	if(subchannel2TSC == RSSPECAN_VAL_TSC_SLOT_USER)
 	{
-		viCheckParm(rsspecan_SetAttributeViString(instrSession, buffer2, RSSPECAN_ATTR_GSM_K10_BURST_SUBCH_TSC_USER_VALUE, subchannel2UserTSC),
+		viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap2, RSSPECAN_ATTR_GSM_K10_BURST_SUBCH_TSC_USER_VALUE, subchannel2UserTSC),
 				8, "Subchannel 2 User TSC");
 	}
 
@@ -820,15 +820,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10Trace (ViSession instrSession,
                                                  ViInt32 traceType)
 {
 	ViStatus	error = VI_SUCCESS;
-	ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 4),
     		3, "Trace");
-    sprintf (buffer, "Win%ld,TR%ld", window, trace);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,TR%ld", window, trace);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_TRACE_TYPE, traceType),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_TRACE_TYPE, traceType),
     		4, "Trace Type");
 
 Error:
@@ -846,7 +846,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10Measurement(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar  buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar  repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -859,16 +859,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10Measurement(
         case RSSPECAN_VAL_GSM_K10_CONST: // (4) - Constellation
         case RSSPECAN_VAL_GSM_K10_PTEM:  // (5) - Power vs. Time
 
-            sprintf(buffer, "%s", GSMBurstTypeArr[measurementMode]);
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", GSMBurstTypeArr[measurementMode]);
 
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_MEAS_BURST_TYPE, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_MEAS_BURST_TYPE, NULL));
             break;
         case RSSPECAN_VAL_GSM_K10_MOD:   // (6) - Modulation Spectrum
         case RSSPECAN_VAL_GSM_K10_SWIT:  // (7) - Transient Spectrum
 
-            sprintf(buffer, "%s", GSMSpectrumTypeArr[measurementMode - 6]);
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", GSMSpectrumTypeArr[measurementMode - 6]);
 
-            checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_GSM_K10_MEAS_SPECT_TYPE, NULL));
+            checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_MEAS_SPECT_TYPE, NULL));
             break;
         case RSSPECAN_VAL_GSM_K10_WIDE:  // (8) - Wide Spectrum
             viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_GSM_K10_MEASUREMENT_WIDE_SPECTRUM, NULL),
@@ -1161,7 +1161,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10MeasurementResults(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar  buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar  repCap[RS_REPCAP_BUF_SIZE];
     ViInt32     old_timeout = 0;
 
 	checkErr(RsCore_LockSession(instrSession));
@@ -1188,9 +1188,9 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10MeasurementResults(
             viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_GSM_K10_MOD_AVG, RSSPECAN_VAL_GSM_K10_MOD_DEV),
             		5, "Modifier");
 
-            sprintf(buffer, "%s,%s", GSMMeasTypeArr[measurement], GSMMeasModifArr[modifier]);
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s,%s", GSMMeasTypeArr[measurement], GSMMeasModifArr[modifier]);
 
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_READ_GSM_K10_MEAS_RES, result),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_READ_GSM_K10_MEAS_RES, result),
             		6, "Result");
             break;
         }
@@ -1198,9 +1198,9 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10MeasurementResults(
         case RSSPECAN_VAL_GSM_K10_MEAS_PERC_MERR:
         case RSSPECAN_VAL_GSM_K10_MEAS_PERC_PERR:
         {
-            sprintf(buffer, "%s", GSMPercentileArr[measurement - 12]);
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", GSMPercentileArr[measurement - 12]);
 
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_READ_GSM_K10_MEAS_RES_95_PERC, result),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_READ_GSM_K10_MEAS_RES_95_PERC, result),
             		6, "Result");
             break;
         }
@@ -1210,9 +1210,9 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10MeasurementResults(
             viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_GSM_K10_MOD_AVG, RSSPECAN_VAL_GSM_K10_MOD_DEV),
             		5, "Modifier");
 
-			sprintf(buffer, "%s", GSMMeasModifArr[modifier]);
+			snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", GSMMeasModifArr[modifier]);
 
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_READ_GSM_K10_TRIGGER_TO_SYNC_RESULTS, result),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_READ_GSM_K10_TRIGGER_TO_SYNC_RESULTS, result),
             		6, "Result");
             break;
         }
@@ -1240,7 +1240,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10MeasurementResults(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar  buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar  repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1264,9 +1264,9 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10MeasurementResults(
             viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_GSM_K10_MOD_AVG, RSSPECAN_VAL_GSM_K10_MOD_DEV),
             		4, "Modifier");
 
-            sprintf(buffer, "%s,%s", GSMMeasTypeArr[measurement], GSMMeasModifArr[modifier]);
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s,%s", GSMMeasTypeArr[measurement], GSMMeasModifArr[modifier]);
 
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_FETCH_GSM_K10_MEAS_RES, result),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FETCH_GSM_K10_MEAS_RES, result),
             		5, "Result");
             break;
         }
@@ -1274,9 +1274,9 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10MeasurementResults(
         case RSSPECAN_VAL_GSM_K10_MEAS_PERC_MERR:
         case RSSPECAN_VAL_GSM_K10_MEAS_PERC_PERR:
         {
-            sprintf(buffer, "%s", GSMPercentileArr[measurement - 12]);
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", GSMPercentileArr[measurement - 12]);
 
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_FETCH_GSM_K10_MEAS_RES_95_PERC, result),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FETCH_GSM_K10_MEAS_RES_95_PERC, result),
             		5, "Result");
             break;
         }
@@ -1285,9 +1285,9 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10MeasurementResults(
             viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_GSM_K10_MOD_AVG, RSSPECAN_VAL_GSM_K10_MOD_DEV),
             		4, "Modifier");
 
-			sprintf(buffer, "%s", GSMMeasModifArr[modifier]);
+			snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", GSMMeasModifArr[modifier]);
 
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_FETCH_GSM_K10_TRIGGER_TO_SYNC_RESULTS, result),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FETCH_GSM_K10_TRIGGER_TO_SYNC_RESULTS, result),
             		5, "Result");
             break;
         }
@@ -1369,7 +1369,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10BurstSlotResults(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
     ViInt32     old_timeout = 0;
     checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
     checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
@@ -1385,9 +1385,9 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10BurstSlotResults(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_GSM_K10_BURST_MOD_AVG_PWR, RSSPECAN_VAL_GSM_K10_BURST_MOD_MAX_PWR),
     		4, "modifier");
 
-    sprintf (buffer, "GSMS%ld,%s,%s", slot, GSMBurstSelArr[burstSelection], GSMBurstModifArr[modifier]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld,%s,%s", slot, GSMBurstSelArr[burstSelection], GSMBurstModifArr[modifier]);
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_READ_GSM_K10_BURST_SLOT_RES, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_READ_GSM_K10_BURST_SLOT_RES, result),
     		6, "Result");
 
 Error:
@@ -1411,7 +1411,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10BurstSlotResults(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar  buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar  repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1424,9 +1424,9 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10BurstSlotResults(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_GSM_K10_BURST_MOD_AVG_PWR, RSSPECAN_VAL_GSM_K10_BURST_MOD_MAX_PWR),
     		4, "modifier");
 
-    sprintf (buffer, "GSMS%ld,%s,%s", slot, GSMBurstSelArr[burstSelection], GSMBurstModifArr[modifier]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld,%s,%s", slot, GSMBurstSelArr[burstSelection], GSMBurstModifArr[modifier]);
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_FETCH_GSM_K10_BURST_SLOT_RES, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FETCH_GSM_K10_BURST_SLOT_RES, result),
     		5, "Result");
 
 Error:
@@ -1448,7 +1448,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10BurstSlotDeltaToSync (ViSession instrSessio
                                                            ViReal64 *result)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
     ViInt32     old_timeout = 0;
     checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
     checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
@@ -1460,9 +1460,9 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10BurstSlotDeltaToSync (ViSession instrSessio
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, slot, 0, 7),
     		3, "Slot");
 
-    sprintf (buffer, "GSMS%ld", slot);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld", slot);
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_READ_GSM_K10_BURST_SLOT_DELTA_TO_SYNC, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_READ_GSM_K10_BURST_SLOT_DELTA_TO_SYNC, result),
     		4, "Result");
 
 Error:
@@ -1484,7 +1484,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10BurstSlotDeltaToSync (ViSession instrSessi
                                                            ViReal64 *result)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1493,9 +1493,9 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10BurstSlotDeltaToSync (ViSession instrSessi
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, slot, 0, 7),
     		2, "Slot");
 
-    sprintf (buffer, "GSMS%ld", slot);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld", slot);
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_FETCH_GSM_K10_BURST_SLOT_DELTA_TO_SYNC, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FETCH_GSM_K10_BURST_SLOT_DELTA_TO_SYNC, result),
     		3, "Result");
 
 Error:

@@ -77,7 +77,6 @@ ViStatus _VI_FUNC rsspecan_SelectADemodResult (ViSession instrSession,
 {
     ViStatus    error   = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     tmp_trace=3;
     ViInt32     tmp_mode=12;
 
@@ -105,10 +104,10 @@ ViStatus _VI_FUNC rsspecan_SelectADemodResult (ViSession instrSession,
         case RSSPECAN_VAL_FM_FEED_SPEC:
         case RSSPECAN_VAL_FM_FEED_FM:
         case RSSPECAN_VAL_FM_FEED_PM:
-             sprintf (buffer, ":CALC1:FEED '%s'\n", ADemMeasResArr[operatingMode]);
+             sprintf (cmd, ":CALC1:FEED '%s'\n", ADemMeasResArr[operatingMode]);
         break;
         case RSSPECAN_VAL_FM_FEED_AMS_REL:
-            sprintf (buffer, ":CALC1:FEED '%s%ld:REL'\n", ADemMeasResArr[operatingMode], trace);
+            sprintf (cmd, ":CALC1:FEED '%s%ld:REL'\n", ADemMeasResArr[operatingMode], trace);
         break;
         case RSSPECAN_VAL_FM_FEED_AMS:
         case RSSPECAN_VAL_FM_FEED_FMS:
@@ -118,10 +117,10 @@ ViStatus _VI_FUNC rsspecan_SelectADemodResult (ViSession instrSession,
         case RSSPECAN_VAL_FM_FEED_AM_REL_AFSP:
         case RSSPECAN_VAL_FM_FEED_RFP_AFSP:
 		case RSSPECAN_VAL_FSM_FEED_SUMM:
-            sprintf (buffer, ":CALC1:FEED '%s%ld'\n", ADemMeasResArr[operatingMode], trace);
+            sprintf (cmd, ":CALC1:FEED '%s%ld'\n", ADemMeasResArr[operatingMode], trace);
         break;
     }
-    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "%s", buffer);
+
     checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
@@ -202,7 +201,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodSet(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     rec_len=130560;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -223,11 +222,11 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodSet(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, numberOfMeas, 0, 32767),
     		7, "Number of Measurements");
 
-    sprintf (buffer, "SENS:ADEM:SET %.12fHZ,%ld,%s,%s,%ld,%ld\n",
+    sprintf (cmd, "SENS:ADEM:SET %.12fHZ,%ld,%s,%s,%ld,%ld\n",
         sampleRate, recordLength, rsspecan_rngFmTriggerSource.rangeValues[triggerSource].cmdString,
         rsspecan_rngPolarity.rangeValues[triggerSlope].cmdString, pretriggerSamples, numberOfMeas);
 
-    checkErr(RsCore_Write(instrSession, buffer));
+    checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -246,7 +245,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodResultType(
     ViInt32 resultTypes[])
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -257,7 +256,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodResultType(
 
     if (rsspecan_IsFSV (instrSession))
 	{
-        sprintf (buffer, "SENS:ADEM:%s:TYPE %s,%s,%s,%s,%s,%s",
+        sprintf (cmd, "SENS:ADEM:%s:TYPE %s,%s,%s,%s,%s,%s",
             ADEMTypeArr[demodulationType], resultTypeArr[resultTypes[0]],
         resultTypeArr[resultTypes[1]], resultTypeArr[resultTypes[2]],resultTypeArr[resultTypes[3]],
 		resultTypeArr[resultTypes[4]],resultTypeArr[resultTypes[5]]);
@@ -265,17 +264,17 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodResultType(
 	else
 		if (!RsCore_IsInstrumentModel(instrSession, "FSL"))
 	    {
-	        sprintf (buffer, "SENS:ADEM:%s:TYPE %s,%s,%s",
+	        sprintf (cmd, "SENS:ADEM:%s:TYPE %s,%s,%s",
 	            ADEMTypeArr[demodulationType], resultTypeArr[resultTypes[0]],
 	        resultTypeArr[resultTypes[1]], resultTypeArr[resultTypes[2]]);
 	    }
 	    else
 	    {
-	        sprintf (buffer, "SENS:ADEM:%s:TYPE %s,%s,%s,%s",
+	        sprintf (cmd, "SENS:ADEM:%s:TYPE %s,%s,%s,%s",
 	            ADEMTypeArr[demodulationType], resultTypeArr[resultTypes[0]],
 	        resultTypeArr[resultTypes[1]], resultTypeArr[resultTypes[2]],resultTypeArr[resultTypes[3]]);
 	    }
-    checkErr(RsCore_Write(instrSession, buffer));
+    checkErr(RsCore_Write(instrSession, cmd));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -1001,7 +1000,7 @@ ViStatus _VI_FUNC rsspecan_GetADemodOffset(
 {
     ViStatus    error   = VI_SUCCESS;
     ViString    fmOffsetArr[]={"Imm","Aver"};
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1021,9 +1020,9 @@ ViStatus _VI_FUNC rsspecan_GetADemodOffset(
     }
 
     checkErr(viScanf (instrSession, "%le", value));*/
-    sprintf (buffer,"FMOff%s", fmOffsetArr[resultType]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "FMOff%s", fmOffsetArr[resultType]);
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_ADEM_FM_OFFSET, value),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_ADEM_FM_OFFSET, value),
     		3, "Value");
 
 Error:

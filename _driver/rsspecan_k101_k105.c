@@ -1490,7 +1490,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementResultSummary(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
     ViAttr	attr[8] = {RSSPECAN_ATTR_LTE_UPLINK_EVM_PUSCH_QPSK_RESULT,
 					   RSSPECAN_ATTR_LTE_UPLINK_EVM_PUSCH_16QAM_RESULT,
 					   RSSPECAN_ATTR_LTE_UPLINK_EVM_PUSCH_64QAM_RESULT,
@@ -1512,7 +1512,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementResultSummary(
         case RSSPECAN_VAL_LTE_UPLINK_DMRS_PUSCH_AVER:
         case RSSPECAN_VAL_LTE_UPLINK_PUCCH_AVER:
         case RSSPECAN_VAL_LTE_UPLINK_PRACH_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
             break;
         case RSSPECAN_VAL_LTE_UPLINK_PUSCH_QPSK_MAX:
         case RSSPECAN_VAL_LTE_UPLINK_PUSCH_16QAM_MAX:
@@ -1522,7 +1522,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementResultSummary(
         case RSSPECAN_VAL_LTE_UPLINK_DMRS_PUSCH_MAX:
         case RSSPECAN_VAL_LTE_UPLINK_PUCCH_MAX:
         case RSSPECAN_VAL_LTE_UPLINK_PRACH_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
             break;
         case RSSPECAN_VAL_LTE_UPLINK_PUSCH_QPSK_MIN:
         case RSSPECAN_VAL_LTE_UPLINK_PUSCH_16QAM_MIN:
@@ -1532,15 +1532,14 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementResultSummary(
         case RSSPECAN_VAL_LTE_UPLINK_DMRS_PUSCH_MIN:
         case RSSPECAN_VAL_LTE_UPLINK_PUCCH_MIN:
         case RSSPECAN_VAL_LTE_UPLINK_PRACH_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
             break;
         default:
         viCheckParm(RsCore_InvalidViInt32Value(instrSession, frameResult), 2, "Frame Result");
             break;
     }
 
-    viCheckParm(rsspecan_GetAttributeViReal64 (instrSession, buffer,
-		attr[(int) fmod(frameResult,8)], result), 3, "Result");
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, attr[(int) fmod(frameResult,8)], result), 3, "Result");
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -1562,27 +1561,27 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementEVMAll(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
             break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
             break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_LTE_UPLINK_EVM_ALL_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_EVM_ALL_RESULT, result),
     		3, "Result");
 
 Error:
@@ -1605,27 +1604,27 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementEVMPhysicalChannel(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
             break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
             break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_LTE_UPLINK_EVM_PHYSICAL_CHANNEL_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_EVM_PHYSICAL_CHANNEL_RESULT, result),
     		3, "Result");
 
 Error:
@@ -1649,27 +1648,27 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementEVMPhysicalSignal(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
             break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
             break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_LTE_UPLINK_EVM_PHYSICAL_SIGNAL_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_EVM_PHYSICAL_SIGNAL_RESULT, result),
     		3, "Result");
 
 Error:
@@ -1692,27 +1691,27 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementFrequencyError(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
             break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
             break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_LTE_UPLINK_FREQUENCY_ERROR_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_FREQUENCY_ERROR_RESULT, result),
     		3, "Result");
 
 Error:
@@ -1735,27 +1734,27 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementSamplingError(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
             break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
             break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_LTE_UPLINK_SAMPLING_ERROR_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_SAMPLING_ERROR_RESULT, result),
     		3, "Result");
 
 Error:
@@ -1778,27 +1777,27 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementIQOffset(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
             break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
             break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_LTE_UPLINK_IQ_OFFSET_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_IQ_OFFSET_RESULT, result),
     		3, "Result");
 
 Error:
@@ -1821,27 +1820,27 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementIQGainImbalance(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
             break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
             break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_LTE_UPLINK_IQ_GAIN_IMBALANCE_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_IQ_GAIN_IMBALANCE_RESULT, result),
     		3, "Result");
 
 Error:
@@ -1865,27 +1864,27 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementIQQuadratureError(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
             break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
             break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_LTE_UPLINK_IQ_QUADRATURE_ERROR_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_IQ_QUADRATURE_ERROR_RESULT, result),
     		3, "Result");
 
 Error:
@@ -1908,27 +1907,27 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementFramePower(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
             break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
             break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_LTE_UPLINK_FRAME_POWER_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_FRAME_POWER_RESULT, result),
     		3, "Result");
 
 Error:
@@ -1949,27 +1948,27 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementCrestFactor(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
             break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
             break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_LTE_UPLINK_CREST_FACTOR_RESULT, result),
+	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_CREST_FACTOR_RESULT, result),
 			3, "Result");
 
 Error:
@@ -2105,18 +2104,18 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkDetectedCyclicPrefix(
 )
 {
     ViStatus	error = VI_SUCCESS;
-	ViChar		buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar		response[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    checkErr(RsCore_QueryViString(instrSession, "FETC:CYCP?", buffer));
+    checkErr(RsCore_QueryViString(instrSession, "FETC:CYCP?", response));
 
-	if (strncmp (buffer, "NORM", 4) == 0)
+	if (strncmp (response, "NORM", 4) == 0)
 		*result = 0;
-	else if (strncmp (buffer, "EXT", 3) == 0)
+	else if (strncmp (response, "EXT", 3) == 0)
 		*result = 1;
 	else
-		*result = atoi (buffer);
+		*result = atoi (response);
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2146,7 +2145,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkEVMVersusCarrierTrace(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2155,20 +2154,20 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkEVMVersusCarrierTrace(
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "TRACE2");
+            sprintf (traceName, "TRACE2");
             break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "TRACE3");
+            sprintf (traceName, "TRACE3");
             break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "TRACE1");
+            sprintf (traceName, "TRACE1");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize, traceData, noofValues));
+    checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2198,15 +2197,15 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkEVMVersusSymbolTrace(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K101|K105"));
 
-    sprintf (buffer, "TRACE1");
+    sprintf (traceName, "TRACE1");
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize, traceData, noofValues));
+    checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2232,15 +2231,15 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkEVMVersusSubframeTrace(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K101|K105"));
 
-    sprintf (buffer, "TRACE1");
+    sprintf (traceName, "TRACE1");
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize, traceData, noofValues));
+    checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2268,7 +2267,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkSEMTrace(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2277,17 +2276,17 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkSEMTrace(
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_VALUES:
-            sprintf (buffer, "TRACE1");
+            sprintf (traceName, "TRACE1");
             break;
         case RSSPECAN_VAL_MEASTYPE_SUMMARY:
-            sprintf (buffer, "LIST");
+            sprintf (traceName, "LIST");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize, traceData, noofValues));
+    checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2313,15 +2312,15 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkACLRTrace(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K101|K105"));
 
-    sprintf (buffer, "TRACE1");
+    sprintf (traceName, "TRACE1");
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize, traceData, noofValues));
+    checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2349,7 +2348,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkInbandEmissionTrace(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2358,20 +2357,20 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkInbandEmissionTrace(
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_RESOURCE_BLOCK_INDEXES:
-            sprintf (buffer, "TRACE1");
+            sprintf (traceName, "TRACE1");
             break;
         case RSSPECAN_VAL_MEASTYPE_INBAND_EMISSION:
-            sprintf (buffer, "TRACE2");
+            sprintf (traceName, "TRACE2");
             break;
         case RSSPECAN_VAL_MEASTYPE_UPPER_LIMIT_LINE:
-            sprintf (buffer, "TRACE3");
+            sprintf (traceName, "TRACE3");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize, traceData, noofValues));
+    checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2399,15 +2398,15 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkPowerSpectrumTrace(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
     checkErr(RsCore_CheckInstrumentOptions(instrSession, "K101|K105"));
 
-    sprintf (buffer, "TRACE1");
+    sprintf (traceName, "TRACE1");
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize, traceData, noofValues));
+    checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2439,7 +2438,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkChannelFlatnessTrace(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2448,20 +2447,20 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkChannelFlatnessTrace(
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "TRACE2");
+            sprintf (traceName, "TRACE2");
             break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "TRACE3");
+            sprintf (traceName, "TRACE3");
             break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "TRACE1");
+            sprintf (traceName, "TRACE1");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize, traceData, noofValues));
+    checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2493,7 +2492,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkChannelGroupDelayTrace(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2502,20 +2501,20 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkChannelGroupDelayTrace(
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "TRACE2");
+            sprintf (traceName, "TRACE2");
             break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "TRACE3");
+            sprintf (traceName, "TRACE3");
             break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "TRACE1");
+            sprintf (traceName, "TRACE1");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize, traceData, noofValues));
+    checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2547,7 +2546,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkChannelFlatnessDifferenceTrace(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2556,20 +2555,20 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkChannelFlatnessDifferenceTrace(
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "TRACE2");
+            sprintf (traceName, "TRACE2");
             break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "TRACE3");
+            sprintf (traceName, "TRACE3");
             break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "TRACE1");
+            sprintf (traceName, "TRACE1");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize, traceData, noofValues));
+    checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2742,7 +2741,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkCCDF(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      traceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2751,17 +2750,17 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkCCDF(
     switch (measurementType)
     {
         case RSSPECAN_VAL_MEASTYPE_PROBABILITY:
-            sprintf (buffer, "TRACE1");
+            sprintf (traceName, "TRACE1");
             break;
         case RSSPECAN_VAL_MEASTYPE_POWER_STEPS:
-            sprintf (buffer, "TRACE2");
+            sprintf (traceName, "TRACE2");
             break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, measurementType), 2, "Measurement Type");
             break;
     }
 
-    checkErr(rsspecan_dataReadTrace (instrSession, 0, buffer, arraySize, traceData, noofValues));
+    checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 

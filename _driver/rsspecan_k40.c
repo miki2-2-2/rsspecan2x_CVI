@@ -945,7 +945,7 @@ ViStatus _VI_FUNC rsspecan_CreatePhaseLimitLine(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -954,16 +954,16 @@ ViStatus _VI_FUNC rsspecan_CreatePhaseLimitLine(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, strlen(name), 0, 8), 4, "Name (string length)");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, strlen(comment), 0, 40), 5, "Comment (string length)");
 
-    sprintf (buffer, "L%ld", limit);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%ld", limit);
 
-    viCheckParm(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_LIMIT_NAME, name),
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_LIMIT_NAME, name),
     		4, "Name");
 
-    viCheckParm(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_LIMIT_COMMENT, comment),
+    viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_LIMIT_COMMENT, comment),
     		5, "Comment");
 
-    sprintf (buffer, "Win%ld,L%ld", window, limit);
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_LIMIT_ASSIGN_TRACE, assigntoTrace),
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,L%ld", window, limit);
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_LIMIT_ASSIGN_TRACE, assigntoTrace),
     		6, "Assign to Trace");
 
 Error:
@@ -1027,7 +1027,7 @@ ViStatus _VI_FUNC rsspecan_EnablePhaseLimitCheck(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
     ViInt32     attribute = 0;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -1048,12 +1048,12 @@ ViStatus _VI_FUNC rsspecan_EnablePhaseLimitCheck(
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, type), 4, "Type");
     }
 
-    sprintf (buffer, "Win%ld,L%ld", window, limit);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,L%ld", window, limit);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_LIMIT_STATE, limitEnabled),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_LIMIT_STATE, limitEnabled),
     		5, "Limit Enabled");
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, attribute, checkEnabled),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, attribute, checkEnabled),
     		6, "Check Enabled");
 
 Error:
@@ -1073,7 +1073,7 @@ ViStatus _VI_FUNC rsspecan_MovePhaseLimitLine(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
     ViInt32     attributes[] = {RSSPECAN_LIMIT_LOWER_SHIFT,
                                 RSSPECAN_LIMIT_UPPER_SHIFT,
                                 RSSPECAN_LIMIT_CONTROL_SHIFT};
@@ -1085,9 +1085,9 @@ ViStatus _VI_FUNC rsspecan_MovePhaseLimitLine(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, 0, 2),
     		3, "Type");
 
-    sprintf (buffer, "L%ld", limit);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%ld", limit);
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, attributes[type], value),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, attributes[type], value),
     		4, "Value");
 
 Error:
@@ -1106,16 +1106,16 @@ ViStatus _VI_FUNC rsspecan_CopyPhaseLimitLine(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
     		2, "Limit");
 
-    sprintf (buffer, "L%ld", limit);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%ld", limit);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_LIMIT_COPY, copyTo),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_LIMIT_COPY, copyTo),
     		3, "Copy To");
 
 Error:
@@ -1159,16 +1159,16 @@ ViStatus _VI_FUNC rsspecan_DeletePhaseLimitLine(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
     		2, "Limit");
 
-    sprintf (buffer, "L%ld", limit);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%ld", limit);
 
-    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_LIMIT_DELETE, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_LIMIT_DELETE, NULL));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -1220,18 +1220,15 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseNoiseLimitSettings (ViSession instrSess
 {
 	ViStatus    error   = VI_SUCCESS;
 	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar      buffer[25] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, segment, 1, 5),
     		5, "Segment");
-    viCheckParm(RsCore_GetAttributeRepCapName (instrSession,
-                                                 RSSPECAN_ATTR_PHASE_NOISE_LIMIT_SLOPE,
-                                                 "pnlSegment",
-                                                 segment - 1,
-                                                 25,
-                                                 buffer), 5, "Segment");
+    viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_PHASE_NOISE_LIMIT_SLOPE,
+    		"pnlSegment", segment - 1, RS_REPCAP_BUF_SIZE, repCap),
+    		5, "Segment");
 
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_NOISE_LIMIT_SHAPE_TYPE, shapeType),
     		2, "Shape Type");
@@ -1244,10 +1241,10 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseNoiseLimitSettings (ViSession instrSess
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_NOISE_LIMIT_LEVEL, noiseFloor),
 			4, "Noise Floor");
 
-	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PHASE_NOISE_LIMIT_CORNER_FREQUENCY, cornerFrequency),
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PHASE_NOISE_LIMIT_CORNER_FREQUENCY, cornerFrequency),
 			6, "Corner Frequency");
 
-	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_PHASE_NOISE_LIMIT_SLOPE, slope),
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PHASE_NOISE_LIMIT_SLOPE, slope),
 			7, "Slope");
 
 Error:
@@ -1267,16 +1264,16 @@ ViStatus _VI_FUNC rsspecan_PhaseCopyToUserLimitLine (ViSession instrSession,
                                                      ViInt32 limitLine)
 {
 	ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, limitLine, 1, 8),
     		2, "Limit Line");
 
-    sprintf (buffer, "LL%ld",  limitLine);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "LL%ld", limitLine);
 
-    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_PHASE_COPY_TO_USER_LIMIT_LINE, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_PHASE_COPY_TO_USER_LIMIT_LINE, NULL));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -1320,16 +1317,16 @@ ViStatus _VI_FUNC rsspecan_GetPhaseLimitCheckResult(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
     		3, "Limit");
 
-    sprintf (buffer, "Win%ld,L%ld", window, limit);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,L%ld", window, limit);
 
-    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_LIMIT_CHECK_RESULT, state),
+    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_LIMIT_CHECK_RESULT, state),
     		4, "State");
 
 Error:

@@ -366,31 +366,31 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmExtendedSlotParameters (ViSession instrSe
                                                                ViString limitLineUpper)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, slotNumber, 0, 7),
     		2, "Slot Number");
 
-    sprintf (buffer, "SL%ld", slotNumber);
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_MODULATION, modulation),
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "SL%ld", slotNumber);
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_MODULATION, modulation),
     		3, "Modulation");
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_RLEV_MODE, referenceLevelMode),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_RLEV_MODE, referenceLevelMode),
     		4, "Reference Level Mode");
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_RLEV_VALUE, referenceLevelValue),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_RLEV_VALUE, referenceLevelValue),
     		5, "Reference Level Value");
     if (modulation != RSSPECAN_VAL_EXT_SLOT_MODUL_OFF)
     {
-        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_LIMIT_CLEV, limitLineCtrlLevel),
+        viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_LIMIT_CLEV, limitLineCtrlLevel),
         		6, "Limit Line Ctrl Level");
-        sprintf (buffer, "SL%ld,Low", slotNumber);
-        viCheckParm(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_LIMIT, limitLineLower),
+        snprintf(repCap, RS_REPCAP_BUF_SIZE, "SL%ld,Low", slotNumber);
+        viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_LIMIT, limitLineLower),
         		7, "Limit Line Lower");
-        sprintf (buffer, "SL%ld,Upp", slotNumber);
-        viCheckParm(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_LIMIT, limitLineUpper),
+        snprintf(repCap, RS_REPCAP_BUF_SIZE, "SL%ld,Upp", slotNumber);
+        viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_LIMIT, limitLineUpper),
         		8, "Limit Line Upper");
     }
 

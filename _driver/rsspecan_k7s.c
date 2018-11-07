@@ -79,7 +79,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoTrigger(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -109,9 +109,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoTrigger(
         case RSSPECAN_VAL_FMS_TRG_STER:
         case RSSPECAN_VAL_FMS_TRG_RDS:
         case RSSPECAN_VAL_FMS_TRG_PIL:
-            sprintf (buffer, "%s", ChannelTypeArr[triggerSource - 4]);
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", ChannelTypeArr[triggerSource - 4]);
 
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_FMS_TRIGGER_LEVEL, triggerLevel),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FMS_TRIGGER_LEVEL, triggerLevel),
             		3, "Trigger Level");
         break;
         default:
@@ -137,16 +137,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoPhaseNoiseMarker(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 16),
     		3, "Marker");
 
-    sprintf (buffer, "Win%ld,M%ld", window, marker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_PHASE_NOISE_MARKER_STATE, state),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_PHASE_NOISE_MARKER_STATE, state),
     		4, "State");
 
 Error:
@@ -168,13 +168,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoDifferenceFrequencyDistortion(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_DIFFERENCE_FREQUENCY_DISTORTION_STATE, state),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_DIFFERENCE_FREQUENCY_DISTORTION_STATE, state),
     		2, "State");
 
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_FMS_DIFFERENCE_FREQUENCY_DISTORTION_UNIT, unit),
@@ -197,7 +197,7 @@ ViStatus _VI_FUNC rsspecan_FMStereoDifferenceFrequencyDistortionSearchSignal(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar  buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar  repCap[RS_REPCAP_BUF_SIZE];
     ViInt32     old_timeout = -1;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -207,9 +207,9 @@ ViStatus _VI_FUNC rsspecan_FMStereoDifferenceFrequencyDistortionSearchSignal(
     checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
     checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
 
-    sprintf (buffer, "Win%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_FMS_DIFFERENCE_FREQUENCY_DISTORTION_SEARCH_SIGNAL, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_FMS_DIFFERENCE_FREQUENCY_DISTORTION_SEARCH_SIGNAL, NULL));
 
 Error:
     if (old_timeout >= 0)
@@ -231,13 +231,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoIntermodulationDistortion(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_INTERMODULATION_DISTORTION_STATE, state),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_INTERMODULATION_DISTORTION_STATE, state),
     		2, "State");
 
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_FMS_INTERMODULATION_DISTORTION_UNIT, unit),
@@ -260,7 +260,7 @@ ViStatus _VI_FUNC rsspecan_FMStereoIntermodulationDistortionSearchSignal(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar  buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar  repCap[RS_REPCAP_BUF_SIZE];
     ViInt32     old_timeout = -1;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -270,9 +270,9 @@ ViStatus _VI_FUNC rsspecan_FMStereoIntermodulationDistortionSearchSignal(
     checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
     checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
 
-    sprintf (buffer, "Win%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_FMS_INTERMODULATION_DISTORTION_SEARCH_SIGNAL, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_FMS_INTERMODULATION_DISTORTION_SEARCH_SIGNAL, NULL));
 
 Error:
     if (old_timeout >= 0)
@@ -317,13 +317,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoDisplayConfig(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_FMS_DISPLAY_CONFIG, displayConfiguration),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_FMS_DISPLAY_CONFIG, displayConfiguration),
     		3, "Display Configuration");
 
 Error:
@@ -366,22 +366,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoResultSummarySetup(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_FSM_CHAN_TYPE_LEFT, RSSPECAN_VAL_FSM_CHAN_TYPE_PILOT),
     		2, "Channel Type");
 
-    sprintf (buffer, "%s", ChannelTypeArr[channelType]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", ChannelTypeArr[channelType]);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_FMS_RESULT_SUMMARY_DETECTOR, detector),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_FMS_RESULT_SUMMARY_DETECTOR, detector),
     		3, "Detector");
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_FMS_RESULT_SUMMARY_MODE, mode),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_FMS_RESULT_SUMMARY_MODE, mode),
     		4, "Mode");
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_RESULT_SUMMARY_COUPLED, coupled),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_RESULT_SUMMARY_COUPLED, coupled),
     		5, "Coupled");
 
 Error:
@@ -400,16 +400,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoMeasToRef(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_FSM_CHAN_TYPE_LEFT, RSSPECAN_VAL_FSM_CHAN_TYPE_PILOT),
     		2, "Channel Type");
 
-    sprintf (buffer, "%s", ChannelTypeArr[channelType]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", ChannelTypeArr[channelType]);
 
-    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_FMS_MEAS_TO_REF, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_FMS_MEAS_TO_REF, NULL));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -454,79 +454,79 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoAFFilter(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_FSM_CHAN_TYPE_LEFT, RSSPECAN_VAL_FSM_CHAN_TYPE_PILOT),
     		2, "Channel Type");
 
-    sprintf (buffer, "%s", ChannelTypeArr[channelType]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", ChannelTypeArr[channelType]);
 
     if (highPass == RSSPECAN_VAL_FMS_HPAS_FILT_NONE)
     {
-        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_HIGH_PASS_STATE, VI_FALSE),
+        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_HIGH_PASS_STATE, VI_FALSE),
         		3, "High Pass");
     }
     else
     {
-        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_HIGH_PASS_STATE, VI_TRUE),
+        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_HIGH_PASS_STATE, VI_TRUE),
         		3, "High Pass");
 
-        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_HIGH_PASS_FREQUENCY, highPassArr[highPass]),
+        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_HIGH_PASS_FREQUENCY, highPassArr[highPass]),
         		3, "High Pass");
     }
 
     if (lowPass == RSSPECAN_VAL_FMS_LPAS_FILT_NONE)
     {
-        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_LOW_PASS_STATE, VI_FALSE),
+        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_LOW_PASS_STATE, VI_FALSE),
         		4, "Low Pass");
     }
     else
     {
-        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_LOW_PASS_STATE, VI_TRUE),
+        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_LOW_PASS_STATE, VI_TRUE),
         		4, "Low Pass");
 
         if ((lowPass == RSSPECAN_VAL_FMS_LPAS_FILT_5PCT) ||
            (lowPass == RSSPECAN_VAL_FMS_LPAS_FILT_10PCT) ||
            (lowPass == RSSPECAN_VAL_FMS_LPAS_FILT_25PCT))
         {
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_LOW_PASS_FREQUENCY_RELATIVE, lowPassArr[lowPass]),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_LOW_PASS_FREQUENCY_RELATIVE, lowPassArr[lowPass]),
             		4, "Low Pass");
         }
         else
         {
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_LOW_PASS_FREQUENCY_ABSOLUTE, lowPassArr[lowPass]),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_LOW_PASS_FREQUENCY_ABSOLUTE, lowPassArr[lowPass]),
             		4, "Low Pass");
         }
     }
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_CCITT, weightingArr[weighting][0]),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_CCITT, weightingArr[weighting][0]),
     		5, "Weighting");
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_CCIR_UNWEIGHTED, weightingArr[weighting][1]),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_CCIR_UNWEIGHTED, weightingArr[weighting][1]),
     		5, "Weighting");
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_CCIR_WEIGHTED, weightingArr[weighting][2]),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_CCIR_WEIGHTED, weightingArr[weighting][2]),
     		5, "Weighting");
 
-	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_A_WEIGHTED, weightingArr[weighting][3]),
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_A_WEIGHTED, weightingArr[weighting][3]),
 			5, "Weighting");
 
     if (deemphasis == RSSPECAN_VAL_FMS_DEEMPH_NONE)
     {
-        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_DEEMPHASIS_STATE, VI_FALSE),
+        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_DEEMPHASIS_STATE, VI_FALSE),
         		6, "Deemphasis");
     }
     else
     {
-        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_DEEMPHASIS_STATE, VI_TRUE),
+        viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_DEEMPHASIS_STATE, VI_TRUE),
         		6, "Deemphasis");
 
-        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_DEEMPHASIS_TIME_CONSTANT, deemphasisArr[deemphasis]),
+        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_DEEMPHASIS_TIME_CONSTANT, deemphasisArr[deemphasis]),
         		6, "Deemphasis");
     }
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FMS_AF_FILTER_COUPLED, coupled),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_COUPLED, coupled),
     		7, "Coupled");
 
 Error:
@@ -739,7 +739,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoTraceModes(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
+    ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -758,18 +758,18 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoTraceModes(
 
     if (measurementType == RSSPECAN_VAL_FMS_AFSP)
     {
-        sprintf (buffer, "SENS:SFM:%s:AFSP:TYPE %s,%s,%s",
+        sprintf (cmd, "SENS:SFM:%s:AFSP:TYPE %s,%s,%s",
             ChannelTypeArr[channelType], traceModesArr[traceModes[0]],
             traceModesArr[traceModes[1]], traceModesArr[traceModes[2]]);
     }
     else
     {
-        sprintf (buffer, "SENS:SFM:%s:TDO:TYPE %s,%s,%s",
+        sprintf (cmd, "SENS:SFM:%s:TDO:TYPE %s,%s,%s",
             ChannelTypeArr[channelType], traceModesArr[traceModes[0]],
             traceModesArr[traceModes[1]], traceModesArr[traceModes[2]]);
     }
 
-    checkErr(RsCore_Write(instrSession, buffer));
+    checkErr(RsCore_Write(instrSession, cmd));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -791,16 +791,16 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoPhaseNoiseResult(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar  buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar  repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 16),
     		3, "Marker");
 
-    sprintf (buffer, "Win%ld,M%ld", window, marker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_QUERY_FMS_PHASE_NOISE_RESULT, phaseNoiseResult),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_QUERY_FMS_PHASE_NOISE_RESULT, phaseNoiseResult),
     		4, "Phase Noise Result");
 
 Error:
@@ -920,7 +920,7 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoChannelTypeResults(
 )
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -929,9 +929,9 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoChannelTypeResults(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, RSSPECAN_VAL_FMS_MEAS_TYPE_ADEV, RSSPECAN_VAL_FMS_MEAS_TYPE_AFR),
     		4, "Measurement Type");
 
-    sprintf (buffer, "Win%ld,%s,%s", window, ChannelTypeArr[channelType], measTypeArr[measurementType]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,%s,%s", window, ChannelTypeArr[channelType], measTypeArr[measurementType]);
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_QUERY_FMS_CHANNEL_TYPE_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_QUERY_FMS_CHANNEL_TYPE_RESULT, result),
     		5, "Result");
 
 Error:

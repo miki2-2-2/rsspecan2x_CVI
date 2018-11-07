@@ -339,18 +339,18 @@ ViStatus _VI_FUNC rsspecan_ConfigureFFTReferenceLevel (ViSession instrSession,
                                            ViReal64 referenceLevelOffset)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_AMPLITUDE_UNITS, amplitudeUnits),
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_AMPLITUDE_UNITS, amplitudeUnits),
     		3, "Amplitude Units");
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_REFERENCE_LEVEL, referenceLevel),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_LEVEL, referenceLevel),
     		4, "Reference Level");
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_REFERENCE_LEVEL_OFFSET, referenceLevelOffset),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_LEVEL_OFFSET, referenceLevelOffset),
     		5, "Reference Level Offset");
 
 Error:
@@ -459,18 +459,18 @@ ViStatus _VI_FUNC rsspecan_ConfigureFFTPhaseLine(ViSession  instrSession,
                                                 ViReal64    phaseLinePosition)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, line, 1, 2),
     		3, "Line");
-    sprintf (buffer, "C%ld,L%ld", window, line);
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_FFT_PLINE_STATE, phaseLineState),
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,L%ld", window, line);
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FFT_PLINE_STATE, phaseLineState),
     		4, "Phase Line State");
     if (phaseLineState)
     {
-        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_FFT_PLINE, phaseLinePosition),
+        viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FFT_PLINE, phaseLinePosition),
         		5, "Phase Line Position");
     }
 

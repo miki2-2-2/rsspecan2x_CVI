@@ -460,16 +460,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRATraceSettings(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 4),
     		2, "Trace");
 
-    sprintf (buffer, "Win2,TR%ld", trace);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win2,TR%ld", trace);
 
-	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_TRACE_STATE, traceState),
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_TRACE_STATE, traceState),
 			3, "Trace State");
 
 Error:
@@ -490,19 +490,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAMarker(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 4),
 			3, "Marker");
 
-    sprintf (buffer, "Win%ld,M%ld", window, marker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_MARKER_ENABLED, markerEnabled),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_MARKER_ENABLED, markerEnabled),
     		4, "Marker Enabled");
 
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_MARKER_TRACE, trace),
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_MARKER_TRACE, trace),
 			5, "Trace");
 
 Error:
@@ -523,22 +523,22 @@ ViStatus _VI_FUNC rsspecan_TETRAMarkerSearch(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 4),
 			3, "Marker");
 
-    sprintf (buffer, "Win%ld,M%ld", window, marker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
 
 	if (markerSearch == RSSPECAN_VAL_MARKER_SEARCH_HIGHEST)
 	{
-		checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_PEAK, NULL));
+		checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MARKER_SEARCH_PEAK, NULL));
 	}
 	else
 	{
-		checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_MARKER_SEARCH_MIN, NULL));
+		checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MARKER_SEARCH_MIN, NULL));
 	}
 
 Error:
@@ -565,7 +565,7 @@ ViStatus _VI_FUNC rsspecan_TETRAMoveMarker(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -574,9 +574,9 @@ ViStatus _VI_FUNC rsspecan_TETRAMoveMarker(
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 0, 8),
 			4, "Measurement");
 
-    sprintf (buffer, "Win%ld,M%ld,Mkr%s", window, marker, tetraMoveMarkerMeasArr[measurement]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld,Mkr%s", window, marker, tetraMoveMarkerMeasArr[measurement]);
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_MOVE_MARKER, markerPosition),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_MOVE_MARKER, markerPosition),
     		5, "Marker Position");
 
 Error:
@@ -597,16 +597,16 @@ ViStatus _VI_FUNC rsspecan_QueryTETRAMarkerAmplitude(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 4),
 			3, "Marker");
 
-    sprintf (buffer, "Win%ld,M%ld", window, marker);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_MARKER_AMPLITUDE, markerAmplitude),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_MARKER_AMPLITUDE, markerAmplitude),
     		2, "Marker Amplitude");
 
 Error:
@@ -660,13 +660,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRADisplayActiveWindow(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_SELECT_WINDOW, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_SELECT_WINDOW, NULL));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -685,7 +685,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAResultSummaryLimits(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -694,9 +694,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAResultSummaryLimits(
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, mode, 2, 3),
 			3, "Mode");
 
-    sprintf (buffer, "EVMLim%s,TETRA%s", evmLimitTypeArr[limitType], tetraMeasModArr[mode]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "EVMLim%s,TETRA%s", evmLimitTypeArr[limitType], tetraMeasModArr[mode]);
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_EVM_SUMMARY_LIMITS, value),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_EVM_SUMMARY_LIMITS, value),
     		4, "Value");
 
 Error:
@@ -715,25 +715,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAResultSummaryLimitsAll(
 )
 {
 	ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *pbuf;
-    ViInt32     i;
 
 	checkErr(RsCore_LockSession(instrSession));
-
-	pbuf = buffer;
-    if (arraySize>0)
-    {
-        pbuf += sprintf (buffer, "CALC:LIM:BURS:ALL ");
-
-		for (i = 0; i < arraySize; i++)
-            pbuf += sprintf (pbuf, "%.12f,",limitValues[i]);
-
-		*pbuf = '\0';
-    	*--pbuf = '\n';
-
-        checkErr(RsCore_Write(instrSession, buffer));
-    }
+	
+	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, "CALC:LIM:BURS:ALL ", limitValues, arraySize));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -781,7 +766,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAACPLimits(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -792,9 +777,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAACPLimits(
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelBandwidth, 0, 3),
 			4, "Channel Bandwidth");
 
-    sprintf (buffer, "ACP%s,ACP%s,Ch%s", tetraACPTypeArr[acp], tetraACPChannelArr[channelNumber], tetraChannelBWArr[channelBandwidth]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "ACP%s,ACP%s,Ch%s", tetraACPTypeArr[acp], tetraACPChannelArr[channelNumber], tetraChannelBWArr[channelBandwidth]);
 
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_ACP_LIMITS, limitValue),
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_ACP_LIMITS, limitValue),
     		5, "Limit Value");
 
 Error:
@@ -812,16 +797,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAMeasurementType(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 0, 12),
     		2, "Measurement");
 
-    sprintf (buffer, "%s", tetraMeasurementSelectArr[measurement]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", tetraMeasurementSelectArr[measurement]);
 
-    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_TETRA_MEASUREMENT_TYPE, NULL));
+    checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_TETRA_MEASUREMENT_TYPE, NULL));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -843,31 +828,31 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAYAxis(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 1, 4),
     		2, "Measurement");
 
-    sprintf (buffer, "TETRA%s", tetraYAxisMeasArr[measurement]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "TETRA%s", tetraYAxisMeasArr[measurement]);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE_AUTO, autoScaling),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE_AUTO, autoScaling),
     		3, "Auto Scaling");
 
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE_UNIT, unit),
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE_UNIT, unit),
 			4, "Unit");
 
 	if (autoScaling == VI_FALSE)
 	{
-		sprintf (buffer, "TETRA%s,TETRACenter", tetraYAxisMeasArr[measurement]);
+		snprintf(repCap, RS_REPCAP_BUF_SIZE, "TETRA%s,TETRACenter", tetraYAxisMeasArr[measurement]);
 
-		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE, yCenter),
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE, yCenter),
 				5, "Y-Center");
 
-		sprintf (buffer, "TETRA%s,TETRASpan", tetraYAxisMeasArr[measurement]);
+		snprintf(repCap, RS_REPCAP_BUF_SIZE, "TETRA%s,TETRASpan", tetraYAxisMeasArr[measurement]);
 
-		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE, ySpan),
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE, ySpan),
 				5, "Y-Span");
 	}
 
@@ -1094,7 +1079,7 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAMeasuremenResults(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1103,9 +1088,9 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAMeasuremenResults(
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, 1, 4),
 			3, "Measurement Type");
 
-    sprintf (buffer, "%s,TETRA%s", tetraSummaryTableArr[measurement], tetraMeasModArr[measurementType]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s,TETRA%s", tetraSummaryTableArr[measurement], tetraMeasModArr[measurementType]);
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_SUMMARY_TABLE_MEASUREMENT_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_SUMMARY_TABLE_MEASUREMENT_RESULT, result),
     		2, "Result");
 
 Error:
@@ -1260,7 +1245,7 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAPVTMeasurement(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1276,9 +1261,9 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAPVTMeasurement(
 	}
 	else
 	{
-    	sprintf (buffer, "%s,TETRA%s", tetraPVTMeasArr[pvt], tetraMeasModArr[measurementType]);
+    	snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s,TETRA%s", tetraPVTMeasArr[pvt], tetraMeasModArr[measurementType]);
 
-    	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_PVT_MEASUREMENT, result),
+    	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_PVT_MEASUREMENT, result),
     			4, "Result");
 	}
 
@@ -1353,7 +1338,7 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAACP(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1373,9 +1358,9 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAACP(
 	}
 	else
 	{
-		sprintf (buffer, "ACP%s,ACP%s,%s,TETRA%s", tetraACPTypeArr[acp], tetraACPChannelArr[channelNumber], tetraACPMeas[acpMeasurement], tetraMeasModArr[measurementType]);
+		snprintf(repCap, RS_REPCAP_BUF_SIZE, "ACP%s,ACP%s,%s,TETRA%s", tetraACPTypeArr[acp], tetraACPChannelArr[channelNumber], tetraACPMeas[acpMeasurement], tetraMeasModArr[measurementType]);
 
-    	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_FETCH_ACP_MEASUREMENT, result),
+    	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_FETCH_ACP_MEASUREMENT, result),
     			6, "Result");
 	}
 
@@ -1399,7 +1384,7 @@ ViStatus _VI_FUNC rsspecan_GetTETRATraceXAxisMinMax(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1408,9 +1393,9 @@ ViStatus _VI_FUNC rsspecan_GetTETRATraceXAxisMinMax(
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, valueType, 1, 2),
 			4, "Value Type");
 
-    sprintf (buffer, "Win%ld,TR%ld,TETRA%s", window, trace, tetraMeasModArr[valueType]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,TR%ld,TETRA%s", window, trace, tetraMeasModArr[valueType]);
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_TETRA_TRACE_X_AXIS_MIN_MAX, xAxisValue),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_TRACE_X_AXIS_MIN_MAX, xAxisValue),
     		5, "X Axis Value");
 
 Error:
@@ -1452,7 +1437,7 @@ ViStatus _VI_FUNC rsspecan_GetTETRAResultSummaryLimitCheckResult(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1461,9 +1446,9 @@ ViStatus _VI_FUNC rsspecan_GetTETRAResultSummaryLimitCheckResult(
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, mode, 2, 3),
 			3, "Mode");
 
-    sprintf (buffer, "EVMLim%s,TETRA%s", evmLimitTypeArr[limitType], tetraMeasModArr[mode]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "EVMLim%s,TETRA%s", evmLimitTypeArr[limitType], tetraMeasModArr[mode]);
 
-    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_TETRA_RESULT_SUMMARY_LIMIT_CHECK_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_TETRA_RESULT_SUMMARY_LIMIT_CHECK_RESULT, result),
     		4, "Result");
 
 Error:
@@ -1508,7 +1493,7 @@ ViStatus _VI_FUNC rsspecan_GetTETRAACPLimitCheckResult(
 )
 {
     ViStatus	error = VI_SUCCESS;
-    ViChar	buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar	repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1519,9 +1504,9 @@ ViStatus _VI_FUNC rsspecan_GetTETRAACPLimitCheckResult(
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, 2, 4),
 			4, "Measurement Type");
 
-    sprintf (buffer, "ACP%s,ACP%s,TETRA%s", tetraACPTypeArr[acp], tetraACPChannelArr[channelNumber], tetraMeasModArr[measurementType]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "ACP%s,ACP%s,TETRA%s", tetraACPTypeArr[acp], tetraACPChannelArr[channelNumber], tetraMeasModArr[measurementType]);
 
-    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_TETRA_ACP_LIMIT_CHECK_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_TETRA_ACP_LIMIT_CHECK_RESULT, result),
     		5, "Result");
 
 Error:

@@ -313,8 +313,8 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableData(ViSession  instrSe
 {
     ViStatus    error = VI_SUCCESS;
     ViInt32     i = 0;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *pbuffer;
+    ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      *pbuffer = cmd;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -322,7 +322,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableData(ViSession  instrSe
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
     		2, "Array Size");
-    pbuffer=buffer;
+    pbuffer;
     pbuffer += sprintf (pbuffer, "CONF:WCDP:MS:CTAB:DATA %ld,%ld,%ld,%ld,%ld,%.12f",
                 codeClass[i], codeNumber[i], channelMapping[i], pilotLength[i], status[i],
                 cdpRelative[i]);
@@ -332,7 +332,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableData(ViSession  instrSe
             codeClass[i], codeNumber[i], channelMapping[i], pilotLength[i], status[i],
                 cdpRelative[i]);
 
-    checkErr(RsCore_Write(instrSession, buffer));
+    checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 

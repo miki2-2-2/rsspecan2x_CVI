@@ -302,8 +302,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUEChannelTableData(ViSession instrSession
 {
     ViStatus    error = VI_SUCCESS;
     ViInt32     i=0;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *pbuffer;
+    ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      *pbuffer = cmd;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -311,7 +311,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUEChannelTableData(ViSession instrSession
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
     		2, "Array Size");
-    pbuffer = buffer;
 	pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,%ld,%d,%ld,%ld",
 	                channelType[i], codeClass[i], codeNumber[i], modulationType[i], midableShift[i],
 					status[i], reserved1[i], reserved2[i]);
@@ -320,7 +319,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUEChannelTableData(ViSession instrSession
         pbuffer += sprintf (pbuffer, ",%ld,%ld,%ld,%ld,%ld,%d,%ld,%ld",
                 channelType[i], codeClass[i], codeNumber[i], modulationType[i], midableShift[i], status[i],
                 reserved1[i], reserved2[i]);
-    checkErr(RsCore_Write(instrSession, buffer));
+    checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));
 

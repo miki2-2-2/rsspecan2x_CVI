@@ -43,15 +43,15 @@ ViStatus _VI_FUNC rsspecan_SelectBTOTrace (ViSession instrSession,
                                            ViInt32 trace)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 3),
     		2, "Trace");
 
-    sprintf (buffer, "TR%ld", trace);
-    checkErr(rsspecan_SetAttributeViString(instrSession, buffer, RSSPECAN_ATTR_BTO_TRAC, ""));
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "TR%ld", trace);
+    checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_BTO_TRAC, ""));
 
 Error:
     (void)RsCore_UnlockSession(instrSession);
@@ -365,17 +365,17 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOTrace (ViSession instrSession,
                                               ViInt32 traceDetector)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 3),
     		2, "Trace");
-    sprintf (buffer, "TR%ld", trace);
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_BTO_TRAC_MOD, traceMode),
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "TR%ld", trace);
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_BTO_TRAC_MOD, traceMode),
     		3, "Trace Mode");
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_BTO_TRAC_DET, traceDetector),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_BTO_TRAC_DET, traceDetector),
     		4, "Trace Detector");
 
 Error:
@@ -593,7 +593,7 @@ ViStatus _VI_FUNC rsspecan_GetBTOFrequencyDeviation (ViSession instrSession,
                                                      ViReal64 *value)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -602,28 +602,28 @@ ViStatus _VI_FUNC rsspecan_GetBTOFrequencyDeviation (ViSession instrSession,
 
     switch (type){
         case RSSPECAN_VAL_MEASTYPE_MAXMIN:
-            sprintf (buffer, "F%ld,Min", frequencyDeviation);
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_BTO_MCH_DF_MAX, value),
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "F%ld,Min", frequencyDeviation);
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_MCH_DF_MAX, value),
             		4, "Value");
         break;
         case RSSPECAN_VAL_MEASTYPE_MAXMAX:
-            sprintf (buffer, "F%ld,Max", frequencyDeviation);
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_BTO_MCH_DF_MAX, value),
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "F%ld,Max", frequencyDeviation);
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_MCH_DF_MAX, value),
             		4, "Value");
         break;
         case RSSPECAN_VAL_MEASTYPE_MAXAVER:
-            sprintf (buffer, "F%ld,Aver", frequencyDeviation);
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_BTO_MCH_DF_MAX, value),
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "F%ld,Aver", frequencyDeviation);
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_MCH_DF_MAX, value),
             		4, "Value");
         break;
         case RSSPECAN_VAL_MEASTYPE_AVERMIN:
-            sprintf (buffer, "F%ld,Min", frequencyDeviation);
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_BTO_MCH_DF_AVER, value),
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "F%ld,Min", frequencyDeviation);
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_MCH_DF_AVER, value),
             		4, "Value");
         break;
         case RSSPECAN_VAL_MEASTYPE_AVERMAX:
-            sprintf (buffer, "F%ld,Max", frequencyDeviation);
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_BTO_MCH_DF_AVER, value),
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "F%ld,Max", frequencyDeviation);
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_MCH_DF_AVER, value),
             		4, "Value");
         break;
     }
@@ -961,34 +961,34 @@ ViStatus _VI_FUNC rsspecan_GetBTOCFSDeviation (ViSession instrSession,
                                                              ViReal64 *value)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     switch (type){
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
         break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
         break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
         break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, type), 3, "Type");
     }
     switch (parameter){
         case RSSPECAN_VAL_BTO_CFS_FERR_INITIAL:
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_BTO_CFST_FERR_INITIAL, value),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_CFST_FERR_INITIAL, value),
             		4, "Value");
         break;
         case RSSPECAN_VAL_BTO_CFS_FERR_BLOCK:
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_BTO_CFST_FERR_BLOCK, value),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_CFST_FERR_BLOCK, value),
             		4, "Value");
         break;
         case RSSPECAN_VAL_BTO_CFS_FERR_TOTAL:
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_BTO_CFST_FERR_TOTAL, value),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_CFST_FERR_TOTAL, value),
             		4, "Value");
         break;
         default:
@@ -1011,26 +1011,26 @@ ViStatus _VI_FUNC rsspecan_GetBTOCFSModulAccuracy (ViSession instrSession,
                                                                  ViReal64 *value)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     switch (type){
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
         break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
         break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
         break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, type), 3, "Type");
     }
     switch (parameter){
         case RSSPECAN_VAL_BTO_CFS_DEVM_RMS:
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_BTO_CFST_DEVM_RMS, value),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_CFST_DEVM_RMS, value),
             		4, "Value");
         break;
         case RSSPECAN_VAL_BTO_CFS_DEVM_99PCT:
@@ -1136,36 +1136,36 @@ ViStatus _VI_FUNC rsspecan_GetBTORelativeTransmissionPower (ViSession instrSessi
                                                             ViReal64 *value)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE]="";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     switch (modificator){
         case RSSPECAN_VAL_MEASTYPE_MIN:
-            sprintf (buffer, "Min");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Min");
         break;
         case RSSPECAN_VAL_MEASTYPE_MAX:
-            sprintf (buffer, "Max");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Max");
         break;
         case RSSPECAN_VAL_MEASTYPE_AVER:
-            sprintf (buffer, "Aver");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Aver");
         break;
         default:
             viCheckParm(RsCore_InvalidViInt32Value(instrSession, modificator), 3, "Modificator");
     }
     switch (parameter){
         case RSSPECAN_VAL_BTO_RTP_DPSK:
-            strcat(buffer,"SECTION_DPSK");
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_BTO_RTP, value),
+            strcat(repCap, "SECTION_DPSK");
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_RTP, value),
             		4, "Value");
         break;
         case RSSPECAN_VAL_BTO_RTP_GFSK:
-            strcat(buffer,"SECTION_GFSK");
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_BTO_RTP, value),
+            strcat(repCap, "SECTION_GFSK");
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_RTP, value),
             		4, "Value");
         break;
         case RSSPECAN_VAL_BTO_RTP_RATIO:
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_BTO_RTP_RATIO, value),
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_RTP_RATIO, value),
             		4, "Value");
         break;
         default:

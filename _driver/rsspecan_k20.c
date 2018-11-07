@@ -179,15 +179,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVMarkerState (ViSession instrSession,
                                                      ViBoolean markerState)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, markerNumber, 1, 4),
     		2, "Marker Number");
-    sprintf (buffer, "Win0,M%ld", markerNumber);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win0,M%ld", markerNumber);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_MARKER_ENABLED, markerState),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_MARKER_ENABLED, markerState),
     		2, "Marker State");
 
 Error:
@@ -204,15 +204,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVDeltaMarkerState (ViSession instrSession
                                                         ViBoolean deltaMarkerState)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, deltaMarkerNumber, 1, 4),
     		2, "Delta Marker Number");
-    sprintf (buffer, "Win0,DM%ld", deltaMarkerNumber);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win0,DM%ld", deltaMarkerNumber);
 
-    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_REFERENCE_MARKER_STATE, deltaMarkerState),
+    viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_MARKER_STATE, deltaMarkerState),
     		2, "Delta Marker State");
 
 Error:
@@ -844,7 +844,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACarrierLimit (ViSession instrSession,
                                                        ViReal64 limitValue)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 	ViChar      buffer2[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
     checkErr(RsCore_LockSession(instrSession));
@@ -855,20 +855,20 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACarrierLimit (ViSession instrSession,
     		3, "Limit Type");
     switch (limitType){
         case RSSPECAN_VAL_LIM_LOW:
-            sprintf (buffer, "Low");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Low");
         break;
         case RSSPECAN_VAL_LIM_UPP:
-            sprintf (buffer, "Upp");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Upp");
         break;
     }
 
     switch (measurement){
         case RSSPECAN_VAL_ATV_VCP:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_VCP, limitValue),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_VCP, limitValue),
             		4, "Limit Value");
         break;
         case RSSPECAN_VAL_ATV_VCF:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_VCF, limitValue),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_VCF, limitValue),
             		4, "Limit Value");
         break;
         case RSSPECAN_VAL_ATV_SC1PR:
@@ -878,18 +878,18 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACarrierLimit (ViSession instrSession,
             		4, "Limit Value");
         break;
         case RSSPECAN_VAL_ATV_SC1IF:
-            strcat (buffer, ",SC1");
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_FREQ_OFFSET, limitValue),
+            strcat (repCap, ",SC1");
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_FREQ_OFFSET, limitValue),
             		4, "Limit Value");
         break;
         case RSSPECAN_VAL_ATV_SC2PR:
-            strcat (buffer, ",SC2");
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_REL_POWER, limitValue),
+            strcat (repCap, ",SC2");
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_REL_POWER, limitValue),
             		4, "Limit Value");
         break;
         case RSSPECAN_VAL_ATV_SC2IF:
-            strcat (buffer, ",SC2");
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_FREQ_OFFSET, limitValue),
+            strcat (repCap, ",SC2");
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_FREQ_OFFSET, limitValue),
             		4, "Limit Value");
         break;
     }
@@ -911,7 +911,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACarrierRatioLimit (ViSession instrSessi
                                                             ViReal64 limitValue)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -921,19 +921,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACarrierRatioLimit (ViSession instrSessi
     		3, "Limit Type");
     switch (limitType){
         case RSSPECAN_VAL_LIM_LOW:
-            sprintf (buffer, "Low");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Low");
         break;
         case RSSPECAN_VAL_LIM_UPP:
-            sprintf (buffer, "Upp");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Upp");
         break;
     }
     switch (measurement){
         case RSSPECAN_VAL_ATV_MEAS_CN:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_LIM_CN, limitValue),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_LIM_CN, limitValue),
             		4, "Limit Value");
         break;
         case RSSPECAN_VAL_ATV_MEAS_CSO:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_LIM_CSO, limitValue),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_LIM_CSO, limitValue),
             		4, "Limit Value");
         break;
         case RSSPECAN_VAL_ATV_MEAS_CTB:
@@ -989,7 +989,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVAVisionModLimit (ViSession instrSession,
                                                          ViReal64 limitValue)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -999,23 +999,23 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVAVisionModLimit (ViSession instrSession,
     		3, "Limit Type");
     switch (limitType){
         case RSSPECAN_VAL_LIM_LOW:
-            sprintf (buffer, "Low");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Low");
         break;
         case RSSPECAN_VAL_LIM_UPP:
-            sprintf (buffer, "Upp");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Upp");
         break;
     }
     switch (limit){
         case RSSPECAN_VAL_ATV_VCP:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_LIM_VMOD_VCP, limitValue),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_LIM_VMOD_VCP, limitValue),
             		4, "Limit Value");
         break;
         case RSSPECAN_VAL_ATV_RPC:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_LIM_VMOD_RPC, limitValue),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_LIM_VMOD_RPC, limitValue),
             		4, "Limit Value");
         break;
         case RSSPECAN_VAL_ATV_MDEP:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_LIM_VMOD_MDEP, limitValue),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_LIM_VMOD_MDEP, limitValue),
             		4, "Limit Value");
         break;
     }
@@ -1321,14 +1321,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVDCCDFPercentMark (ViSession instrSession
                                                           ViReal64 positionValue)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, markerNumber, 1, 4),
     		2, "Marker Number");
-    sprintf (buffer, "Win0,M%ld", markerNumber);
-    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_MARKER_PROBABILITY, positionValue),
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win0,M%ld", markerNumber);
+    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_MARKER_PROBABILITY, positionValue),
     		3, "Position Value");
 
 Error:
@@ -1364,7 +1364,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVDOverLimit (ViSession instrSession,
                                                     ViReal64 limitValue)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1375,10 +1375,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVDOverLimit (ViSession instrSession,
 
     switch (limitType){
         case RSSPECAN_VAL_LIM_LOW:
-            sprintf (buffer, "Low");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Low");
         break;
         case RSSPECAN_VAL_LIM_UPP:
-            sprintf (buffer, "Upp");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Upp");
         break;
     }
 
@@ -1387,26 +1387,26 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVDOverLimit (ViSession instrSession,
         case RSSPECAN_VAL_DTV_MERP:
         case RSSPECAN_VAL_DTV_EVMR:
         case RSSPECAN_VAL_DTV_EVMP:
-            sprintf (buffer, "%s", DTVMeasArr[measurement]);
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", DTVMeasArr[measurement]);
             switch (limitType){
                 case RSSPECAN_VAL_LIM_LOW:
-                    checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_ERROR_UNIT, RSSPECAN_VAL_UNIT_DB));
-                    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_LIM_ERR_LOW, limitValue),
+                    checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_ERROR_UNIT, RSSPECAN_VAL_UNIT_DB));
+                    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_LIM_ERR_LOW, limitValue),
                     		4, "Limit Value");
                 break;
                 case RSSPECAN_VAL_LIM_UPP:
-                    checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_ERROR_UNIT, RSSPECAN_VAL_UNIT_PCT));
-                    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_LIM_ERR_UPP, limitValue),
+                    checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_ERROR_UNIT, RSSPECAN_VAL_UNIT_PCT));
+                    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_LIM_ERR_UPP, limitValue),
                     		4, "Limit Value");
                 break;
             }
         break;
         case RSSPECAN_VAL_DTV_CFOF:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_CARR_LIM_FREQ_OFFSET, limitValue),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_CARR_LIM_FREQ_OFFSET, limitValue),
             		4, "Limit Value");
         break;
         case RSSPECAN_VAL_DTV_SROF:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_LIM_SYMB_RATE_OFFSET, limitValue),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_LIM_SYMB_RATE_OFFSET, limitValue),
             		4, "Limit Value");
         break;
     }
@@ -1457,7 +1457,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVDModErrLimit (ViSession instrSession,
                                                       ViReal64 limitValue)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1468,10 +1468,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVDModErrLimit (ViSession instrSession,
 
     switch (limitType){
         case RSSPECAN_VAL_LIM_LOW:
-            sprintf (buffer, "Low");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Low");
         break;
         case RSSPECAN_VAL_LIM_UPP:
-            sprintf (buffer, "Upp");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Upp");
         break;
     }
 
@@ -1480,34 +1480,34 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVDModErrLimit (ViSession instrSession,
         case RSSPECAN_VAL_DTV_MERP:
         case RSSPECAN_VAL_DTV_EVMR:
         case RSSPECAN_VAL_DTV_EVMP:
-            sprintf (buffer, "%s", DTVMeasArr[measurement]);
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", DTVMeasArr[measurement]);
             switch (limitType){
                 case RSSPECAN_VAL_LIM_LOW:
-                    checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_ERROR_UNIT, RSSPECAN_VAL_UNIT_DB));
-                    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_LIM_ERR_LOW, limitValue),
+                    checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_ERROR_UNIT, RSSPECAN_VAL_UNIT_DB));
+                    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_LIM_ERR_LOW, limitValue),
                     		4, "Limit Value");
                 break;
                 case RSSPECAN_VAL_LIM_UPP:
-                    checkErr(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_ERROR_UNIT, RSSPECAN_VAL_UNIT_PCT));
-                    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_LIM_ERR_UPP, limitValue),
+                    checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_ERROR_UNIT, RSSPECAN_VAL_UNIT_PCT));
+                    viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_LIM_ERR_UPP, limitValue),
                     		4, "Limit Value");
                 break;
             }
         break;
         case RSSPECAN_VAL_DTV_IMB:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_LIM_IMB, limitValue),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_LIM_IMB, limitValue),
             		4, "Limit Value");
         break;
         case RSSPECAN_VAL_DTV_QERR:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_LIM_QERR, limitValue),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_LIM_QERR, limitValue),
             		4, "Limit Value");
         break;
         case RSSPECAN_VAL_DTV_SUP:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_LIM_SUPP, limitValue),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_LIM_SUPP, limitValue),
             		4, "Limit Value");
         break;
         case RSSPECAN_VAL_DTV_PJIT:
-            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_LIM_PJIT, limitValue),
+            viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_LIM_PJIT, limitValue),
             		4, "Limit Value");
         break;
     }
@@ -1546,15 +1546,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVDUnit (ViSession instrSession,
                                           ViInt32 unit)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 0, 3),
     		2, "Measurement");
-    sprintf (buffer, "%s", DTVMeasArr[measurement]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", DTVMeasArr[measurement]);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_ERROR_UNIT, unit),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_ERROR_UNIT, unit),
     		2, "Unit");
 
 Error:
@@ -1698,7 +1698,7 @@ ViStatus _VI_FUNC rsspecan_QueryCATVACarrierRatioResult (ViSession instrSession,
                                                     ViReal64 *result)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1724,8 +1724,8 @@ ViStatus _VI_FUNC rsspecan_QueryCATVACarrierRatioResult (ViSession instrSession,
             }
         break;
         default:
-            sprintf (buffer,"%s,%s", rsspecan_rngCatvAtvMeas.rangeValues[measurement].cmdString,ATVCarrierResultArr[resultType]);
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_VALUE, result),
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s,%s", rsspecan_rngCatvAtvMeas.rangeValues[measurement].cmdString,ATVCarrierResultArr[resultType]);
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_VALUE, result),
             		4, "Result");
         break;
     }
@@ -1854,8 +1854,8 @@ ViStatus _VI_FUNC rsspecan_QueryCATVACarrierLimitResult (ViSession instrSession,
                                                          ViInt32 *result)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar        repCap[RS_REPCAP_BUF_SIZE] = "";
+	ViChar      repCap2[RS_REPCAP_BUF_SIZE];
+	ViChar        repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1865,43 +1865,43 @@ ViStatus _VI_FUNC rsspecan_QueryCATVACarrierLimitResult (ViSession instrSession,
     		3, "Limit Type");
     switch (limitType){
         case RSSPECAN_VAL_LIM_LOW:
-            sprintf (buffer, "Low");
+            sprintf (repCap2, "Low");
         break;
         case RSSPECAN_VAL_LIM_UPP:
-            sprintf (buffer, "Upp");
+            sprintf (repCap2, "Upp");
         break;
     }
 
     switch (measurement){
         case RSSPECAN_VAL_ATV_VCP:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_VCP_RESULT, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap2, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_VCP_RESULT, result),
             		4, "Result");
         break;
         case RSSPECAN_VAL_ATV_VCF:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_VCF_RESULT, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap2, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_VCF_RESULT, result),
             		4, "Result");
         break;
         case RSSPECAN_VAL_ATV_SC1PR:
             //strcat (buffer,",SC1");
-			snprintf(repCap, RS_REPCAP_BUF_SIZE, "SC1,%s", buffer);
+			snprintf(repCap, RS_REPCAP_BUF_SIZE, "SC1,%s", repCap2);
             viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_REL_POWER_RESULT, result),
             		4, "Result");
         break;
         case RSSPECAN_VAL_ATV_SC1IF:
             //strcat (buffer,",SC1");
-			snprintf(repCap, RS_REPCAP_BUF_SIZE, "SC1,%s", buffer);
+			snprintf(repCap, RS_REPCAP_BUF_SIZE, "SC1,%s", repCap2);
             viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_FREQ_OFFSET_RESULT, result),
             		4, "Result");
         break;
         case RSSPECAN_VAL_ATV_SC2PR:
             //strcat (buffer,",SC2");
-			snprintf(repCap, RS_REPCAP_BUF_SIZE, "SC2,%s", buffer);
+			snprintf(repCap, RS_REPCAP_BUF_SIZE, "SC2,%s", repCap2);
             viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_REL_POWER_RESULT, result),
             		4, "Result");
         break;
         case RSSPECAN_VAL_ATV_SC2IF:
             //strcat (buffer,",SC2");
-			snprintf(repCap, RS_REPCAP_BUF_SIZE, "SC2,%s", buffer);
+			snprintf(repCap, RS_REPCAP_BUF_SIZE, "SC2,%s", repCap2);
             viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_FREQ_OFFSET_RESULT, result),
             		4, "Result");
         break;
@@ -1922,7 +1922,7 @@ ViStatus _VI_FUNC rsspecan_QueryCATVACarrierRatioLimitResult (ViSession instrSes
                                                               ViInt32 *result)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -1933,23 +1933,23 @@ ViStatus _VI_FUNC rsspecan_QueryCATVACarrierRatioLimitResult (ViSession instrSes
 
     switch (limitType){
         case RSSPECAN_VAL_LIM_LOW:
-            sprintf (buffer, "Low");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Low");
         break;
         case RSSPECAN_VAL_LIM_UPP:
-            sprintf (buffer, "Upp");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Upp");
         break;
     }
     switch (measurement){
         case RSSPECAN_VAL_ATV_MEAS_CN:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_LIM_CN_RESULT, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_LIM_CN_RESULT, result),
             		4, "Result");
         break;
         case RSSPECAN_VAL_ATV_MEAS_CSO:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_LIM_CSO_RESULT, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_LIM_CSO_RESULT, result),
             		4, "Result");
         break;
         case RSSPECAN_VAL_ATV_MEAS_CTB:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_LIM_CTB_RESULT, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_LIM_CTB_RESULT, result),
             		4, "Result");
         break;
     }
@@ -2001,7 +2001,7 @@ ViStatus _VI_FUNC rsspecan_QueryCATVAVisionModulationLimitResult (ViSession inst
                                                                   ViInt32 *result)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2012,24 +2012,24 @@ ViStatus _VI_FUNC rsspecan_QueryCATVAVisionModulationLimitResult (ViSession inst
 
     switch (limitType){
         case RSSPECAN_VAL_LIM_LOW:
-            sprintf (buffer, "Low");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Low");
         break;
         case RSSPECAN_VAL_LIM_UPP:
-            sprintf (buffer, "Upp");
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "Upp");
         break;
     }
     switch (measurement){
         case RSSPECAN_VAL_ATV_VCP:
-            strcat (buffer, ",VisCarrPow");
+            strcat (repCap, ",VisCarrPow");
         break;
         case RSSPECAN_VAL_ATV_RPC:
-            strcat (buffer, ",ResPicture");
+            strcat (repCap, ",ResPicture");
         break;
         case RSSPECAN_VAL_ATV_MDEP:
-            strcat (buffer, ",Depth");
+            strcat (repCap, ",Depth");
         break;
     }
-    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_ATV_LIM_VMOD_MDEP_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_LIM_VMOD_MDEP_RESULT, result),
     		4, "Result");
 
 Error:
@@ -2095,7 +2095,7 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDOverviewResult (ViSession instrSession,
                                                      ViReal64 *result)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2107,8 +2107,8 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDOverviewResult (ViSession instrSession,
         case RSSPECAN_VAL_DTV_MERP:
         case RSSPECAN_VAL_DTV_EVMR:
         case RSSPECAN_VAL_DTV_EVMP:
-            sprintf (buffer, "%s", DTVMeasArr[measurement]);
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_ERROR, result),
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", DTVMeasArr[measurement]);
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_ERROR, result),
             		3, "Result");
         break;
         case RSSPECAN_VAL_DTV_CFOF:
@@ -2159,7 +2159,7 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDModulationErrorsResult (ViSession instrSess
                                                              ViReal64 *result)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2171,8 +2171,8 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDModulationErrorsResult (ViSession instrSess
         case RSSPECAN_VAL_DTV_MERP:
         case RSSPECAN_VAL_DTV_EVMR:
         case RSSPECAN_VAL_DTV_EVMP:
-            sprintf (buffer, "%s", DTVMeasArr[measurement]);
-            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_ERROR, result),
+            snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", DTVMeasArr[measurement]);
+            viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_ERROR, result),
             		3, "Result");
         break;
         case RSSPECAN_VAL_DTV_IMB:
@@ -2233,7 +2233,7 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDSignalStatisticsResult (ViSession instrSess
                                                              ViReal64 *result)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
     ViString   statisticMeasType[] = {"Mean","Peak","CrestFactor"};
 
     checkErr(RsCore_LockSession(instrSession));
@@ -2242,9 +2242,9 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDSignalStatisticsResult (ViSession instrSess
     		2, "Trace");
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultType, 0, 2),
     		3, "Result Type");
-    sprintf (buffer, "TR%ld,Stat%s", traceNumber, statisticMeasType[resultType]);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "TR%ld,Stat%s", traceNumber, statisticMeasType[resultType]);
 
-    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, buffer, RSSPECAN_ATTR_STAT_RESULT, result),
+    viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_STAT_RESULT, result),
     		4, "Result");
 
 Error:
@@ -2293,8 +2293,8 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDOverviewLimitResult (ViSession instrSession
                                                           ViInt32 *result)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-	ViChar        repCap[RS_REPCAP_BUF_SIZE] = "";
+	ViChar      repCap2[RS_REPCAP_BUF_SIZE];
+	ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2304,10 +2304,10 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDOverviewLimitResult (ViSession instrSession
     		3, "Limit Type");
     switch (limitType){
         case RSSPECAN_VAL_LIM_LOW:
-            sprintf (buffer, "Low");
+            sprintf (repCap2, "Low");
         break;
         case RSSPECAN_VAL_LIM_UPP:
-            sprintf (buffer, "Upp");
+            sprintf (repCap2, "Upp");
         break;
     }
 
@@ -2316,16 +2316,16 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDOverviewLimitResult (ViSession instrSession
         case RSSPECAN_VAL_DTV_MERP:
         case RSSPECAN_VAL_DTV_EVMR:
         case RSSPECAN_VAL_DTV_EVMP:
-			snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s,%s", DTVMeasArr[measurement], buffer);
+			snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s,%s", DTVMeasArr[measurement], repCap2);
             viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_LIM_ERROR_RESULT, result),
             		4, "Result");
         break;
         case RSSPECAN_VAL_DTV_CFOF:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_CARR_LIM_FREQ_OFFSET_RESULT, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap2, RSSPECAN_ATTR_CATV_DTV_CARR_LIM_FREQ_OFFSET_RESULT, result),
             		4, "Result");
         break;
         case RSSPECAN_VAL_DTV_SROF:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_LIM_SYMB_RATE_OFFSET_RESULT, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap2, RSSPECAN_ATTR_CATV_DTV_LIM_SYMB_RATE_OFFSET_RESULT, result),
             		4, "Result");
         break;
     }
@@ -2364,8 +2364,8 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDModulationErrorsLimitResult (ViSession inst
                                                                   ViInt32 *result)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-	ViChar        repCap[RS_REPCAP_BUF_SIZE] = "";
+	ViChar      repCap[RS_REPCAP_BUF_SIZE];
+	ViChar      repCap2[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -2375,10 +2375,10 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDModulationErrorsLimitResult (ViSession inst
     		3, "Limit Type");
     switch (limitType){
         case RSSPECAN_VAL_LIM_LOW:
-            sprintf (buffer, "Low");
+            sprintf (repCap2, "Low");
         break;
         case RSSPECAN_VAL_LIM_UPP:
-            sprintf (buffer, "Upp");
+            sprintf (repCap2, "Upp");
         break;
     }
 
@@ -2387,20 +2387,20 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDModulationErrorsLimitResult (ViSession inst
         case RSSPECAN_VAL_DTV_MERP:
         case RSSPECAN_VAL_DTV_EVMR:
         case RSSPECAN_VAL_DTV_EVMP:
-			snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s,%s", DTVMeasArr[measurement], buffer);
+			snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s,%s", DTVMeasArr[measurement], repCap2);
             viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_DTV_LIM_ERROR_RESULT, result),
             		4, "Result");
         break;
         case RSSPECAN_VAL_DTV_IMB:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_LIM_IMB_RESULT, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap2, RSSPECAN_ATTR_CATV_DTV_LIM_IMB_RESULT, result),
             		4, "Result");
         break;
         case RSSPECAN_VAL_DTV_QERR:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_LIM_QERR_RESULT, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap2, RSSPECAN_ATTR_CATV_DTV_LIM_QERR_RESULT, result),
             		4, "Result");
         break;
         case RSSPECAN_VAL_DTV_SUP:
-            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_CATV_DTV_CARR_LIM_CARR_SUPP_RESULT, result),
+            viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap2, RSSPECAN_ATTR_CATV_DTV_CARR_LIM_CARR_SUPP_RESULT, result),
             		4, "Result");
         break;
         case RSSPECAN_VAL_DTV_PJIT:

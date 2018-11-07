@@ -803,20 +803,20 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterTrendPower (ViSession in
                                                                     ViInt32 axis)
 {
 	ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
     if (group == RSSPECAN_VAL_GROUP_Y)
 	{
-		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_POWER_Y_AXIS, axis),
+		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_POWER_Y_AXIS, axis),
 				4, "Axis");
 	}
 	else
 	{
-		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_POWER_X_AXIS, axis),
+		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_POWER_X_AXIS, axis),
 				4, "Axis");
 	}
 
@@ -839,20 +839,20 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterTrendTiming (ViSession i
                                                                      ViInt32 axis)
 {
 	ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
     if (group == RSSPECAN_VAL_GROUP_Y)
 	{
-		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_TIMING_Y_AXIS, axis),
+		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_TIMING_Y_AXIS, axis),
 				4, "Axis");
 	}
 	else
 	{
-		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_TIMING_X_AXIS, axis),
+		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_TIMING_X_AXIS, axis),
 				4, "Axis");
 	}
 
@@ -875,20 +875,20 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterTrendFrequency (ViSessio
                                                                         ViInt32 axis)
 {
 	ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
     if (group == RSSPECAN_VAL_GROUP_Y)
 	{
-		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_FREQUENCY_Y_AXIS, axis),
+		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_FREQUENCY_Y_AXIS, axis),
 				4, "Axis");
 	}
 	else
 	{
-		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_FREQUENCY_X_AXIS, axis),
+		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_FREQUENCY_X_AXIS, axis),
 				4, "Axis");
 	}
 
@@ -911,20 +911,20 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterTrendPhase (ViSession in
                                                                     ViInt32 axis)
 {
 	ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
     if (group == RSSPECAN_VAL_GROUP_Y)
 	{
-		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_PHASE_Y_AXIS, axis),
+		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_PHASE_Y_AXIS, axis),
 				4, "Axis");
 	}
 	else
 	{
-		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_PHASE_X_AXIS, axis),
+		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_PHASE_X_AXIS, axis),
 				4, "Axis");
 	}
 
@@ -947,13 +947,13 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterDistributionBins(
 )
 {
 	ViStatus    error   = VI_SUCCESS;
-    ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+    ViChar      repCap[RS_REPCAP_BUF_SIZE];
 
     checkErr(RsCore_LockSession(instrSession));
 
-    sprintf (buffer, "Win%ld", window);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_PULSE_PARAMETER_DISTRIBUTION_BINS, numberOfBins),
+    viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_PARAMETER_DISTRIBUTION_BINS, numberOfBins),
     		3, "Number Of Bins");
 
 Error:
