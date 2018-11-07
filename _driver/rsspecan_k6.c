@@ -269,10 +269,6 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseRFInput (ViSession instrSession,
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_AMPL_HIGHPASS_FILTER, highpassFilter),
 			4, "Highpass Filter");
 
-	/* Not yet implemented
-	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_AMPL_YIG_FILTER, YIGPreselector),
-			5, "YIG Preselector");
-												 */
     YIGPreselector;
 
 Error:
@@ -809,7 +805,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterTrendPower (ViSession in
 
     snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    if (group == RSSPECAN_VAL_GROUP_Y)
+	if (group == RSSPECAN_VAL_GROUP_Y)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_POWER_Y_AXIS, axis),
 				4, "Axis");
@@ -845,7 +841,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterTrendTiming (ViSession i
 
     snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    if (group == RSSPECAN_VAL_GROUP_Y)
+	if (group == RSSPECAN_VAL_GROUP_Y)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_TIMING_Y_AXIS, axis),
 				4, "Axis");
@@ -881,7 +877,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterTrendFrequency (ViSessio
 
     snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    if (group == RSSPECAN_VAL_GROUP_Y)
+	if (group == RSSPECAN_VAL_GROUP_Y)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_FREQUENCY_Y_AXIS, axis),
 				4, "Axis");
@@ -917,7 +913,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterTrendPhase (ViSession in
 
     snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-    if (group == RSSPECAN_VAL_GROUP_Y)
+	if (group == RSSPECAN_VAL_GROUP_Y)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_PHASE_Y_AXIS, axis),
 				4, "Axis");

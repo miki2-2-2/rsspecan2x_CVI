@@ -1138,7 +1138,7 @@ ViStatus _VI_FUNC rsspecan_CreateNoiseLimitLine(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 6),
     		2, "Limit Line Number");
 
-    sprintf(lim_line_no,"L%d",limit);
+    sprintf(lim_line_no,"L%ld",limit);
 
     viCheckParm(rsspecan_SetAttributeViString(instrSession, lim_line_no, RSSPECAN_LIMIT_NAME, name),
     		3, "Limit Line Name");
@@ -1182,7 +1182,7 @@ ViStatus _VI_FUNC rsspecan_DefineNoiseLimitLine(
     viCheckParm(RsCore_InvalidNullPointer(instrSession, xAxis), 6, "X Axis");
     viCheckParm(RsCore_InvalidNullPointer(instrSession, amplitude), 7, "Amplitude");
 
-	snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%d", limit);
+	snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%ld", limit);
 
 	if (RsCore_IsInstrumentModel(instrSession, "FSW"))
     {
@@ -1254,7 +1254,7 @@ ViStatus _VI_FUNC rsspecan_AssignNoiseLimitLineToTrace (ViSession instrSession,
 
     checkErr(RsCore_CheckInstrumentModel(instrSession, "FSW"));
 
-    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,L%ld", 1, 1);
+    snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%d,L%d", 1, 1);
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_LIMIT_ASSIGN_TRACE, assignToTrace),
     		2, "Assign to Trace");
 
@@ -1292,7 +1292,7 @@ ViStatus _VI_FUNC rsspecan_EnableNoiseLimitCheck(
 
     checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_WINDOW_SELECT, &window));
 
-    sprintf(lim_line_no,"Win%ld,L%d", window, limit);
+    sprintf(lim_line_no,"Win%ld,L%ld", window, limit);
 
     viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, lim_line_no, RSSPECAN_LIMIT_STATE, limitEnabled),
     		4, "Limit Enabled");
@@ -1338,7 +1338,7 @@ ViStatus _VI_FUNC rsspecan_MoveNoiseLimitLine(
         viCheckParm(RsCore_InvalidViReal64Range(instrSession, value, -200.0, 200.0), 4, "Value");
     }
 
-    sprintf(lim_line_no,"L%d",limit);
+    sprintf(lim_line_no,"L%ld", limit);
 
     viCheckParm(rsspecan_SetAttributeViReal64(instrSession, lim_line_no, attr[type], value),
     		4, "Value");
@@ -1366,7 +1366,7 @@ ViStatus _VI_FUNC rsspecan_CopyNoiseLimitLine(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 6),
     		2, "Limit Line Number");
 
-    sprintf(lim_line_no,"L%d",limit);
+    sprintf(lim_line_no,"L%ld",limit);
 
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, lim_line_no, RSSPECAN_LIMIT_COPY, copyTo),
     		3, "Copy To");
@@ -1396,7 +1396,7 @@ ViStatus _VI_FUNC rsspecan_ClearNoiseLimitLineResults(
 
     checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_WINDOW_SELECT, &window));
 
-    sprintf(lim_line_no,"Win%ld,L%d", window, limit);
+    sprintf(lim_line_no,"Win%ld,L%ld", window, limit);
 
     checkErr(rsspecan_SetAttributeViString(instrSession, lim_line_no, RSSPECAN_LIMIT_CLEAR, NULL));
 
@@ -1422,7 +1422,7 @@ ViStatus _VI_FUNC rsspecan_DeleteNoiseLimitLine(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 6),
     		2, "Limit Line Number");
 
-    sprintf(lim_line_no,"L%d",limit);
+    sprintf(lim_line_no,"L%ld",limit);
 
     checkErr(rsspecan_SetAttributeViString(instrSession, lim_line_no, RSSPECAN_LIMIT_DELETE, NULL));
 
@@ -1491,7 +1491,7 @@ ViStatus _VI_FUNC rsspecan_GetNoiseLimitCheckResult(
 
     checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_WINDOW_SELECT, &window));
 
-    sprintf(lim_line_no,"Win%ld,L%d", window, limit);
+    sprintf(lim_line_no,"Win%ld,L%ld", window, limit);
 
     viCheckParm(rsspecan_GetAttributeViInt32(instrSession, lim_line_no, RSSPECAN_LIMIT_CHECK_RESULT, state),
     		3, "State");

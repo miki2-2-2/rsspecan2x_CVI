@@ -740,13 +740,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KChannelTableData(
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
     		10, "Num of Elements");
-    pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%ld,%.12f",
-                channelType[i], codeClass[i], codeNumber[i], radioConfiguration[i], status[i],
+    pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%d,%.12f",
+                channelType[i], codeClass[i], codeNumber[i], radioConfiguration[i], status[i] == VI_FALSE ? 0 : 1,
                 cdpRelative[i]);
 
     for (i=1;i<numofElements; i++)
-        pbuffer += sprintf (pbuffer, ",%ld,%ld,%ld,%ld,0,0,%ld,%.12f",
-            channelType[i], codeClass[i], codeNumber[i], radioConfiguration[i], status[i],
+        pbuffer += sprintf (pbuffer, ",%ld,%ld,%ld,%ld,0,0,%d,%.12f",
+            channelType[i], codeClass[i], codeNumber[i], radioConfiguration[i], status[i] == VI_FALSE ? 0 : 1,
                 cdpRelative[i]);
 
     checkErr(RsCore_Write(instrSession, cmd));
@@ -1220,14 +1220,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KChannelTableData(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
     		10, "Num of Elements");
 
-    pbuffer += sprintf (pbuffer,  "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%ld,%.12f",
-                channelType[i], codeClass[i], codeNumber[i], mapping[i], status[i],
-                cdpRelative[i]);
+    pbuffer += sprintf (pbuffer,  "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%d,%.12f",
+                channelType[i], codeClass[i], codeNumber[i], mapping[i], status[i] == VI_FALSE ? 0 : 1, cdpRelative[i]);
 
     for (i=1;i<numofElements; i++)
-        pbuffer += sprintf (pbuffer, ",%ld,%ld,%ld,%ld,0,0,%ld,%.12f",
-            channelType[i], codeClass[i], codeNumber[i], mapping[i], status[i],
-                cdpRelative[i]);
+        pbuffer += sprintf (pbuffer, ",%ld,%ld,%ld,%ld,0,0,%d,%.12f",
+            channelType[i], codeClass[i], codeNumber[i], mapping[i], status[i] == VI_FALSE ? 0 : 1, cdpRelative[i]);
 
     checkErr(RsCore_Write(instrSession, cmd));
 
@@ -1695,14 +1693,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOChannelTableData(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
     		10, "Num of Elements");
 
-    pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%ld,%.12f",
-                channelType[i], codeClass[i], codeNumber[i], modulation[i], status[i],
-                cdpRelative[i]);
+    pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%d,%.12f",
+                channelType[i], codeClass[i], codeNumber[i], modulation[i], status[i] == VI_FALSE ? 0 : 1, cdpRelative[i]);
 
     for (i=1;i<numofElements; i++)
-        pbuffer += sprintf (pbuffer, ",%ld,%ld,%ld,%ld,0,0,%ld,%.12f",
-            channelType[i], codeClass[i], codeNumber[i], modulation[i], status[i],
-                cdpRelative[i]);
+        pbuffer += sprintf (pbuffer, ",%ld,%ld,%ld,%ld,0,0,%d,%.12f",
+            channelType[i], codeClass[i], codeNumber[i], modulation[i], status[i] == VI_FALSE ? 0 : 1, cdpRelative[i]);
 
     checkErr(RsCore_Write(instrSession, cmd));
 
@@ -2165,14 +2161,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOChannelTableData(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
     		10, "Num of Elements");
 
-    pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,%ld,0,%ld,0",
-                channelType[i], codeClass[i], codeNumber[i], mapping[i], activity[i],
-                status[i]);
+    pbuffer += sprintf (pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,%ld,0,%d,0",
+                channelType[i], codeClass[i], codeNumber[i], mapping[i], activity[i], status[i] == VI_FALSE ? 0 : 1);
 
     for (i=1;i<numofElements; i++)
-        pbuffer += sprintf (pbuffer, ",%ld,%ld,%ld,%ld,%ld,0,%ld,0",
-            channelType[i], codeClass[i], codeNumber[i], mapping[i], activity[i],
-                status[i]);
+        pbuffer += sprintf (pbuffer, ",%ld,%ld,%ld,%ld,%ld,0,%d,0",
+            channelType[i], codeClass[i], codeNumber[i], mapping[i], activity[i], status[i] == VI_FALSE ? 0 : 1);
 
     checkErr(RsCore_Write(instrSession, cmd));
 

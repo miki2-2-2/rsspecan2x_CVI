@@ -662,13 +662,13 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDBSChannelTableData (ViSession instrSe
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
     		2, "Array Size");
-    pbuffer += sprintf (pbuffer, "CONF:WCDP:CTAB:DATA %ld,%ld,%d,%ld,%ld,%d,%ld,%.12f",
-                codeClass[i], codeNumber[i], TFCI[i], timingOffset[i], pilotLength[i], channelType[i],
-                status[i], CDPRelative[i]);
+    pbuffer += sprintf (pbuffer, "CONF:WCDP:CTAB:DATA %ld,%ld,%d,%ld,%ld,%ld,%d,%.12f",
+                codeClass[i], codeNumber[i], TFCI[i] > 0 ? 1 : 0, timingOffset[i], pilotLength[i], channelType[i],
+                status[i] > 0 ? 1 : 0, CDPRelative[i]);
     for (i=1;i<arraySize; i++)
-        pbuffer += sprintf (pbuffer, ",%ld,%ld,%d,%ld,%ld,%d,%ld,%.12f",
-            codeClass[i], codeNumber[i], TFCI[i], timingOffset[i], pilotLength[i], channelType[i],
-                status[i], CDPRelative[i]);
+        pbuffer += sprintf (pbuffer, ",%ld,%ld,%d,%ld,%ld,%ld,%d,%.12f",
+            codeClass[i], codeNumber[i], TFCI[i] > 0 ? 1 : 0, timingOffset[i], pilotLength[i], channelType[i],
+                status[i] > 0 ? 1 : 0, CDPRelative[i]);
     checkErr(RsCore_Write(instrSession, cmd));
 
     checkErr(rsspecan_CheckStatus (instrSession));

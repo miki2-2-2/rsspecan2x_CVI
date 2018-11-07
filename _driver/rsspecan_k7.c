@@ -254,7 +254,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodResultType(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, demodulationType, 0, 8),
     		2, "Demodulation Type");
 
-    if (rsspecan_IsFSV (instrSession))
+	if (rsspecan_IsFSV (instrSession))
 	{
         sprintf (cmd, "SENS:ADEM:%s:TYPE %s,%s,%s,%s,%s,%s",
             ADEMTypeArr[demodulationType], resultTypeArr[resultTypes[0]],
@@ -262,18 +262,20 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodResultType(
 		resultTypeArr[resultTypes[4]],resultTypeArr[resultTypes[5]]);
 	}
 	else
+	{
 		if (!RsCore_IsInstrumentModel(instrSession, "FSL"))
-	    {
-	        sprintf (cmd, "SENS:ADEM:%s:TYPE %s,%s,%s",
-	            ADEMTypeArr[demodulationType], resultTypeArr[resultTypes[0]],
-	        resultTypeArr[resultTypes[1]], resultTypeArr[resultTypes[2]]);
-	    }
-	    else
-	    {
-	        sprintf (cmd, "SENS:ADEM:%s:TYPE %s,%s,%s,%s",
-	            ADEMTypeArr[demodulationType], resultTypeArr[resultTypes[0]],
-	        resultTypeArr[resultTypes[1]], resultTypeArr[resultTypes[2]],resultTypeArr[resultTypes[3]]);
-	    }
+		{
+			sprintf(cmd, "SENS:ADEM:%s:TYPE %s,%s,%s",
+				ADEMTypeArr[demodulationType], resultTypeArr[resultTypes[0]],
+				resultTypeArr[resultTypes[1]], resultTypeArr[resultTypes[2]]);
+		}
+		else
+		{
+			sprintf(cmd, "SENS:ADEM:%s:TYPE %s,%s,%s,%s",
+				ADEMTypeArr[demodulationType], resultTypeArr[resultTypes[0]],
+				resultTypeArr[resultTypes[1]], resultTypeArr[resultTypes[2]], resultTypeArr[resultTypes[3]]);
+		}
+	}
     checkErr(RsCore_Write(instrSession, cmd));
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -361,7 +363,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodFilterManual (ViSession instrSession,
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, filterType, RSSPECAN_VAL_FMDEM_FILTER_HP, RSSPECAN_VAL_FMDEM_FILTER_LP),
 			2, "Filter Type");
 
-    if (filterType == RSSPECAN_VAL_FMDEM_FILTER_HP)
+	if (filterType == RSSPECAN_VAL_FMDEM_FILTER_HP)
     {
         viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Highpass", RSSPECAN_ATTR_ADEM_FILT_FREQ_MANUAL, filterFrequency),
         		3, "Filter Frequency");
@@ -1008,19 +1010,8 @@ ViStatus _VI_FUNC rsspecan_GetADemodOffset(
 
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultType, 0, 1),
     		2, "Result Type");
-    /*
-    switch (resultType)
-    {
-        case RSSPECAN_VAL_FMDEM_IMM:
-            checkErr(RsCore_Write(instrSession, "*CLS;:SENS:ADEM:FM:OFFS? IMM"));
-        break;
-        case RSSPECAN_VAL_FMDEM_AVG:
-            checkErr(RsCore_Write(instrSession, "*CLS;:SENS:ADEM:FM:OFFS? AVER"));
-        break;
-    }
-
-    checkErr(viScanf (instrSession, "%le", value));*/
-    snprintf(repCap, RS_REPCAP_BUF_SIZE, "FMOff%s", fmOffsetArr[resultType]);
+    
+	snprintf(repCap, RS_REPCAP_BUF_SIZE, "FMOff%s", fmOffsetArr[resultType]);
 
     viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_ADEM_FM_OFFSET, value),
     		3, "Value");

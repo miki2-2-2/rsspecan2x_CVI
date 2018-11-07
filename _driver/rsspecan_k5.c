@@ -495,14 +495,14 @@ ViStatus _VI_FUNC rsspecan_ReadGsmLevelTime (ViSession instrSession,
 
     checkErr(RsCore_QueryViStringWithOpc(instrSession, "READ:AUTO:LEVT?", timeout, RS_MAX_MESSAGE_BUF_SIZE, response));
     sscanf(response, "%[^,],%le,%le,%le,%le",
-                &tmp_stat_text, &tmp_signalPowerdBm, &tmp_triggerTimes, &tmp_triggerLeveldBmV, &tmp_reserved);
+                tmp_stat_text, &tmp_signalPowerdBm, &tmp_triggerTimes, &tmp_triggerLeveldBmV, &tmp_reserved);
 
 	if ((tmp_status = RsCore_FindStringIndex(statusArr, tmp_stat_text)) < 0)
 	{
 		viCheckErrElab(RS_ERROR_UNEXPECTED_RESPONSE, "Unknown Status response");
 	}
 
-    if (status) *status = (tmp_status==0)?VI_FALSE:VI_TRUE;
+    if (status) *status = (tmp_status==0) ? VI_FALSE : VI_TRUE;
     if (signalPowerdBm) *signalPowerdBm=tmp_signalPowerdBm;
     if (triggerTimes) *triggerTimes=tmp_triggerTimes;
     if (triggerLeveldBmV) *triggerLeveldBmV=tmp_triggerLeveldBmV;

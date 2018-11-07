@@ -532,10 +532,10 @@ Error:
 ViStatus rsspecan_C2kSetCount_RangeTableCallback(ViSession instrSession, ViConstString repCapName, RsCoreAttributePtr attr, RsCoreRangeTablePtr* rangeTable)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar     mode[256]="";
+    ViChar     mode[RS_MAX_MESSAGE_LEN]="";
 
-    checkErr(rsspecan_GetAttributeViString(instrSession,"", RSSPECAN_ATTR_GET_INSTR_MODE, 256, mode));
-    if (!(strcmp(mode,"BC2K")&&strcmp(mode,"M2CK")))
+    checkErr(rsspecan_GetAttributeViString(instrSession,"", RSSPECAN_ATTR_GET_INSTR_MODE, RS_MAX_MESSAGE_LEN, mode));
+    if ((strcmp(mode,"BC2K") == 0) || (strcmp(mode,"M2CK") == 0))
         *rangeTable = &rsspecan_rngC2KSetCount;
     else
         *rangeTable = &rsspecan_rngBDOSetCount;
@@ -588,7 +588,7 @@ ViStatus rsspecan_InpAmpEattMan_RangeTableCallback(ViSession instrSession, ViCon
 {
     ViStatus    error = VI_SUCCESS;
 
-    if (RsCore_IsInstrumentModel(instrSession, "FSV"))
+	if (RsCore_IsInstrumentModel(instrSession, "FSV"))
     {
         *rangeTable = &rsspecan_rngInpAmptEattManFSV;
     }
@@ -596,7 +596,7 @@ ViStatus rsspecan_InpAmpEattMan_RangeTableCallback(ViSession instrSession, ViCon
     {
         *rangeTable = &rsspecan_rngInpAmptEattManFSW;
     }
-    else
+	else
     {
         *rangeTable = &rsspecan_rngInpAmptEattMan;
     }
@@ -794,7 +794,7 @@ ViStatus rsspecan_Attenuation_WriteCallback(ViSession instrSession, ViConstStrin
 	switch (attr->dataType)
 	{
 	case RS_VAL_INT32:
-		snprintf(buffer, RS_MAX_MESSAGE_BUF_SIZE, "%s %d.0", cmd, (ViInt32)*(ViReal64 *)value);
+		snprintf(buffer, RS_MAX_MESSAGE_BUF_SIZE, "%s %ld.0", cmd, (ViInt32)*(ViReal64 *)value);
 		break;
 	case RS_VAL_REAL64:
 		snprintf(buffer, RS_MAX_MESSAGE_BUF_SIZE, "%s %.0f", cmd, *(ViReal64 *)value);

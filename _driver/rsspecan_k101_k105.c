@@ -2914,8 +2914,8 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkBitstream(
                     nType++;
                     break;
                 case 3: // stream
-                    sscanf(pValue, "%x", &nSymbolValue);
-					p2bitStreams += sprintf (p2bitStreams, "%d", nSymbolValue);
+                    sscanf(pValue, "%lx", &nSymbolValue);
+					p2bitStreams += sprintf (p2bitStreams, "%ld", nSymbolValue);
 
                     nCurrentSymbol++;
                     if ( nCurrentSymbol >= nSymbols )

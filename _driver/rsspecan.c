@@ -18,7 +18,6 @@
 #include <math.h>
 #include <float.h>
 #include "rsspecan.h"
-#include "time.h"
 #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__))
     #define ANSI
 #endif
@@ -2299,7 +2298,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureListPowerSequence (ViSession instrSession,
 
     *--pbuffer = '\0'; // Remove remaining comma
 
-    pbuffer += sprintf (pbuffer, "\n");
+    sprintf (pbuffer, "\n");
 
 	checkErr(RsCore_Write(instrSession, pwrite_buffer));
 
@@ -2358,7 +2357,7 @@ ViStatus _VI_FUNC rsspecan_QueryListPowerSequence (ViSession instrSession,
 	viCheckAlloc(pwrite_buffer = (ViChar*)malloc((size_t)(20 + 240 * noofListItems)));
     pbuffer = pwrite_buffer;
 
-    pbuffer += sprintf (pbuffer, "*CLS;:SENS%ld:LIST:POW:SEQ? ", window);
+    pbuffer += sprintf (pbuffer, ":SENS%ld:LIST:POW:SEQ? ", window);
 
     for (i=0; i<noofListItems; i++)
         {
@@ -2377,7 +2376,6 @@ ViStatus _VI_FUNC rsspecan_QueryListPowerSequence (ViSession instrSession,
 
     *--pbuffer = '\0'; // Remove remaining comma
 
-    pbuffer += sprintf (pbuffer, "\n");
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, pwrite_buffer, noofListItems, listPowerResults, NULL));
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -3512,7 +3510,7 @@ ViStatus _VI_FUNC rsspecan_QueryNdBFrequencies (ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:NDBD:FREQ?", window);
 	checkErr(RsCore_QueryViString(instrSession, cmd, response));
-	sscanf(response, "%Le,%Le", ndBFrequencyLower, ndBFrequencyHigher);
+	sscanf(response, "%le,%le", ndBFrequencyLower, ndBFrequencyHigher);
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
@@ -3541,7 +3539,7 @@ ViStatus _VI_FUNC rsspecan_QueryNdBTimes (ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:NDBD:TIME?", window);
 	checkErr(RsCore_QueryViString(instrSession, cmd, response));
-	sscanf(response, "%Le,%Le", n_dBTimeLower, n_dBTimeHigher);
+	sscanf(response, "%le,%le", n_dBTimeLower, n_dBTimeHigher);
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -8612,7 +8610,7 @@ ViStatus _VI_FUNC rsspecan_FileDirectory (ViSession instrSession,
     checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, directory), 2, "Directory");
-    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "*CLS;:MMEM:CAT? '%s'", directory);
+    snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "MMEM:CAT? '%s'", directory);
     checkErr(rsspecan_QueryViString(instrSession, cmd, bufferSize, output));
 
 Error:
@@ -8633,7 +8631,6 @@ ViStatus _VI_FUNC rsspecan_FileDirectoryPath (ViSession instrSession,
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViUInt32    count = 0;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -8642,7 +8639,7 @@ ViStatus _VI_FUNC rsspecan_FileDirectoryPath (ViSession instrSession,
 	checkErr(rsspecan_QueryViString(instrSession, cmd, bufferSize, output));
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);  // TODO: Missing free(pbuffer)
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -10288,7 +10285,7 @@ ViStatus _VI_FUNC rsspecan_GetCurrentResults(ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "TRAC%ld:IMM:RES?", window);
 	checkErr(RsCore_QueryViString(instrSession, cmd, response));
-	sscanf(response, "%Le,%Le", xValue, yValue);
+	sscanf(response, "%le,%le", xValue, yValue);
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -12823,7 +12820,7 @@ ViStatus _VI_FUNC rsspecan_QueryHDist (ViSession instrSession,
      viCheckParm(RsCore_InvalidNullPointer(instrSession, harmonicDistortion_in_dB), 3, "Harmonic Distortion in dB");
 
 	 checkErr(RsCore_QueryViString(instrSession, ":CALC:MARK:FUNC:HARM:DIST? TOT", response));
-	 sscanf(response, "%Le,%Le", harmonicDistortion_in_percent, harmonicDistortion_in_dB);
+	 sscanf(response, "%le,%le", harmonicDistortion_in_percent, harmonicDistortion_in_dB);
 
     checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -16348,7 +16345,6 @@ ViStatus _VI_FUNC rsspecan_ErrorListSpecificType (ViSession instrSession,
     ViStatus    error   = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
     ViChar      *pbuffer = NULL;
-    ViUInt32    retCnt = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 

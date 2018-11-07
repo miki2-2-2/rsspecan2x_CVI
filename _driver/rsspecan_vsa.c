@@ -929,7 +929,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSADataCaptureSettings(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar      repCap[RS_REPCAP_BUF_SIZE];
-    ViInt32     length;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -944,7 +943,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSADataCaptureSettings(
         break;
 
         case RSSPECAN_VAL_VSA_DEM_RLEN_SYMBOL:
-            length= (ViInt32)captureLength;
             checkErr(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_VSA_DEMODULATION_REC_LENGTH_AUTO, VI_FALSE));
             viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_VSA_DEMODULATION_REC_LENGTH_SYM,
                  (ViInt32) captureLength), 4, "Capture Length");
@@ -2162,7 +2160,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAUserDefinedMeasurementFilter(
 	{
 		checkErr(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_VSA_MEASUREMENT_FILTER_STATE, VI_FALSE));
 	}
-    else
+	else
 	{
 		checkErr(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_VSA_MEASUREMENT_FILTER_STATE, VI_TRUE));
 		checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_VSA_MEASUREMENT_FILTER_TYPE, RSSPECAN_VAL_VSA_MEAS_FILTER_TYPE_USER));
@@ -3867,8 +3865,7 @@ ViStatus _VI_FUNC rsspecan_GetVSAResult(ViSession   instrSession,
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, RSSPECAN_VAL_VSA_MPOW, RSSPECAN_VAL_VSA_SR_ERROR),
     		3, "Type");
 
-    if (!rsspecan_IsFSV (instrSession))
-
+	if (!rsspecan_IsFSV (instrSession))
 	{
 		switch(type){
 	        case RSSPECAN_VAL_VSA_MPOW:

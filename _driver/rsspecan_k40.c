@@ -825,7 +825,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseCarrierFrequencyOffsetTable(
         viCheckParm(RsCore_InvalidViInt32Range(instrSession, fft, RSSPECAN_VAL_BAND_TYPE_NORM, RSSPECAN_VAL_BAND_TYPE_IQFFT),
         		5, "FFT");
 
-        sprintf(range,"R%d",subband);
+        sprintf(range,"R%ld",subband);
 
         viCheckParm(rsspecan_SetAttributeViReal64(instrSession, range, RSSPECAN_ATTR_PHASE_LIST_RANG_BAND, rbw),
         		3, "RBW");
@@ -1140,7 +1140,7 @@ ViStatus _VI_FUNC rsspecan_ClearPhaseLimitLineResults(
     viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
     		2, "Limit");
 
-    sprintf(lim_line_no,"Win1,L%d",limit);
+    sprintf(lim_line_no,"Win1,L%ld",limit);
 
     checkErr(rsspecan_SetAttributeViString(instrSession, lim_line_no, RSSPECAN_LIMIT_CLEAR, NULL));
 

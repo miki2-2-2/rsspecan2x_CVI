@@ -138,7 +138,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRADataCaptureSettings(
 
     checkErr(RsCore_LockSession(instrSession));
 
-    if (captureTimeUnit == RSSPECAN_VAL_TETRA_UNIT_SECONDS)
+	if (captureTimeUnit == RSSPECAN_VAL_TETRA_UNIT_SECONDS)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_SWEEP_TIME, captureTime),
 				2, "Capture Time");

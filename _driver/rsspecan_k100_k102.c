@@ -2368,7 +2368,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkBitstream (ViSession instrSession,
                     nType++;
                     break;
                 case 5: // stream
-                    sscanf(pValue, "%x", &nSymbolValue);
+                    sscanf(pValue, "%lx", &nSymbolValue);
                     bitStreams[nIndexSymbol + nCurrentSymbol] = (ViChar) nSymbolValue;
 
                     nCurrentSymbol++;
