@@ -1163,7 +1163,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10MeasurementResults(
     ViStatus    error = VI_SUCCESS;
     ViChar  buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViInt32     old_timeout = 0;
-    
+
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(result == NULL, 5, "Result");
@@ -1241,7 +1241,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10MeasurementResults(
 {
     ViStatus    error = VI_SUCCESS;
     ViChar  buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    
+
     checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(result == NULL, 5, "Result");

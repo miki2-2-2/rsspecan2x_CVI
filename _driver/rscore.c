@@ -8,7 +8,7 @@
 
 Modification History:
 
-3.00, (build 33) 2018-11-06 Miloslav Macko
+3.00, (build 34) 2018-11-06 Miloslav Macko
 	- Reviewed and reworked to reflect the features of LabVIEW and IVI.NET core
 	- Incompatible with rsidr_core 2.xx, therefore the file name and function prefixes change to be able to co-exist with rsidr_core 2.xx :
 	- File names changed to rscore.h and rscore.c
@@ -7255,13 +7255,37 @@ Error:
 }
 
 /*****************************************************************************************************/
+/*  RsCore_QueryViStringUnknownLengthToUserBuffer
+	Queries string response from the instrument. The response length is unlimited,
+	but maximum of bufferSize length is copied to the provided responseString.
+	The response is trimmed for trailing LF-characters and always null-terminated.
+	- responseLength returns the true length of the response and can be set to NULL
+	Note! Do not use for querying binary data, for that purpose use the RsCore_QueryBinaryDataBlock... functions
+******************************************************************************************************/
+ViStatus RsCore_QueryViStringUnknownLengthToUserBuffer(ViSession instrSession, ViConstString query, ViInt32 bufferSize, ViChar* responseString, ViInt32 *responseLength)
+{
+	ViStatus error = VI_SUCCESS;
+	ViChar *data = NULL;
+
+	checkErr(RsCore_QueryViStringUnknownLength(instrSession, query, &data));
+	checkErr(RsCore_CopyToUserBufferAsciiData(instrSession, responseString, bufferSize, data));
+
+	if (responseLength)
+		*responseLength = (ViInt32)strlen(data);
+
+Error:
+	if (data) free(data);
+	return error;
+}
+
+/*****************************************************************************************************/
 /*  RsCore_QueryViStringWithOpc
-    Sends an OPC-synchronized query to the instrument. The response length is limited.
-    The response is trimmed for any leading LF characters and terminated with null-character
-    Set the parameter timeoutMs to 0 in order to use the session OPC timeout.
-    Because of the order of commands, this function also calls the driver's CheckStatus callback.
-    If you use this function, do not call the CheckStatus anymore
-    Note! Do not use for querying binary data, for that purpose use the RsCore_QueryBinaryDataBlock...withOpc functions
+	Sends an OPC-synchronized query to the instrument. The response length is limited.
+	The response is trimmed for any leading LF characters and terminated with null-character
+	Set the parameter timeoutMs to 0 in order to use the session OPC timeout.
+	Because of the order of commands, this function also calls the driver's CheckStatus callback.
+	If you use this function, do not call the CheckStatus anymore
+	Note! Do not use for querying binary data, for that purpose use the RsCore_QueryBinaryDataBlock...withOpc functions
 ******************************************************************************************************/
 ViStatus RsCore_QueryViStringWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs, ViInt32 bufferSize, ViChar* responseString)
 {
@@ -7288,6 +7312,33 @@ ViStatus RsCore_QueryViStringUnknownLengthWithOpc(ViSession instrSession, ViCons
 	RsCore_TrimString(*responseString, RS_VAL_TRIM_WHITESPACES);
 
 Error:
+	return error;
+}
+
+/*****************************************************************************************************/
+/*  RsCore_QueryViStringUnknownLengthToUserBufferWithOpc
+	Sends an OPC-synchronized query to the instrument. The response length is limited.
+	The response is trimmed for any leading LF characters and terminated with null-character
+	Set the parameter timeoutMs to 0 in order to use the session OPC timeout.
+	Because of the order of commands, this function also calls the driver's CheckStatus callback.
+	If you use this function, do not call the CheckStatus anymore
+	- responseLength returns the true length of the response and can be set to NULL
+	- Do not use for querying binary data, for that purpose use the RsCore_QueryBinaryDataBlock...withOpc functions
+******************************************************************************************************/
+ViStatus RsCore_QueryViStringUnknownLengthToUserBufferWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs,
+	ViInt32 bufferSize, ViChar* responseString, ViInt32 *responseLength)
+{
+	ViStatus error = VI_SUCCESS;
+	ViChar *data = NULL;
+
+	checkErr(RsCore_QueryViStringUnknownLengthWithOpc(instrSession, query, timeoutMs, &data));
+	checkErr(RsCore_CopyToUserBufferAsciiData(instrSession, responseString, bufferSize, data));
+
+	if (responseLength)
+		*responseLength = (ViInt32)strlen(data);
+
+Error:
+	if (data) free(data);
 	return error;
 }
 

@@ -403,7 +403,16 @@ extern "C" {
 // Assign status to the error variable. If status is negative,
 // jump to the Error label.
 #ifndef checkErr
-#define checkErr(fCall)      error = (fCall); if (error < 0) goto Error;
+#define checkErr(fCall)      if (error = (fCall), error < 0) goto Error;
+#endif
+
+// checkErrKeepWarn(status) -*/
+// Assign status to the error variable. If negative, jump to the Error label.
+// If the status is 0, keep the previous warning status.
+// If the status is > 0, the old warning is overwritten
+#ifndef checkErrKeepWarn
+#define checkErrKeepWarn(fCall) if (warning = error, error = (fCall), error < 0) goto Error;\
+								else error = (error == 0) ? warning : error;
 #endif
 
 // checkStatusOnErr(status)
@@ -411,7 +420,7 @@ extern "C" {
 // If status is VI_ERROR_TMO or RS_ERROR_INSTRUMENT_STATUS, jump to the CheckStatus.
 // Otherwise acts as the checkErr
 #ifndef checkStatusOnErr
-#define checkStatusOnErr(fCall)      error = (fCall);if (error < 0)\
+#define checkStatusOnErr(fCall)      error = (fCall); if (error < 0)\
 										{ if (error != RS_ERROR_INSTRUMENT_STATUS && error != VI_ERROR_TMO)\
 											goto Error; else goto CheckStatus; }
 #endif
@@ -1135,16 +1144,13 @@ ViStatus RsCore_WriteAsciiViBooleanArray(ViSession instrSession, ViConstString c
 ViStatus RsCore_ReadViStringUnknownLength(ViSession instrSession, ViChar** responseString);
 
 ViStatus RsCore_QueryViString(ViSession instrSession, ViConstString query, ViChar* responseString);
-
-ViStatus RsCore_QueryViStringShort(ViSession instrSession,
-                                   ViConstString query,
-                                   ViChar* responseString);
-
+ViStatus RsCore_QueryViStringShort(ViSession instrSession, ViConstString query, ViChar* responseString);
 ViStatus RsCore_QueryViStringUnknownLength(ViSession instrSession, ViConstString query, ViChar** responseString);
+ViStatus RsCore_QueryViStringUnknownLengthToUserBuffer(ViSession instrSession, ViConstString query, ViInt32 bufferSize, ViChar* responseString, ViInt32 *responseLength);
 
 ViStatus RsCore_QueryViStringWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs, ViInt32 bufferSize, ViChar* responseString);
-
 ViStatus RsCore_QueryViStringUnknownLengthWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs, ViChar** responseString);
+ViStatus RsCore_QueryViStringUnknownLengthToUserBufferWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs, ViInt32 bufferSize, ViChar* responseString, ViInt32 *responseLength);
 
 ViStatus RsCore_QueryViInt32(ViSession instrSession,
                              ViConstString query,

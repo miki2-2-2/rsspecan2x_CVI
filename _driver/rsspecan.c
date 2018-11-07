@@ -5363,8 +5363,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureFrequencyMaskShape (ViSession instrSession,
 {
     ViStatus    error = VI_SUCCESS;
     ViChar   buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *p2buf = NULL;
-    ViInt32     i = 0;
     ViInt32     win = 1;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -5376,32 +5374,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureFrequencyMaskShape (ViSession instrSession,
     viCheckParm(rsspecan_SetAttributeViInt32(instrSession, buffer, RSSPECAN_ATTR_FREQUENCY_MASK_TRIGGER_MODE, mode),
     		2, "Mode");
 
-    p2buf = buffer + sprintf (buffer, "CALC:MASK:LOW ");
-
-    for (i = 0; i < arraySize * 2; i++)
-        p2buf += sprintf (p2buf, "%.12lG,", lower[i]);
-
-    *p2buf = '\0';
-    *--p2buf = '\n';
-
-    checkErr(RsCore_Write(instrSession, buffer));
-
+    checkErr(RsCore_WriteAsciiViReal64Array(instrSession, "CALC:MASK:LOW ", lower, arraySize));
     checkErr(rsspecan_CheckStatus (instrSession));
-
-    p2buf = buffer + sprintf (buffer, "CALC:MASK:UPP ");
-
-    for (i = 0; i < arraySize * 2; i++)
-        p2buf += sprintf (p2buf, "%.12lG,", upper[i]);
-
-    *p2buf = '\0';
-    *--p2buf = '\n';
-
-    checkErr(RsCore_Write(instrSession, buffer));
-
+	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, "CALC:MASK:UPP ", upper, arraySize));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);  // TODO: Missing free(p2buf)
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -7707,7 +7686,7 @@ ViStatus _VI_FUNC rsspecan_QueryWindowIndex (ViSession instrSession,
     ViStatus    error   = VI_SUCCESS;
 	ViChar      cmd[RS_MAX_MESSAGE_BUF_SIZE];
 	ViChar      response[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar      *pbuff = NULL;
+    ViChar      *pbuff;
 
     checkErr(RsCore_LockSession(instrSession));
 
@@ -7719,7 +7698,7 @@ ViStatus _VI_FUNC rsspecan_QueryWindowIndex (ViSession instrSession,
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
-    (void)RsCore_UnlockSession(instrSession);  // TODO: Missing free(pbuff)
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -7850,7 +7829,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTransducerFactor (ViSession instrSession,
 {
     ViStatus    error = VI_SUCCESS;
     ViChar      repCap[RS_MAX_MESSAGE_BUF_SIZE] = "";
-    ViChar      *pbuf = NULL;
+    ViChar      *pbuf;
     ViChar      *p2buf = NULL;
     ViInt32     i;
 
@@ -7892,7 +7871,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTransducerFactor (ViSession instrSession,
 
 Error:
     if (p2buf) free (p2buf);
-    (void)RsCore_UnlockSession(instrSession);  // TODO: Missing free(pbuf)
+    (void)RsCore_UnlockSession(instrSession);
     return error;
 }
 
@@ -8660,10 +8639,9 @@ ViStatus _VI_FUNC rsspecan_FileDirectoryPath (ViSession instrSession,
 {
     ViStatus    error = VI_SUCCESS;
     ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-    ViChar      *pbuffer = NULL;
     ViUInt32    count = 0;
 
-    checkErr(RsCore_LockSession(instrSession));
+	checkErr(RsCore_LockSession(instrSession));
 
     viCheckParm(RsCore_InvalidNullPointer(instrSession, directory), 2, "Directory");
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":MMEM:CAT:LONG? '%s'", directory);
@@ -13200,23 +13178,17 @@ ViStatus _VI_FUNC rsspecan_QueryViString (ViSession instrSession,
                                           ViChar _VI_FAR value[])
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar* response = NULL;
+	ViStatus warning = VI_SUCCESS;
 
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, (ViInt32)strlen(command), 1, 10000000), 2, "Command (null string length)");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, value), 3, "Value");
 
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, command, &response));
-
-	checkErr(rsspecan_CheckStatus(instrSession));
-
-	checkErr(RsCore_CopyToUserBufferAsciiData(instrSession, value, bufferSize, response));
+	checkErr(RsCore_QueryViStringUnknownLengthToUserBuffer(instrSession, command, bufferSize, value, NULL));
+	checkErrKeepWarn(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (response)
-		free(response);
-
 	(void)RsCore_UnlockSession(instrSession);
 	return error;
 }

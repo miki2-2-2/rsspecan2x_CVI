@@ -1800,8 +1800,7 @@ ViStatus _VI_FUNC rsspecan_QueryPulseResultPower (ViSession instrSession,
 
     snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS:PULS:POW:%s%s? %s", PulsePowerResultArr[parameter],
 										PulseResultTypeArr[resultType], PulseQueryRangeArr[queryRange]);
-	
-	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
+    checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
     checkErr(rsspecan_CheckStatus (instrSession));
 
 Error:
