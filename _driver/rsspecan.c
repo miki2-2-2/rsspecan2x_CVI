@@ -6063,7 +6063,6 @@ ViStatus _VI_FUNC rsspecan_ExternalMixerConversionLossTableCatalog (ViSession in
                                                                     ViChar CVLNamesList[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViUInt32    retCnt = 0;
     ViChar      *buf = NULL;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -6748,7 +6747,6 @@ ViStatus _VI_FUNC rsspecan_GetLimitLineCatalog (ViSession instrSession,
                                                 ViChar limitLinesList[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViUInt32    retCnt = 0;
     ViChar      *buf=NULL;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -7266,7 +7264,6 @@ ViStatus _VI_FUNC rsspecan_GetDisplayThemeCatalog (ViSession instrSession,
                                                    ViChar themeList[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViUInt32    retCnt = 0;
     ViChar      *buf=NULL;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -7911,7 +7908,6 @@ ViStatus _VI_FUNC rsspecan_GetTransducerFactorCatalog (ViSession instrSession,
                                                        ViChar transducerFactorsList[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViUInt32    retCnt = 0;
     ViChar      *buf=NULL;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -8121,7 +8117,6 @@ ViStatus _VI_FUNC rsspecan_QueryTransducerSetCatalog (ViSession instrSession,
                                                       ViChar transducerSetsList[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViUInt32    retCnt = 0;
     ViChar      *buf=NULL;
 
     checkErr(RsCore_LockSession(instrSession));
@@ -13949,7 +13944,6 @@ ViStatus _VI_FUNC rsspecan_SEStandardCatalog (ViSession instrSession,
                                               ViChar catalogList[])
 {
     ViStatus    error = VI_SUCCESS;
-    ViUInt32    retCnt = 0;
     ViChar      *buf=NULL;
 
     checkErr(RsCore_LockSession(instrSession));

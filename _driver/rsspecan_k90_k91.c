@@ -931,7 +931,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanDemodulation(ViSession   instrSession,
                                                     ViInt32 maxNumberofDataSymbols)
 {
     ViStatus    error = VI_SUCCESS;
-    ViChar      options[RS_MAX_MESSAGE_BUF_SIZE] = "";
     ViInt32     is_k91 = 0;
 
     checkErr(RsCore_LockSession(instrSession));

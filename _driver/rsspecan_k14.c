@@ -1090,7 +1090,6 @@ ViStatus _VI_FUNC rsspecan_ReadPersistenceSpectrumTraceData (ViSession instrSess
                                                              ViInt32 *returnedValues)
 {
     ViStatus    error   = VI_SUCCESS;
-    ViChar      trace[RS_MAX_MESSAGE_BUF_SIZE]="";
 
     checkErr(RsCore_LockSession(instrSession));
 

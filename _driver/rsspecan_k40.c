@@ -1793,7 +1793,6 @@ ViStatus _VI_FUNC rsspecan_GetPhaseDecadeSpotNoiseResult (ViSession instrSession
                                                  ViInt32 *returnedValues)
 {
 	ViStatus    error = VI_SUCCESS;
-    ViInt32     cnt = 0;
 
     checkErr(RsCore_LockSession(instrSession));
 

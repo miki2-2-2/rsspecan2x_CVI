@@ -202,7 +202,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodSet(
 )
 {
     ViStatus    error   = VI_SUCCESS;
-    ViUInt32    retCnt = 0;
     ViChar      buffer[RS_MAX_MESSAGE_BUF_SIZE];
     ViInt32     rec_len=130560;
 
