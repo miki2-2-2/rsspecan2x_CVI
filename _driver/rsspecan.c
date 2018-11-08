@@ -16106,7 +16106,7 @@ ViStatus _VI_FUNC rsspecan_reset(ViSession instrSession)
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(RsCore_Write(instrSession, "*RST")); // TODO: Check double write
+	checkErr(RsCore_Write(instrSession, "*RST"));
 	checkErr(RsCore_QueryViInt32(instrSession, "*OPC?", NULL));
 
 	checkErr(rsspecan_DefaultInstrSetup(instrSession));
@@ -16414,7 +16414,7 @@ Error:
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_error_message(ViSession instrSession, ViStatus errorCode,
                                          ViChar errorMessage[])
-{  // TODO: ERROR: Correct to (void)(RsCore_LockSession(instrSession));
+{
 	ViStatus error = VI_SUCCESS;
 
 	checkErr(RsCore_LockSession(instrSession));
