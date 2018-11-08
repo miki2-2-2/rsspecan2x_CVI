@@ -176,16 +176,6 @@ ViStatus _VI_FUNC rsspecan_InitWithOptions(
 	checkErr(RsCore_ApplyOptionString(instrSession, optionString));
 	checkErr(RsCore_BuildRepCapTable(instrSession, rsspecan_RsCoreRepCapTable));
 
-	//Parameter idnModelFullName determines RS_ATTR_INSTRUMENT_MODEL value:
-	// VI_FALSE: RS_ATTR_INSTRUMENT_MODEL = "RTO"
-	// VI_TRUE: RS_ATTR_INSTRUMENT_MODEL = "RTO2044"
-	// This is important for CheckInstrumentModel() function used in all attributes and some hi-level functions
-	checkErr(RsCore_QueryAndParseIDNstring(instrSession, RSSPECAN_ATTR_ID_QUERY_RESPONSE, RSSPECAN_SIMULATION_ID_QUERY, VI_FALSE, NULL));
-
-	// Query OPT string, parse the options, remove the duplicates,
-	// sort them and store the result string to RS_ATTR_OPTIONS_LIST
-	checkErr(RsCore_QueryAndParseOPTstring(instrSession, RSSPECAN_SIMULATION_OPT_QUERY, RS_VAL_OPTIONS_PARSING_KEEP_AFTER_DASH));
-
 	// Default Instrument Setup + optional *RST
 	if (resetDevice == VI_TRUE)
 	{
@@ -206,6 +196,7 @@ ViStatus _VI_FUNC rsspecan_InitWithOptions(
 Error:
 	if (error < VI_SUCCESS)
 	{
+		// In case of RS_ERROR_INSTRUMENT_STATUS read the error query before you close the session
 		if (error == RS_ERROR_INSTRUMENT_STATUS && rsSession->autoSystErrQuery == VI_FALSE)
 		{
 			rsSession->autoSystErrQuery = VI_TRUE;
@@ -16063,7 +16054,8 @@ ViStatus _VI_FUNC rsspecan_reset(ViSession instrSession)
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(RsCore_Write(instrSession, "*RST")); // TODO: Check double write
+	checkErr(rsspecan_ClearStatus(instrSession));
+	checkErr(RsCore_Write(instrSession, "*RST")); // IGNORE: Check double write
 	checkErr(RsCore_QueryViInt32(instrSession, "*OPC?", NULL));
 
 	checkErr(rsspecan_DefaultInstrSetup(instrSession));
@@ -16372,7 +16364,7 @@ ViStatus _VI_FUNC rsspecan_error_message(ViSession instrSession, ViStatus errorC
 {
 	ViStatus error = VI_SUCCESS;
 
-	checkErr(RsCore_LockSession(instrSession));
+	(void)(RsCore_LockSession(instrSession));
 
 	static RsCoreStringValueTable errorTable =
 	{
@@ -16528,15 +16520,7 @@ Error:
 ViStatus _VI_FUNC rsspecan_SetVISATimeout(ViSession instrSession,
                                           ViUInt32 VISATimeout)
 {
-	ViStatus error = VI_SUCCESS;
-
-	checkErr(RsCore_LockSession(instrSession));
-
-	checkErr(RsCore_SetVisaTimeout(instrSession, VISATimeout));
-
-Error:
-	(void)RsCore_UnlockSession(instrSession);
-	return error;
+	return RsCore_SetVisaTimeout(instrSession, VISATimeout);
 }
 
 /// HIFN This function returns the minimum timeout value to use (in
@@ -16549,15 +16533,7 @@ Error:
 ViStatus _VI_FUNC rsspecan_GetVISATimeout(ViSession instrSession,
                                           ViUInt32* VISATimeout)
 {
-	ViStatus error = VI_SUCCESS;
-
-	checkErr(RsCore_LockSession(instrSession));
-
-	checkErr(RsCore_GetVisaTimeout(instrSession, VISATimeout));
-
-Error:
-	(void)RsCore_UnlockSession(instrSession);
-	return error;
+	return RsCore_GetVisaTimeout(instrSession, VISATimeout);
 }
 
 /*****************************************************************************
@@ -16618,10 +16594,17 @@ ViStatus _VI_FUNC rsspecan_IDQueryResponse(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_QueryViString(instrSession, "*IDN?", 256, IDQueryResponse));
+	if (RsCore_Simulating(instrSession))
+	{
+		strncpy(IDQueryResponse, RSSPECAN_SIMULATION_ID_QUERY, bufferSize);
+		IDQueryResponse[bufferSize - 1] = 0;
+		goto Error;
+	}
+
+	checkErr(rsspecan_QueryViString(instrSession, "*IDN?", bufferSize, IDQueryResponse));
 
 Error:
-	(void)RsCore_UnlockSession(instrSession);
+	RsCore_UnlockSession(instrSession);
 	return error;
 }
 
@@ -16639,7 +16622,7 @@ ViStatus _VI_FUNC rsspecan_ProcessAllPreviousCommands(
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_WriteInstrData(instrSession, "*WAI"));
+	checkErr(RsCore_Write(instrSession, "*WAI"));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -16661,7 +16644,7 @@ ViStatus _VI_FUNC rsspecan_QueryOPC(
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_QueryViInt32(instrSession, "*OPC?", opc));
+	checkErr(RsCore_QueryViInt32(instrSession, "*OPC?", opc));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

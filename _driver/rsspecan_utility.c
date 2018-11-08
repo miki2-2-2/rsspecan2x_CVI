@@ -23,14 +23,15 @@ ViStatus rsspecan_InitAttributes(ViSession instrSession)
 
 	// Instrument Identification
 	//Parameter idnModelFullName determines RS_ATTR_INSTRUMENT_MODEL value:
-	// VI_FALSE: RS_ATTR_INSTRUMENT_MODEL = "RTO"
-	// VI_TRUE: RS_ATTR_INSTRUMENT_MODEL = "RTO2044"
+	// VI_FALSE: RS_ATTR_INSTRUMENT_MODEL = "FSQ"
+	// VI_TRUE: RS_ATTR_INSTRUMENT_MODEL = "FSQ26"
 	// This is important for CheckInstrumentModel() function used in all attributes and some hi-level functions
 	checkErr(RsCore_QueryAndParseIDNstring(instrSession, RSSPECAN_ATTR_ID_QUERY_RESPONSE, RSSPECAN_SIMULATION_ID_QUERY, VI_FALSE, NULL));
 
 	// Query OPT string, parse the options, remove the duplicates,
 	// sort them and store the result string to RS_ATTR_OPTIONS_LIST
-	checkErr(RsCore_QueryAndParseOPTstring(instrSession, RSSPECAN_SIMULATION_OPT_QUERY, RS_VAL_OPTIONS_PARSING_KEEP_AFTER_DASH));
+	// This is important for CheckInstrumentOptions() function used in all attributes and some hi-level functions
+	checkErr(RsCore_QueryAndParseOPTstring(instrSession, RSSPECAN_SIMULATION_OPT_QUERY, RS_VAL_OPTIONS_PARSING_AUTO));
 
 	// - Class Driver Identification
 	checkErr(RsCore_SetAttributeViString(instrSession, "", RS_ATTR_CLASS_DRIVER_DESCRIPTION, 0, RSSPECAN_CLASS_DRIVER_DESCRIPTION));
