@@ -1896,13 +1896,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureTraceIQDataAnalyzerEnabled(ViSession instrSe
                                                                ViBoolean IQDataAnalyzerEnabled)
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar repCap[RS_REPCAP_BUF_SIZE];
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	sprintf(buffer, "Win%ld", window);
+	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_IQ_DATA_ANALYZER_STATE, IQDataAnalyzerEnabled),
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_IQ_DATA_ANALYZER_STATE, IQDataAnalyzerEnabled),
 			2, "IQ Data Analyzer Enabled");
 
 Error:
@@ -2406,9 +2406,6 @@ ViStatus _VI_FUNC rsspecan_QueryListPowerResult(ViSession instrSession,
 {
 	ViStatus error = VI_SUCCESS;
 	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-	ViChar* ptag;
-	ViInt32 index;
-	ViChar buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -2416,16 +2413,8 @@ ViStatus _VI_FUNC rsspecan_QueryListPowerResult(ViSession instrSession,
 			3, "No Of Results");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS%ld:LIST:POW:RES?", window);
-	checkErr(RsCore_QueryViString(instrSession, cmd, buffer));
-	ptag = strtok(buffer, ",");
-	for (index = 0; ptag; index++)
-	{
-		if (index < noofResults)
-			listPowerResults[index] = atof(ptag);
-		ptag = strtok(NULL, ",");
-	}
-	if (returnedValues)
-		*returnedValues = index;
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, noofResults, listPowerResults, returnedValues));
+	
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
@@ -5958,15 +5947,13 @@ ViStatus _VI_FUNC rsspecan_CreateExternalMixerConversionLossTable(ViSession inst
                                                                   ViReal64 conversionLossValues[])
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
-	ViChar* pbuf;
+	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar* pbuf = cmd;
 	ViInt32 i;
 
 	checkErr(RsCore_LockSession(instrSession));
 
 	checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
-
-	// sprintf(buffer, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_CVL_NAME, tableName),
 			3, "Table Name");
@@ -5992,10 +5979,9 @@ ViStatus _VI_FUNC rsspecan_CreateExternalMixerConversionLossTable(ViSession inst
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_CVL_COMMENT, comment),
 			10, "Comment");
 
-	pbuf = buffer;
 	if (numberOfValues > 0)
 	{
-		pbuf += sprintf(buffer, "CORR:CVL:DATA ");
+		pbuf += sprintf(pbuf, "CORR:CVL:DATA ");
 
 		for (i = 0; i < numberOfValues; i++)
 			pbuf += sprintf(pbuf, "%.12f,%.12f,", frequencyValues[i], conversionLossValues[i]);
@@ -6003,7 +5989,7 @@ ViStatus _VI_FUNC rsspecan_CreateExternalMixerConversionLossTable(ViSession inst
 		*pbuf = '\0';
 		*--pbuf = '\n';
 
-		checkErr(RsCore_Write(instrSession, buffer));
+		checkErr(RsCore_Write(instrSession, cmd));
 	}
 	checkErr(rsspecan_CheckStatus(instrSession));
 
@@ -8350,7 +8336,7 @@ ViStatus _VI_FUNC rsspecan_HardcopyGetPrinterList(ViSession instrSession,
                                                   ViChar printerList[])
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar buffer[RS_MAX_MESSAGE_BUF_SIZE] = "";
+	ViChar response[RS_MAX_MESSAGE_BUF_SIZE] = "";
 	ViChar* p2buf;
 	ViInt32 count;
 
@@ -8363,16 +8349,16 @@ ViStatus _VI_FUNC rsspecan_HardcopyGetPrinterList(ViSession instrSession,
 	p2buf = printerList;
 	count = 0;
 	checkErr(rsspecan_GetAttributeViString(instrSession, "", RSSPECAN_ATTR_HCOPY_PRINTER_FIRST,
-		RS_MAX_MESSAGE_BUF_SIZE, buffer));
+		RS_MAX_MESSAGE_BUF_SIZE, response));
 
-	while (strlen(buffer) > 1)
+	while (strlen(response) > 1)
 	{
-		count += (ViInt32)strlen(buffer);
+		count += (ViInt32)strlen(response);
 		count++; //add one position for comma
 		if (count <= bufferSize)
-			p2buf += sprintf(p2buf, "%s,", buffer);
+			p2buf += sprintf(p2buf, "%s,", response);
 		checkErr(rsspecan_GetAttributeViString(instrSession, "", RSSPECAN_ATTR_HCOPY_PRINTER_NEXT,
-			RS_MAX_MESSAGE_BUF_SIZE, buffer));
+			RS_MAX_MESSAGE_BUF_SIZE, response));
 	}
 	*--p2buf = '\0';
 
