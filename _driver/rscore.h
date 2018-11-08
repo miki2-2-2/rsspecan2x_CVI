@@ -1224,16 +1224,16 @@ ViStatus RsCore_WriteBinaryDataFromFile(ViSession instrSession,
                                         ViConstString command,
                                         ViConstString sourceFile);
 
-ViStatus RsCore_QueryBinaryOrAsciiFloatArray(ViSession instrSession,
-                                             ViConstString query,
-                                             ViReal64** outDblArray,
-                                             ViInt32* outArraySize);
+ViStatus RsCore_QueryFloatArray(ViSession instrSession,
+                                ViConstString query,
+                                ViReal64** outDblArray,
+                                ViInt32* outArraySize);
 
-ViStatus RsCore_QueryBinaryOrAsciiFloatArrayWithOpc(ViSession instrSession,
-                                                    ViConstString query,
-                                                    ViInt32 timeoutMs,
-                                                    ViReal64** outDblArray,
-                                                    ViInt32* outArraySize);
+ViStatus RsCore_QueryFloatArrayWithOpc(ViSession instrSession,
+                                ViConstString query,
+                                ViInt32 timeoutMs,
+                                ViReal64** outDblArray,
+                                ViInt32* outArraySize);
 
 ViStatus RsCore_QueryFloatArrayToUserBuffer(ViSession instrSession,
 											ViConstString query,
@@ -1248,16 +1248,16 @@ ViStatus RsCore_QueryFloatArrayToUserBufferWithOpc(ViSession instrSession,
 											ViReal64 *userBuffer,
 											ViInt32* actualPointsCount);
 
-ViStatus RsCore_QueryBinaryOrAsciiIntegerArray(ViSession instrSession,
-											ViConstString query,
-											ViInt32** outInt32Array,
-											ViInt32* outArraySize);
+ViStatus RsCore_QueryIntegerArray(ViSession instrSession,
+								ViConstString query,
+								ViInt32** outInt32Array,
+								ViInt32* outArraySize);
 
-ViStatus RsCore_QueryBinaryOrAsciiIntegerArrayWithOpc(ViSession instrSession,
-											ViConstString query,
-											ViInt32 timeoutMs,
-											ViInt32** outInt32Array,
-											ViInt32* outArraySize);
+ViStatus RsCore_QueryIntegerArrayWithOpc(ViSession instrSession,
+										ViConstString query,
+										ViInt32 timeoutMs,
+										ViInt32** outInt32Array,
+										ViInt32* outArraySize);
 
 ViStatus RsCore_QueryIntegerArrayToUserBuffer(ViSession instrSession,
 											ViConstString query,

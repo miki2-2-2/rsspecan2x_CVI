@@ -1292,7 +1292,7 @@ ViStatus _VI_FUNC rsspecan_ReadWlanSEMResults(ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, limitDistance), 9, "Limit Distance");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, failureFlag), 10, "Failure Flag");
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "FORM ASCII;:TRAC:DATA? LIST", &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, "FORM ASCII;:TRAC:DATA? LIST", &data, &dataSize));
 
 	dataSize /= 9;
 

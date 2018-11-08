@@ -2628,7 +2628,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkConstellationDiagram(
 
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K101|K105"));
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "TRAC? TRACE1", &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, "TRAC? TRACE1", &data, &dataSize));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 	dataSize /= 2;
@@ -2695,7 +2695,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkDFTPrecodedConstellation(
 
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K101|K105"));
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "TRAC? TRACE1", &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, "TRAC? TRACE1", &data, &dataSize));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 	dataSize /= 2;
@@ -2814,7 +2814,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkAllocationSummary(
 
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K101|K105"));
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "CALC1:MARK:FUNC:POW:RES?", &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, "CALC1:MARK:FUNC:POW:RES?", &data, &dataSize));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 	dataSize /= 7;

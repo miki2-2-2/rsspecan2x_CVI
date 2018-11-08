@@ -10378,7 +10378,7 @@ ViStatus _VI_FUNC rsspecan_ReadTraceIQData(ViSession instrSession,
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "TRAC%ld:IQ:DATA?", window);
 	}
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, cmd, &data, &dataSize));
 
 	dataSize /= 2;
 
@@ -10438,7 +10438,7 @@ ViStatus _VI_FUNC rsspecan_FetchTraceIQData(ViSession instrSession,
 	}
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "TRAC:IQ:DATA:MEM? %ld,%ld", offsetSamples, noofSamples);
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, cmd, &data, &dataSize));
 
 	dataSize /= 2;
 
@@ -14206,7 +14206,7 @@ ViStatus _VI_FUNC rsspecan_ReadSEListEvaluation(ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, reserved1), 11, "Reserved 1");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, reserved2), 12, "Reserved 2");
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "TRAC:DATA? LIST", &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, "TRAC:DATA? LIST", &data, &dataSize));
 
 	dataSize /= 11;
 	if (returnedValues)
@@ -14523,7 +14523,7 @@ ViStatus _VI_FUNC rsspecan_ReadSEMListEvaluationResults(ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, reserved1), 11, "Reserved 1");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, reserved2), 12, "Reserved 2");
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "TRAC:DATA? LIST", &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, "TRAC:DATA? LIST", &data, &dataSize));
 
 	dataSize /= 11;
 
@@ -15538,7 +15538,7 @@ ViStatus _VI_FUNC rsspecan_QueryMSRAAllAnalysisInterval(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MSRA:WIND%ld:MIV?", window);
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, cmd, &data, &dataSize));
 
 	dataSize /= 2;
 

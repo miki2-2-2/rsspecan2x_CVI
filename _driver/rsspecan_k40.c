@@ -1560,7 +1560,7 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseSpurs(
 
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K40"));
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "FETC:PNO:SPUR?", &data, &retCnt));
+	checkErr(RsCore_QueryFloatArray(instrSession, "FETC:PNO:SPUR?", &data, &retCnt));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 	retCnt /= 2;

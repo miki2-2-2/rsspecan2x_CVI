@@ -977,7 +977,7 @@ ViStatus _VI_FUNC rsspecan_ReadGsmExtendedSlotPtempRef(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArrayWithOpc(instrSession, "READ:BURS:PTEM:REF:ECON:IMM?", timeout, &data, &dataSize));
+	checkErr(RsCore_QueryFloatArrayWithOpc(instrSession, "READ:BURS:PTEM:REF:ECON:IMM?", timeout, &data, &dataSize));
 
 	dataSize /= 4;
 
@@ -1093,7 +1093,7 @@ ViStatus _VI_FUNC rsspecan_FetchGsmExtendedSlotPtempRef(ViSession instrSession,
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
 		2, "Array Size");
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "FETC:BURS:PTEM:REF:ECON:IMM?", &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, "FETC:BURS:PTEM:REF:ECON:IMM?", &data, &dataSize));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 	dataSize /= 4;

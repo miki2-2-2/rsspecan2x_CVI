@@ -2227,7 +2227,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkConstellationDiagram(ViSession instrSe
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, ":TRAC?", &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, ":TRAC?", &data, &dataSize));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 	dataSize /= 2;
@@ -2315,7 +2315,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkAllocationSummary(ViSession instrSessi
 
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K100|K102"));
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "TRACE?", &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, "TRACE?", &data, &dataSize));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 	dataSize /= 7;

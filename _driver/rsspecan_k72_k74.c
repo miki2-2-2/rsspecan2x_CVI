@@ -945,7 +945,7 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSCDPScramblingCodeResult(ViSession instrSessi
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, scrambingCode), 3, "Scrambling Code");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, power), 4, "WiPowerdow");
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, ":CDP:LCODe:SEAR:LIST?", &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, ":CDP:LCODe:SEAR:LIST?", &data, &dataSize));
 
 	dataSize /= 3;
 
@@ -1016,7 +1016,7 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSCDPListEvaluationResult(ViSession instrSessi
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, reserved1), 11, "Reserved 1");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, reserved2), 12, "Reserved 2");
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "TRAC:DATA? LIST", &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, "TRAC:DATA? LIST", &data, &dataSize));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 	dataSize /= 11;

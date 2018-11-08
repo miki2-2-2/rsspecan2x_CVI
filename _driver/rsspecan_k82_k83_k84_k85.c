@@ -1901,7 +1901,7 @@ ViStatus _VI_FUNC rsspecan_ReadBDOPowerVsTimeListEvaluation(ViSession instrSessi
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, reserved1), 12, "Reserved 1");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, reserved2), 13, "Reserved 2");
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, ":CONF:CDP:BTS:PVT:LIST:RES?", &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, ":CONF:CDP:BTS:PVT:LIST:RES?", &data, &dataSize));
 
 	dataSize /= 12;
 

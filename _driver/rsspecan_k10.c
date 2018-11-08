@@ -2088,7 +2088,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10MagnitudeCaptureResults(ViSession instrSes
 	viCheckParm(length == NULL, 3, "Length");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FETC:MCAP:SLOT:%s?", GSMMAgnitudeResultArr[resultType]);
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, cmd, &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, cmd, &data, &dataSize));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 	dataSize /= 2;

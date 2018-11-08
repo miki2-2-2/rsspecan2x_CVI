@@ -889,7 +889,7 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoMeasurementResults(
 
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7S"));
 
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, "CALC:MARK:FUNC:SFM:RES? SUMM", &data, &dataSize));
+	checkErr(RsCore_QueryFloatArray(instrSession, "CALC:MARK:FUNC:SFM:RES? SUMM", &data, &dataSize));
 
 	dataSize /= 5;
 

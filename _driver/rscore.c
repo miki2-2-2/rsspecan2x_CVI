@@ -8,7 +8,7 @@
 
 Modification History:
 
-3.00, (build 34) 2018-11-06 Miloslav Macko
+3.00, (build 35) 2018-11-08 Miloslav Macko
 	- Reviewed and reworked to reflect the features of LabVIEW and IVI.NET core
 	- Incompatible with rsidr_core 2.xx, therefore the file name and function prefixes change to be able to co-exist with rsidr_core 2.xx :
 	- File names changed to rscore.h and rscore.c
@@ -7972,14 +7972,14 @@ Error:
 }
 
 /******************************************************************************************************/
-/*  QueryBinaryOrAsciiFloatArray
+/*  RsCore_QueryFloatArray
     Queries an array of floating-point numbers that can be returned in ASCII format or in binary format.
     The array is always returned as the most-universal ViReal64 array.
     - For ASCII format, the array numbers are decoded as comma-separated values.
     - For Binary Format, the numbers are decoded based on the property binaryFloatNumbersFormat, usually float 32-bit (FORM REAL,32)
     WARNING!!! - Deallocate the outDblArray after use. */
 /******************************************************************************************************/
-ViStatus RsCore_QueryBinaryOrAsciiFloatArray(ViSession instrSession, ViConstString query, ViReal64** outDblArray, ViInt32* outArraySize)
+ViStatus RsCore_QueryFloatArray(ViSession instrSession, ViConstString query, ViReal64** outDblArray, ViInt32* outArraySize)
 {
 	ViStatus error = VI_SUCCESS;
 	ViByte* data = NULL;
@@ -8023,7 +8023,7 @@ ViStatus RsCore_QueryBinaryOrAsciiFloatArray(ViSession instrSession, ViConstStri
 			break;
 		default:
 			viCheckErrElab(VI_ERROR_NSUP_MODE,
-				"RsCore_QueryBinaryOrAsciiFloatArray: Unsupported mode of conversion BinDataBlock -> FloatArray[]");
+				"RsCore_QueryFloatArray: Unsupported mode of conversion BinDataBlock -> FloatArray[]");
 			break;
 		}
 	}
@@ -8042,7 +8042,7 @@ Error:
 }
 
 /******************************************************************************************************/
-/*  RsCore_QueryBinaryOrAsciiFloatArrayWithOpc
+/*  RsCore_QueryFloatArrayWithOpc
     Queries with OPC an array of floating-point numbers that can be returned in ASCII format or in binary format.
     Set the parameter timeoutMs to 0 in order to use the session's OPC timeout.
     Because of the order of commands, this function also calls the driver's CheckStatus callback.
@@ -8052,7 +8052,7 @@ Error:
     - For Binary Format, the numbers are decoded based on the property binaryFloatNumbersFormat, usually float 32-bit (FORM REAL,32)
     WARNING!!! - Deallocate the outDblArray after use. */
 /******************************************************************************************************/
-ViStatus RsCore_QueryBinaryOrAsciiFloatArrayWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs,
+ViStatus RsCore_QueryFloatArrayWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs,
                                                     ViReal64** outDblArray, ViInt32* outArraySize)
 {
 	ViStatus error = VI_SUCCESS;
@@ -8096,7 +8096,7 @@ ViStatus RsCore_QueryBinaryOrAsciiFloatArrayWithOpc(ViSession instrSession, ViCo
 			break;
 		default:
 			viCheckErrElab(VI_ERROR_NSUP_MODE,
-				"RsCore_QueryBinaryOrAsciiFloatArrayWithOpc: Unsupported mode of conversion BinDataBlock -> FloatArray[]");
+				"RsCore_QueryFloatArrayWithOpc: Unsupported mode of conversion BinDataBlock -> FloatArray[]");
 			break;
 		}
 	}
@@ -8115,14 +8115,14 @@ Error:
 }
 
 /******************************************************************************************************/
-/*  RsCore_QueryBinaryOrAsciiIntegerArray
+/*  RsCore_QueryIntegerArray
     Queries an array of integer numbers that can be returned in ASCII format or in binary format.
     The array is always returned as the most-universal ViInt32 array.
     - For ASCII format, the array numbers are decoded as comma-separated values.
     - For Binary Format, the numbers are decoded based on the property binaryIntegerNumbersFormat, usually integer 32-bit (FORM INT,32)
     WARNING!!! - Deallocate the outInt32Array after use. */
 /******************************************************************************************************/
-ViStatus RsCore_QueryBinaryOrAsciiIntegerArray(ViSession instrSession, ViConstString query, ViInt32** outInt32Array, ViInt32* outArraySize)
+ViStatus RsCore_QueryIntegerArray(ViSession instrSession, ViConstString query, ViInt32** outInt32Array, ViInt32* outArraySize)
 {
 	ViStatus error = VI_SUCCESS;
 	ViByte* data = NULL;
@@ -8160,7 +8160,7 @@ ViStatus RsCore_QueryBinaryOrAsciiIntegerArray(ViSession instrSession, ViConstSt
 			break;
 		default:
 			viCheckErrElab(VI_ERROR_NSUP_MODE,
-				"RsCore_QueryBinaryOrAsciiIntegerArray: Unsupported mode of conversion BinDataBlock -> Integer32Array[]");
+				"RsCore_QueryIntegerArray: Unsupported mode of conversion BinDataBlock -> Integer32Array[]");
 			break;
 		}
 	}
@@ -8179,7 +8179,7 @@ Error:
 }
 
 /******************************************************************************************************/
-/*  RsCore_QueryBinaryOrAsciiIntegerArrayWithOpc
+/*  RsCore_QueryIntegerArrayWithOpc
     Queries with OPC an array of integer numbers that can be returned in ASCII format or in binary format.
     Set the parameter timeoutMs to 0 in order to use the session's OPC timeout.
     Because of the order of commands, this function also calls the driver's CheckStatus callback.
@@ -8189,7 +8189,7 @@ Error:
     - For Binary Format, the numbers are decoded based on the property binaryIntegerNumbersFormat, usually integer 32-bit (FORM INT,32)
     WARNING!!! - Deallocate the outInt32Array after use. */
 /******************************************************************************************************/
-ViStatus RsCore_QueryBinaryOrAsciiIntegerArrayWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs,
+ViStatus RsCore_QueryIntegerArrayWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs,
                                                       ViInt32** outInt32Array, ViInt32* outArraySize)
 {
 	ViStatus error = VI_SUCCESS;
@@ -8227,7 +8227,7 @@ ViStatus RsCore_QueryBinaryOrAsciiIntegerArrayWithOpc(ViSession instrSession, Vi
 			break;
 		default:
 			viCheckErrElab(VI_ERROR_NSUP_MODE,
-				"RsCore_QueryBinaryOrAsciiIntegerArray: Unsupported mode of conversion BinDataBlock -> Integer32Array[]");
+				"RsCore_QueryIntegerArray: Unsupported mode of conversion BinDataBlock -> Integer32Array[]");
 			break;
 		}
 	}
@@ -8250,7 +8250,7 @@ Error:
 	The function sends the query to the instrument, reads the array response and copies it to the provided user buffer
 	Before sending the command, it sends the bin format setting: ':FORM REAL,32'
 	Even if the instrument returns the data in ASCII format, the function parses it properly
-	(it uses RsCore_QueryBinaryOrAsciiFloatArray)
+	(it uses RsCore_QueryFloatArray)
 	If the userBufferLength is smaller than read-out dataCount, the function only copies
 	the maximum provided count of the data and returns positive error number that equals the dataCount.
 	actualPointsCount can be set to NULL
@@ -8266,7 +8266,7 @@ ViStatus RsCore_QueryFloatArrayToUserBuffer(ViSession instrSession,
 	ViInt32 dataCount = 0;
 
 	checkErr(RsCore_Write(instrSession, ":FORM REAL,32"));
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArray(instrSession, query, &data, &dataCount));
+	checkErr(RsCore_QueryFloatArray(instrSession, query, &data, &dataCount));
 	
 	if (dataCount <= userBufferLength)
 	{
@@ -8292,7 +8292,7 @@ Error:
 
 /******************************************************************************************************/
 /*  RsCore_QueryFloatArrayToUserBufferWithOpc
-	Same as RsCore_QueryBinaryOrAsciiFloatArrayWithOpc, but the query is sent with OPC-sync
+	Same as RsCore_QueryFloatArrayWithOpc, but the query is sent with OPC-sync
 	Set the parameter timeoutMs to 0 in order to use the session's OPC timeout
 /******************************************************************************************************/
 ViStatus RsCore_QueryFloatArrayToUserBufferWithOpc(ViSession instrSession,
@@ -8307,7 +8307,7 @@ ViStatus RsCore_QueryFloatArrayToUserBufferWithOpc(ViSession instrSession,
 	ViInt32 dataCount = 0;
 
 	checkErr(RsCore_Write(instrSession, ":FORM REAL,32"));
-	checkErr(RsCore_QueryBinaryOrAsciiFloatArrayWithOpc(instrSession, query, timeoutMs, &data, &dataCount));
+	checkErr(RsCore_QueryFloatArrayWithOpc(instrSession, query, timeoutMs, &data, &dataCount));
 
 	if (dataCount <= userBufferLength)
 	{
@@ -8333,9 +8333,9 @@ Error:
 
 /******************************************************************************************************/
 /*  RsCore_QueryIntegerArrayToUserBuffer
-	The function uses RsCore_QueryBinaryOrAsciiIntegerArray to send the query to the instrument,
+	The function uses RsCore_QueryIntegerArray to send the query to the instrument,
 	read the array response and copies it to the provided user buffer.
-	The function parses correctly ASCII or BINARY response (it uses RsCore_QueryBinaryOrAsciiIntegerArray)
+	The function parses correctly ASCII or BINARY response (it uses RsCore_QueryIntegerArray)
 	If the userBufferLength is smaller than read-out dataCount, the function only copies
 	the maximum provided count of the data and returns positive error number that equals the dataCount.
 	actualPointsCount is allowed to be NULL
@@ -8350,7 +8350,7 @@ ViStatus RsCore_QueryIntegerArrayToUserBuffer(ViSession instrSession,
 	ViInt32* data = NULL;
 	ViInt32 dataCount = 0;
 
-	checkErr(RsCore_QueryBinaryOrAsciiIntegerArray(instrSession, query, &data, &dataCount));
+	checkErr(RsCore_QueryIntegerArray(instrSession, query, &data, &dataCount));
 
 	if (dataCount <= userBufferLength)
 	{
@@ -8390,7 +8390,7 @@ ViStatus RsCore_QueryIntegerArrayToUserBufferWithOpc(ViSession instrSession,
 	ViInt32* data = NULL;
 	ViInt32 dataCount = 0;
 
-	checkErr(RsCore_QueryBinaryOrAsciiIntegerArrayWithOpc(instrSession, query, timeoutMs, &data, &dataCount));
+	checkErr(RsCore_QueryIntegerArrayWithOpc(instrSession, query, timeoutMs, &data, &dataCount));
 
 	if (dataCount <= userBufferLength)
 	{
