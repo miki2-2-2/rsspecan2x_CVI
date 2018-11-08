@@ -117,10 +117,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KPCGSettings(ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentModel(instrSession, "FSQ"));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_SET_COUNT, setCount),
-		2, "Set Count");
+			2, "Set Count");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_SET_TO_ANALYZE, setToAnalyze),
-		3, "Set To Analyze");
+			3, "Set To Analyze");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -160,7 +160,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KSignalStatisticMeasurement(ViSession inst
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 0, 2),
-		2, "Measurement");
+			2, "Measurement");
 
 	switch (measurement)
 	{
@@ -176,7 +176,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KSignalStatisticMeasurement(ViSession inst
 		break;
 	}
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MEAS_STAT_SAMPLES, numberofSamples),
-		3, "Number Of Samples");
+			3, "Number Of Samples");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -223,7 +223,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KChannelTableOperations(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, operation, 0, 4),
-		2, "Operation");
+			2, "Operation");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTable), 3, "Channel Table");
 
 	switch (operation)
@@ -234,18 +234,18 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KChannelTableOperations(
 	case RSSPECAN_VAL_TABLE_SELECT:
 		checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_STATE, VI_TRUE));
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_SELECT, channelTable),
-			3, "Channel Table");
+				3, "Channel Table");
 		break;
 	case RSSPECAN_VAL_TABLE_NEW:
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_NAME, channelTable),
-			3, "Channel Table");
+				3, "Channel Table");
 		break;
 	case RSSPECAN_VAL_TABLE_DELETE:
 		checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_DELETE, NULL));
 		break;
 	case RSSPECAN_VAL_TABLE_COPY:
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_COPY, channelTable),
-			3, "Channel Table");
+				3, "Channel Table");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, operation), 2, "Operation");
@@ -303,7 +303,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KChannelTableComment(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_CTABLE_COMMENT, channelTableComment),
-		2, "Channel Table Comment");
+			2, "Channel Table Comment");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -334,7 +334,7 @@ ViStatus _VI_FUNC rsspecan_QueryC2KChannelTableCatalog(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, bufferSize, 0, INT_MAX),
-		3, "Buffer Size");
+			3, "Buffer Size");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTablesList), 4, "Channel Table List");
 
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CONF:CDP:CTAB:CAT?", &buf));
@@ -367,22 +367,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KBasicSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_BCLASS, bandClass),
-		2, "Band Class");
+			2, "Band Class");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_CDP_TPMEAS, timePhase),
-		3, "Time Phase");
+			3, "Time Phase");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_CDP_ICTHRES, inactChannelThreshold),
-		4, "Inact Channel Threshold");
+			4, "Inact Channel Threshold");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_CDP_QINVERT, invertQ),
-		5, "Invert Q");
+			5, "Invert Q");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_SBAND, sideBand),
-		6, "Side Band");
+			6, "Side Band");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_CDP_NORMALIZE, normalize),
-		7, "Normalize");
+			7, "Normalize");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -403,7 +403,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KPowerDisplay(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_DISPLAY, mode),
-		2, "Mode");
+			2, "Mode");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -425,7 +425,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureC2KAmplitudeYScaleDivision(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_PDIV, yScaleDiv),
-		2, "Y Scale Div");
+			2, "Y Scale Div");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -487,12 +487,11 @@ ViStatus _VI_FUNC rsspecan_ReadC2KTraceData(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K82|K83|K84|K85"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, sourceTrace, 1, 2),
-		3, "Source Trace");
+			3, "Source Trace");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, actualPoints), 5, "Actual Points");
 
 	sprintf(traceName, "TRACE%ld", sourceTrace);
-	checkErr(rsspecan_dataReadTrace (instrSession, window, traceName, arrayLength,
-		values, actualPoints));
+	checkErr(rsspecan_dataReadTrace(instrSession, window, traceName, arrayLength, values, actualPoints));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -564,8 +563,7 @@ ViStatus _VI_FUNC rsspecan_ReadC2KCDPTraceData(
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, actualPoints), 5, "Actual Points");
 
 	sprintf(traceName, "%s", traceC2KArr[sourceTrace]);
-	checkErr(rsspecan_dataReadTrace (instrSession, window, traceName, arrayLength,
-		values, actualPoints));
+	checkErr(rsspecan_dataReadTrace(instrSession, window, traceName, arrayLength, values, actualPoints));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -609,18 +607,18 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KSEM(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_LIM_MODE, limitLineType),
-		2, "Limit Line Type");
+			2, "Limit Line Type");
 
 	if (limitLineType == RSSPECAN_VAL_C2K_LIM_MODE_MAN)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_LIM_VAL, limitLineValue),
-			3, "Limit Line Value");
+				3, "Limit Line Value");
 	}
 
 	if (!rsspecan_IsFSV(instrSession))
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_LIM_TRANS, _30kHz1MHzTransition),
-			4, "30kHz/1MHz Transition");
+				4, "30kHz/1MHz Transition");
 	}
 
 Error:
@@ -647,7 +645,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KCodeDomainAnalyzerResults(ViSession inst
 	case RSSPECAN_VAL_C2K_FEED_ERR_CTAB:
 	case RSSPECAN_VAL_C2K_FEED_CPOW:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
-			2, "Result Type");
+				2, "Result Type");
 		break;
 	case RSSPECAN_VAL_C2K_FEED_MACC:
 	case RSSPECAN_VAL_C2K_FEED_PVSL:
@@ -659,7 +657,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KCodeDomainAnalyzerResults(ViSession inst
 	case RSSPECAN_VAL_C2K_FEED_SYMB_EVM:
 	case RSSPECAN_VAL_C2K_FEED_COMP_CONS:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
-			2, "Result Type");
+				2, "Result Type");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, resultType), 2, "Result Type");
@@ -688,19 +686,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KCodeDomainAnalyzerSettings(
 	if (!RsCore_IsInstrumentModel(instrSession, "FSP")) // not FSP
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_IQLENGTH_FSQ_FSU, captureLength),
-			2, "Capture Length");
+				2, "Capture Length");
 	}
 	else // is FSP
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_IQLENGTH_FSP, captureLength),
-			2, "Capture Length");
+				2, "Capture Length");
 	}
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_SLOT, selectPCG),
-		4, "Select PCG");
+			4, "Select PCG");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_CODE, selectChannel),
-		3, "Select Channel");
+			3, "Select Channel");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -742,7 +740,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KChannelTableData(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K82"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
-		10, "Num of Elements");
+			10, "Num of Elements");
 	pbuffer += sprintf(pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%d,%.12f",
 	                   channelType[i], codeClass[i], codeNumber[i], radioConfiguration[i], status[i] == VI_FALSE ? 0 : 1,
 	                   cdpRelative[i]);
@@ -778,16 +776,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KAdvancedSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_PNOFFSET, pnOffset),
-		2, "PN Offset");
+			2, "PN Offset");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_SFACTOR, baseSpreadingFactor),
-		3, "Base Spreading Factor");
+			3, "Base Spreading Factor");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_PREFERENCE, powerReference),
-		4, "Power Reference");
+			4, "Power Reference");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_ORDER, order),
-		5, "Order");
+			5, "Order");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -819,7 +817,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KForce1xEVDV(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_FORCE_DV, _1xEVDV),
-		2, "1xEV-DV");
+			2, "1xEV-DV");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -843,12 +841,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KAntennaSettings(
 	if (antennaDiversity == RSSPECAN_VAL_C2K_ANTENNA_OFF)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_ANTENNA, antennaDiversity),
-			2, "Antenna Diversity");
+				2, "Antenna Diversity");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_ANTENNA, antennaNumber),
-			3, "Antenna Number");
+				3, "Antenna Number");
 	}
 
 Error:
@@ -875,28 +873,28 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KMultiCarrier(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_STATE, multiCarrier),
-		2, "Multi Carrier");
+			2, "Multi Carrier");
 
 	if (multiCarrier == VI_TRUE)
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_ENH_ALG, enhancedAlgorithm),
-			3, "Enhanced Algorithm");
+				3, "Enhanced Algorithm");
 
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_FILTER_STATE, mcFilter),
-			4, "MC Filter");
+				4, "MC Filter");
 
 		if (mcFilter == VI_TRUE)
 		{
 			viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_FILTER_TYPE, filterType),
-				5, "Filter Type");
+					5, "Filter Type");
 
 			if (filterType == RSSPECAN_VAL_C2K_MCARRIER_FTYPE_RRC)
 			{
 				viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_ROLL_OFF, rollOff),
-					6, "Roll Off");
+						6, "Roll Off");
 
 				viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_CUT_OFF_FREQ, cutOffFrequency),
-					7, "Cut Off Frequency");
+						7, "Cut Off Frequency");
 			}
 		}
 	}
@@ -964,7 +962,7 @@ ViStatus _VI_FUNC rsspecan_StoreBC2KSEMToFile(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_LIM_STORE_FILE, fileName),
-		2, "File Name");
+			2, "File Name");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -996,8 +994,7 @@ ViStatus _VI_FUNC rsspecan_ReadBC2KSEMPeakList(
 	arrayLength = 3 * numberOfValues;
 	data = malloc(sizeof(ViReal64) * arrayLength);
 
-	checkErr(rsspecan_dataReadTrace (instrSession, window, "FINal1", arrayLength,
-		data, &retVal));
+	checkErr(rsspecan_dataReadTrace(instrSession, window, "FINal1", arrayLength, data, &retVal));
 
 	if (returnedValues)
 		*returnedValues = retVal / 3; // Three result arrays
@@ -1091,12 +1088,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KSEM(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_LIM_MODE, limitLineType),
-		2, "Limit Line Type");
+			2, "Limit Line Type");
 
 	if (!rsspecan_IsFSV(instrSession))
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_LIM_TRANS, _30kHz1MHzTransition),
-			3, "30kHz/1MHz Transition");
+				3, "30kHz/1MHz Transition");
 	}
 
 Error:
@@ -1122,7 +1119,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KCodeDomainAnalyzerResults(ViSession inst
 	case RSSPECAN_VAL_C2K_FEED_CDEP:
 	case RSSPECAN_VAL_C2K_FEED_ERR_CTAB:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
-			2, "Result Type");
+				2, "Result Type");
 		break;
 	case RSSPECAN_VAL_C2K_FEED_MACC:
 	case RSSPECAN_VAL_C2K_FEED_PVSL:
@@ -1134,7 +1131,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KCodeDomainAnalyzerResults(ViSession inst
 	case RSSPECAN_VAL_C2K_FEED_SYMB_EVM:
 	case RSSPECAN_VAL_C2K_FEED_COMP_CONS:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
-			2, "Result Type");
+				2, "Result Type");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, resultType), 2, "Result Type");
@@ -1164,22 +1161,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KCodeDomainAnalyzerSettings(ViSession ins
 	if (!RsCore_IsInstrumentModel(instrSession, "FSP")) // not FSP
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_IQLENGTH_FSQ_FSU, captureLength),
-			2, "Capture Length");
+				2, "Capture Length");
 	}
 	else // is FSP
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_IQLENGTH_FSP, captureLength),
-			2, "Capture Length");
+				2, "Capture Length");
 	}
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_CODE, selectChannel),
-		3, "Select Channel");
+			3, "Select Channel");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_SLOT, selectPCG),
-		4, "Select PCG");
+			4, "Select PCG");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_MAPPING, selectMapping),
-		5, "Select Mapping");
+			5, "Select Mapping");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1221,7 +1218,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KChannelTableData(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K83"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
-		10, "Num of Elements");
+			10, "Num of Elements");
 
 	pbuffer += sprintf(pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%d,%.12f",
 	                   channelType[i], codeClass[i], codeNumber[i], mapping[i], status[i] == VI_FALSE ? 0 : 1, cdpRelative[i]);
@@ -1259,27 +1256,27 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KAdvancedSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_SFACTOR, baseSpreadingFactor),
-		2, "Base Spreading Factor");
+			2, "Base Spreading Factor");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_PREFERENCE, powerReference),
-		3, "Power Reference");
+			3, "Power Reference");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_ORDER, order),
-		4, "Order");
+			4, "Order");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_MAPPING, selectIQ),
-		5, "Select IQ");
+			5, "Select IQ");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_LCODE_MODE, longCodeMode),
-		6, "Long Code Mode");
+			6, "Long Code Mode");
 
 	if (longCodeMode == RSSPECAN_VAL_MC2K_LCODE_STANDARD)
 	{
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_LCODE_MASK, longCodeMask),
-			7, "Long Code Mask");
+				7, "Long Code Mask");
 
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_LCODE_OFFSET, longCodeOffset),
-			8, "Long Code Offset");
+				8, "Long Code Offset");
 	}
 
 Error:
@@ -1300,7 +1297,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KCDPOverview(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_OVERVIEW, codeDomainOverview),
-		2, "Code Domain Overview");
+			2, "Code Domain Overview");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1347,7 +1344,7 @@ ViStatus _VI_FUNC rsspecan_QueryMC2KCodeDomainAnalyzerResultSummary(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K83"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultType, RSSPECAN_VAL_C2K_SLOT, RSSPECAN_VAL_C2K_EVMPEAK),
-		3, "Result Type");
+			3, "Result Type");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:CDP:RES? %s", window, analyzerResultSummaryArr[resultType]);
 	checkErr(RsCore_QueryViReal64(instrSession, cmd, result));
@@ -1394,16 +1391,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOSEM(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_LIM_MODE, limitLineType),
-		2, "Limit Line Type");
+			2, "Limit Line Type");
 
 	if (limitLineType == RSSPECAN_VAL_C2K_LIM_MODE_MAN)
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_LIM_VAL, limitLineValue),
-		3, "Limit Line Value");
+			3, "Limit Line Value");
 
 	if (!rsspecan_IsFSV(instrSession))
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_LIM_TRANS, _30kHz1MHzTransition),
-			4, "30kHz/1MHz Transition");
+				4, "30kHz/1MHz Transition");
 	}
 
 Error:
@@ -1431,7 +1428,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOCodeDomainAnalyzerResults(
 	case RSSPECAN_VAL_C2K_FEED_ERR_CTAB:
 	case RSSPECAN_VAL_C2K_FEED_CPOW:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
-			2, "Result Type");
+				2, "Result Type");
 		break;
 	case RSSPECAN_VAL_C2K_FEED_MACC:
 	case RSSPECAN_VAL_C2K_FEED_PVSL:
@@ -1444,7 +1441,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOCodeDomainAnalyzerResults(
 	case RSSPECAN_VAL_C2K_FEED_COMP_CONS:
 	case RSSPECAN_VAL_C2K_FEED_PVCH:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
-			2, "Result Type");
+				2, "Result Type");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, resultType), 2, "Result Type");
@@ -1473,18 +1470,18 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOCodeDomainAnalyzerSettings(
 	if (!RsCore_IsInstrumentModel(instrSession, "FSP")) // not FSP
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_IQLENGTH_FSQ_FSU, captureLength),
-			2, "Capture Length");
+				2, "Capture Length");
 	}
 	else // is FSP
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_IQLENGTH_FSP, captureLength),
-			2, "Capture Length");
+				2, "Capture Length");
 	}
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_SLOT, selectSlot),
-		4, "Select Slot");
+			4, "Select Slot");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_CODE, selectCode),
-		3, "Select Code");
+			3, "Select Code");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1508,19 +1505,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOCDPChannelType(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_CTYPE, channelType),
-		2, "Channel Type");
+			2, "Channel Type");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BDO_CDP_OVERVIEW, codeDomainOverview),
-		3, "Code Domain Overview");
+			3, "Code Domain Overview");
 
 	if (codeDomainOverview == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_MMODE, mapping),
-			4, "Mapping");
+				4, "Mapping");
 
 		if (((channelType != RSSPECAN_VAL_C2K_CDP_CTYPE_DATA) && (mapping != RSSPECAN_VAL_C2K_CDP_MMODE_AUTO)) || (mapping != RSSPECAN_VAL_C2K_CDP_MMODE_COMPLEX))
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_MAPPING, select),
-			5, "Select");
+				5, "Select");
 	}
 
 Error:
@@ -1544,14 +1541,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOChannelType(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_CTYPE, channelType),
-		2, "Channel Type");
+			2, "Channel Type");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_MMODE, mapping),
-		3, "Mapping");
+			3, "Mapping");
 
 	if (((channelType != RSSPECAN_VAL_C2K_CDP_CTYPE_DATA) && (mapping != RSSPECAN_VAL_C2K_CDP_MMODE_AUTO)) || (mapping != RSSPECAN_VAL_C2K_CDP_MMODE_COMPLEX))
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_CDP_MAPPING, select),
-		4, "Select");
+			4, "Select");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1570,7 +1567,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureEVDOBSTPowerReference(ViSession instrSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_PREFERENCE, powerReference),
-		2, "Power Reference");
+			2, "Power Reference");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1596,24 +1593,24 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOPowerVsTime(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win1", RSSPECAN_ATTR_NUMBER_OF_SWEEPS, numberOfHalfslots),
-		2, "Number Of Halfslots");
+			2, "Number Of Halfslots");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_RFSLOT, referenceSlot),
-		3, "Reference Slot");
+			3, "Reference Slot");
 
 	if (referenceSlot == RSSPECAN_VAL_C2K_CDP_RFSLOT_IDLE)
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BDO_PVT_BURST_FIT, burstFit),
-		4, "Burst Fit");
+			4, "Burst Fit");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_LIM_PVT_REFERENCE, referenceMeanPower),
-		5, "Reference Mean Power");
+			5, "Reference Mean Power");
 
 	if (referenceMeanPower != RSSPECAN_VAL_C2K_LIM_PVT_REF_AUTO)
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_BDO_LIM_PVT_VALUE, referenceValue),
-		6, "Reference Value");
+			6, "Reference Value");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BDO_PVT_FAIL_RESTART, restartOnFail),
-		7, "Restart On Fail");
+			7, "Restart On Fail");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1632,7 +1629,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOPowerVsTimeListEvaluation(ViSession instr
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BDO_LIM_PVT_LIST, state),
-		2, "State");
+			2, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1694,7 +1691,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOChannelTableData(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K84"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
-		10, "Num of Elements");
+			10, "Num of Elements");
 
 	pbuffer += sprintf(pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,0,0,%d,%.12f",
 	                   channelType[i], codeClass[i], codeNumber[i], modulation[i], status[i] == VI_FALSE ? 0 : 1, cdpRelative[i]);
@@ -1726,13 +1723,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOAdvancedSettings(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_PNOFFSET, pnOffset),
-		2, "PN Offset");
+			2, "PN Offset");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BDO_CDP_AVERAGE, cdpAverage),
-		3, "CDP Average");
+			3, "CDP Average");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BDO_REVISION, revision),
-		4, "Revision");
+			4, "Revision");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1758,28 +1755,28 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOMultiCarrier(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_STATE, multiCarrier),
-		2, "Multi Carrier");
+			2, "Multi Carrier");
 
 	if (multiCarrier == VI_TRUE)
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_ENH_ALG, enhancedAlgorithm),
-			3, "Enhanced Algorithm");
+				3, "Enhanced Algorithm");
 
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_FILTER_STATE, mcFilter),
-			4, "MC Filter");
+				4, "MC Filter");
 
 		if (mcFilter == VI_TRUE)
 		{
 			viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_FILTER_TYPE, filterType),
-				5, "Filter Type");
+					5, "Filter Type");
 
 			if (filterType == RSSPECAN_VAL_C2K_MCARRIER_FTYPE_RRC)
 			{
 				viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_ROLL_OFF, rollOff),
-					6, "Roll Off");
+						6, "Roll Off");
 
 				viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_MCARRIER_CUT_OFF_FREQ, cutOffFrequency),
-					7, "Cut Off Frequency");
+						7, "Cut Off Frequency");
 			}
 		}
 	}
@@ -1804,7 +1801,7 @@ ViStatus _VI_FUNC rsspecan_StoreBDOSEMToFile(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_LIM_STORE_FILE, fileName),
-		2, "File Name");
+			2, "File Name");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1836,8 +1833,7 @@ ViStatus _VI_FUNC rsspecan_ReadBDOSEMPeakList(
 	arrayLength = 3 * numberOfValues;
 	data = malloc(sizeof(ViReal64) * arrayLength);
 
-	checkErr(rsspecan_dataReadTrace (instrSession, window, "FINal1", arrayLength,
-		data, &retVal));
+	checkErr(rsspecan_dataReadTrace(instrSession, window, "FINal1", arrayLength, data, &retVal));
 
 	if (returnedValues)
 		*returnedValues = retVal / 3; // Three result arrays
@@ -2034,10 +2030,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOSEM(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_LIM_MODE, limitLineType),
-		2, "Limit Line Type");
+			2, "Limit Line Type");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_C2K_LIM_TRANS, _30kHz1MHzTransition),
-		3, "30kHz/1MHz Transition");
+			3, "30kHz/1MHz Transition");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2063,7 +2059,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOCodeDomainAnalyzerResults(
 	case RSSPECAN_VAL_C2K_FEED_CDEP:
 	case RSSPECAN_VAL_C2K_FEED_ERR_CTAB:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
-			2, "Result Type");
+				2, "Result Type");
 		break;
 	case RSSPECAN_VAL_C2K_FEED_MACC:
 	case RSSPECAN_VAL_C2K_FEED_PVSL:
@@ -2075,7 +2071,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOCodeDomainAnalyzerResults(
 	case RSSPECAN_VAL_C2K_FEED_SYMB_EVM:
 	case RSSPECAN_VAL_C2K_FEED_COMP_CONS:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_C2K_RESULT_TYPE, resultType),
-			2, "Result Type");
+				2, "Result Type");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, resultType), 2, "Result Type");
@@ -2105,22 +2101,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOCodeDomainAnalyzerSettings(ViSession inst
 	if (!RsCore_IsInstrumentModel(instrSession, "FSP")) // not FSP
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MDO_CDP_IQLENGTH_FSQ_FSU, captureLength),
-			2, "Capture Length");
+				2, "Capture Length");
 	}
 	else // is FSP
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MDO_CDP_IQLENGTH_FSP, captureLength),
-			2, "Capture Length");
+				2, "Capture Length");
 	}
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MDO_CDP_CODE, selectChannel),
-		3, "Select Channel");
+			3, "Select Channel");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_C2K_CDP_SLOT, selectHalfslot),
-		4, "Select Halfslot");
+			4, "Select Halfslot");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_MAPPING, selectMapping),
-		5, "Select Mapping");
+			5, "Select Mapping");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2162,7 +2158,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOChannelTableData(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K85"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, numofElements, 1, INT_MAX),
-		10, "Num of Elements");
+			10, "Num of Elements");
 
 	pbuffer += sprintf(pbuffer, "CONF:CDP:CTAB:DATA %ld,%ld,%ld,%ld,%ld,0,%d,0",
 	                   channelType[i], codeClass[i], codeNumber[i], mapping[i], activity[i], status[i] == VI_FALSE ? 0 : 1);
@@ -2200,25 +2196,25 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOAdvancedSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_PREFERENCE, powerReference),
-		2, "Power Reference");
+			2, "Power Reference");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_ORDER, order),
-		3, "Order");
+			3, "Order");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_MAPPING, selectIQ),
-		4, "Select IQ");
+			4, "Select IQ");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_MDO_CDP_AVERAGE, cdpAverage),
-		5, "CDP Average");
+			5, "CDP Average");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MDO_CDP_OPERATION, operation),
-		6, "Operation");
+			6, "Operation");
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MDO_CDP_LCODE_I, longCodeI),
-		7, "Long Code I");
+			7, "Long Code I");
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MDO_CDP_LCODE_Q, longCodeQ),
-		8, "Long Code Q");
+			8, "Long Code Q");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2238,7 +2234,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOCDPOverview(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_MC2K_CDP_OVERVIEW, codeDomainOverview),
-		2, "Code Domain Overview");
+			2, "Code Domain Overview");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

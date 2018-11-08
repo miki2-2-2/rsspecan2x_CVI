@@ -49,20 +49,20 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkSignalCharacteristics(ViSession i
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_DUPLEXING, duplexing),
-		2, "Duplexing");
+			2, "Duplexing");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_FREQUENCY_CENTER, frequency),
-		3, "Frequency");
+			3, "Frequency");
 
 	switch (bandwidthSettingType)
 	{
 	case RSSPECAN_VAL_LTE_DOWNLINK_CHBW:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CHANNEL_BANDWIDTH, channelBandwidth),
-			4, "Channel bandwidth");
+				4, "Channel bandwidth");
 		break;
 	case RSSPECAN_VAL_LTE_DOWNLINK_NRB:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_NUMBER_OF_RESOURCE_BLOCKS, number_ofResourceBlocks),
-			5, "Number of Resource Blocks");
+				5, "Number of Resource Blocks");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, bandwidthSettingType), 4, "Bandwidth Setting Type");
@@ -70,7 +70,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkSignalCharacteristics(ViSession i
 	}
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CYCLIC_PREFIX, cyclicPrefix),
-		6, "Cyclic Prefix");
+			6, "Cyclic Prefix");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -92,13 +92,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkLevel(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_AUTO_REFERENCE_LEVEL, autoReferenceLevel),
-		3, "Auto Reference Level");
+			3, "Auto Reference Level");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_REFERENCE_LEVEL, referenceLevel),
-		2, "Reference Level");
+			2, "Reference Level");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_REFERENCE_LEVEL_OFFSET, externalAttenuation),
-		4, "External Attenuation");
+			4, "External Attenuation");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -118,7 +118,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkLevelInBBMode(ViSession instrSess
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_REFERENCE_LEVEL_IN_BB_MODE, referenceLevel),
-		2, "Reference Level");
+			2, "Reference Level");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -139,10 +139,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkMIMO(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_MIMO_CONFIGURATION, configuration),
-		2, "Configuration");
+			2, "Configuration");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_MIMO_ANTENNA, antennaSelection),
-		3, "Antenna Selection");
+			3, "Antenna Selection");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -165,7 +165,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkMeasurement(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_MEASUREMENT, measurement),
-		2, "measurement");
+			2, "measurement");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -184,7 +184,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkIQ(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_IQ_SWAP, swapIQ),
-		2, "Swap IQ");
+			2, "Swap IQ");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -204,7 +204,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkInput(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_INPUT, source),
-		2, "Source");
+			2, "Source");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -233,7 +233,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkCSIRSState(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CSI_RS_STATE, state),
-		2, "state");
+			2, "state");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -289,22 +289,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkCSIRS(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CSI_RS_ANTENA_PORTS, antenaPorts),
-		2, "antenaPorts");
+			2, "antenaPorts");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CSI_RS_CONFIGURATION_INDEX, configurationIndex),
-		3, "configurationIndex");
+			3, "configurationIndex");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CSI_RS_OVERWRITE_PDSCH, overwritePDSCH),
-		4, "overwritePDSCH");
+			4, "overwritePDSCH");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CSI_RS_RELATIVE_POWER, relativePower),
-		5, "relativePower");
+			5, "relativePower");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CSI_RS_SUBFRAME_CONFIGURATION, subframeConfiguration),
-		6, "subframeConfiguration");
+			6, "subframeConfiguration");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CSI_RS_FRAME_NUMBER_OFFSET, frameNumberOffset),
-		7, "frameNumberOffset");
+			7, "frameNumberOffset");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -326,7 +326,7 @@ ViStatus _VI_FUNC rsspecan_LoadLTEDownlinkDemodulationSettings(ViSession instrSe
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_LOAD_DEMODULATION_SETTINGS, filePath),
-		2, "File path");
+			2, "File path");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -347,7 +347,7 @@ ViStatus _VI_FUNC rsspecan_StoreLTEDownlinkDemodulationSettings(ViSession instrS
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_STORE_DEMODULATION_SETTINGS, filePath),
-		2, "File path");
+			2, "File path");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -370,16 +370,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkDataAnalysis(ViSession instrSessi
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CHANNEL_ESTIMATION, channelEstimation),
-		2, "Channel Estimation");
+			2, "Channel Estimation");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_EVM_CALCULATION_METHOD, EVMCalculationMethod),
-		3, "EVM Calculation Method");
+			3, "EVM Calculation Method");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_SCRAMBLING_OF_CODED_BITS, scrambling_ofCodedBits),
-		4, "Scrambling of Coded Bits");
+			4, "Scrambling of Coded Bits");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_AUTO_DEMODULATION, autoDemodulation),
-		5, "Auto Demodulation");
+			5, "Auto Demodulation");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -408,16 +408,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkDataAnalysisSettings(ViSession in
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PDSCH_SUBFRAME_DETECT, PDSCHSubframeDetect),
-		2, "PDSCH Subframe Detect");
+			2, "PDSCH Subframe Detect");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_BOOSTING_ESTIMATION, boostingEstimation),
-		3, "Boosting Estimation");
+			3, "Boosting Estimation");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PDSCH_REFERENCE_DATA, PDSCHReferenceData),
-		4, "PDSCH Reference Data");
+			4, "PDSCH Reference Data");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_MULTICARRIER_FILTER, multicarrierFilter),
-		5, "Multicarrier Filter");
+			5, "Multicarrier Filter");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -437,10 +437,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkTracking(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PHASE_TRACKING, phaseTracking),
-		2, "Phase Tracking");
+			2, "Phase Tracking");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_TIMING, timing),
-		3, "Timing");
+			3, "Timing");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -459,7 +459,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkTDDAllocation(ViSession instrSess
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_TDD_UL_DL_ALLOCATIONS, TDDULDLAllocations),
-		2, "TDD UL/DL Allocations");
+			2, "TDD UL/DL Allocations");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -484,7 +484,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkTDDSpecialSubframe(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_TDD_SPECIAL_SUBFRAME, specialSubframe),
-		2, "Special Subframe");
+			2, "Special Subframe");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -513,23 +513,23 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPhysicalLayerCellIdentity(ViSessi
 	if (autoCellIdentityGroup)
 	{
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CID_GROUP_AUTO, NULL),
-			0, "");
+				0, "");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CELL_IDENTITY_GROUP, cellIdentityGroup),
-			3, "Cell Identity Group");
+				3, "Cell Identity Group");
 	}
 
 	if (autoCellIdentity)
 	{
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CELL_IDENTITY_AUTO, NULL),
-			0, "");
+				0, "");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CELL_IDENTITY, cellIdentity),
-			4, "Auto Cell Identity");
+				4, "Auto Cell Identity");
 	}
 
 Error:
@@ -549,7 +549,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPDSCHConfigurableSubframes(ViSess
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PDSCH_CONFIGURABLE_SUBFRAMES, configurableSubframes),
-		2, "Configurable Subframes");
+			2, "Configurable Subframes");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -572,12 +572,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPDSCHUsedAllocations(ViSession in
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, subframe, 0, 9),
-		2, "Subframe");
+			2, "Subframe");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "SFR%ld", subframe);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_PDSCH_USED_ALLOCATIONS, usedAllocations),
-		3, "Used Allocations");
+			3, "Used Allocations");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -603,26 +603,26 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPDSCHUsedAllocation(ViSession ins
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, subframe, 0, 9),
-		2, "Subframe");
+			2, "Subframe");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, usedAllocation, 0, 99),
-		3, "Used Allocation");
+			3, "Used Allocation");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, codeword, 1, 2),
-		4, "Codeword");
+			4, "Codeword");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "SFR%ld,AL%ld,CW%ld", subframe, usedAllocation, codeword);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_PDSCH_ALLOCATION_MODULATION, modulation),
-		5, "Modulation");
+			5, "Modulation");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "SFR%ld,AL%ld", subframe, usedAllocation);
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_PDSCH_ALLOCATION_RESOURCE_BLOCKS, resourceBlocks),
-		6, "Resource Blocks");
+			6, "Resource Blocks");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_PDSCH_ALLOCATION_RESOURCE_BLOCKS_OFFSET, resourceBlocksOffset),
-		7, "Resource Blocks Offset");
+			7, "Resource Blocks Offset");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_PDSCH_ALLOCATION_POWER, power),
-		8, "Power");
+			8, "Power");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -652,14 +652,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPDSCHStartOffset(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, subframe, 0, 9),
-		2, "Subframe");
+			2, "Subframe");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, usedAllocation, 0, 99),
-		3, "Used Allocation");
+			3, "Used Allocation");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "SFR%ld,AL%ld", subframe, usedAllocation);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_PDSCH_ALLOCATION_START_OFFSET, resourceBlocksOffset),
-		4, "Resource Blocks Offset");
+			4, "Resource Blocks Offset");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -679,7 +679,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPRBSymbolOffset(ViSession instrSe
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PRB_SYMBOL_OFFSET, PRBSymbolOffset),
-		2, "PRB Symbol Offset");
+			2, "PRB Symbol Offset");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -699,7 +699,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkReferenceSignal(ViSession instrSe
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_REFERENCE_POWER, referencePower),
-		2, "Reference Power");
+			2, "Reference Power");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -719,10 +719,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkSynchronisationSignal(ViSession i
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PSYNC_RELATIVE_POWER, pSYNCRelativePower),
-		2, "P-SYNC Relative Power");
+			2, "P-SYNC Relative Power");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_SSYNC_RELATIVE_POWER, sSYNCRelativePower),
-		3, "S-SYNC Relative Power");
+			3, "S-SYNC Relative Power");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -742,10 +742,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPBCH(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PBCH_STATE, PBCHPresent),
-		2, "PBCH Present");
+			2, "PBCH Present");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PBCH_RELATIVE_POWER, PBCHRelativePower),
-		3, "PBCH Relative Power");
+			3, "PBCH Relative Power");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -765,10 +765,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPCFICH(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PCFICH_STATE, PCFICHPresent),
-		2, "PCFICH Present");
+			2, "PCFICH Present");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PCFICH_RELATIVE_POWER, PCFICHRelativePower),
-		3, "PCFICH Relative Power");
+			3, "PCFICH Relative Power");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -789,13 +789,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPHICH(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PHICH_NUMBER_OF_GROUPS, PHICHNumber_ofGroups),
-		2, "PHICH Number of Groups");
+			2, "PHICH Number of Groups");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PHICH_DURATION, PHICHDuration),
-		3, "PHICH Duration");
+			3, "PHICH Duration");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PHICH_RELATIVE_POWER, PHICHRelativePower),
-		4, "PHICH Relative Power");
+			4, "PHICH Relative Power");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -819,12 +819,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPHICHNgParameter(ViSession instrS
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PHICH_NG_PARAMETER, PHICHNgParameter),
-		2, "PHICH Ng Parameter");
+			2, "PHICH Ng Parameter");
 
 	if (PHICHNgParameter == RSSPECAN_VAL_LTE_DOWNLINK_PHICH_NG_CUSTOM)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PHICH_NUMBER_OF_GROUPS, PHICHNumberOfGroups),
-			3, "PHICH Number Of Groups");
+				3, "PHICH Number Of Groups");
 	}
 
 Error:
@@ -849,7 +849,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPHICHEnhancedTestModels(ViSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PHICH_ENHANCED_TEST_MODELS, PHICHTDDM_i1),
-		2, "PHICH TDD m_i=1");
+			2, "PHICH TDD m_i=1");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -870,13 +870,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPDCCH(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PDCCH_NUMBER_OF_PDCCHS, number_ofPDCCHs),
-		2, "Number of PDCCHs");
+			2, "Number of PDCCHs");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PDCCH_FORMAT, PDCCHFormat),
-		3, "PDCCH Format");
+			3, "PDCCH Format");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PDCCH_RELATIVE_POWER, PDCCHRelativePower),
-		4, "PDCCH Relative Power");
+			4, "PDCCH Relative Power");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -899,7 +899,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPDSCHPowerRatio(ViSession instrSe
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PDSCH_POWER_RATIO, PDSCHPowerRatio),
-		2, "PDSCH Power Ratio");
+			2, "PDSCH Power Ratio");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -921,7 +921,7 @@ ViStatus _VI_FUNC rsspecan_UpdateIQResults(ViSession instrSession)
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_UPDATE_IQ_RESULTS, NULL),
-		0, "");
+			0, "");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -944,7 +944,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkMeasurementType(ViSession instrSe
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_MEASUREMENT_TYPE, measurementType),
-		3, "Measurement Type");
+			3, "Measurement Type");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -965,13 +965,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkSubframeSelection(ViSession instr
 
 	if (allSubframes)
 	{
-		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_SUBFRAME_SELECTION_ALL, allSubframes),
-			2, "All Subframes");
+		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_SUBFRAME_SELECTION_ALL, NULL),
+				2, "All Subframes");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_SUBFRAME_SELECTION, singleSubframeSelection),
-			3, "Single Subframe Selection");
+				3, "Single Subframe Selection");
 	}
 
 Error:
@@ -991,7 +991,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkEVMUnits(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_EVM_UNITS, EVMUnits),
-		2, "EVM Units");
+			2, "EVM Units");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1011,7 +1011,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkBitStream(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_BIT_STREAM_FORMAT, bitStreamFormat),
-		2, "Bit Stream Format");
+			2, "Bit Stream Format");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1030,7 +1030,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkSEMSettings(ViSession instrSessio
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_SEM_CHANNEL, SEMChannelCategory),
-		2, "SEM Channel Category");
+			2, "SEM Channel Category");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1050,10 +1050,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkACPSettings(ViSession instrSessio
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_ACP_ASSUMED_ADJ_CHANNEL_CARRIER, assumedAdjChannelCarrier),
-		2, "Assumed Adj. Channel Carrier");
+			2, "Assumed Adj. Channel Carrier");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_ACP_NOISE_CORRECTION, noiseCorrection),
-		3, "Noise Correction");
+			3, "Noise Correction");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1073,7 +1073,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkConstellationLocation(ViSession i
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_CONSTELLATION_LOCATION, constellationLocation),
-		2, "Constellation Location");
+			2, "Constellation Location");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1102,15 +1102,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkYAxisScaling(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_Y_AXIS_SCALING_AUTO, autoScaling),
-		2, "Auto Scaling");
+			2, "Auto Scaling");
 
 	if (autoScaling == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_Y_AXIS_SCALING_PER_DIVISION, perDivision),
-			3, "Per Division");
+				3, "Per Division");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_Y_AXIS_SCALING_OFFSET, offset),
-			4, "Offset");
+				4, "Offset");
 	}
 
 Error:
@@ -1135,15 +1135,15 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementResultSummary(ViSession in
 	{
 	case RSSPECAN_VAL_LTE_DOWNLINK_QPSK:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_EVM_PDSCH_QPSK_RESULT, result),
-			3, "Result");
+				3, "Result");
 		break;
 	case RSSPECAN_VAL_LTE_DOWNLINK_16QAM:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_EVM_PDSCH_16QAM_RESULT, result),
-			3, "Result");
+				3, "Result");
 		break;
 	case RSSPECAN_VAL_LTE_DOWNLINK_64QAM:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_EVM_PDSCH_64QAM_RESULT, result),
-			3, "Result");
+				3, "Result");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, frameResult), 2, "Frame result");
@@ -1185,7 +1185,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementEVMAll(ViSession instrSess
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_EVM_ALL_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1223,7 +1223,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementEVMPhysicalChannel(ViSessi
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_EVM_PHYSICAL_CHANNEL_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1261,7 +1261,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementEVMPhysicalSignal(ViSessio
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_EVM_PHYSICAL_SIGNAL_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1292,7 +1292,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementEVMSDSFAverage(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_EVM_SDSF_AVERAGE, result),
-		2, "Result");
+			2, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1330,7 +1330,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementFrequencyError(ViSession i
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_FREQUENCY_ERROR_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1368,7 +1368,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementSamplingError(ViSession in
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_SAMPLING_ERROR_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1405,7 +1405,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementIQOffset(ViSession instrSe
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_IQ_OFFSET_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1443,7 +1443,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementIQGainImbalance(ViSession 
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_IQ_GAIN_IMBALANCE_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1481,7 +1481,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementIQQuadratureError(ViSessio
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_IQ_QUADRATURE_ERROR_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1518,7 +1518,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementFramePower(ViSession instr
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_FRAME_POWER_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1555,7 +1555,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementCrestFactor(ViSession inst
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_CREST_FACTOR_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1574,7 +1574,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementTriggerToFrame(ViSession i
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_TRIGGER_TO_FRAME_RESULT, result),
-		2, "Result");
+			2, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1593,7 +1593,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementOSTP(ViSession instrSessio
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_OSTP_RESULT, result),
-		2, "Result");
+			2, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1631,7 +1631,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementRSTP(ViSession instrSessio
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_RSTP_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1681,7 +1681,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementRSSI(
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_DOWNLINK_RSSI_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1707,7 +1707,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementACPResult(ViSession instrS
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K100|K102"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 5, 5),
-		2, "Array size");
+			2, "Array size");
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC1:MARK:FUNC:POW:RES?", arraySize, result, NULL));
 	checkErr(rsspecan_CheckStatus (instrSession));
@@ -1731,7 +1731,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkDetectedCellIdentityGroup(ViSession i
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_DETECTED_CELL_IDENTITY_GROUP, result),
-		2, "Result");
+			2, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1751,7 +1751,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkDetectedCellIdentity(ViSession instrS
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_DETECTED_CELL_IDENTITY, result),
-		2, "Result");
+			2, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1771,7 +1771,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkDetectedCyclicPrefix(ViSession instrS
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_DETECTED_CYCLIC_PREFIX, result),
-		2, "Result");
+			2, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1811,8 +1811,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkEVMVersusCarrierTrace(ViSession instrS
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize,
-		traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1839,8 +1838,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkEVMVersusSymbolTrace(ViSession instrSe
 
 	sprintf(traceName, "TRACE1");
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize,
-		traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1868,8 +1866,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkFrequencyErrorVersusSymbolTrace(ViSess
 
 	sprintf(traceName, "TRACE1");
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize,
-		traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1894,8 +1891,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkEVMVersusSubframeTrace(ViSession instr
 
 	sprintf(traceName, "TRACE1");
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize,
-		traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1932,8 +1928,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkSEMTrace(ViSession instrSession,
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize,
-		traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1958,8 +1953,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkACPTrace(ViSession instrSession,
 
 	sprintf(traceName, "TRACE1");
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize,
-		traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1985,8 +1979,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkPowerSpectrumTrace(ViSession instrSess
 
 	sprintf(traceName, "TRACE1");
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize,
-		traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2027,8 +2020,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkPowerVersusRBReferenceSignalTrace(ViSe
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize,
-		traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2069,8 +2061,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkPowerVersusRBPDSCHTrace(ViSession inst
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize,
-		traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2112,8 +2103,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkChannelFlatnessTrace(ViSession instrSe
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize,
-		traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2155,8 +2145,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkChannelGroupDelayTrace(ViSession instr
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize,
-		traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2198,8 +2187,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkChannelFlatnessDifferenceTrace(ViSessi
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize,
-		traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2279,8 +2267,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkCCDF(ViSession instrSession,
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize,
-		traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 

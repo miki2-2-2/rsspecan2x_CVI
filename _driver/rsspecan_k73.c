@@ -59,7 +59,7 @@ ViStatus _VI_FUNC rsspecan_Set3GPPUEMeasurement(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_MEAS, measurement),
-		2, "Measurement");
+			2, "Measurement");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -91,38 +91,38 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPUEMeasurement(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SCR_CODE, scramblingCode),
-		2, "Scrambling Code");
+			2, "Scrambling Code");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SCR_TYPE, scramblingType),
-		3, "Scrambling Type");
+			3, "Scrambling Type");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_BASE, measurementBase),
-		4, "Measurement Base");
+			4, "Measurement Base");
 
 	if (measurementBase == RSSPECAN_VAL_3GUE_CDP_BASE_FRAME)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SLOT, slot),
-			5, "Slot");
+				5, "Slot");
 	}
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SIDEBAND, sideBand),
-		6, "Side Band");
+			6, "Side Band");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_NORM, normalize),
-		7, "Normalize");
+			7, "Normalize");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GUE_RRC_FILTER, rrcFilter),
-		8, "RRC Filter");
+			8, "RRC Filter");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_HSDPAUPA_STATE, hsdpaupa),
-		9, "HSDPA/UPA");
+			9, "HSDPA/UPA");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_ELIMINATE_TAIL_CHIPS, eliminateTailChips),
-		10, "Eliminate Tail Chips");
+			10, "Eliminate Tail Chips");
 	if (!rsspecan_IsFSV(instrSession))
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_EVM_MEAS_INTERVAL, EVMMeasInterval),
-			13, "EVM Meas Interval");
+				13, "EVM Meas Interval");
 	}
 
 Error:
@@ -143,10 +143,10 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPUEMultiframe(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_MULTIFRAME_CAPTURE_LENGTH, captureLength),
-		2, "Capture Length");
+			2, "Capture Length");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_MULTIFRAME_FRAME_ANALYZE, frameToAnalyze),
-		3, "Frame To Analyze");
+			3, "Frame To Analyze");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -167,13 +167,13 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPUEResults(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SEL_COMP, selectIQ),
-		2, "Select I/Q");
+			2, "Select I/Q");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_CHAN_CODE, channel),
-		3, "Channel");
+			3, "Channel");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GUE_CDP_SFAC, spreadingFactor),
-		4, "Spreading Factor");
+			4, "Spreading Factor");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -199,7 +199,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPUEResultType(ViSession instrSession,
 	case RSSPECAN_VAL_3GUE_RES_CDEP:
 	case RSSPECAN_VAL_3GUE_RES_CTAB:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_3GUE_RESULT, resultType),
-			2, "Result Type");
+				2, "Result Type");
 		break;
 	case RSSPECAN_VAL_3GUE_RES_SUM:
 	case RSSPECAN_VAL_3GUE_RES_PCD:
@@ -219,7 +219,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPUEResultType(ViSession instrSession,
 	case RSSPECAN_VAL_3GUE_RES_CHIP_MAGN:
 	case RSSPECAN_VAL_3GUE_RES_CHIP_PHAS:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_3GUE_RESULT, resultType),
-			2, "Result Type");
+				2, "Result Type");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, resultType), 2, "Result Type");
@@ -253,19 +253,19 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableOperations(ViSession in
 	case RSSPECAN_VAL_CDP_TABLE_SELECT:
 		checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB, VI_TRUE));
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_SEL, channelTable),
-			3, "Channel Table");
+				3, "Channel Table");
 		break;
 	case RSSPECAN_VAL_CDP_TABLE_NEW:
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_NAME, channelTable),
-			3, "Channel Table");
+				3, "Channel Table");
 		break;
 	case RSSPECAN_VAL_CDP_TABLE_DELETE:
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_DEL, channelTable),
-			3, "Channel Table");
+				3, "Channel Table");
 		break;
 	case RSSPECAN_VAL_CDP_TABLE_COPY:
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_COPY, channelTable),
-			3, "Channel Table");
+				3, "Channel Table");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, operation), 2, "Operation");
@@ -290,7 +290,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableComment(ViSession instr
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_COMMENT, channelTableComment),
-		2, "Channel Table Comment");
+			2, "Channel Table Comment");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -326,7 +326,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableData(ViSession instrSes
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K73"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
-		2, "Array Size");
+			2, "Array Size");
 
 	pbuffer += sprintf(pbuffer, "CONF:WCDP:MS:CTAB:DATA %ld,%ld,%ld,%ld,%d,%.12f",
 	                   codeClass[i], codeNumber[i], channelMapping[i], pilotLength[i], status[i] == VI_FALSE ? 0 : 1, cdpRelative[i]);
@@ -357,7 +357,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableHighSpeedChannel(ViSess
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GUE_WCDP_CTAB_HSDP, state),
-		2, "State");
+			2, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -382,7 +382,7 @@ ViStatus _VI_FUNC rsspecan_Query3GPPFDDUEChannelTableCatalog(ViSession instrSess
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K73"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, bufferSize, 0, INT_MAX),
-		3, "Buffer Size");
+			3, "Buffer Size");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTablesList), 4, "Channel Table List");
 
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CONF:WCDP:MS:CTAB:CAT?", &buf));
@@ -445,11 +445,10 @@ ViStatus _VI_FUNC rsspecan_Get3GPPUETrace(ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K73"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, RSSPECAN_VAL_3GUE_TRAC_CDP, RSSPECAN_VAL_3GUE_TRAC_EVM_RMS),
-		3, "Trace");
+			3, "Trace");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, actualPoints), 5, "Actual Points");
 
-	checkErr(rsspecan_dataReadTrace (instrSession, window, trace3GUEArr[trace], arrayLength,
-		values, actualPoints));
+	checkErr(rsspecan_dataReadTrace(instrSession, window, trace3GUEArr[trace], arrayLength, values, actualPoints));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -476,7 +475,7 @@ ViStatus _VI_FUNC rsspecan_Get3GPPUEResult(ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K73"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, RSSPECAN_VAL_CDP_RES_PTOT, RSSPECAN_VAL_CDP_RES_ARCD),
-		2, "Type");
+			2, "Type");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, result), 3, "Result");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MARK:FUNC:WCDP:MS:RES? %s", result3GUECDPArr[type]);

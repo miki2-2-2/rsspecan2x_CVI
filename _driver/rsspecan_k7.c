@@ -63,7 +63,7 @@ ViStatus _VI_FUNC rsspecan_SetADemodState(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_FMDEM_STATE, state),
-		2, "State");
+			2, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -97,9 +97,9 @@ ViStatus _VI_FUNC rsspecan_SelectADemodResult(ViSession instrSession,
 	            viCheckParm(RS_ERROR_INVALID_PARAMETER, 2, "Operating Mode");
 	    }*/
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, operatingMode, 0, tmp_mode),
-		2, "Operating Mode");
+			2, "Operating Mode");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 0, tmp_trace),
-		3, "Trace");
+			3, "Trace");
 	switch (operatingMode)
 	{
 	case RSSPECAN_VAL_FM_FEED_AM_REL:
@@ -148,42 +148,42 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodTrigger(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_FMDEM_TRIGGER_SOURCE, triggerSource),
-		2, "Trigger Source");
+			2, "Trigger Source");
 
 	switch (triggerSource)
 	{
 	case RSSPECAN_VAL_TRG_IMM:
 	case RSSPECAN_VAL_TRG_EXT:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_DELAY, triggerOffset),
-			3, "Trigger Offset");
+				3, "Trigger Offset");
 		break;
 	case RSSPECAN_VAL_TRG_IFP:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_DELAY, triggerOffset),
-			3, "Trigger Offset");
+				3, "Trigger Offset");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_IFP_LEVEL, triggerLevel),
-			5, "Trigger Level");
+				5, "Trigger Level");
 		break;
 	case RSSPECAN_VAL_TRG_FM:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_ADEM_TRIGGER_FM_LEVEL, triggerLevel),
-			5, "Trigger Level");
+				5, "Trigger Level");
 		break;
 	case RSSPECAN_VAL_TRG_AM:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_ADEM_TRIGGER_AM_LEVEL_ABS, triggerLevel),
-			5, "Trigger Level");
+				5, "Trigger Level");
 		break;
 	case RSSPECAN_VAL_TRG_PM:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_ADEM_TRIGGER_PM_LEVEL, triggerLevel),
-			5, "Trigger Level");
+				5, "Trigger Level");
 		break;
 	case RSSPECAN_VAL_TRG_AMR:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_ADEM_TRIGGER_AM_LEVEL_REL, triggerLevel),
-			5, "Trigger Level");
+				5, "Trigger Level");
 		break;
 	}
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_SLOPE, triggerPolarity),
-		4, "Trigger Polarity");
+			4, "Trigger Polarity");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -217,14 +217,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodSet(
 
 	viCheckParm(RsCore_InvalidViReal64Range(instrSession, sampleRate, 122.0703125, 32.0e+6), 2, "Sample Rate");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, recordLength, 1, rec_len),
-		3, "Record Length");
+			3, "Record Length");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, triggerSource, 0, 1),
-		4, "Trigger Source");
+			4, "Trigger Source");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, triggerSlope, 0, 1),
-		5, "Trigger Slope");
+			5, "Trigger Slope");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, pretriggerSamples, -65024, 130560), 6, "Pretrigger Samples");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, numberOfMeas, 0, 32767),
-		7, "Number of Measurements");
+			7, "Number of Measurements");
 
 	sprintf(cmd, "SENS:ADEM:SET %.12fHZ,%ld,%s,%s,%ld,%ld\n",
 	        sampleRate, recordLength, rsspecan_rngFmTriggerSource.rangeValues[triggerSource].cmdString,
@@ -256,7 +256,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodResultType(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, demodulationType, 0, 8),
-		2, "Demodulation Type");
+			2, "Demodulation Type");
 
 	if (rsspecan_IsFSV(instrSession))
 	{
@@ -310,35 +310,35 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodFilter(
 	{
 	case RSSPECAN_VAL_FMDEM_FILTER_HP:
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_FMDEM_FILT_HPAS_STAT, filterState),
-			3, "Filter State");
+				3, "Filter State");
 		if (filterState)
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_FILT_HPAS_FREQ, filterFrequency),
-			4, "Filter Frequency");
+				4, "Filter Frequency");
 		break;
 
 	case RSSPECAN_VAL_FMDEM_FILTER_LP:
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_FMDEM_FILT_LPAS_STAT, filterState),
-			3, "Filter State");
+				3, "Filter State");
 		if (filterState)
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_FILT_LPAS_FREQ, filterFrequency),
-			4, "Filter Frequency");
+				4, "Filter Frequency");
 		break;
 
 	case RSSPECAN_VAL_FMDEM_FILTER_DEEMP:
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_FMDEM_FILT_DEMP_STAT, filterState),
-			3, "Filter State");
+				3, "Filter State");
 		if (filterState)
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_FILT_DEMP_TCON, amfmDeemphasisValue),
-			5, "Deemphasis Value");
+				5, "Deemphasis Value");
 		break;
 	case RSSPECAN_VAL_FMDEM_FILTER_LP_REL:
 
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_FMDEM_FILT_LPAS_STAT, filterState),
-			3, "Filter State");
+				3, "Filter State");
 		if (filterState)
 		{
 			viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_ADEM_FILT_LPAS_FREQ_REL, filterFrequencyInt),
-				4, "Filter Frequency");
+					4, "Filter Frequency");
 		}
 		break;
 
@@ -366,17 +366,17 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodFilterManual(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, filterType, RSSPECAN_VAL_FMDEM_FILTER_HP, RSSPECAN_VAL_FMDEM_FILTER_LP),
-		2, "Filter Type");
+			2, "Filter Type");
 
 	if (filterType == RSSPECAN_VAL_FMDEM_FILTER_HP)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Highpass", RSSPECAN_ATTR_ADEM_FILT_FREQ_MANUAL, filterFrequency),
-			3, "Filter Frequency");
+				3, "Filter Frequency");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Lowpass", RSSPECAN_ATTR_ADEM_FILT_FREQ_MANUAL, filterFrequency),
-			3, "Filter Frequency");
+				3, "Filter Frequency");
 	}
 
 Error:
@@ -397,11 +397,11 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodFilterWeighting(ViSession instrSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_ADEM_FILT_CCITT, CCITT),
-		2, "CCITT");
+			2, "CCITT");
 	if (CCITT == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_ADEM_FILT_CCIR, CCIR),
-			3, "CCIR");
+				3, "CCIR");
 	}
 
 Error:
@@ -421,7 +421,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodFilterAWeighting(ViSession instrSessio
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_ANALOG_DEMOD_FILTER_A_WEIGHTED_ENABLED, aWeightingFilter),
-		2, "A Weighting Filter");
+			2, "A Weighting Filter");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -444,10 +444,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodZoom(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_FMDEM_ZOOM, zoomState),
-		2, "Zoom State");
+			2, "Zoom State");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_ZOOM_START, startTime),
-		3, "Start Time");
+			3, "Start Time");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -467,12 +467,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodZoomLength(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_FMDEM_ZOOM_LENGTH_MODE, zoomLengthMode),
-		2, "Zoom Length Mode");
+			2, "Zoom Length Mode");
 
 	if (zoomLengthMode == RSSPECAN_VAL_MAN)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_ZOOM_LENGTH, zoomLength),
-			3, "Zoom Length");
+				3, "Zoom Length");
 	}
 
 Error:
@@ -493,10 +493,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureAnalogDemodSquelch(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_FMDEM_SQUELCH, squelchState),
-		2, "Squelch State");
+			2, "Squelch State");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_SQUELCH_LEVEL, squelchLevel),
-		3, "Squelch Level");
+			3, "Squelch Level");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -516,7 +516,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodTHDUnit(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_ADEM_UNIT_THD, unit),
-		2, "Unit");
+			2, "Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -569,9 +569,9 @@ ViStatus _VI_FUNC rsspecan_SelectAnalogDemodTrace(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, window, 1, 16),
-		2, "Window");
+			2, "Window");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 6),
-		3, "Trace");
+			3, "Trace");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,TR%ld", window, trace);
 
@@ -606,11 +606,11 @@ ViStatus _VI_FUNC rsspecan_ConfigureAnalogDemodPredefinedStandard(
 	{
 	case RSSPECAN_VAL_ADEM_PRESET_LOAD:
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_ADEM_PRESET_LOAD, standard),
-			3, "Standard");
+				3, "Standard");
 		break;
 	case RSSPECAN_VAL_ADEM_PRESET_STORE:
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_ADEM_PRESET_STORE, standard),
-			3, "Standard");
+				3, "Standard");
 		break;
 	case RSSPECAN_VAL_ADEM_PRESET_RESTORE:
 		checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_ADEM_PRESET_RESTORE, NULL));
@@ -646,16 +646,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodOnlineOutput(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_ANALOG_DEMOD_OUTPUT_STATE, outputState),
-		2, "Output State");
+			2, "Output State");
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_ANALOG_DEMOD_OUTPUT_SELECTION, outputSelection),
-		3, "Output Selection");
+			3, "Output Selection");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_ANALOG_DEMOD_OUTPUT_CUTOFF_FREQUENCY, ACCutoffFrequency),
-		4, "AC Cutoff Frequency");
+			4, "AC Cutoff Frequency");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_ANALOG_DEMOD_PHONE_OUTPUT, phonesOutput),
-		5, "Phones Output");
+			5, "Phones Output");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -674,7 +674,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureAnalogDemodPMPhaseWrap(ViSession instrSessio
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_ADEM_PHASE_WRAP, phaseWrap),
-		2, "Phase Wrap");
+			2, "Phase Wrap");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -693,7 +693,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureAnalogDemodPMPhaseUnits(ViSession instrSessi
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_ADEM_UNIT_ANGLE, PMUnits),
-		2, "PM Units");
+			2, "PM Units");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -712,7 +712,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureAnalogDemodPMZeroPhaseReferencePoint(ViSessi
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_ADEM_PM_RPO_X, referencePoint),
-		2, "Reference Point");
+			2, "Reference Point");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -731,7 +731,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodBandwidth(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_BAND_DEM, demodulationBandwidth),
-		2, "Demodulation Bandwidth");
+			2, "Demodulation Bandwidth");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -750,7 +750,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodAFCoupling(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_FMDEM_AF_COUP, afCoupling),
-		2, "AF Coupling");
+			2, "AF Coupling");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -770,7 +770,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodMeasuringTime(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_MTIM, measuringTime),
-		2, "Measuring Time");
+			2, "Measuring Time");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -793,10 +793,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodAFFrequencyStartStop(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_AF_START, startFrequency),
-		2, "Start Frequency");
+			2, "Start Frequency");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_AF_STOP, stopFrequency),
-		3, "Stop Frequency");
+			3, "Stop Frequency");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -824,10 +824,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodAFFrequencyCenterSpan(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_AF_CENTER, centerFrequency),
-		2, "Center Frequency");
+			2, "Center Frequency");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_AF_SPAN, span),
-		3, "Span");
+			3, "Span");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -865,7 +865,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodAFParam(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_BAND_RES, resolutionBandwidth),
-		2, "Resolution Bandwidth");
+			2, "Resolution Bandwidth");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -888,10 +888,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodRFParam(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_BAND_RES, resolutionBandwidth),
-		2, "Resolution Bandwidth");
+			2, "Resolution Bandwidth");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_SPEC_SPAN, span),
-		3, "Span");
+			3, "Span");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -913,7 +913,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodRFZoom(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_SPEC_ZOOM, zoom),
-		2, "Zoom");
+			2, "Zoom");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -938,13 +938,13 @@ ViStatus _VI_FUNC rsspecan_GetADemodCurrentlySetValue(
 	switch (value)
 	{
 	case RSSPECAN_VAL_FMDEM_RLEN:
-		viCheckParm(rsspecan_GetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_FMDEM_RLEN, &l_value),
-			3, "Result");
+		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_RLEN, &l_value),
+				3, "Result");
 		break;
 
 	case RSSPECAN_VAL_FMDEM_SRATE:
-		viCheckParm(rsspecan_GetAttributeViReal64 (instrSession, "", RSSPECAN_ATTR_FMDEM_SRATE, &l_value),
-			3, "Result");
+		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_SRATE, &l_value),
+				3, "Result");
 		break;
 	default: viCheckParm(RsCore_InvalidViInt32Value(instrSession, value), 2, "Value");
 	}
@@ -981,9 +981,9 @@ ViStatus _VI_FUNC rsspecan_GetADemodResultValues(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, demodulationType, 0, 8),
-		2, "Demodulation Type");
+			2, "Demodulation Type");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultType, 1, 4),
-		3, "Result Type");
+			3, "Result Type");
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 4, "Timeout");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SENS:ADEM:%s:RES? %s", ADEMTypeArr[demodulationType], resultTypeArr[resultType]);
@@ -1016,12 +1016,12 @@ ViStatus _VI_FUNC rsspecan_GetADemodOffset(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, resultType, 0, 1),
-		2, "Result Type");
+			2, "Result Type");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "FMOff%s", fmOffsetArr[resultType]);
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_ADEM_FM_OFFSET, value),
-		3, "Value");
+			3, "Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1051,11 +1051,11 @@ ViStatus _VI_FUNC rsspecan_GetADemodMarkerModulationValue(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, markerNumber, 1, 4),
-		2, "Marker Number");
+			2, "Marker Number");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, demodulationType, 0, 2),
-		3, "Demodulation Type");
+			3, "Demodulation Type");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, detectorType, 0, 3),
-		4, "Detector Type");
+			4, "Detector Type");
 
 	if (RsCore_IsInstrumentModel(instrSession, "FSL") || rsspecan_IsFSV(instrSession))
 	{
@@ -1063,12 +1063,12 @@ ViStatus _VI_FUNC rsspecan_GetADemodMarkerModulationValue(
 	}
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, tmp_trace),
-		5, "Trace");
+			5, "Trace");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "M%ld,Analog%s,TR%ld,ResDet%s",
 	         markerNumber, ADEMTypeArr[demodulationType], trace, detectorTypeArr[detectorType]);
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_ADEM_SUMM_RES, value),
-		6, "Value");
+			6, "Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1101,22 +1101,22 @@ ViStatus _VI_FUNC rsspecan_GetADemodMarkerMeasValue(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, markerNumber, 1, 4),
-		2, "Marker Number");
+			2, "Marker Number");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 0, 4),
-		3, "Measurement");
+			3, "Measurement");
 	if (RsCore_IsInstrumentModel(instrSession, "FSL") || rsspecan_IsFSV(instrSession))
 	{
 		tmp_trace = 6;
 	}
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, tmp_trace),
-		4, "Trace");
+			4, "Trace");
 
 	attribute = attrs[measurement];
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "M%ld,TR%ld", markerNumber, trace);
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, attribute, value),
-		6, "Value");
+			6, "Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

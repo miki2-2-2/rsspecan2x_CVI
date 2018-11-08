@@ -33,7 +33,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMDemodAnalogState(ViSession instrSession,
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FM_STATE, state),
-		3, "State");
+			3, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -57,10 +57,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMDemodAnalogLowpassFilter(ViSession instrSe
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FM_LPAS_MAN, AFLowpass),
-		3, "Lowpass Auto");
+			3, "Lowpass Auto");
 	if (AFLowpass)
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FM_LPAS_FILTER, frequency),
-		4, "Frequency");
+			4, "Frequency");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -83,7 +83,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMDemodAnalogHighpassFilter(ViSession instrS
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FM_HPAS_FILTER, frequency),
-		3, "Frequency");
+			3, "Frequency");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -107,10 +107,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMDemodAnalogRange(ViSession instrSession,
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FM_SPAN_MAN, spanAutoMan),
-		3, "Span Auto/Manual");
+			3, "Span Auto/Manual");
 	if (spanAutoMan)
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FM_SPAN, span),
-		4, "Span");
+			4, "Span");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

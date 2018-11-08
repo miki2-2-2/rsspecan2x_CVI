@@ -514,7 +514,7 @@ ViStatus rsspecan_BtoChannel_RangeTableCallback(ViSession instrSession, ViConstS
 	ViStatus error = VI_SUCCESS;
 	ViInt32 region;
 
-	checkErr(rsspecan_GetAttributeViInt32(instrSession,"", RSSPECAN_ATTR_BTO_GEOG, &region));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_GEOG, &region));
 	switch (region)
 	{
 	case RSSPECAN_BTO_GEOG_EUR:

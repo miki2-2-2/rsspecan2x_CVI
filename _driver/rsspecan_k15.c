@@ -50,7 +50,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureAvionicsDemodulationMode(ViSession instrSess
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_AVI_DEMOD_MODE, demodulationMode),
-		2, "Demodulation Mode");
+			2, "Demodulation Mode");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -69,7 +69,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureAvionicsDistortionResult(ViSession instrSess
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_AVI_DISTORTION_RESULT, type),
-		2, "Type");
+			2, "Type");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -89,7 +89,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureAvionicsTHDUnit(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_ADEM_UNIT_THD, unit),
-		2, "Unit");
+			2, "Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -108,7 +108,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureAvionicsDDMUnit(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win1", RSSPECAN_ATTR_AVI_DDM_UNIT, unit),
-		2, "Unit");
+			2, "Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -130,7 +130,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureAvionicsInput(ViSession instrSession,
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_AVI_INPUT, input),
-		3, "Input");
+			3, "Input");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -153,12 +153,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureAvionicsDemodulationBandwidth(ViSession inst
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_AVI_DEMOD_BWID_AUTO, dbAuto),
-		3, "Auto");
+			3, "Auto");
 
 	if (dbAuto == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_AVI_DEMOD_BWID, demodulationBandwidth),
-			4, "Demodulation Bandwidth");
+				4, "Demodulation Bandwidth");
 	}
 
 Error:
@@ -180,10 +180,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureAvionicsAFFrequencyStartStop(ViSession instr
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_AF_START, startFrequency),
-		2, "Start Frequency");
+			2, "Start Frequency");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_AF_STOP, stopFrequency),
-		3, "Stop Frequency");
+			3, "Stop Frequency");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -204,10 +204,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureAvionicsAFFrequencyCenterSpan(ViSession inst
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_AF_CENTER, centerFrequency),
-		2, "Center Frequency");
+			2, "Center Frequency");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_AF_SPAN, span),
-		3, "Span");
+			3, "Span");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -244,7 +244,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureAvionicsAFParam(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_BAND_RES, resolutionBandwidth),
-		2, "Resolution Bandwidth");
+			2, "Resolution Bandwidth");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -271,16 +271,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureAvionicsDistortionMeasurement(ViSession inst
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_AVI_HARM_DIST_STATE, SHDState),
-		2, "SHD State");
+			2, "SHD State");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_AVI_HARM_DIST_FREQ, SHDHarmonicFrequency),
-		3, "SHD Harmonic Frequency");
+			3, "SHD Harmonic Frequency");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_AVI_THD_FUND_FREQ, THDFundamentalFrequency),
-		4, "THD Fundamental Frequency");
+			4, "THD Fundamental Frequency");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_AVI_THD_MAX_FREQ, THDMaxFrequency),
-		5, "THD Max Frequency");
+			5, "THD Max Frequency");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -299,7 +299,7 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsRFFrequency(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_AVI_RF_FREQ_RESULT, RFFrequencyResult),
-		2, "RF Frequency Result");
+			2, "RF Frequency Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -319,7 +319,7 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsCarrierOffset(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_AVI_CARR_OFFS_RESULT, carrierOffsetResult),
-		2, "Carrier Offset Result");
+			2, "Carrier Offset Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -338,7 +338,7 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsRFLevel(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_AVI_RF_LEVEL_RESULT, RFLevelResult),
-		2, "RF Level Result");
+			2, "RF Level Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -362,9 +362,9 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsAM(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, AMDepth, 0, 5),
-		2, "AM Depth");
+			2, "AM Depth");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, AMFrequency, 0, 4),
-		4, "AM Frequency");
+			4, "AM Frequency");
 
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K15"));
 
@@ -422,7 +422,7 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsDifferenceInDepth(ViSession instrSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_AVI_DDM_RESULT, DDMResult),
-		2, "DDM Result");
+			2, "DDM Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -444,10 +444,10 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsFM(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_AVI_FM_DEVIATION_RESULT, FMDeviationResult),
-		2, "FM Deviation Result");
+			2, "FM Deviation Result");
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_AVI_FM_FREQ_RESULT, FMFrequencyResult),
-		3, "FM Frequency Result");
+			3, "FM Frequency Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -466,7 +466,7 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsPhase(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_AVI_PHASE_RESULT, phaseResult),
-		2, "Phase Result");
+			2, "Phase Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -485,7 +485,7 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsInputLevel(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_AVI_INPUT_LEVEL_RESULT, inputLevelResult),
-		2, "Input Level Result");
+			2, "Input Level Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -507,7 +507,7 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsSDM(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_AVI_SDM_RESULT, SDMResult),
-		2, "SDM Result");
+			2, "SDM Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -526,7 +526,7 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsSHD(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_AVI_SHD_RESULT, SHDResult),
-		2, "SHD Result");
+			2, "SHD Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

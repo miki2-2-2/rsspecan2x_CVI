@@ -66,13 +66,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRASignalCharacteristics(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_FREQUENCY_CENTER, frequency),
-		2, "Frequency");
+			2, "Frequency");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_BURST_TYPE, slotType),
-		3, "Slot Type");
+			3, "Slot Type");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_CHANNEL_BANDWIDTH, channelBandwidth),
-		4, "Channel Bandwidth");
+			4, "Channel Bandwidth");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -98,27 +98,26 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRALevelSettings(
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, "",
-		RSSPECAN_ATTR_TETRA_INPUT_SELECT, &type));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_INPUT_SELECT, &type));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_REFERENCE_LEVEL_OFFSET, externalAttenuation),
-		4, "External Attenuation");
+			4, "External Attenuation");
 
 	switch (type)
 	{
 	case RSSPECAN_VAL_BB_INPUT_RF:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_RF_MEASUREMENT, level),
-			3, "Level");
+				3, "Level");
 		break;
 
 	case RSSPECAN_VAL_BB_INPUT_AIQ:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_RANGE, level),
-			3, "Level");
+				3, "Level");
 		break;
 
 	case RSSPECAN_VAL_BB_INPUT_DIQ:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_IQ_MEASUREMENT, levelInt),
-			3, "Level");
+				3, "Level");
 		break;
 	}
 
@@ -146,21 +145,21 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRADataCaptureSettings(
 	if (captureTimeUnit == RSSPECAN_VAL_TETRA_UNIT_SECONDS)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_SWEEP_TIME, captureTime),
-			2, "Capture Time");
+				2, "Capture Time");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_TEDS_SLOT_DURATION, captureTime),
-			2, "Capture Time");
+				2, "Capture Time");
 	}
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TETRA_OVERALL_BURST_COUNT, useNumberOfSlotsToAnalyzer),
-		3, "Use Number Of Slots To Analyzer");
+			3, "Use Number Of Slots To Analyzer");
 
 	if (useNumberOfSlotsToAnalyzer == VI_TRUE)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_NUMBER_OF_BURST, numberOfSlotsToAnalyze),
-			4, "Number Of Slots To Analyze");
+				4, "Number Of Slots To Analyze");
 	}
 
 Error:
@@ -195,12 +194,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRATriggerSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_TRIGGER_MODE, mode),
-		2, "Mode");
+			2, "Mode");
 
 	if (offsetUnit == RSSPECAN_VAL_TETRA_UNIT_SECONDS)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_DELAY, offset),
-			3, "Offset");
+				3, "Offset");
 	}
 	else
 	{
@@ -210,10 +209,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRATriggerSettings(
 	}
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_EXTERNAL_TRIGGER_LEVEL, extTriggerLevel),
-		5, "Ext. Trigger Level");
+			5, "Ext. Trigger Level");
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, "",
-		RSSPECAN_ATTR_TETRA_INPUT_SELECT, &type));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_INPUT_SELECT, &type));
 
 	if (mode == RSSPECAN_VAL_TRIG_MODE_POW)
 	{
@@ -221,12 +219,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRATriggerSettings(
 		{
 		case RSSPECAN_VAL_BB_INPUT_RF:
 			viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_TRIGGER_POWER_LEVEL, extTriggerLevel),
-				7, "Power Trigger Level");
+					7, "Power Trigger Level");
 			break;
 
 		case RSSPECAN_VAL_BB_INPUT_DIQ:
 			viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_TRIGGER_IQ_LEVEL, extTriggerLevel),
-				7, "Power Trigger Level");
+					7, "Power Trigger Level");
 			break;
 		}
 	}
@@ -250,7 +248,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAIQSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TETRA_IQ_SETTING, swapIQ),
-		2, "Swap IQ");
+			2, "Swap IQ");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -273,7 +271,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAInputSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_INPUT_SELECT, input),
-		2, "Input");
+			2, "Input");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -299,19 +297,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAAdvancedBasebandSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BB_INPUT_IMPEDANCE, impedance),
-		2, "Impedance");
+			2, "Impedance");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BB_INPUT_SIGNAL_PATH, path),
-		3, "Path");
+			3, "Path");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BB_INPUT_BALANCED, balanced),
-		4, "Balanced");
+			4, "Balanced");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BB_INPUT_IQ_LPAS, lowPass),
-		5, "Low Pass");
+			5, "Low Pass");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BB_INPUT_IQ_DITH, iqDither),
-		6, "IQ Dither");
+			6, "IQ Dither");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -338,33 +336,32 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAAdvancedIQDigital(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_DIGITAL_INPUT_RANGE_AUTO, autoLevel),
-		2, "Auto Level");
+			2, "Auto Level");
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, "",
-		RSSPECAN_ATTR_TETRA_INPUT_SELECT, &type));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_INPUT_SELECT, &type));
 	switch (type)
 	{
 	case RSSPECAN_VAL_BB_INPUT_RF:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_RF_MEASUREMENT, level),
-			3, "Level");
+				3, "Level");
 		break;
 
 	case RSSPECAN_VAL_BB_INPUT_AIQ:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_RANGE, level),
-			3, "Level");
+				3, "Level");
 		break;
 
 	case RSSPECAN_VAL_BB_INPUT_DIQ:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_IQ_MEASUREMENT, levelInt),
-			3, "Level");
+				3, "Level");
 		break;
 	}
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_DIGITAL_INPUT_SAMPLE_RATE_AUTO, autoSamplingRate),
-		4, "Auto Sampling Rate");
+			4, "Auto Sampling Rate");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_SRATE, samplingRate),
-		5, "Sampling Rate");
+			5, "Sampling Rate");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -385,7 +382,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAIQCenterFrequency(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_IQ_CENTER_FREQUENCY, iqCenterFrequency),
-		2, "IQ Center Frequency");
+			2, "IQ Center Frequency");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -411,13 +408,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRADemodulationSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_BURST_TYPE, slotType),
-		2, "Slot Type");
+			2, "Slot Type");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_PAYLOAD_MODULATION, payloadModulation),
-		3, "Payload Modulation");
+			3, "Payload Modulation");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_MAXIMUM_CARRIER_OFFSET, maxCarrierOffset),
-		4, "Max Carrier Offset");
+			4, "Max Carrier Offset");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -442,13 +439,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAEVMSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TETRA_PILOT_TRACKING, pilotTracking),
-		2, "Pilot Tracking");
+			2, "Pilot Tracking");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TETRA_COMPENSATE_AMPLITUDE_DROOP, compensateAmplitudeDroop),
-		3, "Compensate Amplitude Droop");
+			3, "Compensate Amplitude Droop");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TETRA_COMPENSATE_IQ_OFFSET, compensateIQOffset),
-		4, "Compensate IQ Offset");
+			4, "Compensate IQ Offset");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -471,12 +468,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRATraceSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 4),
-		2, "Trace");
+			2, "Trace");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win2,TR%ld", trace);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_TRACE_STATE, traceState),
-		3, "Trace State");
+			3, "Trace State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -501,15 +498,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAMarker(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 4),
-		3, "Marker");
+			3, "Marker");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_MARKER_ENABLED, markerEnabled),
-		4, "Marker Enabled");
+			4, "Marker Enabled");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_MARKER_TRACE, trace),
-		5, "Trace");
+			5, "Trace");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -534,7 +531,7 @@ ViStatus _VI_FUNC rsspecan_TETRAMarkerSearch(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 4),
-		3, "Marker");
+			3, "Marker");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
 
@@ -576,14 +573,14 @@ ViStatus _VI_FUNC rsspecan_TETRAMoveMarker(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 4),
-		3, "Marker");
+			3, "Marker");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 0, 8),
-		4, "Measurement");
+			4, "Measurement");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld,Mkr%s", window, marker, tetraMoveMarkerMeasArr[measurement]);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_MOVE_MARKER, markerPosition),
-		5, "Marker Position");
+			5, "Marker Position");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -608,12 +605,12 @@ ViStatus _VI_FUNC rsspecan_QueryTETRAMarkerAmplitude(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 4),
-		3, "Marker");
+			3, "Marker");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_MARKER_AMPLITUDE, markerAmplitude),
-		2, "Marker Amplitude");
+			2, "Marker Amplitude");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -635,7 +632,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRADisplayFormat(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_DISP_FORMAT, format),
-		2, "Format");
+			2, "Format");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -696,14 +693,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAResultSummaryLimits(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limitType, 0, 8),
-		2, "Limit Type");
+			2, "Limit Type");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, mode, 2, 3),
-		3, "Mode");
+			3, "Mode");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "EVMLim%s,TETRA%s", evmLimitTypeArr[limitType], tetraMeasModArr[mode]);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_EVM_SUMMARY_LIMITS, value),
-		4, "Value");
+			4, "Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -777,16 +774,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAACPLimits(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, acp, 0, 1),
-		2, "ACP");
+			2, "ACP");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelNumber, 0, 6),
-		3, "Channel Number");
+			3, "Channel Number");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelBandwidth, 0, 3),
-		4, "Channel Bandwidth");
+			4, "Channel Bandwidth");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "ACP%s,ACP%s,Ch%s", tetraACPTypeArr[acp], tetraACPChannelArr[channelNumber], tetraChannelBWArr[channelBandwidth]);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_ACP_LIMITS, limitValue),
-		5, "Limit Value");
+			5, "Limit Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -808,7 +805,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAMeasurementType(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 0, 12),
-		2, "Measurement");
+			2, "Measurement");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", tetraMeasurementSelectArr[measurement]);
 
@@ -839,27 +836,27 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAYAxis(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 1, 4),
-		2, "Measurement");
+			2, "Measurement");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "TETRA%s", tetraYAxisMeasArr[measurement]);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE_AUTO, autoScaling),
-		3, "Auto Scaling");
+			3, "Auto Scaling");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE_UNIT, unit),
-		4, "Unit");
+			4, "Unit");
 
 	if (autoScaling == VI_FALSE)
 	{
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "TETRA%s,TETRACenter", tetraYAxisMeasArr[measurement]);
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE, yCenter),
-			5, "Y-Center");
+				5, "Y-Center");
 
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "TETRA%s,TETRASpan", tetraYAxisMeasArr[measurement]);
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_Y_AXIS_TRACE, ySpan),
-			5, "Y-Span");
+				5, "Y-Span");
 	}
 
 Error:
@@ -883,7 +880,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAContinuousMeasurement(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_SWEEP_MODE_CONTINUOUS, continuous),
-		2, "Continuous");
+			2, "Continuous");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -911,15 +908,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAConstellationSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, carrierSelection, 0, 1),
-		3, "Carrier Selection");
+			3, "Carrier Selection");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_CONSTELLATION_SYMBOL_SETTINGS, symbolstoPlotSelection),
-		2, "Symbols to Plot Selection");
+			2, "Symbols to Plot Selection");
 
 	if (carrierSelection == RSSPECAN_VAL_CARRIER_NUM)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_CONSTELLATION_CARRIER_NUMBER, carrierNumber),
-			4, "Carrier Number");
+				4, "Carrier Number");
 	}
 
 Error:
@@ -941,7 +938,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAEVMResultUnits(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_EVM_RESULT_UNITS, evmUnits),
-		2, "EVM Units");
+			2, "EVM Units");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -962,7 +959,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAGainImbalanceResultUnits(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_GAIN_IMBALANCE_RESULT_UNITS, gainImbalanceUnits),
-		2, "Gain Imbalance Units");
+			2, "Gain Imbalance Units");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1065,7 +1062,7 @@ ViStatus _VI_FUNC rsspecan_FetchTETRANumberOfBursts(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_NUMBER_OF_BURST, numberOfBurst),
-		2, "Number of Burst");
+			2, "Number of Burst");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1090,14 +1087,14 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAMeasuremenResults(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, 0, 13),
-		2, "Measurement");
+			2, "Measurement");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, 1, 4),
-		3, "Measurement Type");
+			3, "Measurement Type");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s,TETRA%s", tetraSummaryTableArr[measurement], tetraMeasModArr[measurementType]);
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_SUMMARY_TABLE_MEASUREMENT_RESULT, result),
-		2, "Result");
+			2, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1159,7 +1156,7 @@ ViStatus _VI_FUNC rsspecan_FetchTETRASubcarrierMeanPower(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, 1, 4),
-		2, "Measurement Type");
+			2, "Measurement Type");
 
 	switch (measurementType)
 	{
@@ -1205,7 +1202,7 @@ ViStatus _VI_FUNC rsspecan_FetchTETRASubcarrierReferencePower(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, 1, 4),
-		2, "Measurement Type");
+			2, "Measurement Type");
 
 	switch (measurementType)
 	{
@@ -1256,21 +1253,21 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAPVTMeasurement(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, pvt, 0, 6),
-		2, "PVT");
+			2, "PVT");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, 1, 4),
-		3, "Measurement Type");
+			3, "Measurement Type");
 
 	if (pvt == RSSPECAN_VAL_TETRA_PVT_TRG_TO_SYNC)
 	{
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_PVT_TRIGGER_TO_SYNC_TIME, result),
-			4, "Result");
+				4, "Result");
 	}
 	else
 	{
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s,TETRA%s", tetraPVTMeasArr[pvt], tetraMeasModArr[measurementType]);
 
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_PVT_MEASUREMENT, result),
-			4, "Result");
+				4, "Result");
 	}
 
 Error:
@@ -1322,7 +1319,7 @@ ViStatus _VI_FUNC rsspecan_FetchTETRASpectrumFFTMeasurementRBW(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_SPECTRUM_FFT_MEASUREMENT_RBW, result),
-		2, "Result");
+			2, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1349,18 +1346,18 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAACP(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, acp, 0, 1),
-		2, "ACP");
+			2, "ACP");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, acpMeasurement, 0, 6),
-		3, "ACP Measurement");
+			3, "ACP Measurement");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelNumber, 0, 6),
-		4, "Channel Number");
+			4, "Channel Number");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelNumber, 2, 4),
-		5, "Measurement Type");
+			5, "Measurement Type");
 
 	if (acpMeasurement == RSSPECAN_VAL_TETRA_ACP_RBW)
 	{
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_FETCH_ACP_MODULATION_RBW, result),
-			6, "Result");
+				6, "Result");
 	}
 	else
 	{
@@ -1368,7 +1365,7 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAACP(
 		         tetraMeasModArr[measurementType]);
 
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_FETCH_ACP_MEASUREMENT, result),
-			6, "Result");
+				6, "Result");
 	}
 
 Error:
@@ -1396,14 +1393,14 @@ ViStatus _VI_FUNC rsspecan_GetTETRATraceXAxisMinMax(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 4),
-		3, "Trace");
+			3, "Trace");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, valueType, 1, 2),
-		4, "Value Type");
+			4, "Value Type");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,TR%ld,TETRA%s", window, trace, tetraMeasModArr[valueType]);
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TETRA_TRACE_X_AXIS_MIN_MAX, xAxisValue),
-		5, "X Axis Value");
+			5, "X Axis Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1425,7 +1422,7 @@ ViStatus _VI_FUNC rsspecan_GetTETRAIQDataSamplingRate(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_IQ_SAMPLE_RATE, iqDataSamplingRate),
-		2, "IQ Data Sampling Rate");
+			2, "IQ Data Sampling Rate");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1449,14 +1446,14 @@ ViStatus _VI_FUNC rsspecan_GetTETRAResultSummaryLimitCheckResult(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limitType, 0, 8),
-		2, "Limit Type");
+			2, "Limit Type");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, mode, 2, 3),
-		3, "Mode");
+			3, "Mode");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "EVMLim%s,TETRA%s", evmLimitTypeArr[limitType], tetraMeasModArr[mode]);
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_TETRA_RESULT_SUMMARY_LIMIT_CHECK_RESULT, result),
-		4, "Result");
+			4, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1505,16 +1502,16 @@ ViStatus _VI_FUNC rsspecan_GetTETRAACPLimitCheckResult(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, acp, 0, 1),
-		2, "ACP");
+			2, "ACP");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelNumber, 0, 6),
-		3, "Channel Number");
+			3, "Channel Number");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, 2, 4),
-		4, "Measurement Type");
+			4, "Measurement Type");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "ACP%s,ACP%s,TETRA%s", tetraACPTypeArr[acp], tetraACPChannelArr[channelNumber], tetraMeasModArr[measurementType]);
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_TETRA_ACP_LIMIT_CHECK_RESULT, result),
-		5, "Result");
+			5, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

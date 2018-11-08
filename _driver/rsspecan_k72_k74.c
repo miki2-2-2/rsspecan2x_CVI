@@ -60,7 +60,7 @@ ViStatus _VI_FUNC rsspecan_Set3GPPBSMeasurement(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_MEAS, measurement),
-		2, "Measurement");
+			2, "Measurement");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -82,7 +82,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPBSMode(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GPP_BS_STANDARD, baseStationMode),
-		2, "Base Station Mode");
+			2, "Base Station Mode");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -113,51 +113,51 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPBSMeasurement(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_SCODE, scramblingCode),
-		2, "Scrambling Code");
+			2, "Scrambling Code");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_POW_REF, powerReference),
-		3, "Power Reference");
+			3, "Power Reference");
 	if (!RsCore_IsInstrumentModel(instrSession, "FSL"))
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_COMPARE_MODE, compareMode),
-			4, "Compare Mode");
+				4, "Compare Mode");
 	}
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_SYNC_TYPE, syncType),
-		5, "Sync Type");
+			5, "Sync Type");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_SIDE_BAND, sideBand),
-		6, "Side Band");
+			6, "Side Band");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_NORMALIZE, normalize),
-		7, "Normalize");
+			7, "Normalize");
 
 	if (RsCore_IsInstrumentModel(instrSession, "FSL") || (RsCore_HasInstrumentOptions(instrSession, "K74")))
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_HSDPAUPA_STATE, hsdpaupa),
-			8, "HSDPA/UPA");
+				8, "HSDPA/UPA");
 	}
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_INACT_CHAN_THR, inactiveChannelTreshold),
-		9, "Inactive Channel Threshold");
+			9, "Inactive Channel Threshold");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_INVERT_Q, invertQ),
-		9, "Invert Q");
+			9, "Invert Q");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_ANTENNA, antenna),
-		10, "Antenna");
+			10, "Antenna");
 
 	if (RsCore_IsInstrumentModel(instrSession, "FSL"))
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_POW_DIFFERENCE, powerDifference),
-			11, "Power Difference");
+				11, "Power Difference");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_CONST_B, constellationParameterB),
-			12, "Constellation Parameter B");
+				12, "Constellation Parameter B");
 
 		if (!rsspecan_IsFSV(instrSession))
 		{
 			viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_TIMING_OFFSET, timingOffset),
-				13, "Timing Offset");
+					13, "Timing Offset");
 		}
 	}
 
@@ -179,10 +179,10 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPBSMultiframe(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_MULTIFRAME_CAPTURE_LENGTH, captureLength),
-		2, "Capture Length");
+			2, "Capture Length");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_MULTIFRAME_FRAME_ANALYZE, frameToAnalyze),
-		3, "Frame To Analyze");
+			3, "Frame To Analyze");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -202,10 +202,10 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPBSMulticarrier(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_MCACLR, multicarrierState),
-		2, "Multicarrier State");
+			2, "Multicarrier State");
 	if (multicarrierState)
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_AUTO_SCALE, autoscale),
-		3, "Autoscale");
+			3, "Autoscale");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -226,7 +226,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPBSSingleAntennaMIMOMode(ViSession instrS
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GBS_MIMO_MODE, mode),
-		2, "Mode");
+			2, "Mode");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -247,15 +247,15 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPBSResults(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_RESULTS_SELECT_CHAN, channel),
-		2, "Channel");
+			2, "Channel");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_RESULTS_SELECT_CPICH_SLOT, cpichSlot),
-		3, "CPICH Slot");
+			3, "CPICH Slot");
 
 	if (!RsCore_IsInstrumentModel(instrSession, "FSL"))
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_RESULTS_SFAC, spreadingFactor),
-			4, "Spreading Factor");
+				4, "Spreading Factor");
 	}
 
 Error:
@@ -282,7 +282,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPBSResultType(ViSession instrSession,
 	case RSSPECAN_VAL_3GBS_RES_CTAB:
 	case RSSPECAN_VAL_3GBS_RES_SUM:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_3GBS_RESULT, resultType),
-			2, "Result Type");
+				2, "Result Type");
 		break;
 	case RSSPECAN_VAL_3GBS_RES_PCD:
 	case RSSPECAN_VAL_3GBS_RES_MACC:
@@ -302,7 +302,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPBSResultType(ViSession instrSession,
 	case RSSPECAN_VAL_3GBS_RES_PSVSL:
 	case RSSPECAN_VAL_3GBS_RES_CDPOVER:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C2", RSSPECAN_ATTR_3GBS_RESULT, resultType),
-			2, "Result Type");
+				2, "Result Type");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, resultType), 2, "Result Type");
@@ -325,7 +325,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPBSResultSummaryView(ViSession instrSessi
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_3GBS_RESULT_SUM_VIEW, view),
-		2, "View");
+			2, "View");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -345,7 +345,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPBSYScaleDivision(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_3GPP_PDIV, yScaleDivision),
-		2, " Y Scale Division");
+			2, " Y Scale Division");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -423,9 +423,9 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPTAERBTSCarrier(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, carrier, 1, 23),
-		2, "Carrier");
+			2, "Carrier");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, antenna, 1, 2),
-		3, "Antenna");
+			3, "Antenna");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "CT%ld,AT%ld", carrier, antenna);
 
@@ -478,7 +478,7 @@ ViStatus _VI_FUNC rsspecan_Set_3GPPTAERBTSOperation(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, carrier, 1, 23),
-		2, "Carrier");
+			2, "Carrier");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "CT%ld", carrier);
 
@@ -516,7 +516,7 @@ ViStatus _VI_FUNC rsspecan_Query3GPPTAERTableCatalog(ViSession instrSession,
 
 	viCheckParm(rsspecan_GetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GPP_TAER_TABLE_CATALOG,
 			bufferSize, catalogTablesList),
-		3, "Catalog Tables List");
+			3, "Catalog Tables List");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -597,18 +597,18 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDBSChannelTableOperations(ViSession in
 	case RSSPECAN_VAL_CDP_TABLE_SELECT:
 		checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_CTAB, VI_TRUE));
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_CTAB_SEL, channelTable),
-			3, "Channel Table");
+				3, "Channel Table");
 		break;
 	case RSSPECAN_VAL_CDP_TABLE_NEW:
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_CTAB_NAME, channelTable),
-			3, "Channel Table");
+				3, "Channel Table");
 		break;
 	case RSSPECAN_VAL_CDP_TABLE_DELETE:
 		checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_CTAB_DEL, NULL));
 		break;
 	case RSSPECAN_VAL_CDP_TABLE_COPY:
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_CTAB_COPY, channelTable),
-			3, "Channel Table");
+				3, "Channel Table");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, operation), 2, "Operation");
@@ -633,7 +633,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDBSChannelTableComment(ViSession instr
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GBS_WCDP_CTAB_HEAD_COMM, channelTableComment),
-		2, "Channel Table Comment");
+			2, "Channel Table Comment");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -667,7 +667,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDBSChannelTableData(ViSession instrSes
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K72|K74"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
-		2, "Array Size");
+			2, "Array Size");
 	pbuffer += sprintf(pbuffer, "CONF:WCDP:CTAB:DATA %ld,%ld,%d,%ld,%ld,%ld,%d,%.12f",
 	                   codeClass[i], codeNumber[i], TFCI[i] > 0 ? 1 : 0, timingOffset[i], pilotLength[i], channelType[i],
 	                   status[i] > 0 ? 1 : 0, CDPRelative[i]);
@@ -703,7 +703,7 @@ ViStatus _VI_FUNC rsspecan_Query3GPPFDDBSChannelTableCatalog(ViSession instrSess
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K72|K74"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, bufferSize, 0, INT_MAX),
-		3, "Buffer Size");
+			3, "Buffer Size");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTablesList), 4, "Channel Table List");
 
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CONF:WCDP:CTAB:CAT?", &buf));
@@ -731,7 +731,7 @@ ViStatus _VI_FUNC rsspecan_Set3GPPBSMarkerToChannel(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channel, 0, 1),
-		3, "Channel");
+			3, "Channel");
 
 	switch (channel)
 	{
@@ -764,7 +764,7 @@ ViStatus _VI_FUNC rsspecan_Set3GPPBSDeltaMarkerToChannel(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channel, 0, 1),
-		3, "Channel");
+			3, "Channel");
 
 	switch (channel)
 	{
@@ -832,11 +832,10 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSTrace(ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K72|K74"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, RSSPECAN_VAL_3GBS_TRAC_CDP, RSSPECAN_VAL_3GBS_TRAC_ATRACE2),
-		3, "Trace");
+			3, "Trace");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, actualPoints), 5, "Actual Points");
 
-	checkErr(rsspecan_dataReadTrace (instrSession, window, trace3GBSArr[trace], arrayLength,
-		values, actualPoints));
+	checkErr(rsspecan_dataReadTrace(instrSession, window, trace3GBSArr[trace], arrayLength, values, actualPoints));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -864,7 +863,7 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSResult(ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K72|K74|K44"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, RSSPECAN_VAL_WCDP_RES_PTOT, RSSPECAN_VAL_WCDP_RES_RCDQ),
-		2, "Type");
+			2, "Type");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, result), 3, "Result");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MARK:FUNC:WCDP:RES? %s", result3GBSWCDPArr[type]);
@@ -896,16 +895,16 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSCDPResult(ViSession instrSession,
 	if (!RsCore_HasInstrumentOptions(instrSession, "K44"))
 	{
 		viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, 0, 3),
-			2, "Type");
+				2, "Type");
 	}
 	else
 	{
 		viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, 0, 5),
-			2, "Type");
+				2, "Type");
 	}
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 0, INT_MAX),
-		3, "Array Size");
+			3, "Array Size");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 4, "Results");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MARK:FUNC:POW:RES? %s", result3GBSCDPArr[type]);

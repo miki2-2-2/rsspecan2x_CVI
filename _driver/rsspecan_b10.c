@@ -32,12 +32,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureExternalGeneratorPower(ViSession instrSessio
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, generator, 1, 2),
-		3, "Generator");
+			3, "Generator");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,G%ld", window, generator);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_EXT_GEN_OUTPUT_POWER, power),
-		4, "Power");
+			4, "Power");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -60,7 +60,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureExternalGeneratorSource(ViSession instrSessi
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_EXT_GEN_STATE, state),
-		3, "State");
+			3, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -83,15 +83,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureExternalGeneratorFrequency(ViSession instrSe
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, generator, 1, 2),
-		3, "Generator");
+			3, "Generator");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,G%ld", window, generator);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_EXT_GEN_OUTPUT_FREQUENCY, frequency),
-		4, "Frequency");
+			4, "Frequency");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_EXT_GEN_OUTPUT_FREQUENCY_COUPLING, coupling),
-		5, "Coupling");
+			5, "Coupling");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -114,17 +114,17 @@ ViStatus _VI_FUNC rsspecan_SelectExternalGenerator(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, generator, 1, 2),
-		2, "Generator");
+			2, "Generator");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "G%ld", generator);
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_EXT_GEN_IEEE_ADDR, generatorAddress),
-		3, "Generator Address");
+			3, "Generator Address");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_EXT_GEN_INTF_TYPE, generatorLink),
-		4, "Generator Link");
+			4, "Generator Link");
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_EXT_GEN_TYPE, generatorType),
-		5, "Generator Type");
+			5, "Generator Type");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -157,19 +157,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureExternalGeneratorFrequencySweep(ViSession in
 	ViStatus error = VI_SUCCESS;
 	ViChar repCap[RS_REPCAP_BUF_SIZE];
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, generator, 1, 2),
-		3, "Generator");
+			3, "Generator");
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,G%ld", window, generator);
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_EXT_GEN_FREQ_SWEEP_STATE, frequencySweep),
-		4, "Frequency Sweep");
+			4, "Frequency Sweep");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_EXT_GEN_FREQ_OFFSET, frequencyOffset),
-		5, "Frequency Offset");
+			5, "Frequency Offset");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_EXT_GEN_DENOMINATOR, denominator),
-		6, "Denominator");
+			6, "Denominator");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_EXT_GEN_NUMERATOR, numerator),
-		7, "Numerator");
+			7, "Numerator");
 
 
 	checkErr(RsCore_LockSession(instrSession));
@@ -197,7 +197,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureExternalGeneratorRefOscillator(ViSession ins
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_EXT_GEN_ROSC_SOURCE, reference),
-		3, "Reference");
+			3, "Reference");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -222,7 +222,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureExternalGain(ViSession instrSession,
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CORR_EGA_INP, gain),
-		3, "Gain");
+			3, "Gain");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -245,7 +245,7 @@ ViStatus _VI_FUNC rsspecan_SendCommandToExternalGenerator(ViSession instrSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, deviceAddress, 0, 30),
-		2, "Device Address");
+			2, "Device Address");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SYST:COMM:GPIB:RDEV:COMM %ld,%s", deviceAddress, commandString);
 	checkErr(RsCore_Write(instrSession, cmd));
@@ -273,7 +273,7 @@ ViStatus _VI_FUNC rsspecan_ExternalGeneratorNormalization(ViSession instrSession
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_TGEN_NORMALIZATION_STATE, state),
-		3, "State");
+			3, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -388,14 +388,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureTrackingGenerator(ViSession instrSession,
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TGEN_OUTPUT_LEVEL, sourcePower),
-		3, "Source Power");
+			3, "Source Power");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TGEN_LEVEL_OFFSET, powerOffset),
-		4, "Power Offset");
+			4, "Power Offset");
 
 	if (RsCore_IsInstrumentModel(instrSession, "FSQ"))
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TGEN_FREQUENCY_OFFSET, frequencyOffset),
-		5, "Frequency Offset");
+			5, "Frequency Offset");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -417,7 +417,7 @@ ViStatus _VI_FUNC rsspecan_SetTrackingGeneratorState(ViSession instrSession,
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_TGEN_STATE, state),
-		3, "State");
+			3, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -445,18 +445,18 @@ ViStatus _VI_FUNC rsspecan_ConfigureTrackingGeneratorExternalModulation(ViSessio
 	{
 	case RSSPECAN_VAL_TGEN_EXT_AM:
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_TGEN_AM_STATE, modState),
-			4, "State");
+				4, "State");
 		break;
 	case RSSPECAN_VAL_TGEN_EXT_FM:
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_TGEN_FM_STATE, modState),
-			4, "State");
+				4, "State");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TGEN_FM_DEVIATION, fmDeviation),
-			5, "FM Deviation");
+				5, "FM Deviation");
 		break;
 	case RSSPECAN_VAL_TGEN_EXT_IQ:
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_TGEN_DM_STATE, modState),
-			4, "State");
+				4, "State");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, modulation), 3, "Modulation");
@@ -485,13 +485,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureTrackingGeneratorPowerSweep(ViSession instrS
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_TGEN_POW_MODE, powerSweep),
-		3, "Power Sweep");
+			3, "Power Sweep");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TGEN_POW_START, powerStart),
-		4, "Power Sweep");
+			4, "Power Sweep");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_TGEN_POW_STOP, powerStop),
-		5, "Power Sweep");
+			5, "Power Sweep");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

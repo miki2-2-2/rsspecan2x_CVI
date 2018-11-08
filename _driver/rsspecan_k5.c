@@ -53,7 +53,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmTrigger(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, triggerSource, RSSPECAN_VAL_GSM_TRIG_FRUN, RSSPECAN_VAL_GSM_TRIG_RFP),
-		2, "Trigger Source");
+			2, "Trigger Source");
 
 	switch (triggerSource)
 	{
@@ -62,15 +62,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmTrigger(ViSession instrSession,
 		break;
 	case RSSPECAN_VAL_GSM_TRIG_EXT:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_SYNC_ADJ_EXT, triggerValue),
-			3, "Trigger Value");
+				3, "Trigger Value");
 		break;
 	case RSSPECAN_VAL_GSM_TRIG_IFP:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_SYNC_ADJ_IFP, triggerValue),
-			3, "Trigger Value");
+				3, "Trigger Value");
 		break;
 	case RSSPECAN_VAL_GSM_TRIG_RFP:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_SYNC_ADJ_RFP, triggerValue),
-			3, "Trigger Value");
+				3, "Trigger Value");
 		break;
 	}
 
@@ -99,14 +99,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmDemodulation(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, midamble, RSSPECAN_VAL_GSM_TSC_0, RSSPECAN_VAL_GSM_TSC_AB2),
-		8, "Midamble");
+			8, "Midamble");
 
 	if ((syncSearch == VI_FALSE) && (burstSearch == VI_FALSE))
 	{
 		viCheckErrElab(RS_ERROR_INVALID_CONFIGURATION, "Combination of syncSearch and burstSearch");
 	}
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_CHAN_TSC, midamble),
-		8, "Midamble");
+			8, "Midamble");
 
 	switch (midamble)
 	{
@@ -116,22 +116,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmDemodulation(ViSession instrSession,
 		break;
 	default:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_MTYP, modulationType),
-			2, "Modulation Type");
+				2, "Modulation Type");
 
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_BSE, burstSearch),
-			6, "Burst Search");
+				6, "Burst Search");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_SLOT_MULT, multiSlot),
-			3, "Multi Slot");
+				3, "Multi Slot");
 	}
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_PRAT, samplesPerSymbols),
-		4, "Samples Per Symbols");
+			4, "Samples Per Symbols");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_SSE, syncSearch),
-		5, "Sync Search");
+			5, "Sync Search");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_BSTH, burstSearchThreshold),
-		7, "Burst Search Threshold");
+			7, "Burst Search Threshold");
 
 	if (midamble == RSSPECAN_VAL_GSM_USER)
 	{
@@ -147,7 +147,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmDemodulation(ViSession instrSession,
 			break;
 		}
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_GSM_TSC_USER, userSequence),
-			10, "User Sequence");
+				10, "User Sequence");
 	}
 
 Error:
@@ -168,7 +168,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmMultiCarrierMode(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_MCAR, multiCarrierMode),
-		2, "Multi Carrier MOde");
+			2, "Multi Carrier MOde");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -188,7 +188,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmTransSpecLimitType(ViSession instrSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_SWIT_LIM, limitType),
-		2, "Limit Type");
+			2, "Limit Type");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -208,7 +208,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmIFRFTriggerAsIQPower(ViSession instrSessi
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_SYNC_IQPOWER, state),
-		2, "State");
+			2, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -229,7 +229,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmModulationSpectrumListAverage(ViSession i
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_MODULATION_SPECTRUM_LIST_AVER_TYPE, listAverage),
-		2, "List Average");
+			2, "List Average");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -266,7 +266,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmExtendedSlotState(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_EXTENDED_SLOT_STATE, state),
-		2, "State");
+			2, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -291,24 +291,24 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmExtendedSlot(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_EXTENDED_SLOT_STANDARD, standard),
-		2, "Standard");
+			2, "Standard");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_EXTENDED_SLOT_TRIG_REFERENCE, triggerReference),
-		3, "Trigger Reference");
+			3, "Trigger Reference");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_EXTENDED_SLOT_MIDAMBLE_REFERENCE, referenceMidable),
-		4, "Reference Midable");
+			4, "Reference Midable");
 	if (standard >= RSSPECAN_VAL_GSM_EXTSLOT_GSM900)
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_EXTENDED_SLOT_ABS_LIMIT_STATE, absoluteLevelState),
-			5, "Absolute Level State");
+				5, "Absolute Level State");
 		if (absoluteLevelState == VI_TRUE)
 		{
 			viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "BAS1", RSSPECAN_ATTR_GSM_EXTENDED_SLOT_ABS_LIMIT_VALUE, limitBase1),
-				6, "Limit Base 1");
+					6, "Limit Base 1");
 
 			viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "BAS2", RSSPECAN_ATTR_GSM_EXTENDED_SLOT_ABS_LIMIT_VALUE, limitBase2),
-				7, "Limit Base 2");
+					7, "Limit Base 2");
 		}
 	}
 
@@ -335,15 +335,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmExtendedSlotCommonSettings(ViSession inst
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 2, 2),
-		2, "Array Size");
+			2, "Array Size");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_EXTENDED_SLOT_LONG_SLOT, longSlots),
-		2, "Long Slots");
+			2, "Long Slots");
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CONF:ECON:LSL:VAL %ld,%ld", longSlotsValues[0], longSlotsValues[1]);
 	checkErr(RsCore_Write(instrSession, cmd));
 	checkErr(rsspecan_CheckStatus (instrSession));
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_EXTENDED_SLOT_OFRAME, onlyOneFrame),
-		3, "Only One Frame");
+			3, "Only One Frame");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -371,27 +371,27 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmExtendedSlotParameters(ViSession instrSes
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, slotNumber, 0, 7),
-		2, "Slot Number");
+			2, "Slot Number");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "SL%ld", slotNumber);
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_MODULATION, modulation),
-		3, "Modulation");
+			3, "Modulation");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_RLEV_MODE, referenceLevelMode),
-		4, "Reference Level Mode");
+			4, "Reference Level Mode");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_RLEV_VALUE, referenceLevelValue),
-		5, "Reference Level Value");
+			5, "Reference Level Value");
 	if (modulation != RSSPECAN_VAL_EXT_SLOT_MODUL_OFF)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_LIMIT_CLEV, limitLineCtrlLevel),
-			6, "Limit Line Ctrl Level");
+				6, "Limit Line Ctrl Level");
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "SL%ld,Low", slotNumber);
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_LIMIT, limitLineLower),
-			7, "Limit Line Lower");
+				7, "Limit Line Lower");
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "SL%ld,Upp", slotNumber);
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_GSM_EXTENDED_SLOT_LIMIT, limitLineUpper),
-			8, "Limit Line Upper");
+				8, "Limit Line Upper");
 	}
 
 Error:
@@ -417,7 +417,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmMeasurement(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementMode, RSSPECAN_VAL_GSM_MEAS_PFER, RSSPECAN_VAL_GSM_MEAS_SPUR),
-		2, "Measurement Mode");
+			2, "Measurement Mode");
 
 	checkErr(rsspecan_SetAttributeViString(instrSession, "", attr[measurementMode], NULL));
 
@@ -442,27 +442,27 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmPVTMeasurement(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32(instrSession,"",RSSPECAN_ATTR_GSM_BURS_PTEM_SEL, &tmp_burstSection));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_BURS_PTEM_SEL, &tmp_burstSection));
 	if (tmp_burstSection == RSSPECAN_VAL_GSM_BURST_SEC_FULL)
 		checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_BURS_PTEM_TMHR, VI_FALSE));
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_BURS_PTEM_SEL, burstSection),
-		2, "Burst Section");
+			2, "Burst Section");
 	switch (burstSection)
 	{
 	case RSSPECAN_VAL_GSM_BURST_SEC_FULL:
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_BURS_PTEM_TMHR, highResolutionMode),
-			3, "High Resolution Mode");
+				3, "High Resolution Mode");
 		break;
 	case RSSPECAN_VAL_GSM_BURST_SEC_FRZ:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_BURS_PTEM_FRZ, transitionNo),
-			5, "Transition No");
+				5, "Transition No");
 		break;
 	}
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_BURS_PTEM_SEL, burstSection),
-		2, "Burst Section");
+			2, "Burst Section");
 	if ((burstSection != RSSPECAN_VAL_GSM_BURST_SEC_FULL) || (highResolutionMode == VI_FALSE))
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_BURS_PTEM_FILT, filterBandwidth),
-		4, "Filter Bandwidth");
+			4, "Filter Bandwidth");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -535,7 +535,7 @@ ViStatus _VI_FUNC rsspecan_ReadGsmPhaseFreqErrorValues(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, RSSPECAN_VAL_GSM_PERR_RMS, RSSPECAN_VAL_GSM_IQIM),
-		3, "Measurement");
+			3, "Measurement");
 	if ((modifier != RSSPECAN_VAL_MEASTYPE_MAX) && (modifier != RSSPECAN_VAL_MEASTYPE_AVER))
 	viCheckParm(RS_ERROR_INVALID_PARAMETER, 4, "Modifier");
 	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
@@ -547,23 +547,23 @@ ViStatus _VI_FUNC rsspecan_ReadGsmPhaseFreqErrorValues(ViSession instrSession,
 		{
 		case RSSPECAN_VAL_GSM_PERR_RMS:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_PERR_RMS_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_PERR_PEAK:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_PERR_PEAK_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_FERR:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_FERR_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_IQOF:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_IQOF_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_IQIM:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_IQIM_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		}
 		break;
@@ -572,23 +572,23 @@ ViStatus _VI_FUNC rsspecan_ReadGsmPhaseFreqErrorValues(ViSession instrSession,
 		{
 		case RSSPECAN_VAL_GSM_PERR_RMS:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_PERR_RMS_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_PERR_PEAK:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_PERR_PEAK_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_FERR:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_FERR_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_IQOF:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_IQOF_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_IQIM:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_IQIM_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		}
 		break;
@@ -616,7 +616,7 @@ ViStatus _VI_FUNC rsspecan_FetchGsmPhaseFreqErrorValues(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, RSSPECAN_VAL_GSM_PERR_RMS, RSSPECAN_VAL_GSM_IQIM),
-		2, "Measurement");
+			2, "Measurement");
 	if ((modifier != RSSPECAN_VAL_MEASTYPE_MAX) && (modifier != RSSPECAN_VAL_MEASTYPE_AVER))
 	viCheckParm(RS_ERROR_INVALID_PARAMETER, 3, "Modifier");
 
@@ -627,23 +627,23 @@ ViStatus _VI_FUNC rsspecan_FetchGsmPhaseFreqErrorValues(ViSession instrSession,
 		{
 		case RSSPECAN_VAL_GSM_PERR_RMS:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_PERR_RMS_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_PERR_PEAK:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_PERR_PEAK_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_FERR:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_FERR_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_IQOF:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_IQOF_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_IQIM:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_IQIM_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		}
 		break;
@@ -652,23 +652,23 @@ ViStatus _VI_FUNC rsspecan_FetchGsmPhaseFreqErrorValues(ViSession instrSession,
 		{
 		case RSSPECAN_VAL_GSM_PERR_RMS:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_PERR_RMS_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_PERR_PEAK:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_PERR_PEAK_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_FERR:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_FERR_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_IQOF:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_IQOF_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_IQIM:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_IQIM_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		}
 		break;
@@ -698,7 +698,7 @@ ViStatus _VI_FUNC rsspecan_ReadGsmModulAccValues(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, RSSPECAN_VAL_GSM_MACC_RMS, RSSPECAN_VAL_GSM_MACC_IQIM),
-		3, "Measurement");
+			3, "Measurement");
 	if ((modifier != RSSPECAN_VAL_MEASTYPE_MAX) && (modifier != RSSPECAN_VAL_MEASTYPE_AVER))
 	viCheckParm(RS_ERROR_INVALID_PARAMETER, 4, "Modifier");
 	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
@@ -711,31 +711,31 @@ ViStatus _VI_FUNC rsspecan_ReadGsmModulAccValues(ViSession instrSession,
 		{
 		case RSSPECAN_VAL_GSM_MACC_RMS:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_MACC_RMS_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_PEAK:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_MACC_PEAK_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_OSUP:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_MACC_OSUP_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_PERC:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_MACC_PERC_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_FREQ:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_MACC_FREQ_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_IQOF:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_MACC_IQOF_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_IQIM:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_MACC_IQIM_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		}
 		break;
@@ -744,31 +744,31 @@ ViStatus _VI_FUNC rsspecan_ReadGsmModulAccValues(ViSession instrSession,
 		{
 		case RSSPECAN_VAL_GSM_MACC_RMS:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_MACC_RMS_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_PEAK:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_MACC_PEAK_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_OSUP:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_MACC_OSUP_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_PERC:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_MACC_PERC_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_FREQ:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_MACC_FREQ_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_IQOF:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_MACC_IQOF_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_IQIM:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_MACC_IQIM_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		}
 		break;
@@ -796,7 +796,7 @@ ViStatus _VI_FUNC rsspecan_FetchGsmModulAccValues(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurement, RSSPECAN_VAL_GSM_MACC_RMS, RSSPECAN_VAL_GSM_MACC_IQIM),
-		2, "Measurement");
+			2, "Measurement");
 	if ((modifier != RSSPECAN_VAL_MEASTYPE_MAX) && (modifier != RSSPECAN_VAL_MEASTYPE_AVER))
 	viCheckParm(RS_ERROR_INVALID_PARAMETER, 3, "Modifier");
 
@@ -807,31 +807,31 @@ ViStatus _VI_FUNC rsspecan_FetchGsmModulAccValues(ViSession instrSession,
 		{
 		case RSSPECAN_VAL_GSM_MACC_RMS:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_MACC_RMS_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_PEAK:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_MACC_PEAK_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_OSUP:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_MACC_OSUP_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_PERC:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_MACC_PERC_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_FREQ:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_MACC_FREQ_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_IQOF:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_MACC_IQOF_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_IQIM:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_MACC_IQIM_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		}
 		break;
@@ -840,31 +840,31 @@ ViStatus _VI_FUNC rsspecan_FetchGsmModulAccValues(ViSession instrSession,
 		{
 		case RSSPECAN_VAL_GSM_MACC_RMS:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_MACC_RMS_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_PEAK:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_MACC_PEAK_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_OSUP:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_MACC_OSUP_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_PERC:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_MACC_PERC_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_FREQ:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_MACC_FREQ_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_IQOF:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_MACC_IQOF_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		case RSSPECAN_VAL_GSM_MACC_IQIM:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_MACC_IQIM_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		}
 		break;
@@ -929,7 +929,7 @@ ViStatus _VI_FUNC rsspecan_ReadGsmPowVsTimeValues(ViSession instrSession,
 		{
 		case RSSPECAN_VAL_GSM_PVT_TRGS:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_PTEM_TRGS_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		}
 		break;
@@ -938,7 +938,7 @@ ViStatus _VI_FUNC rsspecan_ReadGsmPowVsTimeValues(ViSession instrSession,
 		{
 		case RSSPECAN_VAL_GSM_PVT_TRGS:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_READ_BURST_PTEM_TRGS_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		}
 		break;
@@ -1047,7 +1047,7 @@ ViStatus _VI_FUNC rsspecan_FetchGsmPowVsTimeValues(ViSession instrSession,
 		{
 		case RSSPECAN_VAL_GSM_PVT_TRGS:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_PTEM_TRGS_MAX, value),
-				4, "Value");
+					4, "Value");
 			break;
 		}
 		break;
@@ -1056,7 +1056,7 @@ ViStatus _VI_FUNC rsspecan_FetchGsmPowVsTimeValues(ViSession instrSession,
 		{
 		case RSSPECAN_VAL_GSM_PVT_TRGS:
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_FETC_BURST_PTEM_TRGS_AVER, value),
-				4, "Value");
+					4, "Value");
 			break;
 		}
 		break;
@@ -1091,7 +1091,7 @@ ViStatus _VI_FUNC rsspecan_FetchGsmExtendedSlotPtempRef(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 1, INT_MAX),
-		2, "Array Size");
+			2, "Array Size");
 
 	checkErr(RsCore_QueryFloatArray(instrSession, "FETC:BURS:PTEM:REF:ECON:IMM?", &data, &dataSize));
 	checkErr(rsspecan_CheckStatus(instrSession));

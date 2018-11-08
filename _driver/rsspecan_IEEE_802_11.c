@@ -58,10 +58,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANSignal(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_STAN, standard),
-		2, "standard");
+			2, "standard");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_FREQUENCY_CENTER, centerFrequency),
-		2, "Center Frequency");
+			2, "Center Frequency");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -89,16 +89,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANInputSource(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_AMPL_RF_COUPLING, inputCoupling),
-		2, "Input Coupling");
+			2, "Input Coupling");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win0", RSSPECAN_ATTR_INPUT_IMPEDANCE, impedance),
-		3, "Impedance");
+			3, "Impedance");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_AMPL_HIGHPASS_FILTER, highpassFilter),
-		4, "Highpass Filter");
+			4, "Highpass Filter");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_AMPL_YIG_FILTER, YIGPreselector),
-		5, "YIG Preselector");
+			5, "YIG Preselector");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -129,15 +129,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANReferenceLevel(ViSession instrSession,
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win0");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_POW_AUTO, autoLevel),
-		2, "Auto Level");
+			2, "Auto Level");
 
 	if (autoLevel == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_LEVEL, referenceLevel),
-			3, "Rreference Level");
+				3, "Rreference Level");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_LEVEL_OFFSET, referenceLevelOffset),
-			4, "Reference Level Offset");
+				4, "Reference Level Offset");
 	}
 
 Error:
@@ -162,12 +162,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANMechanicalAttenuation(ViSession instrSes
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_ATTENUATION_AUTO, autoMode),
-		2, "Auto Mode");
+			2, "Auto Mode");
 
 	if (!autoMode)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_ATTENUATION, value),
-			3, "Value");
+				3, "Value");
 	}
 
 Error:
@@ -192,13 +192,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanElectronicAtt(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win1", RSSPECAN_ATTR_AMPL_EATT_STATE, state),
-		2, "State");
+			2, "State");
 	if (state)
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win1", RSSPECAN_ATTR_AMPL_EATT_AUTO, attenuatorAuto),
-		3, "Attenuator Auto");
+			3, "Attenuator Auto");
 	if (!attenuatorAuto)
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win1", RSSPECAN_ATTR_AMPL_EATT_VALUE, manualValue_dB),
-		4, "Manual Value [dB]");
+			4, "Manual Value [dB]");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -221,12 +221,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANPreamplifier(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_AMPL_PREAMPLIFIER, state),
-		2, "State");
+			2, "State");
 
 	if (state)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_AMPL_PREAMPLIFIER_LEVEL, preamplifierLevel),
-			3, "Preamplifier Level");
+				3, "Preamplifier Level");
 	}
 
 Error:
@@ -259,16 +259,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANSignalCapture(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_WLAN_SRAT, sampleRate),
-		2, "Sample Rate");
+			2, "Sample Rate");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_SWEEP_TIME, captureTime),
-		3, "Capture Time");
+			3, "Capture Time");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_SWAP_IQ, swapIQ),
-		4, "Swap IQ");
+			4, "Swap IQ");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_RBW_FILTER, filterOutAdjacentChannels),
-		5, "filter Out Adjacent Channels");
+			5, "filter Out Adjacent Channels");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -296,10 +296,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANSynchronization(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_POWER_INTERVAL_SEARCH, powerIntervalSearch),
-		2, "Power Interval Search");
+			2, "Power Interval Search");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_FFT_START_OFFSET, FFTStartOffset),
-		3, "FFT Start Offset");
+			3, "FFT Start Offset");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -326,7 +326,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANChannelEstimation(ViSession instrSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_CEST, channelEstimationRange),
-		2, "Channel Estimation Range");
+			2, "Channel Estimation Range");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -348,13 +348,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanTracking(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_TRAC_PHAS, phase),
-		2, "Phase");
+			2, "Phase");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_TRAC_TIME, timing),
-		3, "Time");
+			3, "Time");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_TRAC_LEV, level),
-		4, "Level");
+			4, "Level");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -375,7 +375,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANTrackingPilots(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_TRAC_PILOTS, pilots),
-		2, "Pilots");
+			2, "Pilots");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -403,10 +403,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanBurst(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_BURST_SELECT, burst),
-		2, "Burst");
+			2, "Burst");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_BURST_STATE, state),
-		3, "State");
+			3, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -429,7 +429,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanBurstUnit(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_BURST_UNIT, unit),
-		2, "Unit");
+			2, "Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -454,7 +454,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanIQCompensation(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_IQ_COMPENSATION, iqCompensation),
-		2, "IQ Compensation");
+			2, "IQ Compensation");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -486,21 +486,21 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11a(ViSession instrSessi
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_BCON_AUTO, PPDUAnalysisMode),
-		2, "PPDU Analysis Mode");
+			2, "PPDU Analysis Mode");
 
 	if (PPDUAnalysisMode == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_PPDU_FORMAT_TO_MEASURE, PPDUFormatToMeasure),
-			3, "PPDU Format To Measure");
+				3, "PPDU Format To Measure");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_CHANNEL_BANDWIDTH_TO_MEASURE, channelBandwidthToMeasure),
-			4, "Channel Bandwidth To Measure");
+				4, "Channel Bandwidth To Measure");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_MCS_INDEX_TO_USE_FBUR, PSDUModulationToUse),
-			5, "PSDU Modulation To Use");
+				5, "PSDU Modulation To Use");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_PSDU_MODULATION, PSDUModulation),
-			6, "PSDU Modulation");
+				6, "PSDU Modulation");
 	}
 
 Error:
@@ -527,15 +527,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11n(ViSession instrSessi
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_BCON_AUTO, PPDUAnalysisMode),
-		2, "PPDU Analysis Mode");
+			2, "PPDU Analysis Mode");
 
 	if (PPDUAnalysisMode == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_PPDU_FORMAT_TO_MEASURE_802_11N, PPDUFormatToMeasure),
-			3, "PPDU Format To Measure");
+				3, "PPDU Format To Measure");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_CHANNEL_BANDWIDTH_TO_MEASURE_802_11N, channelBandwidthToMeasure),
-			4, "Channel Bandwidth To Measure");
+				4, "Channel Bandwidth To Measure");
 	}
 
 Error:
@@ -561,12 +561,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11nMCSIndex(ViSession in
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_MCS_INDEX_TO_USE_FBUR, MCSIndexMode),
-		2, "MCS Index Mode");
+			2, "MCS Index Mode");
 
 	if (MCSIndexMode == RSSPECAN_VAL_WLAN_MCS_INDEX_TO_USE_MEAS || MCSIndexMode == RSSPECAN_VAL_WLAN_MCS_INDEX_TO_USE_DEMOD)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_MCS_INDEX, MCSIndex),
-			3, "MCS Index");
+				3, "MCS Index");
 	}
 
 Error:
@@ -590,7 +590,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11nSTBCField(ViSession i
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_STBC, STBCField),
-		2, "STBC Field");
+			2, "STBC Field");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -612,7 +612,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11nGuardIntervalLength(V
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_GUARD_INTERVAL_LENGTH, guardIntervalLength),
-		2, "Guard Interval Length");
+			2, "Guard Interval Length");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -635,7 +635,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11nExtensionSpatialStrea
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_EXT_SPATIAL_STREAMS, extensionSpatialStreams),
-		2, "Extension Spatial Streams");
+			2, "Extension Spatial Streams");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -665,10 +665,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11b_g_DSSS(ViSession ins
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_PPDU_FORMAT_TO_MEASURE_802_11B_G, PPDUFormatPSDUModulation),
-		2, "PPDU Format/PSDU Modulation");
+			2, "PPDU Format/PSDU Modulation");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_PSDU_MODULATION_802_11B_G, PSDUModulation),
-		4, "PSDU Modulation");
+			4, "PSDU Modulation");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -696,15 +696,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11ac(ViSession instrSess
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_BCON_AUTO, PPDUAnalysisMode),
-		2, "PPDU Analysis Mode");
+			2, "PPDU Analysis Mode");
 
 	if (PPDUAnalysisMode == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_PPDU_FORMAT_TO_MEASURE_802_11AC, PPDUFormatToMeasure),
-			3, "PPDU Format To Measure");
+				3, "PPDU Format To Measure");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_CHANNEL_BANDWIDTH_TO_MEASURE_802_11AC, channelBandwidthToMeasure),
-			4, "Channel Bandwidth To Measure");
+				4, "Channel Bandwidth To Measure");
 	}
 
 Error:
@@ -730,12 +730,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11acMCSIndex(ViSession i
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_MCS_INDEX_TO_USE_FBUR, MCSIndexMode),
-		2, "MCS Index Mode");
+			2, "MCS Index Mode");
 
 	if (MCSIndexMode == RSSPECAN_VAL_WLAN_MCS_INDEX_TO_USE_MEAS || MCSIndexMode == RSSPECAN_VAL_WLAN_MCS_INDEX_TO_USE_DEMOD)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_MCS_INDEX, MCSIndex),
-			3, "MCS Index");
+				3, "MCS Index");
 	}
 
 Error:
@@ -759,7 +759,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11acSTBCField(ViSession 
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_STBC, STBCField),
-		2, "STBC Field");
+			2, "STBC Field");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -781,7 +781,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11acGuardIntervalLength(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_GUARD_INTERVAL_LENGTH, guardIntervalLength),
-		2, "Guard Interval Length");
+			2, "Guard Interval Length");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -807,12 +807,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANDemodulation802_11acNsts(ViSession instr
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_NSTS_INDEX_MODE, nstsIndexMode),
-		2, "NSTS Index Mode");
+			2, "NSTS Index Mode");
 
 	if (nstsIndexMode == RSSPECAN_VAL_WLAN_NSTS_INDEX_MEAS || nstsIndexMode == RSSPECAN_VAL_WLAN_NSTS_INDEX_DEMOD)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_NSTS_INDEX, nstsIndex),
-			3, "NSTS Index");
+				3, "NSTS Index");
 	}
 
 Error:
@@ -845,11 +845,11 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANEvaluationRangeStatistics(ViSession inst
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_BURS_COUN_STAT, PPDUStatisticCount),
-		2, "PPDU Statistic Count");
+			2, "PPDU Statistic Count");
 	if (PPDUStatisticCount)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_BURS_COUN, noOfPPDUsToAnalyze),
-			3, "No Of PPDUs To Analyze");
+				3, "No Of PPDUs To Analyze");
 	}
 
 Error:
@@ -882,24 +882,24 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANEvaluationRangeTimeDomain(ViSession inst
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_WLAN_STAN, &standard));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_STAN, &standard));
 
 	if (standard != 0)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_SOURCE_OF_PAYLOAD_LENGTH, sourceOfPayloadLength),
-			2, "source Of Payload Length");
+				2, "source Of Payload Length");
 	}
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_SYM_EQU, equalPPDULength),
-		3, "equal PPDU Length");
+			3, "equal PPDU Length");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Min", RSSPECAN_ATTR_WLAN_SYM, minNumberOfDataSymbols),
-		4, "Min Number Of Data Symbols");
+			4, "Min Number Of Data Symbols");
 
 	if (equalPPDULength == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Max", RSSPECAN_ATTR_WLAN_SYM, maxNumberOfDataSymbols),
-			5, "Max Number Of Data Symbols");
+				5, "Max Number Of Data Symbols");
 	}
 
 Error:
@@ -919,7 +919,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanGainImbalanceUnit(ViSession instrSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_UNIT_GIMB, unit),
-		2, "Unit");
+			2, "Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -940,7 +940,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanEVMUnit(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_UNIT_EVM, unit),
-		2, "Unit");
+			2, "Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -959,7 +959,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanDisplay(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win1", RSSPECAN_ATTR_WLAN_DISP_TABL, displayTable),
-		2, "Display Table");
+			2, "Display Table");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -991,9 +991,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanResultSummaryDisplay(
 	checkErr(RsCore_CheckInstrumentModel(instrSession, "FSW"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, window, 0, 16),
-		2, "Window");
+			2, "Window");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, item, RSSPECAN_VAL_WLAN_ITEM_TX_ALL, RSSPECAN_VAL_WLAN_ITEM_CREST_FACTOR_DSSS),
-		3, "Item");
+			3, "Item");
 
 	if (window == 0)
 		sprintf(cmd, "DISP:WIND:TABL:ITEM %s,%s\n", itemArr[item], offOnArr[displayItem]);
@@ -1029,9 +1029,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanLimit(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		3, "Limit");
+			3, "Limit");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limitType, RSSPECAN_VAL_WLAN_LIM_FERR, RSSPECAN_VAL_WLAN_LIM_EVM_PIL),
-		4, "Limit Type");
+			4, "Limit Type");
 	if ((mode != RSSPECAN_VAL_MEASTYPE_MAX) && (mode != RSSPECAN_VAL_MEASTYPE_AVER))
 	{
 		viCheckParm(RS_ERROR_INVALID_PARAMETER, 5, "Mode");
@@ -1051,27 +1051,27 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanLimit(ViSession instrSession,
 	{
 	case RSSPECAN_VAL_WLAN_LIM_FERR:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FERR, value),
-			6, "Value");
+				6, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_LIM_SYMB:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_SYMB, value),
-			6, "Value");
+				6, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_LIM_IQOFF:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_IQOF, value),
-			6, "Value");
+				6, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_LIM_EVM_ALL:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_EVM_ALL, value),
-			6, "Value");
+				6, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_LIM_EVM_DATA:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_EVM_DATA, value),
-			6, "Value");
+				6, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_LIM_EVM_PIL:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_EVM_PIL, value),
-			6, "Value");
+				6, "Value");
 		break;
 	}
 
@@ -1100,7 +1100,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANAllLimits(ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K91"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		3, "Limit");
+			3, "Limit");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, values), 4, "Values");
 
 	pbuffer += sprintf(pbuffer, "CALC%ld:LIMit%ld:BURSt:ALL ", window, limit);
@@ -1136,7 +1136,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanAllLimits(ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K90|K91"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		3, "Limit");
+			3, "Limit");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, values), 4, "Values");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":CALC%ld:LIM%ld:BURS:ALL?", window, limit);
@@ -1208,11 +1208,10 @@ ViStatus _VI_FUNC rsspecan_ReadWlanTraceData(ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K90|K91"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, sourceTrace, 1, 6),
-		2, "Source Trace");
+			2, "Source Trace");
 	sprintf(traceName, "TRACE%ld", sourceTrace);
 
-	checkErr(rsspecan_dataReadTrace (instrSession,1, traceName, arraySize,
-		traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 1, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -1367,45 +1366,45 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstPower(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, powerMeasurement, RSSPECAN_VAL_WLAN_MEAS_PREA, RSSPECAN_VAL_WLAN_MEAS_CREST_AVER),
-		2, "Power Measurement");
+			2, "Power Measurement");
 
 	switch (powerMeasurement)
 	{
 	case RSSPECAN_VAL_WLAN_MEAS_PREA:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_WLAN_FETC_PRE, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_MEAS_PAYL:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_WLAN_FETC_PAYL, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_MEAS_RMS_MAX:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Max", RSSPECAN_ATTR_WLAN_FETC_RMS, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_MEAS_RMS_MIN:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Min", RSSPECAN_ATTR_WLAN_FETC_RMS, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_MEAS_RMS_AVER:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Aver", RSSPECAN_ATTR_WLAN_FETC_RMS, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_MEAS_PEAK:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_WLAN_FETC_PEAK, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_MEAS_CREST_MAX:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Max", RSSPECAN_ATTR_WLAN_FETC_CRES, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_MEAS_CREST_MIN:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Min", RSSPECAN_ATTR_WLAN_FETC_CRES, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_MEAS_CREST_AVER:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Aver", RSSPECAN_ATTR_WLAN_FETC_CRES, value),
-			3, "Value");
+				3, "Value");
 		break;
 	}
 
@@ -1433,7 +1432,7 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstError(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, errorType, RSSPECAN_VAL_WLAN_ERR_FREQ, RSSPECAN_VAL_WLAN_ERR_SYMB),
-		2, "Error Type");
+			2, "Error Type");
 	switch (mode)
 	{
 	case RSSPECAN_VAL_MEASTYPE_MIN:
@@ -1453,11 +1452,11 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstError(ViSession instrSession,
 	{
 	case RSSPECAN_VAL_WLAN_ERR_FREQ:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETC_FERR, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_ERR_SYMB:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETC_SYMB, value),
-			3, "Value");
+				3, "Value");
 		break;
 	}
 
@@ -1485,7 +1484,7 @@ ViStatus _VI_FUNC rsspecan_FetchWlanIQImp(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, iqImpairment, RSSPECAN_VAL_WLAN_IQ_OFFS, RSSPECAN_VAL_WLAN_IQ_QUAD),
-		2, "IQ Impairment");
+			2, "IQ Impairment");
 	switch (mode)
 	{
 	case RSSPECAN_VAL_MEASTYPE_MIN:
@@ -1504,15 +1503,15 @@ ViStatus _VI_FUNC rsspecan_FetchWlanIQImp(ViSession instrSession,
 	{
 	case RSSPECAN_VAL_WLAN_IQ_OFFS:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETC_IQOF, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_IQ_IMBA:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETC_GIMB, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_IQ_QUAD:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETC_QUAD, value),
-			3, "Value");
+				3, "Value");
 		break;
 	}
 
@@ -1541,7 +1540,7 @@ ViStatus _VI_FUNC rsspecan_FetchWlanEVM(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, evm, RSSPECAN_VAL_WLAN_EVM_ALL, RSSPECAN_VAL_WLAN_EVM_PEAK),
-		2, "EVM");
+			2, "EVM");
 	switch (mode)
 	{
 	case RSSPECAN_VAL_MEASTYPE_MIN:
@@ -1560,23 +1559,23 @@ ViStatus _VI_FUNC rsspecan_FetchWlanEVM(ViSession instrSession,
 	{
 	case RSSPECAN_VAL_WLAN_EVM_ALL:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETC_EVM_ALL, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_EVM_DATA:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETC_EVM_DATA, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_EVM_PILOT:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETC_EVM_PILOT, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_EVM:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETC_EVM, value),
-			3, "Value");
+				3, "Value");
 		break;
 	case RSSPECAN_VAL_WLAN_EVM_PEAK:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETC_EVM_DIR, value),
-			3, "Value");
+				3, "Value");
 		break;
 	}
 
@@ -1602,17 +1601,17 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstCount(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, RSSPECAN_VAL_WLAN_CURRENT, RSSPECAN_VAL_WLAN_ALL),
-		2, "type");
+			2, "type");
 
 	if (type == RSSPECAN_VAL_WLAN_CURRENT)
 	{
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_FETC_BURS_COUNT, count),
-			3, "Count");
+				3, "Count");
 	}
 	else
 	{
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_FETC_BURST_COUNT_ALL, count),
-			3, "Count");
+				3, "Count");
 	}
 
 Error:
@@ -1663,7 +1662,7 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstLength(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_FETC_BURST_LENGTH, length),
-		3, "Length");
+			3, "Length");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1705,7 +1704,7 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstPeak(
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETCH_BURST_PEAK, value),
-		3, "Value");
+			3, "Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1747,7 +1746,7 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstPayload(
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETCH_BURST_PAYLOAD, value),
-		3, "Value");
+			3, "Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1789,7 +1788,7 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstPreamble(
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_WLAN_FETCH_BURST_PREAMBLE, value),
-		3, "Value");
+			3, "Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1813,7 +1812,7 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstStart(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_WLAN_FETCH_BURST_START, value),
-		2, "Value");
+			2, "Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1843,7 +1842,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanPowerResults(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, powerMeasurement, RSSPECAN_VAL_MEAS_POW_ACP, RSSPECAN_VAL_MEAS_POW_PPOW),
-		3, "Power Measurement");
+			3, "Power Measurement");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:POW:RES? %s", window, powerMeasurementArr[powerMeasurement]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
@@ -1871,9 +1870,9 @@ ViStatus _VI_FUNC rsspecan_GetWlanLimitCheckResult(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		3, "Limit");
+			3, "Limit");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limitType, RSSPECAN_VAL_WLAN_LIM_FERR, RSSPECAN_VAL_WLAN_LIM_EVM_PIL),
-		4, "Limit Type");
+			4, "Limit Type");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,L%ld", window, limit);
 	switch (mode)
@@ -1892,27 +1891,27 @@ ViStatus _VI_FUNC rsspecan_GetWlanLimitCheckResult(ViSession instrSession,
 	{
 	case RSSPECAN_VAL_WLAN_LIM_FERR:
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_FERR_RES, result),
-			6, "Result");
+				6, "Result");
 		break;
 	case RSSPECAN_VAL_WLAN_LIM_SYMB:
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_SYMB_RES, result),
-			6, "Result");
+				6, "Result");
 		break;
 	case RSSPECAN_VAL_WLAN_LIM_IQOFF:
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_IQOF_RES, result),
-			6, "Result");
+				6, "Result");
 		break;
 	case RSSPECAN_VAL_WLAN_LIM_EVM_ALL:
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_EVM_ALL_RES, result),
-			6, "Result");
+				6, "Result");
 		break;
 	case RSSPECAN_VAL_WLAN_LIM_EVM_DATA:
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_EVM_DATA_RES, result),
-			6, "Result");
+				6, "Result");
 		break;
 	case RSSPECAN_VAL_WLAN_LIM_EVM_PIL:
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_EVM_PIL_RES, result),
-			6, "Result");
+				6, "Result");
 		break;
 	}
 
@@ -1940,9 +1939,9 @@ ViStatus _VI_FUNC rsspecan_GetWlanACPChannLimitCheckResults(ViSession instrSessi
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		3, "Limit");
+			3, "Limit");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_WLAN_ACP_ADJ, RSSPECAN_VAL_WLAN_ACP_ALT),
-		4, "Channel Type");
+			4, "Channel Type");
 
 	switch (channelType)
 	{
@@ -1991,7 +1990,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanAllLimitCheckResults(ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K90|K91"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		3, "Limit");
+			3, "Limit");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM%ld:BURS:ALL:RESULT?", window, limit);
 	checkErr(RsCore_QueryIntegerArrayToUserBuffer(instrSession, cmd, 12, results, NULL));
@@ -2019,11 +2018,11 @@ ViStatus _VI_FUNC rsspecan_GetWlanLimitCheck(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		3, "Limit");
+			3, "Limit");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,L%ld", window, limit);
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_WLAN_LIM_FAIL_RES, result),
-		4, "Result");
+			4, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

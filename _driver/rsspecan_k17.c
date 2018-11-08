@@ -61,16 +61,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayInput(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_AMPL_RF_COUPLING, inputCoupling),
-		2, "Input Coupling");
+			2, "Input Coupling");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win0", RSSPECAN_ATTR_INPUT_IMPEDANCE, impedance),
-		3, "Impedance");
+			3, "Impedance");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_AMPL_HIGHPASS_FILTER, highpassFilter),
-		4, "Highpass Filter");
+			4, "Highpass Filter");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_AMPL_YIG_FILTER, yigPreselector),
-		5, "YIG Preselector");
+			5, "YIG Preselector");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -104,10 +104,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayReferenceLevel(
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_LEVEL, referenceLevel),
-		3, "Reference Level");
+			3, "Reference Level");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_LEVEL_OFFSET, referenceLevelOffset),
-		4, "Reference Level Offset");
+			4, "Reference Level Offset");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -134,12 +134,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayMechanicalAttenuator(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_ATTENUATION_AUTO, autoMode),
-		2, "Auto Mode");
+			2, "Auto Mode");
 
 	if (!autoMode)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_ATTENUATION, value),
-			3, "Value");
+				3, "Value");
 	}
 
 Error:
@@ -175,16 +175,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayElectronicAttenuator(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_AMPL_EATT_STATE, state),
-		2, "State");
+			2, "State");
 
 	if (state)
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_AMPL_EATT_AUTO, electronicAttenuatorAuto),
-			3, "Electronic Attenuator Auto");
+				3, "Electronic Attenuator Auto");
 		if (!electronicAttenuatorAuto)
 		{
 			viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_AMPL_EATT_VALUE, manualValue_dB),
-				4, "Manual Value dB");
+					4, "Manual Value dB");
 		}
 	}
 
@@ -216,12 +216,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayPreamplifier(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_AMPL_PREAMPLIFIER, state),
-		2, "State");
+			2, "State");
 
 	if (state)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_AMPL_PREAMPLIFIER_LEVEL, preamplifierLevel),
-			3, "Preamplifier Level");
+				3, "Preamplifier Level");
 	}
 
 Error:
@@ -264,16 +264,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayYAxisScaling(
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_DISP_LOG_RANGE, range),
-		3, "Range");
+			3, "Range");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_DISP_REF_POSITION, referencePosition),
-		4, "Reference Position");
+			4, "Reference Position");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_VERTICAL_SCALE, verticalScale),
-		5, "Vertical Scale");
+			5, "Vertical Scale");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_DISP_AMPLITUDE_GRID_MODE, yAxisGridMode),
-		6, "Y-Axis Grid Mode");
+			6, "Y-Axis Grid Mode");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -312,11 +312,11 @@ ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayYAxisScalingMaxMin(
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,Max", window);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_MCGD_VERTICAL_SCALE_MAX_MIN, maximumValue),
-		2, "Maximum Value");
+			2, "Maximum Value");
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,Min", window);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_MCGD_VERTICAL_SCALE_MAX_MIN, miniumumValue),
-		3, "Miniumum Value");
+			3, "Miniumum Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -357,13 +357,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayYAxisScalingReferenceP
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_DISP_Y_AXIS_SCALING, scaling),
-		2, "Scaling");
+			2, "Scaling");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_DISP_REF_POSITION, referencePosition),
-		3, "Reference Position");
+			3, "Reference Position");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_DISP_REF_VALUE, referenceValue),
-		4, "Reference Value");
+			4, "Reference Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -387,7 +387,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayPhaseUnit(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MCGD_RESULT_PHASE_UNIT, unit),
-		2, "Unit");
+			2, "Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -413,10 +413,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelaySignalDescription(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MCGD_CARRIER_COUNT, numberOfCarriers),
-		2, "Number Of Carriers");
+			2, "Number Of Carriers");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_MCGD_CARRIER_SPACING, carrierSpacing),
-		3, "Carrier Spacing");
+			3, "Carrier Spacing");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -442,12 +442,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelayMeasurementTime(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_MCGD_MEASUREMENT_TIME_AUTO, mode),
-		2, "Mode");
+			2, "Mode");
 
 	if (mode == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_MCGD_MEASUREMENT_TIME, measurementTime),
-			3, "Measurement Time");
+				3, "Measurement Time");
 	}
 
 Error:
@@ -478,13 +478,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureMultiCarrierGroupDelaySettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win0", RSSPECAN_ATTR_NUMBER_OF_SWEEPS, sweepCount),
-		2, "Sweep Count");
+			2, "Sweep Count");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MCGD_MODE_ABS_REL, groupDelay),
-		3, "Group Delay");
+			3, "Group Delay");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MCGD_CARRIER_OFFSET_MODE, carrierOffset),
-		4, "Carrier Offset");
+			4, "Carrier Offset");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -510,7 +510,7 @@ ViStatus _VI_FUNC rsspecan_QueryMultiCarrierGroupDelayCarrierOffset(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_MCGD_CARRIER_OFFSET, carrierOffset),
-		2, "Carrier Offset");
+			2, "Carrier Offset");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -557,7 +557,7 @@ ViStatus _VI_FUNC rsspecan_QueryMultiCarrierGroupDelayCalibrationStatus(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MCGD_CALIBRATION_STATUS, calibrationStatus),
-		2, "Calibration Status");
+			2, "Calibration Status");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -589,7 +589,7 @@ ViStatus _VI_FUNC rsspecan_StoreMultiCarrierGroupDelayCalibrationData(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MCGD_STORE_CALIBRATION_DATA, fileName),
-		2, "FileName");
+			2, "FileName");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -621,7 +621,7 @@ ViStatus _VI_FUNC rsspecan_LoadMultiCarrierGroupDelayCalibrationData(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MCGD_LOAD_CALIBRATION_DATA, fileName),
-		2, "FileName");
+			2, "FileName");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -656,7 +656,7 @@ ViStatus _VI_FUNC rsspecan_StoreMultiCarrierGroupDelayMeasurementResults(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MCGD_STORE_MEASUREMENT_RESULTS, fileName),
-		2, "FileName");
+			2, "FileName");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -717,7 +717,7 @@ ViStatus _VI_FUNC rsspecan_QueryMultiCarrierGroupDelayNumberOfTracePoints(
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,TR%ld", window, trace);
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_MCGD_TRACE_POINTS, numberOfTracePoints),
-		4, "Number Of Trace Points");
+			4, "Number Of Trace Points");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -741,7 +741,7 @@ ViStatus _VI_FUNC rsspecan_QueryMultiCarrierGroupDelayMeasurementBandwidth(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_MCGD_BANDWIDTH, bandwidth),
-		2, "Bbandwidth");
+			2, "Bbandwidth");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -767,7 +767,7 @@ ViStatus _VI_FUNC rsspecan_QueryMultiCarrierGroupDelayRecordLength(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_MCGD_RECORD_LENGTH, recordLength),
-		2, "Record Length");
+			2, "Record Length");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -792,7 +792,7 @@ ViStatus _VI_FUNC rsspecan_QueryMultiCarrierGroupDelaySampleRate(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_MCGD_SAMPLE_RATE, sampleRate),
-		2, "Sample Rate");
+			2, "Sample Rate");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

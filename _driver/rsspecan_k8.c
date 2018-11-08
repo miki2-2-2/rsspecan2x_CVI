@@ -48,7 +48,7 @@ ViStatus _VI_FUNC rsspecan_SelectBTOTrace(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 3),
-		2, "Trace");
+			2, "Trace");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "TR%ld", trace);
 	checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_BTO_TRAC, ""));
@@ -76,22 +76,22 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOMeasurement(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_GEOG, geographicalRegion),
-		2, "Geographical Region");
+			2, "Geographical Region");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_CHANNEL, channel),
-		3, "Channel");
+			3, "Channel");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_PCL, outputPowerClass),
-		4, "Output Power Class");
+			4, "Output Power Class");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_PRAT, samplesPerSymbols),
-		5, "Samples Per Symbol");
+			5, "Samples Per Symbol");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_PTYPE, packetType),
-		6, "Packet Type");
+			6, "Packet Type");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_BTO_EGA_INP, anntennaGain),
-		7, "Antenna Gain");
+			7, "Antenna Gain");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -112,10 +112,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOAveragingMethod(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Start", RSSPECAN_ATTR_BTO_POW_AVER, startPosition),
-		2, "Start Position");
+			2, "Start Position");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Stop", RSSPECAN_ATTR_BTO_POW_AVER, stopPosition),
-		2, "Stop Position");
+			2, "Stop Position");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -139,23 +139,23 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOSynchronization(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BTO_SEARCH_SYNC, findSync),
-		2, "Find Sync");
+			2, "Find Sync");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_SYNC_OFFS, syncOffset),
-		3, "Sync Offset");
+			3, "Sync Offset");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BTO_SEARCH_PULS, findBurst),
-		4, "Find Burst");
+			4, "Find Burst");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_BTO_PULS_OFFS, burstOffset),
-		5, "Burst Offset");
+			5, "Burst Offset");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BTO_SEARCH_TIME_AUTO, searchLengthAuto),
-		6, "Search Length Auto");
+			6, "Search Length Auto");
 	if (!searchLengthAuto)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_BTO_SEARCH_TIME, searchLength),
-			7, "Search Length");
+				7, "Search Length");
 	}
 
 Error:
@@ -175,7 +175,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOLAP(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_LAP, lowest24Bits_ofDevAddress),
-		2, "Lowest 24 Bits of Dev. Address");
+			2, "Lowest 24 Bits of Dev. Address");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -197,11 +197,11 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOMeasurementMode(ViSession instrSession,
 	if (!RsCore_IsInstrumentModel(instrSession, "FSL"))
 	{
 		viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementMode, 0, 4),
-			2, "Measurement Mode");
+				2, "Measurement Mode");
 	}
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO, measurementMode),
-		2, "Measurement Mode");
+			2, "Measurement Mode");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -222,7 +222,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTONumberOfAdjacentChannels(ViSession instrS
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_ACLR_ACP, number_ofAdjacentChannels),
-		2, "Number of Adjacent Channels");
+			2, "Number of Adjacent Channels");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -242,7 +242,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOReceiveFilter(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_FILT_MEAS, filter),
-		2, "Filter");
+			2, "Filter");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -280,7 +280,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOSweepCouplingAuto(ViSession instrSession,
 	}
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", attribute, VI_TRUE),
-		1, "Dummy");
+			1, "Dummy");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -323,7 +323,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOSweepCoupling(ViSession instrSession,
 	}
 	checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", attribute2, VI_FALSE));
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", attribute, couplingValue),
-		3, "Coupling Value");
+			3, "Coupling Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -344,10 +344,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOAcquisition(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win1", RSSPECAN_ATTR_SWEEP_MODE_CONTINUOUS, sweepModeContinuous),
-		2, "Sweep Mode Continuous");
+			2, "Sweep Mode Continuous");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_SWE, numberOfSweeps),
-		3, "Number Of Sweeps");
+			3, "Number Of Sweeps");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -370,13 +370,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOTrace(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 3),
-		2, "Trace");
+			2, "Trace");
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "TR%ld", trace);
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_BTO_TRAC_MOD, traceMode),
-		3, "Trace Mode");
+			3, "Trace Mode");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_BTO_TRAC_DET, traceDetector),
-		4, "Trace Detector");
+			4, "Trace Detector");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -396,7 +396,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOPacketBytesSCO(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_PBSC, packetBytesSCO),
-		2, "Packet Bytes SCO");
+			2, "Packet Bytes SCO");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -416,7 +416,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTODisplayYAxisScaling(ViSession instrSessio
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_BTO_PDIV, scaling),
-		2, "Scaling");
+			2, "Scaling");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -437,11 +437,11 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOAnalogDemodulationZoom(ViSession instrSes
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_BTO_ZOOM_STATE, zoomState),
-		2, "Zoom State");
+			2, "Zoom State");
 	if (zoomState == VI_TRUE)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_BTO_ZOOM_START, startTime),
-			3, "Start Time");
+				3, "Start Time");
 	}
 
 Error:
@@ -465,7 +465,7 @@ ViStatus _VI_FUNC rsspecan_GetBTOMesurementStatus(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_STAT, status),
-		2, "Status");
+			2, "Status");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -486,10 +486,10 @@ ViStatus _VI_FUNC rsspecan_GetBTOPacketInfo(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_PTYP, type),
-		2, "Type");
+			2, "Type");
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_PLEN, length),
-		3, "Length");
+			3, "Length");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -510,20 +510,20 @@ ViStatus _VI_FUNC rsspecan_GetBTOOutputPower(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, RSSPECAN_VAL_MEASTYPE_MIN, RSSPECAN_VAL_MEASTYPE_PEAK),
-		2, "Type");
+			2, "Type");
 	switch (type)
 	{
 	case RSSPECAN_VAL_MEASTYPE_MIN:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Min", RSSPECAN_ATTR_BTO_OPOW_AVER, power),
-			3, "Power");
+				3, "Power");
 		break;
 	case RSSPECAN_VAL_MEASTYPE_MAX:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Max", RSSPECAN_ATTR_BTO_OPOW_AVER, power),
-			3, "Power");
+				3, "Power");
 		break;
 	case RSSPECAN_VAL_MEASTYPE_PEAK:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_BTO_OPOW_PEAK, power),
-			3, "Power");
+				3, "Power");
 		break;
 	}
 
@@ -547,7 +547,7 @@ ViStatus _VI_FUNC rsspecan_GetBTONumberOfExceptions(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_ACLR_EXC, numberOfExceptions),
-		2, "Number Of Exceptions");
+			2, "Number Of Exceptions");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -571,7 +571,7 @@ ViStatus _VI_FUNC rsspecan_GetBTOPowerOfChannels(ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K8"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 0, INT_MAX),
-		2, "Array Size");
+			2, "Array Size");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, power), 3, "Power List");
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, ":CALC:BTO:ACLR:LIST?", arraySize, power, returnedValues));
@@ -598,34 +598,34 @@ ViStatus _VI_FUNC rsspecan_GetBTOFrequencyDeviation(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, RSSPECAN_VAL_MEASTYPE_MAXMIN, RSSPECAN_VAL_MEASTYPE_AVERMAX),
-		3, "Type");
+			3, "Type");
 
 	switch (type)
 	{
 	case RSSPECAN_VAL_MEASTYPE_MAXMIN:
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "F%ld,Min", frequencyDeviation);
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_MCH_DF_MAX, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_MEASTYPE_MAXMAX:
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "F%ld,Max", frequencyDeviation);
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_MCH_DF_MAX, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_MEASTYPE_MAXAVER:
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "F%ld,Aver", frequencyDeviation);
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_MCH_DF_MAX, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_MEASTYPE_AVERMIN:
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "F%ld,Min", frequencyDeviation);
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_MCH_DF_AVER, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_MEASTYPE_AVERMAX:
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "F%ld,Max", frequencyDeviation);
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_MCH_DF_AVER, value),
-			4, "Value");
+				4, "Value");
 		break;
 	}
 
@@ -654,15 +654,15 @@ ViStatus _VI_FUNC rsspecan_GetBTORatioAverageFrequencyDeviation(ViSession instrS
 	{
 	case RSSPECAN_VAL_MEASTYPE_MIN:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Min", RSSPECAN_ATTR_BTO_MCH_RAT, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_MEASTYPE_MAX:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Max", RSSPECAN_ATTR_BTO_MCH_RAT, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_MEASTYPE_AVER:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Aver", RSSPECAN_ATTR_BTO_MCH_RAT, value),
-			4, "Value");
+				4, "Value");
 		break;
 	}
 
@@ -691,15 +691,15 @@ ViStatus _VI_FUNC rsspecan_GetBTOInitCarrFreqTol(ViSession instrSession,
 	{
 	case RSSPECAN_VAL_MEASTYPE_MIN:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Min", RSSPECAN_ATTR_BTO_ICFT, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_MEASTYPE_MAX:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Max", RSSPECAN_ATTR_BTO_ICFT, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_MEASTYPE_AVER:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Aver", RSSPECAN_ATTR_BTO_ICFT, value),
-			4, "Value");
+				4, "Value");
 		break;
 	}
 
@@ -721,7 +721,7 @@ ViStatus _VI_FUNC rsspecan_GetBTOPercentageDeviation(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_BTO_MCH_DF2_PERC, value),
-		2, "Value");
+			2, "Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -744,8 +744,7 @@ ViStatus _VI_FUNC rsspecan_GetBTOPacketDataBits(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, maximumTime, 0, 4294967295UL), 2, "Maximum Time");
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, "BTOB", arrayLength,
-		values, actualPoints));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, "BTOB", arrayLength, values, actualPoints));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -771,8 +770,7 @@ ViStatus _VI_FUNC rsspecan_ReadBTOFMTrace(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, maximumTime, 0, 4294967295UL), 2, "Maximum Time");
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, "BTOF", arrayLength,
-		amplitude, actualPoints));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, "BTOF", arrayLength, amplitude, actualPoints));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -800,11 +798,11 @@ ViStatus _VI_FUNC rsspecan_GetBTOCarrFreqDrift(ViSession instrSession,
 	{
 	case RSSPECAN_VAL_MEASTYPE_NONE:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_BTO_CFDR_RATE, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_MEASTYPE_MAX:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_BTO_CFDR_MAX, value),
-			4, "Value");
+				4, "Value");
 		break;
 	}
 
@@ -845,7 +843,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOSENumAdjacentChannels(ViSession instrSess
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_IBS_ACP, number),
-		2, "Number");
+			2, "Number");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -869,15 +867,15 @@ ViStatus _VI_FUNC rsspecan_GetBTOChannelPowerOfSEMeasurement(ViSession instrSess
 	{
 	case RSSPECAN_VAL_BTO_SE_TX:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_BTO_IBS_TXCHANNEL, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_BTO_SE_HADJ_LOW:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Low", RSSPECAN_ATTR_BTO_IBS_HADJ, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_BTO_SE_HADJ_UPP:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Upp", RSSPECAN_ATTR_BTO_IBS_HADJ, value),
-			4, "Value");
+				4, "Value");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, parameter), 2, "Parameter");
@@ -905,7 +903,7 @@ ViStatus _VI_FUNC rsspecan_GetBTOSEPowerOfAdjacentChannels(ViSession instrSessio
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K8"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 0, INT_MAX),
-		2, "Array Size");
+			2, "Array Size");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, power), 3, "Power List");
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, ":CALC:BTO:IBS?", arraySize, power, returnedValues));
@@ -929,7 +927,7 @@ ViStatus _VI_FUNC rsspecan_GetBTOSENumberOfExceptions(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_IBS_EXC, exceptions),
-		2, "Exceptions");
+			2, "Exceptions");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -948,7 +946,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTOCFSBlockCount(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_CFST_BLOCK_COUNT, blockCount),
-		2, "Block Count");
+			2, "Block Count");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -988,15 +986,15 @@ ViStatus _VI_FUNC rsspecan_GetBTOCFSDeviation(ViSession instrSession,
 	{
 	case RSSPECAN_VAL_BTO_CFS_FERR_INITIAL:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_CFST_FERR_INITIAL, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_BTO_CFS_FERR_BLOCK:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_CFST_FERR_BLOCK, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_BTO_CFS_FERR_TOTAL:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_CFST_FERR_TOTAL, value),
-			4, "Value");
+				4, "Value");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, parameter), 2, "Parameter");
@@ -1040,15 +1038,15 @@ ViStatus _VI_FUNC rsspecan_GetBTOCFSModulAccuracy(ViSession instrSession,
 	{
 	case RSSPECAN_VAL_BTO_CFS_DEVM_RMS:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_CFST_DEVM_RMS, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_BTO_CFS_DEVM_99PCT:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_BTO_CFST_DEVM_99PCT, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_BTO_CFS_DEVM_PEAK:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_BTO_CFST_DEVM_PEAK, value),
-			4, "Value");
+				4, "Value");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, parameter), 2, "Parameter");
@@ -1076,15 +1074,15 @@ ViStatus _VI_FUNC rsspecan_GetBTODifferentialPhaseEncodingValues(ViSession instr
 	{
 	case RSSPECAN_VAL_BTO_DPEN_TESTED:
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_DPEN_PACKETS, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_BTO_DPEN_BER:
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_DPEN_BER, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_BTO_DPEN_PASSED:
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BTO_DPEN_PACKETS_PASSED, value),
-			4, "Value");
+				4, "Value");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, parameter), 2, "Parameter");
@@ -1114,17 +1112,17 @@ ViStatus _VI_FUNC rsspecan_ConfigureBTORTPMeasurement(ViSession instrSession,
 	{
 	case RSSPECAN_VAL_BTO_RTP_GFSK:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "SECTION_TIME_GFSK,Start", RSSPECAN_ATTR_BTO_RTP_TIME, start),
-			3, "Start");
+				3, "Start");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "SECTION_TIME_GFSK,Stop", RSSPECAN_ATTR_BTO_RTP_TIME, stop),
-			4, "Stop");
+				4, "Stop");
 		break;
 	case RSSPECAN_VAL_BTO_RTP_DPSK:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "SECTION_TIME_DPSK,Start", RSSPECAN_ATTR_BTO_RTP_TIME, start),
-			3, "Start");
+				3, "Start");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "SECTION_TIME_DPSK,Stop", RSSPECAN_ATTR_BTO_RTP_TIME, stop),
-			4, "Stop");
+				4, "Stop");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, packetSection), 2, "Packet Section");
@@ -1170,16 +1168,16 @@ ViStatus _VI_FUNC rsspecan_GetBTORelativeTransmissionPower(ViSession instrSessio
 	case RSSPECAN_VAL_BTO_RTP_DPSK:
 		strcat(repCap, "SECTION_DPSK");
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_RTP, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_BTO_RTP_GFSK:
 		strcat(repCap, "SECTION_GFSK");
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_RTP, value),
-			4, "Value");
+				4, "Value");
 		break;
 	case RSSPECAN_VAL_BTO_RTP_RATIO:
 		viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_BTO_RTP_RATIO, value),
-			4, "Value");
+				4, "Value");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, parameter), 2, "Parameter");

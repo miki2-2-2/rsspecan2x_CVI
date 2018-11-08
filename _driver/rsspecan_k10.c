@@ -95,7 +95,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10DUT(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_DUT, deviceUnderTest),
-		2, "Device Under Test");
+			2, "Device Under Test");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -117,16 +117,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10SignalCharacteristics(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, bandClass, RSSPECAN_VAL_GSM_K10_FREQ_BAND_TGSM_380, RSSPECAN_VAL_GSM_K10_FREQ_BAND_PCS_1900),
-		2, "Band Class");
+			2, "Band Class");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_SIG_CHAR_MODE, GSMBandArr[bandClass][0]),
-		2, "Band Class");
+			2, "Band Class");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_SIG_CHAR_BAND, GSMBandArr[bandClass][1]),
-		2, "Band Class");
+			2, "Band Class");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_SIG_CHAR_BAND_ARFC, arfcn),
-		3, "ARFCN");
+			3, "ARFCN");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -154,32 +154,32 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10LevelSettings(
 	{
 	case RSSPECAN_VAL_GSM_K10_AUTO_OFF:
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_AUTO_PWR_LEV, VI_FALSE),
-			2, "Automatic Reference Level");
+				2, "Automatic Reference Level");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_REFERENCE_LEVEL, referenceLevel),
-			3, "Reference Level");
+				3, "Reference Level");
 		break;
 	case RSSPECAN_VAL_GSM_K10_AUTO_ONCE:
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_GSM_K10_AUTO_PWR_LEV_ONCE, ""),
-			2, "Automatic Reference Level");
+				2, "Automatic Reference Level");
 		break;
 	case RSSPECAN_VAL_GSM_K10_AUTO_ON:
 	default:
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_AUTO_PWR_LEV, VI_TRUE),
-			2, "Automatic Reference Level");
+				2, "Automatic Reference Level");
 	}
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_AUTO_PWR_LEV, automaticReferenceLevel > 0),
 		2, "Automatic Reference Level");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_REFERENCE_LEVEL_OFFSET, externalAttenuation),
-		4, "External Attenuation");
+			4, "External Attenuation");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_LEVEL_SETTINGS_PWR_CLASS, powerClass),
-		5, "Power Class");
+			5, "Power Class");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_LEVEL_SETTINGS_POW_STAT, staticPCL),
-		6, "Static PCL");
+			6, "Static PCL");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -205,35 +205,35 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10CaptureSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_BB_INPUT_SELECTION, signalSource),
-		2, "Signal Source");
+			2, "Signal Source");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_SWEEP_TIME, captureTime),
-		3, "Capture Time");
+			3, "Capture Time");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_SOURCE, triggerMode),
-		4, "Trigger Mode");
+			4, "Trigger Mode");
 
 	switch (triggerMode)
 	{
 	case RSSPECAN_VAL_TRG_IFP:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_IFP_LEVEL, triggerLevel),
-			6, "Trigger Level");
+				6, "Trigger Level");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_DELAY, triggerOffset),
-			5, "Trigger Offset");
+				5, "Trigger Offset");
 
 		break;
 	case RSSPECAN_VAL_TRG_EXT:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_EXTERNAL_TRIGGER_LEVEL, triggerLevel),
-			6, "Trigger Level");
+				6, "Trigger Level");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_DELAY, triggerOffset),
-			5, "Trigger Offset");
+				5, "Trigger Offset");
 
 		break;
 	}
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win0", RSSPECAN_ATTR_NUMBER_OF_SWEEPS, statisticCount),
-		7, "Statistic Count");
+			7, "Statistic Count");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -253,7 +253,7 @@ ViStatus _VI_FUNC rsspecan_QueryGSMK10StatisticCount(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_STATISTIC_COUNT, statisticCount),
-		2, "Statistic Count");
+			2, "Statistic Count");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -277,7 +277,7 @@ ViStatus _VI_FUNC rsspecan_QueryGSMK10TriggerToSyncNumberOfAcquisitions(ViSessio
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_TRIGGER_TO_SYNC_ACQUISITIONS, numberOfAcquisitions),
-		2, "Number Of Acquisitions");
+			2, "Number Of Acquisitions");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -302,7 +302,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10CorrelationThreshold(ViSession instrSe
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_K10_CORRELATION_THRESHOLD, correlationThreshold),
-		2, "Correlation Threshold");
+			2, "Correlation Threshold");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -322,10 +322,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10Synchronization(ViSession instrSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_SYNCHRONIZATION, synchronization),
-		2, "Synchronization");
+			2, "Synchronization");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_MEASURE_ONLY_ON_SYNC, measureOnlyOnSync),
-		3, "Measure Only On Sync");
+			3, "Measure Only On Sync");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -347,7 +347,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10AutoTrackTime(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_GSM_K10_CAP_SET_TRACK_TIME, autoTrackTime),
-		2, "Auto Track Time");
+			2, "Auto Track Time");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -368,7 +368,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10SwapIQ(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_IQ_SWAP, swapIQ),
-		2, "Swap IQ");
+			2, "Swap IQ");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -387,7 +387,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10MarkerZoom(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_MARKER_ZOOM_FACTOR, zoomFactor),
-		2, "Zoom Factor");
+			2, "Zoom Factor");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -407,7 +407,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10ResultDisplay(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_RESULT_DISPLAY, resultDisplay),
-		2, "Result Display");
+			2, "Result Display");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -493,7 +493,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10DemodulationSingleSlotMeasurements(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_DEMOD_SINGLE_SLOT_MEAS, slotToMeasure),
-		2, "Slot To Measure");
+			2, "Slot To Measure");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -516,10 +516,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10DemodulationMultiSlotMeasurements(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_DEM_MULTI_SLOT_MEAS_SLOT_NUM, numberOfSlotsToMeasure),
-		2, "Number Of Slots To Measure");
+			2, "Number Of Slots To Measure");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_DEM_MULTI_SLOT_MEAS_FIRST_SLOT, firstSlotToMeasure),
-		3, "First Slot To Measure");
+			3, "First Slot To Measure");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -542,7 +542,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10DemodulationEqualTimeslotLength(ViSess
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_DEMODULATION_EQUAL_TIMESLOT_LENGTH, equalTimeslotLength),
-		2, "Equal Timeslot Length");
+			2, "Equal Timeslot Length");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -570,31 +570,31 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10Burst(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, slot, 0, 7),
-		3, "Slot");
+			3, "Slot");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld", slot);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_SLOT_STATE, active),
-		3, "Active");
+			3, "Active");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_TYPE_BURST, burstType),
-		4, "Burst Type");
+			4, "Burst Type");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_PCL, pcl),
-		5, "PCL");
+			5, "PCL");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_MOD, modulation),
-		6, "Modulation");
+			6, "Modulation");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_TSC, tsc),
-		8, "TSC");
+			8, "TSC");
 	switch (burstType)
 	{
 	case RSSPECAN_VAL_GSM_K10_BURST_NORMAL:
 		break;
 	case RSSPECAN_VAL_GSM_K10_BURST_HIGHER_RATE:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_FILTER, filter),
-			7, "Filter");
+				7, "Filter");
 		break;
 	case RSSPECAN_VAL_GSM_K10_BURST_ACCESS:
 		if (modulation != RSSPECAN_VAL_GSM_K10_MOD_GMSK)
@@ -625,12 +625,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10UserTSC(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, slot, 0, 7),
-		2, "Slot");
+			2, "Slot");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld", slot);
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_TSC_USER_VALUE, userTSC),
-		3, "User TSC");
+			3, "User TSC");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -661,25 +661,25 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10AccessBurst(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, slot, 0, 7),
-		2, "Slot");
+			2, "Slot");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld", slot);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_SLOT_STATE, active),
-		3, "Active");
+			3, "Active");
 
 	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_TYPE_BURST, RSSPECAN_VAL_GSM_K10_BURST_ACCESS));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_TIMING_ADVANCE, timingAdvance),
-		4, "Timing Advance");
+			4, "Timing Advance");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_SYNC, sync),
-		5, "Sync");
+			5, "Sync");
 
 	if (sync == RSSPECAN_VAL_SYNC_USER)
 	{
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_TSC_USER_VALUE, userTSC),
-			6, "User TSC");
+				6, "User TSC");
 	}
 
 Error:
@@ -720,40 +720,40 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10AQPSKBurst(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, slot, 0, 7),
-		2, "Slot");
+			2, "Slot");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld", slot);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_SLOT_STATE, active),
-		3, "Active");
+			3, "Active");
 
 	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_TYPE_BURST, RSSPECAN_VAL_GSM_K10_BURST_NORMAL));
 	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_MOD, RSSPECAN_VAL_GSM_K10_MOD_AQPSK));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_SCPIR, SCPIR),
-		4, "SCPIR");
+			4, "SCPIR");
 
 	strcpy(repCap2, repCap);
 	strcat(repCap, ",Sub1");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_SUBCH_TSC, subchannel1TSC),
-		5, "Subchannel 1 TSC");
+			5, "Subchannel 1 TSC");
 
 	if (subchannel1TSC == RSSPECAN_VAL_TSC_SLOT_USER)
 	{
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_BURST_SUBCH_TSC_USER_VALUE, subchannel1UserTSC),
-			6, "Subchannel 1 User TSC");
+				6, "Subchannel 1 User TSC");
 	}
 
 	strcat(repCap2, ",Sub2");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap2, RSSPECAN_ATTR_GSM_K10_BURST_SUBCH_TSC, subchannel2TSC),
-		7, "Subchannel 2 TSC");
+			7, "Subchannel 2 TSC");
 
 	if (subchannel2TSC == RSSPECAN_VAL_TSC_SLOT_USER)
 	{
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap2, RSSPECAN_ATTR_GSM_K10_BURST_SUBCH_TSC_USER_VALUE, subchannel2UserTSC),
-			8, "Subchannel 2 User TSC");
+				8, "Subchannel 2 User TSC");
 	}
 
 Error:
@@ -778,10 +778,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10TriggerToSync(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_TRIGGER_TO_SYNC_BINS_COUNT, numberOfBins),
-		2, "Number Of Bins");
+			2, "Number Of Bins");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_TRIGGER_TO_SYNC_ADAPTIVE_DATA_SIZE, adaptiveDataSize),
-		3, "Adaptive Data Size");
+			3, "Adaptive Data Size");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -802,7 +802,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10WideSpectrumResultsUnit(ViSession inst
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_WIDE_SPECTRUM_UNIT, unit),
-		2, "Unit");
+			2, "Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -826,11 +826,11 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10Trace(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 4),
-		3, "Trace");
+			3, "Trace");
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,TR%ld", window, trace);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_GSM_K10_TRACE_TYPE, traceType),
-		4, "Trace Type");
+			4, "Trace Type");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -873,11 +873,11 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10Measurement(
 		break;
 	case RSSPECAN_VAL_GSM_K10_WIDE: // (8) - Wide Spectrum
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_GSM_K10_MEASUREMENT_WIDE_SPECTRUM, NULL),
-			2, "GSM K10 Measurement Wide Spectrum");
+				2, "GSM K10 Measurement Wide Spectrum");
 		break;
 	case RSSPECAN_VAL_GSM_K10_TS: // (9) - Trigger to sync
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_GSM_K10_MEASUREMENT_TRIGGER_TO_SYNC, NULL),
-			2, "GSM K10 Measurement Trigger to Sync");
+				2, "GSM K10 Measurement Trigger to Sync");
 		break;
 	}
 
@@ -900,7 +900,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmK10PVTMeasurement(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_PWR_VS_TIME_MEAS, burstSection),
-		2, "Burst Section");
+			2, "Burst Section");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -920,7 +920,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10PVTFilter(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_POWER_VS_TIME_FILTER, powerVsTimeFilter),
-		2, "Power Vs Time Filter");
+			2, "Power Vs Time Filter");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -939,7 +939,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10PVTAlignment(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_POWER_VS_TIME_ALIGNMENT, alignment),
-		2, "Alignment");
+			2, "Alignment");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -961,10 +961,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10Demodulation(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_DEMODULATION_SYMBOL_DECISION, symbolDecision),
-		2, "Symbol Decision");
+			2, "Symbol Decision");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_DEMODULATION_TAIL_TSC_BITS, tailTSCBits),
-		3, "Tail TSC Bits");
+			3, "Tail TSC Bits");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -996,24 +996,24 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10MultiMeasurement(ViSession instrSessio
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_MULTI_MEAS_STATE, multipleMeasurementMode),
-		2, "Multiple Measurement Mode");
+			2, "Multiple Measurement Mode");
 
 	if (multipleMeasurementMode == VI_TRUE)
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_MULTI_MEAS_POWER_VS_TIME, powerVsTime),
-			3, "Power Vs Time");
+				3, "Power Vs Time");
 
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_MULTI_MEAS_DEMODULATION, demodulation),
-			4, "Demodulation");
+				4, "Demodulation");
 
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_MULTI_MEAS_CONSTELLATION, constellation),
-			5, "Constellation");
+				5, "Constellation");
 
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_MULTI_MEAS_MODULATION_SPECTRUM, modulationSpectrum),
-			6, "Modulation Spectrum");
+				6, "Modulation Spectrum");
 
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_MULTI_MEAS_TRANSIENT_SPECTRUM, transientSpectrum),
-			7, "Transient Spectrum");
+				7, "Transient Spectrum");
 	}
 
 Error:
@@ -1035,10 +1035,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10ModulationTransientSpectrum(ViSession 
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_MODULATION_TRANSIENT_SPECTRUM_ENABLE_LEFT_LIMIT, enableLeftLimit),
-		2, "Enable Left Limit");
+			2, "Enable Left Limit");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_MODULATION_TRANSIENT_SPECTRUM_ENABLE_RIGHT_LIMIT, enableRightLimit),
-		3, "Enable Right Limit");
+			3, "Enable Right Limit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1073,20 +1073,20 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10ModulationTransientSpectrumAdditional(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_MODULATION_TRANSIENT_SPECTRUM_FILTER_TYPE, filterType),
-		2, "Filter Type");
+			2, "Filter Type");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_MODULATION_TRANSIENT_SPECTRUM_REF_POWER, transientReferencePower),
-		3, "transient Reference Power");
+			3, "transient Reference Power");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CONF:SPEC:MOD:LIST:BAND:RES %ld,%s", offsetFrequency, RBWArr[modulationRBWAt1800kHz]);
 	checkErr(RsCore_Write(instrSession, cmd));
 	checkErr(rsspecan_CheckStatus (instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_MODULATION_TRANSIENT_SPECTRUM_HIGH_DYNAMIC, highDynamic),
-		6, "highDynamic");
+			6, "highDynamic");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_MODULATION_TRANSIENT_SPECTRUM_FREQUENCY_LIST, modulationFrequencyList),
-		7, "Modulation Frequency List");
+			7, "Modulation Frequency List");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1109,18 +1109,18 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10MultiCarrier(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_MULTI_CARRIER_BTS, multiCarrierBTS),
-		2, "Multi Carrier BTS");
+			2, "Multi Carrier BTS");
 
 	if (multiCarrierBTS == VI_TRUE)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_MULTI_CARRIER_NUMBER_OF_ACTIVE_CHANNELS, numberOfActiveCarriers),
-			3, "Number Of Active Carriers");
+				3, "Number Of Active Carriers");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_MULTI_CARRIER_BTS_CLASS, BTSClass),
-			4, "BTS Class");
+				4, "BTS Class");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_MULTI_CARRIER_FILTER, pvTFilter),
-			5, "PvT Filter");
+				5, "PvT Filter");
 	}
 
 Error:
@@ -1186,12 +1186,12 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10MeasurementResults(
 	case RSSPECAN_VAL_GSM_K10_MEAS_ADR:
 		{
 			viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_GSM_K10_MOD_AVG, RSSPECAN_VAL_GSM_K10_MOD_DEV),
-				5, "Modifier");
+					5, "Modifier");
 
 			snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s,%s", GSMMeasTypeArr[measurement], GSMMeasModifArr[modifier]);
 
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_READ_GSM_K10_MEAS_RES, result),
-				6, "Result");
+					6, "Result");
 			break;
 		}
 	case RSSPECAN_VAL_GSM_K10_MEAS_PERC_EVM:
@@ -1201,19 +1201,19 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10MeasurementResults(
 			snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", GSMPercentileArr[measurement - 12]);
 
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_READ_GSM_K10_MEAS_RES_95_PERC, result),
-				6, "Result");
+					6, "Result");
 			break;
 		}
 
 	case RSSPECAN_VAL_GSM_K10_MEAS_TRIGGER_TO_SYNC:
 		{
 			viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_GSM_K10_MOD_AVG, RSSPECAN_VAL_GSM_K10_MOD_DEV),
-				5, "Modifier");
+					5, "Modifier");
 
 			snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", GSMMeasModifArr[modifier]);
 
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_READ_GSM_K10_TRIGGER_TO_SYNC_RESULTS, result),
-				6, "Result");
+					6, "Result");
 			break;
 		}
 
@@ -1262,12 +1262,12 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10MeasurementResults(
 	case RSSPECAN_VAL_GSM_K10_MEAS_ADR:
 		{
 			viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_GSM_K10_MOD_AVG, RSSPECAN_VAL_GSM_K10_MOD_DEV),
-				4, "Modifier");
+					4, "Modifier");
 
 			snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s,%s", GSMMeasTypeArr[measurement], GSMMeasModifArr[modifier]);
 
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FETCH_GSM_K10_MEAS_RES, result),
-				5, "Result");
+					5, "Result");
 			break;
 		}
 	case RSSPECAN_VAL_GSM_K10_MEAS_PERC_EVM:
@@ -1277,18 +1277,18 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10MeasurementResults(
 			snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", GSMPercentileArr[measurement - 12]);
 
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FETCH_GSM_K10_MEAS_RES_95_PERC, result),
-				5, "Result");
+					5, "Result");
 			break;
 		}
 	case RSSPECAN_VAL_GSM_K10_MEAS_TRIGGER_TO_SYNC:
 		{
 			viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_GSM_K10_MOD_AVG, RSSPECAN_VAL_GSM_K10_MOD_DEV),
-				4, "Modifier");
+					4, "Modifier");
 
 			snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", GSMMeasModifArr[modifier]);
 
 			viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FETCH_GSM_K10_TRIGGER_TO_SYNC_RESULTS, result),
-				5, "Result");
+					5, "Result");
 			break;
 		}
 
@@ -1379,16 +1379,16 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10BurstSlotResults(
 	viCheckParm(result == NULL, 6, "Result");
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, slot, 0, 7),
-		3, "Slot");
+			3, "Slot");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, burstSelection, RSSPECAN_VAL_GSM_K10_BURST_ALL, RSSPECAN_VAL_GSM_K10_BURST_CURR),
-		3, "burstSelection");
+			3, "burstSelection");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_GSM_K10_BURST_MOD_AVG_PWR, RSSPECAN_VAL_GSM_K10_BURST_MOD_MAX_PWR),
-		4, "modifier");
+			4, "modifier");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld,%s,%s", slot, GSMBurstSelArr[burstSelection], GSMBurstModifArr[modifier]);
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_READ_GSM_K10_BURST_SLOT_RES, result),
-		6, "Result");
+			6, "Result");
 
 Error:
 	rsspecan_SetOPCTimeout(instrSession, old_timeout);
@@ -1418,16 +1418,16 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10BurstSlotResults(
 	viCheckParm(result == NULL, 5, "Result");
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, slot, 0, 7),
-		2, "Slot");
+			2, "Slot");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, burstSelection, RSSPECAN_VAL_GSM_K10_BURST_ALL, RSSPECAN_VAL_GSM_K10_BURST_CURR),
-		3, "burstSelection");
+			3, "burstSelection");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, RSSPECAN_VAL_GSM_K10_BURST_MOD_AVG_PWR, RSSPECAN_VAL_GSM_K10_BURST_MOD_MAX_PWR),
-		4, "modifier");
+			4, "modifier");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld,%s,%s", slot, GSMBurstSelArr[burstSelection], GSMBurstModifArr[modifier]);
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FETCH_GSM_K10_BURST_SLOT_RES, result),
-		5, "Result");
+			5, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1458,12 +1458,12 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10BurstSlotDeltaToSync(ViSession instrSession
 	viCheckParm(result == NULL, 4, "Result");
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, slot, 0, 7),
-		3, "Slot");
+			3, "Slot");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld", slot);
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_READ_GSM_K10_BURST_SLOT_DELTA_TO_SYNC, result),
-		4, "Result");
+			4, "Result");
 
 Error:
 	rsspecan_SetOPCTimeout(instrSession, old_timeout);
@@ -1491,12 +1491,12 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10BurstSlotDeltaToSync(ViSession instrSessio
 	viCheckParm(result == NULL, 3, "Result");
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, slot, 0, 7),
-		2, "Slot");
+			2, "Slot");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "GSMS%ld", slot);
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FETCH_GSM_K10_BURST_SLOT_DELTA_TO_SYNC, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1526,7 +1526,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10SpectrumReferencePower(ViSession instrSessi
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, spectrumType, RSSPECAN_VAL_GSM_K10_MOD_SPEC, RSSPECAN_VAL_GSM_K10_WIDE_SPEC),
-		3, "Spectrum Type");
+			3, "Spectrum Type");
 
 	switch (spectrumType)
 	{
@@ -1574,7 +1574,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10SpectrumReferencePower(ViSession instrSess
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, spectrumType, RSSPECAN_VAL_GSM_K10_MOD_SPEC, RSSPECAN_VAL_GSM_K10_WIDE_SPEC),
-		3, "Spectrum Type");
+			3, "Spectrum Type");
 
 	switch (spectrumType)
 	{

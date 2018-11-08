@@ -32,11 +32,11 @@ ViStatus _VI_FUNC rsspecan_PWMMode(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,PM%ld", window, pmet);
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_PMET_STATE, state),
-		2, "State");
+			2, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -55,7 +55,7 @@ ViStatus _VI_FUNC rsspecan_PWMSelect(ViSession instrSession, ViInt32 sensor)
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PMET_SELECT, sensor),
-		2, "Sensor");
+			2, "Sensor");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -80,8 +80,8 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMMeasurement(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementTime, RSSPECAN_VAL_PWMET_MEASTIME_NORM, RSSPECAN_VAL_PWMET_MEASTIME_MANUAL),
-		3, "Measurement Time");
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+			3, "Measurement Time");
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,PM%ld", window, pmet);
 	switch (measurementTime)
@@ -95,11 +95,11 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMMeasurement(ViSession instrSession,
 		checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PMET_MEAS_TIME, measurementTime));
 	}
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PMET_COUPLING, coupling),
-		4, "Coupling");
+			4, "Coupling");
 	if (coupling == RSSPECAN_VAL_PMET_COUP_OFF)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PMET_FREQ, frequency),
-			5, "Frequency");
+				5, "Frequency");
 	}
 
 Error:
@@ -122,19 +122,19 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMRelative(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,PM%ld", window, pmet);
 
 	checkErr(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_PMET_RELATIVE, VI_TRUE));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PMET_REL, referenceValue),
-		3, "Reference Value");
+			3, "Reference Value");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,PM%ld", window, pmet);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PMET_UNIT_REL, unit),
-		4, "Unit");
+			4, "Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -155,13 +155,13 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMAbsolute(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,PM%ld", window, pmet);
 	checkErr(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_PMET_RELATIVE, VI_FALSE));
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,PM%ld", window, pmet);
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PMET_UNIT_ABS, unit),
-		3, "Unit");
+			3, "Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -184,11 +184,11 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMReferenceLevelOffsetState(ViSession instr
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,PM%ld", window, pmet);
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_PMET_REF_LEVEL_OFFSET_STATE, state),
-		3, "State");
+			3, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -211,15 +211,15 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMExternalPowerTrigger(ViSession instrSessi
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,PM%ld", window, pmet);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_STATE, state),
-		3, "State");
+			3, "State");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PWR_EXTERNAL_POWER_TRIGGER_LEVEL, level),
-		4, "Level");
+			4, "Level");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -250,20 +250,20 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMExternalPowerTriggerAdvanced(ViSession in
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,PM%ld", window, pmet);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_HYSTERESIS, hysteresis),
-		3, "Hysteresis");
+			3, "Hysteresis");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_DROPOUT_TIME, dropoutTime),
-		4, "Dropout Time");
+			4, "Dropout Time");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_HOLDOFF_TIME, holdoffTime),
-		4, "Holdoff Time");
+			4, "Holdoff Time");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PWM_EXTERNAL_POWER_TRIGGER_SLOPE, slope),
-		3, "Slope");
+			3, "Slope");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -284,11 +284,11 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMBarGraphView(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win0,PM%ld", pmet);
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_PMET_BARGRAPH_STATE, barGraphView),
-		2, "Bar Graph View");
+			2, "Bar Graph View");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -320,11 +320,11 @@ ViStatus _VI_FUNC rsspecan_ConfigurePowerSensorAssignment(ViSession instrSession
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "PM%ld", pmet);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_PMET_AUTOMATIC_ASSIGNMENT, autoAssignment),
-		2, "Auto Assignment");
+			2, "Auto Assignment");
 
 	if (autoAssignment == VI_FALSE) // if not AutoAssign only
 	{
@@ -352,7 +352,7 @@ ViStatus _VI_FUNC rsspecan_QueryPowerSensorCount(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PMET_NUMBER_OF_SENSORS, powerSensorCount),
-		2, "Power Sensor Count");
+			2, "Power Sensor Count");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -373,14 +373,14 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMDutyCycle(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "PM%ld", pmet);
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_PMET_DUTY_CYCLE_STATE, dutyCycle),
-		2, "Duty Cycle");
+			2, "Duty Cycle");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PMET_DUTY_CYCLE, dutyCycleValue),
-		3, "Duty Cycle Value");
+			3, "Duty Cycle Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -401,7 +401,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMMeasToRef(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,PM%ld", window, pmet);
 	checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_PMET_REL_AUTO, ""));
@@ -423,7 +423,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePWMZero(ViSession instrSession)
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "PM%ld", pmet);
 	checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_PMET_ZERO, ""));
@@ -447,11 +447,11 @@ ViStatus _VI_FUNC rsspecan_ConfigurePowerSensorReferenceLevelOffset(ViSession in
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "PM%ld", pmet);
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PWM_RELATIVE_OFFSET, offset),
-		2, "Offset");
+			2, "Offset");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -476,13 +476,13 @@ ViStatus _VI_FUNC rsspecan_ReadPWMResult(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,PM%ld", window, pmet);
 	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
 	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PMET_READ, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	if (old_timeout >= 0)
@@ -505,11 +505,11 @@ ViStatus _VI_FUNC rsspecan_FetchPWMResult(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,PM%ld", window, pmet);
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PMET_FETCH, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

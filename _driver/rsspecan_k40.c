@@ -64,24 +64,24 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseSignalSettings(
 	viCheckParm(RsCore_InvalidViReal64Range(instrSession, levelTolerance, 3.0, 20.0), 7, "Level Tolerance");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_FREQUENCY_CENTER, frequency),
-		2, "Frequency");
+			2, "Frequency");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_CONF_POW_EXP_RF, level),
-		3, "Level");
+			3, "Level");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PHASE_SWE_FORW, sweepForward),
-		4, "Sweep Forward");
+			4, "Sweep Forward");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PHASE_FREQ_VER, verifyFrequencyLevel),
-		5, "Verify Frequency Level");
+			5, "Verify Frequency Level");
 
 	if (verifyFrequencyLevel == VI_TRUE)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_FREQ_VER_TOL, frequencyTolerance),
-			6, "Frequency Tolerance");
+				6, "Frequency Tolerance");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_POW_RLEV_VER_TOL, levelTolerance),
-			7, "Level Tolerance");
+				7, "Level Tolerance");
 	}
 
 Error:
@@ -105,10 +105,10 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseFrequencyTolerance(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PHASE_FREQ_VER, VI_TRUE),
-		2, "");
+			2, "");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_FREQ_VER_TOL_ABS, absoluteFrequencyTolerance),
-		2, "Absolute Frequency Tolerance");
+			2, "Absolute Frequency Tolerance");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -131,16 +131,15 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseAFCSettings(
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_PHASE_FREQ_VER,
-		&state));
+	checkErr(rsspecan_GetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PHASE_FREQ_VER, &state));
 
 	if (state == VI_TRUE)
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PHASE_FREQ_TRACK, trackFrequency),
-			2, "Track Frequency");
+				2, "Track Frequency");
 
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PHASE_POW_TRACK, trackLevel),
-			3, "Track Level");
+				3, "Track Level");
 	}
 
 Error:
@@ -170,7 +169,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseAMRejection(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PHASE_AM_REJECTION, amRejection),
-		2, "AM Rejection");
+			2, "AM Rejection");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -195,7 +194,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseTrackingBW(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_TRACKING_BANDWIDTH, trackingBandwidth),
-		2, "Tracking Bandwidth");
+			2, "Tracking Bandwidth");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -218,7 +217,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseDigitalPLL(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PHASE_DIGITAL_PLL, digitalPLL),
-		2, "Digital PLL");
+			2, "Digital PLL");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -242,7 +241,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseDecimation(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PHASE_DECIMATION, decimation),
-		2, "Decimation");
+			2, "Decimation");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -276,26 +275,26 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseDisplaySettings(
 	viCheckParm(RsCore_InvalidViReal64Range(instrSession, yAxisRange, 1.0, 200.0), 6, "Y Axis Range");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_FREQUENCY_START, xAxisStart),
-		2, "X Axis Start");
+			2, "X Axis Start");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_FREQUENCY_STOP, xAxisStop),
-		3, "X Axis Stop");
+			3, "X Axis Stop");
 
 	if (autoscaleOnce == VI_TRUE)
 	{
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_Y_AUTO_ONCE, ""),
-			4, "Autoscale Once");
+				4, "Autoscale Once");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_Y_AUTO, autoscaleOnce),
-			4, "Autoscale Once");
+				4, "Autoscale Once");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_Y_RLEV, yAxisTop),
-			5, "Y Axis Top");
+				5, "Y Axis Top");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_Y, yAxisRange),
-			6, "Y Axis Range");
+				6, "Y Axis Range");
 	}
 
 Error:
@@ -326,37 +325,37 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseDisplayYAxisSettings(ViSession instrSes
 	{
 	case RSSPECAN_VAL_PHASE_Y_SCALE_OFF:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_Y_AXIS_MANUAL_SCALING, yAxisScaling),
-			2, "Y Axis Scaling");
+				2, "Y Axis Scaling");
 		break;
 	case RSSPECAN_VAL_PHASE_Y_SCALE_TOP_BOTTOM:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_Y_AXIS_MANUAL_SCALING, yAxisScaling),
-			2, "Y Axis Scaling");
+				2, "Y Axis Scaling");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_Y_RLEV, yAxisTop),
-			3, "Y Axis Top");
+				3, "Y Axis Top");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_Y_BOTTOM, yAxisBottom),
-			4, "Y Axis Bottom");
+				4, "Y Axis Bottom");
 		break;
 	case RSSPECAN_VAL_PHASE_Y_SCALE_TOP_RANGE:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_Y_AXIS_MANUAL_SCALING, yAxisScaling),
-			2, "Y Axis Scaling");
+				2, "Y Axis Scaling");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_Y_RLEV, yAxisTop),
-			3, "Y Axis Top");
+				3, "Y Axis Top");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_Y, yAxisRange),
-			4, "Y Axis Range");
+				4, "Y Axis Range");
 		break;
 	case RSSPECAN_VAL_PHASE_Y_SCALE_BOTTOM_RANGE:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_Y_AXIS_MANUAL_SCALING, yAxisScaling),
-			2, "Y Axis Scaling");
+				2, "Y Axis Scaling");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_Y_BOTTOM, yAxisBottom),
-			4, "Y Axis Bottom");
+				4, "Y Axis Bottom");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_Y, yAxisRange),
-			4, "Y Axis Range");
+				4, "Y Axis Range");
 		break;
 	case RSSPECAN_VAL_PHASE_Y_SCALE_AUTO:
 		checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_Y_AUTO, VI_TRUE));
@@ -392,20 +391,20 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseDisplayXAxisSettings(ViSession instrSes
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_X_AXIS_SCOPE, xAxisScope),
-		2, "X Axis Scope");
+			2, "X Axis Scope");
 
 	switch (xAxisScope)
 	{
 	case RSSPECAN_VAL_NOISE_X_SCOPE_MANUAL:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_X_AXIS_START_FREQUENCY, xAxisStart),
-			3, "X Axis Start");
+				3, "X Axis Start");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_X_AXIS_STOP_FREQUENCY, xAxisStop),
-			4, "X Axis Stop");
+				4, "X Axis Stop");
 		break;
 	case RSSPECAN_VAL_NOISE_X_SCOPE_HDECADE:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_X_AXIS_HALF_DECADE, halfDecade),
-			5, "Half Decade");
+				5, "Half Decade");
 		break;
 	}
 
@@ -431,18 +430,18 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseTraceSettings(
 
 	viCheckParm(RsCore_InvalidViReal64Range(instrSession, traceOffset, -200.0, 200.0e+6), 2, "Trace Offset");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, traceSmoothing, 1, 20),
-		3, "Trace Smoothing");
+			3, "Trace Smoothing");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, smoothingType, RSSPECAN_VAL_PHASE_SMO_TYPE_LIN, RSSPECAN_VAL_PHASE_SMO_TYPE_MED),
-		4, "Smoothing Type");
+			4, "Smoothing Type");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_Y_RLEV_OFFS, traceOffset),
-		2, "Trace Offset");
+			2, "Trace Offset");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_SMO_APER, traceSmoothing),
-		3, "Trace Smoothing");
+			3, "Trace Smoothing");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_SMO_TYPE, smoothingType),
-		4, "Smoothing Type");
+			4, "Smoothing Type");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -476,10 +475,10 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseResidualCalculations(
 	if (useMeasurementSettings == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "C1", RSSPECAN_ATTR_PHASE_CALC_EVAL_STAR, evaluateFrom),
-			3, "Evaluate From");
+				3, "Evaluate From");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "C1", RSSPECAN_ATTR_PHASE_CALC_EVAL_STOP, evaluateTo),
-			4, "Evaluate To");
+				4, "Evaluate To");
 	}
 
 Error:
@@ -505,12 +504,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseTraceCustomRange(ViSession instrSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, userRange, 1, 3),
-		2, "User Range");
+			2, "User Range");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,U%ld", window, userRange);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PHASE_USER_TRACE, trace),
-		3, "trace");
+			3, "trace");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -537,15 +536,15 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseUserResidualCalculations(ViSession inst
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, userRange, 1, 3),
-		2, "User Range");
+			2, "User Range");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld,U%ld", window, userRange);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PHASE_USER_EVALUATE_FROM, evaluateFrom),
-		3, "Evaluate From");
+			3, "Evaluate From");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PHASE_USER_EVALUATE_TO, evaluateTo),
-		4, "Evaluate To");
+			4, "Evaluate To");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -575,33 +574,33 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseSpotNoiseSettings(
 	viCheckParm(RsCore_InvalidViReal64Range(instrSession, offsetFrequency4, 1.0, 1.0e+9), 6, "Offset Frequency 4");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "SN1", RSSPECAN_ATTR_PHASE_CALC_SNO_STAT, enable),
-		2, "Enable");
+			2, "Enable");
 
 	if (RsCore_IsInstrumentModel(instrSession, "FSW"))
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "SN2", RSSPECAN_ATTR_PHASE_CALC_SNO_STAT, enable),
-			2, "Enable");
+				2, "Enable");
 
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "SN3", RSSPECAN_ATTR_PHASE_CALC_SNO_STAT, enable),
-			2, "Enable");
+				2, "Enable");
 
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "SN4", RSSPECAN_ATTR_PHASE_CALC_SNO_STAT, enable),
-			2, "Enable");
+				2, "Enable");
 	}
 
 	if (enable == VI_TRUE)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "SN1", RSSPECAN_ATTR_PHASE_CALC_SNO_X, offsetFrequency1),
-			3, "Offset Frequency 1");
+				3, "Offset Frequency 1");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "SN2", RSSPECAN_ATTR_PHASE_CALC_SNO_X, offsetFrequency2),
-			4, "Offset Frequency 2");
+				4, "Offset Frequency 2");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "SN3", RSSPECAN_ATTR_PHASE_CALC_SNO_X, offsetFrequency3),
-			5, "Offset Frequency 3");
+				5, "Offset Frequency 3");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "SN4", RSSPECAN_ATTR_PHASE_CALC_SNO_X, offsetFrequency4),
-			6, "Offset Frequency 4");
+				6, "Offset Frequency 4");
 	}
 
 Error:
@@ -626,13 +625,13 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseAnalyzerSettings(
 	if (RsCore_HasInstrumentOptions(instrSession, "B2"))
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_INP_PRES_STAT, preselector),
-			2, "Pre-selector");
+				2, "Pre-selector");
 	}
 
 	if (RsCore_HasInstrumentOptions(instrSession, "B25|B2|B22"))
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_INP_GAIN_STAT, preamplifier),
-			3, "Pre-amplifier");
+				3, "Pre-amplifier");
 	}
 
 Error:
@@ -655,7 +654,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseSpotNoiseCalculation(ViSession instrSes
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PHASE_SPOT_NOISE_CALCULATION, spotNoiseCalculation),
-		2, "Spot Noise Calculation");
+			2, "Spot Noise Calculation");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -697,12 +696,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseSpurSettings(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PHASE_SPUR_SUPPRESSION, spurSuppression),
-		2, "Spur Suppression");
+			2, "Spur Suppression");
 
 	if (spurSuppression == VI_TRUE)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_SPUR_THRESHOLD, spurThreshold),
-			3, "Spur Threshold");
+				3, "Spur Threshold");
 	}
 
 Error:
@@ -724,10 +723,10 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseSweepSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, sweepMode, RSSPECAN_VAL_SWE_MODE_FAST, RSSPECAN_VAL_SWE_MODE_MAN),
-		2, "Sweep Mode");
+			2, "Sweep Mode");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_SWEEP_MODE, sweepMode),
-		2, "Sweep Mode");
+			2, "Sweep Mode");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -750,7 +749,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseSignalVerificationFailed(ViSession inst
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_SIGNAL_VERIFICATION_FAILED, stopOnVerifyFailed),
-		2, "Stop On Verify Failed");
+			2, "Stop On Verify Failed");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -778,10 +777,10 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseSpanSettings(
 	viCheckParm(RS_ERROR_INVALID_PARAMETER, 2, "Start Offset>Stop Offset");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_FREQUENCY_START, startOffset),
-		2, "Start Offset");
+			2, "Start Offset");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_FREQUENCY_STOP, stopOffset),
-		3, "Stop Offset");
+			3, "Stop Offset");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -811,29 +810,28 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseCarrierFrequencyOffsetTable(
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_PHASE_SWEEP_MODE,
-		&sweepMode));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_SWEEP_MODE, &sweepMode));
 
 	if (sweepMode == RSSPECAN_VAL_SWE_MODE_MAN)
 	{
 		viCheckParm(RsCore_InvalidViInt32Range(instrSession, subband, 1, 18),
-			2, "Sub-band");
+				2, "Sub-band");
 		viCheckParm(RsCore_InvalidViReal64Range(instrSession, rbw, 1.0, 300.0e+6), 3, "RBW");
 		viCheckParm(RsCore_InvalidViInt32Range(instrSession, average, 1, 10000),
-			4, "Average");
+				4, "Average");
 		viCheckParm(RsCore_InvalidViInt32Range(instrSession, fft, RSSPECAN_VAL_BAND_TYPE_NORM, RSSPECAN_VAL_BAND_TYPE_IQFFT),
-			5, "FFT");
+				5, "FFT");
 
 		sprintf(range, "R%ld", subband);
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, range, RSSPECAN_ATTR_PHASE_LIST_RANG_BAND, rbw),
-			3, "RBW");
+				3, "RBW");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, range, RSSPECAN_ATTR_PHASE_LIST_RANG_SWE_COUN, average),
-			4, "Average");
+				4, "Average");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, range, RSSPECAN_ATTR_PHASE_LIST_RANG_FILT_TYPE, fft),
-			5, "FFT");
+				5, "FFT");
 	}
 
 Error:
@@ -862,25 +860,24 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhasePresetSettings(
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetAttributeViInt32 (instrSession, "", RSSPECAN_ATTR_PHASE_SWEEP_MODE,
-		&sweepMode));
+	checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_SWEEP_MODE, &sweepMode));
 
 	if (sweepMode == RSSPECAN_VAL_SWE_MODE_MAN)
 	{
 		viCheckParm(RsCore_InvalidViReal64Range(instrSession, rbw, 1.0, 300.0e+6), 2, "RBW");
 		viCheckParm(RsCore_InvalidViInt32Range(instrSession, average, 1, 10000),
-			3, "Average");
+				3, "Average");
 		viCheckParm(RsCore_InvalidViInt32Range(instrSession, fft, RSSPECAN_VAL_BAND_TYPE_NORM, RSSPECAN_VAL_BAND_TYPE_IQFFT),
-			4, "FFT");
+				4, "FFT");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_PHASE_BAND_RAT, rbw),
-			2, "RBW");
+				2, "RBW");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win1", RSSPECAN_ATTR_PHASE_SWEEP_COUNT, average),
-			3, "Average");
+				3, "Average");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win1", RSSPECAN_ATTR_PHASE_BAND_TYPE, fft),
-			4, "FFT");
+				4, "FFT");
 	}
 
 Error:
@@ -907,21 +904,21 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseGlobalIQWindowSettings(ViSession instrS
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, decade, RSSPECAN_VAL_PHASE_ALL_DECADE, RSSPECAN_VAL_PHASE_PARTICULAR_DECADE),
-		2, "Decade");
+			2, "Decade");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, subband, 1, 20),
-		3, "Subband");
+			3, "Subband");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "R%ld", subband);
 
 	if (decade == RSSPECAN_VAL_PHASE_PARTICULAR_DECADE)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PHASE_IQ_WINDOW_FUNCTION_PARTICULAR_DECADE, globalIQWindow),
-			4, "Global IQ Window");
+				4, "Global IQ Window");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_IQ_WINDOW_FUNCTION_ALL_DECADE, globalIQWindow),
-			5, "Global IQ Window");
+				5, "Global IQ Window");
 	}
 
 Error:
@@ -949,21 +946,21 @@ ViStatus _VI_FUNC rsspecan_CreatePhaseLimitLine(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		3, "Limit");
+			3, "Limit");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, strlen(name), 0, 8), 4, "Name (string length)");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, strlen(comment), 0, 40), 5, "Comment (string length)");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%ld", limit);
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_LIMIT_NAME, name),
-		4, "Name");
+			4, "Name");
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_LIMIT_COMMENT, comment),
-		5, "Comment");
+			5, "Comment");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,L%ld", window, limit);
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_LIMIT_ASSIGN_TRACE, assigntoTrace),
-		6, "Assign to Trace");
+			6, "Assign to Trace");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -989,11 +986,11 @@ ViStatus _VI_FUNC rsspecan_DefinePhaseLimitLine(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		2, "Limit");
+			2, "Limit");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, 0, 1),
-		3, "Type");
+			3, "Type");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, count, 1, INT_MAX),
-		4, "Count");
+			4, "Count");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, xAxis), 5, "X Axis");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, amplitude), 6, "Amplitude");
 
@@ -1032,7 +1029,7 @@ ViStatus _VI_FUNC rsspecan_EnablePhaseLimitCheck(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		3, "Limit");
+			3, "Limit");
 
 	switch (type)
 	{
@@ -1050,10 +1047,10 @@ ViStatus _VI_FUNC rsspecan_EnablePhaseLimitCheck(
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,L%ld", window, limit);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_LIMIT_STATE, limitEnabled),
-		5, "Limit Enabled");
+			5, "Limit Enabled");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, attribute, checkEnabled),
-		6, "Check Enabled");
+			6, "Check Enabled");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1082,14 +1079,14 @@ ViStatus _VI_FUNC rsspecan_MovePhaseLimitLine(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		2, "Limit");
+			2, "Limit");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, type, 0, 2),
-		3, "Type");
+			3, "Type");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%ld", limit);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, attributes[type], value),
-		4, "Value");
+			4, "Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1112,12 +1109,12 @@ ViStatus _VI_FUNC rsspecan_CopyPhaseLimitLine(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		2, "Limit");
+			2, "Limit");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%ld", limit);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_LIMIT_COPY, copyTo),
-		3, "Copy To");
+			3, "Copy To");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1139,7 +1136,7 @@ ViStatus _VI_FUNC rsspecan_ClearPhaseLimitLineResults(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		2, "Limit");
+			2, "Limit");
 
 	sprintf(lim_line_no, "Win1,L%ld", limit);
 
@@ -1165,7 +1162,7 @@ ViStatus _VI_FUNC rsspecan_DeletePhaseLimitLine(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		2, "Limit");
+			2, "Limit");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%ld", limit);
 
@@ -1193,7 +1190,7 @@ ViStatus _VI_FUNC rsspecan_GetActivePhaseLimitLine(ViSession instrSession,
 
 	viCheckParm(rsspecan_GetAttributeViString(instrSession, "", RSSPECAN_ATTR_LIMIT_LINE_ACTIVE,
 			bufferSize, activeLimitLines),
-		3, "Active Limit Lines");
+			3, "Active Limit Lines");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1226,13 +1223,13 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseNoiseLimitSettings(ViSession instrSessi
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, segment, 1, 5),
-		5, "Segment");
+			5, "Segment");
 	viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_PHASE_NOISE_LIMIT_SLOPE,
 			"pnlSegment", segment - 1, RS_REPCAP_BUF_SIZE, repCap),
-		5, "Segment");
+			5, "Segment");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_NOISE_LIMIT_SHAPE_TYPE, shapeType),
-		2, "Shape Type");
+			2, "Shape Type");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:PNL:TRAC %s", selectedTraces);
 	checkErr(RsCore_Write(instrSession, cmd));
@@ -1240,13 +1237,13 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseNoiseLimitSettings(ViSession instrSessi
 	checkErr(rsspecan_CheckStatus (instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_NOISE_LIMIT_LEVEL, noiseFloor),
-		4, "Noise Floor");
+			4, "Noise Floor");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PHASE_NOISE_LIMIT_CORNER_FREQUENCY, cornerFrequency),
-		6, "Corner Frequency");
+			6, "Corner Frequency");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PHASE_NOISE_LIMIT_SLOPE, slope),
-		7, "Slope");
+			7, "Slope");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1270,7 +1267,7 @@ ViStatus _VI_FUNC rsspecan_PhaseCopyToUserLimitLine(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limitLine, 1, 8),
-		2, "Limit Line");
+			2, "Limit Line");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "LL%ld", limitLine);
 
@@ -1295,7 +1292,7 @@ ViStatus _VI_FUNC rsspecan_GetPhaseNoiseLimitCheckState(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_NOISE_LIMIT_CHECK_STATE, limitCheck),
-		2, "Limit Check");
+			2, "Limit Check");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1323,12 +1320,12 @@ ViStatus _VI_FUNC rsspecan_GetPhaseLimitCheckResult(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		3, "Limit");
+			3, "Limit");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,L%ld", window, limit);
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_LIMIT_CHECK_RESULT, state),
-		4, "State");
+			4, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1353,7 +1350,7 @@ ViStatus _VI_FUNC rsspecan_TracePhaseSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, traceNumber, 1, 3),
-		2, "Trace Number");
+			2, "Trace Number");
 
 	if ((traceMode < RSSPECAN_TRAC_MOD_WRITE) || (traceMode > RSSPECAN_TRAC_MOD_MINH))
 	viCheckParm(RS_ERROR_INVALID_PARAMETER, 4, "Trace Mode");
@@ -1361,15 +1358,15 @@ ViStatus _VI_FUNC rsspecan_TracePhaseSettings(
 	sprintf(traceNR, "TR%ld", traceNumber);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, traceNR, RSSPECAN_ATTR_PHASE_DISP_TRACE_SMO, smoothing),
-		5, "Smoothing");
+			5, "Smoothing");
 
 	sprintf(traceNR, "Win1,TR%ld", traceNumber);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, traceNR, RSSPECAN_ATTR_TRACE_STATE, traceState),
-		3, "Trace State");
+			3, "Trace State");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, traceNR, RSSPECAN_ATTR_TRACE_TYPE, traceMode),
-		4, "Trace Mode");
+			4, "Trace Mode");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1417,7 +1414,7 @@ ViStatus _VI_FUNC rsspecan_GetPhaseEstimatedMeasurementTime(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_SWEEP_TIME, estimatedMeasurementTime),
-		2, "Estimated Measurement Time");
+			2, "Estimated Measurement Time");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1445,7 +1442,7 @@ ViStatus _VI_FUNC rsspecan_ReadPhaseTraceData(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, sourceTrace, 0, 2),
-		2, "Source Trace");
+			2, "Source Trace");
 
 	if (noofPoints)
 		dataSize = *noofPoints;
@@ -1489,7 +1486,7 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseResidualResults(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, 0, 2),
-		2, "Modifier");
+			2, "Modifier");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FETC:PNO:%s?", fetchPhaseArr[modifier]);
 	checkErr(RsCore_QueryViReal64(instrSession, cmd, value));
@@ -1520,9 +1517,9 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseResidualUserResults(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, userRange, 1, 3),
-		2, "User Range");
+			2, "User Range");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, modifier, 0, 2),
-		3, "Modifier");
+			3, "Modifier");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FETC:PNO:USER%ld:%s?", userRange, fetchPhaseArr[modifier]);
 	checkErr(RsCore_QueryViReal64(instrSession, cmd, value));
@@ -1608,7 +1605,7 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseSpursDiscrete(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_MEASURED_DISCRETE_JITTER, discrete),
-		2, "Discrete");
+			2, "Discrete");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1638,7 +1635,7 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseSpursRandom(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_MEASURED_RANDOM_JITTER, random),
-		2, "Random");
+			2, "Random");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1665,10 +1662,10 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseFrequencyLevel(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_MEASURED_FREQUENCY, frequency),
-		2, "Frequency");
+			2, "Frequency");
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_MEASURED_LEVEL, level),
-		3, "Level");
+			3, "Level");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1697,7 +1694,7 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseIntegratedPhaseNoise(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_MEASURED_INTEGRATED_PHASE_NOISE, ipn),
-		2, "IPN");
+			2, "IPN");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1734,12 +1731,12 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseUserIntegratedPhaseNoise(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, user, 1, 3),
-		2, "User");
+			2, "User");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "U%ld", user);
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PHASE_MEASURED_USER_INTEGRATED_PHASE_NOISE, ipn),
-		3, "IPN");
+			3, "IPN");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1763,12 +1760,12 @@ ViStatus _VI_FUNC rsspecan_GetPhaseSpotNoiseYPosition(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, spotNoiseMarkerNumber, 1, 5),
-		2, "Spot Noise Marker Number");
+			2, "Spot Noise Marker Number");
 
 	sprintf(snoiseNR, "SN%ld", spotNoiseMarkerNumber);
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, snoiseNR, RSSPECAN_ATTR_PHASE_CALC_SNO_Y, spotNoiseMarkerResult),
-		3, "Spot Noise Marker Result");
+			3, "Spot Noise Marker Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

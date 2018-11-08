@@ -65,7 +65,7 @@ ViStatus _VI_FUNC rsspecan_SetFMStereoState(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_FMS_STATE, state),
-		2, "State");
+			2, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -88,7 +88,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoTrigger(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_FMS_TRIGGER_SOURCE, triggerSource),
-		2, "Trigger Source");
+			2, "Trigger Source");
 
 	switch (triggerSource)
 	{
@@ -96,15 +96,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoTrigger(
 		break;
 	case RSSPECAN_VAL_FMS_TRG_EXT:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_EXTERNAL_TRIGGER_LEVEL, triggerLevel),
-			3, "Trigger Level");
+				3, "Trigger Level");
 		break;
 	case RSSPECAN_VAL_FMS_TRG_IFP:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TRIGGER_IFP_LEVEL, triggerLevel),
-			3, "Trigger Level");
+				3, "Trigger Level");
 		break;
 	case RSSPECAN_VAL_FMS_TRG_TIME:
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TRIGGER_TIME_INTERVAL, triggerLevel),
-			3, "Trigger Level");
+				3, "Trigger Level");
 		break;
 	case RSSPECAN_VAL_FMS_TRG_LEFT:
 	case RSSPECAN_VAL_FMS_TRG_RIGH:
@@ -116,7 +116,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoTrigger(
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", ChannelTypeArr[triggerSource - 4]);
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FMS_TRIGGER_LEVEL, triggerLevel),
-			3, "Trigger Level");
+				3, "Trigger Level");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, triggerSource), 2, "Trigger Source");
@@ -146,12 +146,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoPhaseNoiseMarker(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 16),
-		3, "Marker");
+			3, "Marker");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_PHASE_NOISE_MARKER_STATE, state),
-		4, "State");
+			4, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -179,10 +179,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoDifferenceFrequencyDistortion(
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_DIFFERENCE_FREQUENCY_DISTORTION_STATE, state),
-		2, "State");
+			2, "State");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_FMS_DIFFERENCE_FREQUENCY_DISTORTION_UNIT, unit),
-		3, "Unit");
+			3, "Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -242,10 +242,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoIntermodulationDistortion(
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_INTERMODULATION_DISTORTION_STATE, state),
-		2, "State");
+			2, "State");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_FMS_INTERMODULATION_DISTORTION_UNIT, unit),
-		3, "Unit");
+			3, "Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -302,7 +302,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoAFAutoScale(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_FMS_AF_AUTO_SCALE, state),
-		2, "State");
+			2, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -328,7 +328,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoDisplayConfig(
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_FMS_DISPLAY_CONFIG, displayConfiguration),
-		3, "Display Configuration");
+			3, "Display Configuration");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -350,7 +350,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoReferenceDeviation(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMS_REFERENCE_DEVIATION, referenceDeviation),
-		2, "Reference Deviation");
+			2, "Reference Deviation");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -375,18 +375,18 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoResultSummarySetup(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_FSM_CHAN_TYPE_LEFT, RSSPECAN_VAL_FSM_CHAN_TYPE_PILOT),
-		2, "Channel Type");
+			2, "Channel Type");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", ChannelTypeArr[channelType]);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_FMS_RESULT_SUMMARY_DETECTOR, detector),
-		3, "Detector");
+			3, "Detector");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_FMS_RESULT_SUMMARY_MODE, mode),
-		4, "Mode");
+			4, "Mode");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_RESULT_SUMMARY_COUPLED, coupled),
-		5, "Coupled");
+			5, "Coupled");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -409,7 +409,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoMeasToRef(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_FSM_CHAN_TYPE_LEFT, RSSPECAN_VAL_FSM_CHAN_TYPE_PILOT),
-		2, "Channel Type");
+			2, "Channel Type");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", ChannelTypeArr[channelType]);
 
@@ -435,7 +435,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoMeasurementTime(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_MTIM, measuringTime),
-		2, "Measuring Time");
+			2, "Measuring Time");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -463,33 +463,33 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoAFFilter(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_FSM_CHAN_TYPE_LEFT, RSSPECAN_VAL_FSM_CHAN_TYPE_PILOT),
-		2, "Channel Type");
+			2, "Channel Type");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "%s", ChannelTypeArr[channelType]);
 
 	if (highPass == RSSPECAN_VAL_FMS_HPAS_FILT_NONE)
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_HIGH_PASS_STATE, VI_FALSE),
-			3, "High Pass");
+				3, "High Pass");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_HIGH_PASS_STATE, VI_TRUE),
-			3, "High Pass");
+				3, "High Pass");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_HIGH_PASS_FREQUENCY, highPassArr[highPass]),
-			3, "High Pass");
+				3, "High Pass");
 	}
 
 	if (lowPass == RSSPECAN_VAL_FMS_LPAS_FILT_NONE)
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_LOW_PASS_STATE, VI_FALSE),
-			4, "Low Pass");
+				4, "Low Pass");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_LOW_PASS_STATE, VI_TRUE),
-			4, "Low Pass");
+				4, "Low Pass");
 
 		if ((lowPass == RSSPECAN_VAL_FMS_LPAS_FILT_5PCT) ||
 			(lowPass == RSSPECAN_VAL_FMS_LPAS_FILT_10PCT) ||
@@ -501,37 +501,37 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoAFFilter(
 		else
 		{
 			viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_LOW_PASS_FREQUENCY_ABSOLUTE, lowPassArr[lowPass]),
-				4, "Low Pass");
+					4, "Low Pass");
 		}
 	}
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_CCITT, weightingArr[weighting][0]),
-		5, "Weighting");
+			5, "Weighting");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_CCIR_UNWEIGHTED, weightingArr[weighting][1]),
-		5, "Weighting");
+			5, "Weighting");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_CCIR_WEIGHTED, weightingArr[weighting][2]),
-		5, "Weighting");
+			5, "Weighting");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_A_WEIGHTED, weightingArr[weighting][3]),
-		5, "Weighting");
+			5, "Weighting");
 
 	if (deemphasis == RSSPECAN_VAL_FMS_DEEMPH_NONE)
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_DEEMPHASIS_STATE, VI_FALSE),
-			6, "Deemphasis");
+				6, "Deemphasis");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_DEEMPHASIS_STATE, VI_TRUE),
-			6, "Deemphasis");
+				6, "Deemphasis");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_DEEMPHASIS_TIME_CONSTANT, deemphasisArr[deemphasis]),
-			6, "Deemphasis");
+				6, "Deemphasis");
 	}
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_COUPLED, coupled),
-		7, "Coupled");
+			7, "Coupled");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -572,10 +572,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoAFRange(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_VERTICAL_SCALE, deviation),
-		2, "Deviation");
+			2, "Deviation");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DISP_Y_AXIS_SCALING, devperDivision),
-		3, "Dev Per Division");
+			3, "Dev Per Division");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -597,7 +597,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoAFRangeTHDUnit(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_ADEM_UNIT_THD, unit),
-		2, "Unit");
+			2, "Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -619,10 +619,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoAFRangeDevUnit(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_FMS_AF_RANGE_DEV_UNIT_ABSOLUTE, absoluteDevUnit),
-		2, "Absolute Dev Unit");
+			2, "Absolute Dev Unit");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_FMS_AF_RANGE_DEV_UNIT_RELATIVE, relativeDevUnit),
-		3, "Relative Dev Unit");
+			3, "Relative Dev Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -644,10 +644,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoTimeDomainZoom(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_FMDEM_ZOOM, zoomState),
-		2, "Zoom State");
+			2, "Zoom State");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_ZOOM_START, startTime),
-		3, "Start Time");
+			3, "Start Time");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -669,12 +669,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoTimeDomainZoomLength(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_FMDEM_ZOOM_LENGTH_MODE, zoomLengthMode),
-		2, "Zoom Length Mode");
+			2, "Zoom Length Mode");
 
 	if (zoomLengthMode == RSSPECAN_VAL_MAN)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMDEM_ZOOM_LENGTH, zoomLength),
-			3, "Zoom Length");
+				3, "Zoom Length");
 	}
 
 Error:
@@ -695,10 +695,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoSquelch(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_FMS_SQUELCH, squelchState),
-		2, "Squelch State");
+			2, "Squelch State");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_FMS_SQUELCH_LEVEL, squelchLevel),
-		3, "Squelch Level");
+			3, "Squelch Level");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -720,7 +720,7 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoCarrierFrequency(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_QUERY_FMS_CARRIER_FREQUENCY, carrierFrequency),
-		2, "Carrier Frequency");
+			2, "Carrier Frequency");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -750,15 +750,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoTraceModes(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7S"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_FSM_CHAN_TYPE_LEFT, RSSPECAN_VAL_FSM_CHAN_TYPE_PILOT),
-		2, "Channel Type");
+			2, "Channel Type");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, RSSPECAN_VAL_FMS_AFSP, RSSPECAN_VAL_FMS_TDOM),
-		3, "Measurement Type");
+			3, "Measurement Type");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, traceModes[0], RSSPECAN_VAL_FMS_RESULT_OFF, RSSPECAN_VAL_FMS_RESULT_VIEW),
-		4, "Trace Modes");
+			4, "Trace Modes");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, traceModes[1], RSSPECAN_VAL_FMS_RESULT_OFF, RSSPECAN_VAL_FMS_RESULT_VIEW),
-		4, "Trace Modes");
+			4, "Trace Modes");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, traceModes[2], RSSPECAN_VAL_FMS_RESULT_OFF, RSSPECAN_VAL_FMS_RESULT_VIEW),
-		4, "Trace Modes");
+			4, "Trace Modes");
 
 	if (measurementType == RSSPECAN_VAL_FMS_AFSP)
 	{
@@ -800,12 +800,12 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoPhaseNoiseResult(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 16),
-		3, "Marker");
+			3, "Marker");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_QUERY_FMS_PHASE_NOISE_RESULT, phaseNoiseResult),
-		4, "Phase Noise Result");
+			4, "Phase Noise Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -929,14 +929,14 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoChannelTypeResults(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_FSM_CHAN_TYPE_LEFT, RSSPECAN_VAL_FSM_CHAN_TYPE_XTALK),
-		3, "Channel Type");
+			3, "Channel Type");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, RSSPECAN_VAL_FMS_MEAS_TYPE_ADEV, RSSPECAN_VAL_FMS_MEAS_TYPE_AFR),
-		4, "Measurement Type");
+			4, "Measurement Type");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,%s,%s", window, ChannelTypeArr[channelType], measTypeArr[measurementType]);
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_QUERY_FMS_CHANNEL_TYPE_RESULT, result),
-		5, "Result");
+			5, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -964,7 +964,7 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoChannelTypeAllResults(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7S"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_FSM_CHAN_TYPE_LEFT, RSSPECAN_VAL_FSM_CHAN_TYPE_PILOT),
-		3, "Channel Type");
+			3, "Channel Type");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MARK:FUNC:SFM:%s:RES? ALL", ChannelTypeArr[channelType]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 32001, result, NULL));
@@ -999,11 +999,11 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoResultValues(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K7S"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, channelType, RSSPECAN_VAL_FSM_CHAN_TYPE_LEFT, RSSPECAN_VAL_FSM_CHAN_TYPE_PILOT),
-		2, "Channel Type");
+			2, "Channel Type");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, measurementType, RSSPECAN_VAL_FMS_AFSP, RSSPECAN_VAL_FMS_TDOM),
-		3, "Measurement Type");
+			3, "Measurement Type");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, traceMode, RSSPECAN_VAL_FMS_RESULT_CURR, RSSPECAN_VAL_FMS_RESULT_MIN),
-		4, "Trace Mode");
+			4, "Trace Mode");
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 5, "Timeout");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SENS:SFM:%s:%s:RES? %s", ChannelTypeArr[channelType], resultTypeArr[measurementType], traceModesArr[traceMode]);

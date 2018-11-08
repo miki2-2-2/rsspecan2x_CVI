@@ -63,20 +63,20 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSignalCharacteristics(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_DUPLEXING, duplexing),
-		2, "Duplexing");
+			2, "Duplexing");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_FREQUENCY_CENTER, frequency),
-		3, "Frequency");
+			3, "Frequency");
 
 	switch (bandwidthSettingType)
 	{
 	case RSSPECAN_VAL_LTE_DOWNLINK_CHBW:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_CHANNEL_BANDWIDTH, channelBandwidth),
-			4, "Channel bandwidth");
+				4, "Channel bandwidth");
 		break;
 	case RSSPECAN_VAL_LTE_DOWNLINK_NRB:
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_NUMBER_OF_RESOURCE_BLOCKS, numberofResourceBlocks),
-			5, "Number of Resource Blocks");
+				5, "Number of Resource Blocks");
 		break;
 	default:
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, bandwidthSettingType), 4, "Bandwidth Setting Type");
@@ -84,7 +84,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSignalCharacteristics(
 	}
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_CYCLIC_PREFIX, cyclicPrefix),
-		6, "Cyclic Prefix");
+			6, "Cyclic Prefix");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -115,16 +115,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkLevel(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_AUTO_REFERENCE_LEVEL, autoReferenceLevel),
-		2, "Auto Reference Level");
+			2, "Auto Reference Level");
 
 	if (autoReferenceLevel == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_REFERENCE_LEVEL, referenceLevel),
-			3, "Reference Level");
+				3, "Reference Level");
 	}
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_REFERENCE_LEVEL_OFFSET, externalAttenuation),
-		4, "External Attenuation");
+			4, "External Attenuation");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -149,7 +149,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkLevelInBBMode(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_REFERENCE_LEVEL_IN_BB_MODE, referenceLevel),
-		2, "Reference Level");
+			2, "Reference Level");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -189,12 +189,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkTrigger(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TRIGGER_MODE, mode),
-		2, "Mode");
+			2, "Mode");
 
 	if (mode != RSSPECAN_VAL_TRIG_MODE_IMMEDIATE)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_DELAY, offset),
-			3, "Offset");
+				3, "Offset");
 	}
 
 	if ((mode == RSSPECAN_VAL_TRIG_MODE_IF_POWER) ||
@@ -202,14 +202,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkTrigger(
 		(mode == RSSPECAN_VAL_TRIG_MODE_RF_POWER)*/)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_IFP_OFFSET, holdoff),
-			4, "Holdoff");
+				4, "Holdoff");
 	}
 
 	if ((mode == RSSPECAN_VAL_TRIG_MODE_IF_POWER) ||
 		(mode == RSSPECAN_VAL_TRIG_MODE_POWER))
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_IFP_HYSTERESIS, hysteresis),
-			5, "Hysteresis");
+				5, "Hysteresis");
 	}
 
 	if ((mode == RSSPECAN_VAL_TRIG_MODE_EXTERNAL) ||
@@ -218,7 +218,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkTrigger(
 		(mode == RSSPECAN_VAL_TRIG_MODE_RF_POWER))
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", trig_level_attr[mode], triggerLevel),
-			6, "Trigger Level");
+				6, "Trigger Level");
 	}
 
 Error:
@@ -242,7 +242,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkIQ(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_IQ_SWAP, swapIQ),
-		2, "Swap IQ");
+			2, "Swap IQ");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -267,7 +267,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkInput(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_INPUT, source),
-		2, "Source");
+			2, "Source");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -290,7 +290,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkAutoLevelTrackTime(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_AUTO_LEVEL_TRACK_TIME, autoLevelTrackTime),
-		2, "Auto Level Track Time");
+			2, "Auto Level Track Time");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -315,7 +315,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkRFAttenuation(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_RF_ATTENUATION, attenuation),
-		2, "Attenuation");
+			2, "Attenuation");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -342,10 +342,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkDigitalBaseband(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_SRATE, digitalInputDataRate),
-		2, "Digital Input Data Rate");
+			2, "Digital Input Data Rate");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_DIGITAL_INPUT_RANGE, fullScaleLevel),
-		3, "Full Scale Level");
+			3, "Full Scale Level");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -387,16 +387,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkMIMO(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_MIMO_ANTENNA, antenna),
-		2, "Antenna");
+			2, "Antenna");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_MIMO_PUCCH, pucch),
-		3, "PUCCH");
+			3, "PUCCH");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_MIMO_PUSCH, pusch),
-		4, "PUSCH");
+			4, "PUSCH");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_MIMO_SRS, srs),
-		2, "SRS");
+			2, "SRS");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -425,7 +425,7 @@ ViStatus _VI_FUNC rsspecan_LoadLTEUplinkDemodulationSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_LOAD_DEMODULATION_SETTINGS, filePath),
-		2, "File Path");
+			2, "File Path");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -450,7 +450,7 @@ ViStatus _VI_FUNC rsspecan_StoreLTEUplinkDemodulationSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_STORE_DEMODULATION_SETTINGS, filePath),
-		2, "File Path");
+			2, "File Path");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -479,13 +479,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkDataAnalysis(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_CHANNEL_ESTIMATION, channelEstimation),
-		2, "Channel Estimation");
+			2, "Channel Estimation");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_COMPENSATE_DC_OFFSET, compensateDCOffset),
-		3, "Compensate DC Offset");
+			3, "Compensate DC Offset");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_AUTO_DEMODULATION, autoDemodulation),
-		4, "Auto Demodulation");
+			4, "Auto Demodulation");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -507,7 +507,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkCodeBitsScrambling(ViSession instrS
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SCRAMBLING_OF_CODED_BITS, scramblingOfCodedBits),
-		2, "Scrambling Of Coded Bits");
+			2, "Scrambling Of Coded Bits");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -537,7 +537,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSuppressedInterferenceSynchronizati
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SUPPRESSED_INTERFERENCE_SYNC, suppressedInterferenceSync),
-		2, "Suppressed Interference Sync");
+			2, "Suppressed Interference Sync");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -564,10 +564,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkTracking(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PHASE_TRACKING, phaseTracking),
-		2, "Phase Tracking");
+			2, "Phase Tracking");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_TIMING, timing),
-		3, "Timing");
+			3, "Timing");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -598,7 +598,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkTransientSlots(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_TRANSIENT_SLOTS, transientSlots),
-		2, "Transient Slots");
+			2, "Transient Slots");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -621,7 +621,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkTDDAllocation(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_TDD_UL_DL_ALLOCATIONS, tddULDLAllocations),
-		2, "TDD UL DL Allocations");
+			2, "TDD UL DL Allocations");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -645,7 +645,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkTDDSpecialSubframe(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_TDD_SPECIAL_SUBFRAME, specialSubframe),
-		2, "Special Subframe");
+			2, "Special Subframe");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -674,10 +674,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkPhysicalLayerCellIdentity(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_CELL_IDENTITY_GROUP, cellIdentityGroup),
-		2, "Cell Identity Group");
+			2, "Cell Identity Group");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_CELL_IDENTITY, identity),
-		3, "Identity");
+			3, "Identity");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -701,7 +701,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkConfigurableSubframes(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_CONFIGURABLE_SUBFRAMES, configurableSubframes),
-		2, "Configurable Subframes");
+			2, "Configurable Subframes");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -740,10 +740,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSubframeTable(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, subframe, 0, 9),
-		2, "Subframe");
+			2, "Subframe");
 	viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_LTE_UPLINK_SUBFRAME_ALLOCATION_ENABLE_PUCCH,
 			"LTESubframe", subframe , RS_REPCAP_BUF_SIZE, repCap),
-		2, "Subframe");
+			2, "Subframe");
 
 	viCheckParm(rsspecan_SetAttributeViInt32 (instrSession, repCap,
 		RSSPECAN_ATTR_LTE_UPLINK_SUBFRAME_ALLOCATION_ENABLE_PUCCH,
@@ -752,16 +752,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSubframeTable(
 	if (enablePUCCH == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_SUBFRAME_ALLOCATION_MODULATION, modulation),
-			4, "Modulation");
+				4, "Modulation");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_SUBFRAME_ALLOCATION_RESOURCE_BLOCKS, resourceBlocks),
-			5, "Resource Blocks");
+				5, "Resource Blocks");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_SUBFRAME_ALLOCATION_RESOURCE_BLOCKS_OFFSET, resourceBlocksOffset),
-			6, "Resource Blocks Offset");
+				6, "Resource Blocks Offset");
 	}
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_SUBFRAME_ALLOCATION_POWER, power),
-		7, "Power");
+			7, "Power");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -804,25 +804,25 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkReferenceSignal(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_POWER_PUSCH, relativePowerPUSCH),
-		2, "Relative Power PUSCH");
+			2, "Relative Power PUSCH");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_POWER_PUCCH, relativePowerPUCCH),
-		3, "Relative Power PUCCH");
+			3, "Relative Power PUCCH");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_GROUP_HOPPING, groupHopping),
-		4, "Group Hopping");
+			4, "Group Hopping");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SEQUENCE_HOPPING, sequenceHopping),
-		5, "sequenceHopping");
+			5, "sequenceHopping");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_DELTA_SEQUENCE_SHIFT, deltaSequenceShift),
-		6, "Delta Sequence Shift");
+			6, "Delta Sequence Shift");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_N_DMRS, n_dmrs),
-		7, "n_DMRS");
+			7, "n_DMRS");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_N_PRS_STATE, enablen_PRS),
-		8, "Enable n_PRS");
+			8, "Enable n_PRS");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -857,19 +857,19 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSoundingReferenceSignal(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SOUNDING_REFERENCE_SIGNAL_PRESENT, present),
-		2, "Present");
+			2, "Present");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SOUNDING_REFERENCE_SIGNAL_POWER, relativePower),
-		3, "Relative Power");
+			3, "Relative Power");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SOUNDING_REFERENCE_SIGNAL_SYMBOL_OFFSET, symbolOffset),
-		4, "Symbol Offset");
+			4, "Symbol Offset");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SOUNDING_REFERENCE_SIGNAL_SUBCARRIER_OFFSET, subcarrierOffset),
-		5, "Subcarrier Offset");
+			5, "Subcarrier Offset");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SOUNDING_REFERENCE_SIGNAL_SUBCARRIERS, numberOfSubcarriers),
-		6, "Number Of Subcarriers");
+			6, "Number Of Subcarriers");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -890,7 +890,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSoundingReferenceSignalNRRC(ViSessi
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SOUNDING_REFERENCE_SIGNAL_N_RRC, frequencyDomainPosition),
-		2, "frequencyDomainPosition");
+			2, "frequencyDomainPosition");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -922,7 +922,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSoundingReferenceSignalANSimultaneo
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SOUNDING_REFERENCE_SIGNAL_AN_TX, anSimultaneousTX),
-		2, "AN Simultaneous TX");
+			2, "AN Simultaneous TX");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -951,16 +951,16 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSoundingReferenceSignalModulation(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SOUNDING_REFERENCE_SIGNAL_ALPHA_PARAMETER, parameterAlpha),
-		2, "Parameter Alpha");
+			2, "Parameter Alpha");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SOUNDING_REFERENCE_SIGNAL_U_PARAMETER, parameteru),
-		3, "Parameter u");
+			3, "Parameter u");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SOUNDING_REFERENCE_SIGNAL_MODE, mode),
-		4, "Mode");
+			4, "Mode");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SOUNDING_REFERENCE_SIGNAL_Q_PARAMETER, parameterq),
-		5, "Parameter q");
+			5, "Parameter q");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -988,10 +988,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkPUSCHStructure(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PUSCH_FREQUENCY_HOPPING_MODE, frequencyHoppingMode),
-		2, "Frequency Hopping Mode");
+			2, "Frequency Hopping Mode");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PUSCH_SUBBANDS, numberofSubbands),
-		3, "Number of Subbands");
+			3, "Number of Subbands");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1014,10 +1014,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkPUSCHHopping(ViSession instrSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PUSCH_HOPPING_OFFSET, hoppingOffset),
-		2, "Hopping Offset");
+			2, "Hopping Offset");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PUSCH_INFO_IN_HOPPING_BITS, infoInHoppingBits),
-		3, "Info In Hopping Bits");
+			3, "Info In Hopping Bits");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1059,25 +1059,25 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkPUCCHStructure(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PUCCH_RESOURCE_BLOCKS, numberofRBsforPUCCH),
-		2, "Number of RBs for PUCCH");
+			2, "Number of RBs for PUCCH");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PUCCH_DELTA_SHIFT, deltaShift),
-		3, "Delta Shift");
+			3, "Delta Shift");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PUCCH_DELTA_OFFSET, deltaOffset),
-		4, "Delta Offset");
+			4, "Delta Offset");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PUCCH_CYCLIC_SHIFTS, n_1_cs),
-		5, "N1_cs");
+			5, "N1_cs");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PUCCH_BANDWIDTH, n_2_RB),
-		6, "N2_RB");
+			6, "N2_RB");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PUCCH_FORMAT, format),
-		7, "Format");
+			7, "Format");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PUCCH_RESOURCE_INDEX, n_pucch),
-		8, "N_PUCCH");
+			8, "N_PUCCH");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1113,29 +1113,29 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkPRACHStructure(ViSession instrSessi
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PRACH_CONFIGURATION, PRACHConfiguration),
-		2, "PRACH Configuration");
+			2, "PRACH Configuration");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PRACH_RESTRICTED_SET, restrictedSet),
-		3, "Restricted Set");
+			3, "Restricted Set");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PRACH_FREQUENCY_OFFSET, frequencyOffset),
-		4, "Frequency Offset");
+			4, "Frequency Offset");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PRACH_NCS_CONFIGURATION, ncsConfiguration),
-		5, "Ncs Configuration");
+			5, "Ncs Configuration");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PRACH_LOGICAL_ROOT_SEQ_INDEX, logicalRootSequenceIndex),
-		6, "Logical Root SequenceIndex");
+			6, "Logical Root SequenceIndex");
 
 	if (sequenceIndex == RSSPECAN_VAL_LTE_UPLINK_PRACH_SEQ_INDEX_AUTO)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PRACH_SEQUENCE_INDEX, sequenceIndex),
-			7, "Sequence Index");
+				7, "Sequence Index");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PRACH_SEQUENCE_INDEX_VALUE, sequenceIndexValue),
-			8, "Sequence Index Value");
+				8, "Sequence Index Value");
 	}
 
 Error:
@@ -1162,15 +1162,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkPRACHPreambleMapping(ViSession inst
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PRACH_AUTOMATIC_PREAMBLE_MAPPING, automaticPreambleMapping),
-		2, "Automatic Preamble Mapping");
+			2, "Automatic Preamble Mapping");
 
 	if (automaticPreambleMapping == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PRACH_FREQUENCY_INDEX, frequencyIndex),
-			3, "Frequency Index");
+				3, "Frequency Index");
 
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_PRACH_HALF_FRAME_INDICATOR, halfFrameIndicator),
-			4, "Half Frame Indicator");
+				4, "Half Frame Indicator");
 	}
 
 Error:
@@ -1204,14 +1204,14 @@ ViStatus _VI_FUNC rsspecan_ConfigureMarkerToTrace(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, window, 0, 16),
-		2, "Window");
+			2, "Window");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 16),
-		3, "Marker");
+			3, "Marker");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, marker);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_ASSIGN_MARKER_TO_TRACE_RAISING_FALLING, trace),
-		4, "Trace");
+			4, "Trace");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1264,10 +1264,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkMeasurementType(
 
 	viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_LTE_UPLINK_MEASUREMENT_TYPE,
 			"Window", window , RS_REPCAP_BUF_SIZE, repCap),
-		2, "Window");
+			2, "Window");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_MEASUREMENT_TYPE, measurementType),
-		3, "Measurement Type");
+			3, "Measurement Type");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1295,12 +1295,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSubframeSelection(
 	if (allSubframes == VI_TRUE)
 	{
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SUBFRAME_SELECTION_ALL, NULL),
-			2, "All Subframes");
+				2, "All Subframes");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SUBFRAME_SELECTION, singleSubframeSelection),
-			3, "Single Subframe Selection");
+				3, "Single Subframe Selection");
 	}
 
 Error:
@@ -1328,7 +1328,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSlotSelection(ViSession instrSessio
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SLOT_SELECTION, slotSelection),
-		2, "Slot Selection");
+			2, "Slot Selection");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1351,7 +1351,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkEVMUnits(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_EVM_UNITS, evmUnits),
-		2, "EVM Units");
+			2, "EVM Units");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1376,7 +1376,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkBitStream(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_BIT_STREAM_FORMAT, bitStreamFormat),
-		2, "Bit Stream Format");
+			2, "Bit Stream Format");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1400,7 +1400,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSEMSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SEM_CHANNEL, semChannelCategory),
-		2, "SEM Channel Category");
+			2, "SEM Channel Category");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1427,10 +1427,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkACLRSettings(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_ACLR_ASSUMED_ADJ_CHANNEL_CARRIER, assumedAdjChannelCarrier),
-		2, "Assumed Adj Channel Carrier");
+			2, "Assumed Adj Channel Carrier");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_ACLR_NOISE_CORRECTION, noiseCorrection),
-		3, "Noise Correction");
+			3, "Noise Correction");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1460,15 +1460,15 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkYAxisScaling(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_Y_AXIS_SCALING_AUTO, autoScaling),
-		2, "Auto Scaling");
+			2, "Auto Scaling");
 
 	if (autoScaling == VI_FALSE)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_Y_AXIS_SCALING_PER_DIVISION, perDivision),
-			3, "Per Division");
+				3, "Per Division");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_Y_AXIS_SCALING_OFFSET, offset),
-			4, "Offset");
+				4, "Offset");
 	}
 
 Error:
@@ -1586,7 +1586,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementEVMAll(
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_EVM_ALL_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1629,7 +1629,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementEVMPhysicalChannel(
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_EVM_PHYSICAL_CHANNEL_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1673,7 +1673,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementEVMPhysicalSignal(
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_EVM_PHYSICAL_SIGNAL_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1716,7 +1716,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementFrequencyError(
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_FREQUENCY_ERROR_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1759,7 +1759,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementSamplingError(
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_SAMPLING_ERROR_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1802,7 +1802,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementIQOffset(
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_IQ_OFFSET_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1845,7 +1845,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementIQGainImbalance(
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_IQ_GAIN_IMBALANCE_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1889,7 +1889,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementIQQuadratureError(
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_IQ_QUADRATURE_ERROR_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1932,7 +1932,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementFramePower(
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_FRAME_POWER_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1973,7 +1973,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementCrestFactor(
 	}
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_LTE_UPLINK_CREST_FACTOR_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1997,7 +1997,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementTriggerToFrame(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_TRIGGER_TO_FRAME_RESULT, result),
-		2, "Result");
+			2, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2032,7 +2032,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkMeasurementACLRResult(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K101|K105"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, arraySize, 5, 5),
-		2, "Array size");
+			2, "Array size");
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC1:MARK:FUNC:POW:RES?", arraySize, result, NULL));
 	checkErr(rsspecan_CheckStatus (instrSession));
@@ -2061,7 +2061,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkDetectedCellIdentityGroup(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_DETECTED_CELL_IDENTITY_GROUP, result),
-		2, "Result");
+			2, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2087,7 +2087,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEUplinkDetectedCellIdentity(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_DETECTED_CELL_IDENTITY, result),
-		2, "Result");
+			2, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2171,7 +2171,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkEVMVersusCarrierTrace(
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2209,7 +2209,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkEVMVersusSymbolTrace(
 
 	sprintf(traceName, "TRACE1");
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2243,7 +2243,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkEVMVersusSubframeTrace(
 
 	sprintf(traceName, "TRACE1");
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2290,7 +2290,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkSEMTrace(
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2324,7 +2324,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkACLRTrace(
 
 	sprintf(traceName, "TRACE1");
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2374,7 +2374,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkInbandEmissionTrace(
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2410,7 +2410,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkPowerSpectrumTrace(
 
 	sprintf(traceName, "TRACE1");
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2464,7 +2464,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkChannelFlatnessTrace(
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2518,7 +2518,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkChannelGroupDelayTrace(
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2572,7 +2572,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkChannelFlatnessDifferenceTrace(
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 
@@ -2764,7 +2764,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkCCDF(
 		break;
 	}
 
-	checkErr(rsspecan_dataReadTrace (instrSession, 0, traceName, arraySize, traceData, noofValues));
+	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
 	checkErr(rsspecan_CheckStatus (instrSession));
 

@@ -81,13 +81,13 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseSignalModel(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_SIGNAL_PERIOD, pulsePeriod),
-		2, "Pulse Period");
+			2, "Pulse Period");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PULSE_SIGNAL_DROOP_STATE, pulseHasDroop),
-		3, "Pulse Has Droop");
+			3, "Pulse Has Droop");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_SIGNAL_MODULATION, pulseModulation),
-		4, "Pulse Modulation");
+			4, "Pulse Modulation");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -132,13 +132,13 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseSignalTimingManual(ViSession instrSessi
 	checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PULSE_SIGNAL_TIMING_AUTO_MODE, VI_FALSE));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Min", RSSPECAN_ATTR_PULSE_SIGNAL_TIMING_WIDTH, minPulseWidth),
-		2, "Min Pulse Width");
+			2, "Min Pulse Width");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Max", RSSPECAN_ATTR_PULSE_SIGNAL_TIMING_WIDTH, maxPulseWidth),
-		3, "Max Pulse Width");
+			3, "Max Pulse Width");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PULSE_SIGNAL_TIMING_OFF_TIME, minPulseOffTime),
-		4, "Min Pulse Off Time");
+			4, "Min Pulse Off Time");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -161,11 +161,11 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseSignalFrequencyOffset(ViSession instrSe
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PULSE_SIGNAL_OFFSET_AUTO_MODE, autoMode),
-		2, "Auto Mode");
+			2, "Auto Mode");
 	if (!autoMode)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PULSE_SIGNAL_OFFSET_VALUE, value),
-			3, "Value");
+				3, "Value");
 	}
 
 Error:
@@ -190,12 +190,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseSignalChirpRate(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PULSE_SIGNAL_CHIRP_RATE_AUTO_MODE, autoMode),
-		2, "Auto Mode");
+			2, "Auto Mode");
 
 	if (!autoMode)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PULSE_SIGNAL_CHIRP_RATE_VALUE, chirpRate),
-			3, "Chirp Rate");
+				3, "Chirp Rate");
 	}
 
 Error:
@@ -217,7 +217,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseInputSignalSource(ViSession instrSessio
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_INPUT_SIGNAL_SOURCE, source),
-		2, "Source");
+			2, "Source");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -239,7 +239,7 @@ ViStatus _VI_FUNC rsspecan_PulseSelectIQDataFile(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_PULSE_SELECT_IQ_DATA_FILE, fileName),
-		2, "File Name");
+			2, "File Name");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -266,14 +266,14 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseRFInput(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_AMPL_RF_COUPLING, inputCoupling),
-		2, "Input Coupling");
+			2, "Input Coupling");
 
 	viCheckParm(rsspecan_SetAttributeViInt32 (instrSession, "",
 		RSSPECAN_ATTR_INPUT_IMPEDANCE,
 		(ViInt32)impedance), 3, "Impedance");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_AMPL_HIGHPASS_FILTER, highpassFilter),
-		4, "Highpass Filter");
+			4, "Highpass Filter");
 
 	YIGPreselector;
 
@@ -300,11 +300,11 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseFrequencyStepSize(ViSession instrSessio
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_FREQUENCY_STEP_AUTO, stepSizeAuto),
-		2, "Step Size Auto");
+			2, "Step Size Auto");
 	if (!stepSizeAuto)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_FREQUENCY_CENTER_STEP, stepSize),
-			3, "Step Size");
+				3, "Step Size");
 	}
 
 Error:
@@ -328,12 +328,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseMechanicalAttenuator(ViSession instrSes
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_ATTENUATION_AUTO, autoMode),
-		2, "Auto Mode");
+			2, "Auto Mode");
 
 	if (!autoMode)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_ATTENUATION, value),
-			3, "Value");
+				3, "Value");
 	}
 
 Error:
@@ -362,16 +362,16 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseElectronicAttenuator(ViSession instrSes
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_AMPL_EATT_STATE, state),
-		2, "State");
+			2, "State");
 
 	if (state)
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_AMPL_EATT_AUTO, electronicAttenuatorAuto),
-			3, "Electronic Attenuator Auto");
+				3, "Electronic Attenuator Auto");
 		if (!electronicAttenuatorAuto)
 		{
 			viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win0", RSSPECAN_ATTR_AMPL_EATT_VALUE, manualValuedB),
-				3, "Manual Value dB");
+					3, "Manual Value dB");
 		}
 	}
 
@@ -396,12 +396,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulsePreamplifier(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "Win0", RSSPECAN_ATTR_AMPL_PREAMPLIFIER, state),
-		2, "State");
+			2, "State");
 
 	if (state)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_AMPL_PREAMPLIFIER_LEVEL, preamplifierLevel),
-			3, "Preamplifier Level");
+				3, "Preamplifier Level");
 	}
 
 Error:
@@ -427,13 +427,13 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseMeasurementAcquisition(ViSession instrS
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_ACQUISITION_FILTER_TYPE, filterType),
-		2, "Filter Type");
+			2, "Filter Type");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PULSE_ACQUISITION_BANDWIDTH, measurementBandwidth),
-		3, "Measurement Bandwidth");
+			3, "Measurement Bandwidth");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_SWEEP_TIME, measurementTime),
-		4, "Measurement Time");
+			4, "Measurement Time");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -458,13 +458,13 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseMeasurementDetection(ViSession instrSes
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_DETECTION_REF_SOURCE, referenceSource),
-		2, "Reference Source");
+			2, "Reference Source");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PULSE_DETECTION_THRESHOLD, threshold),
-		3, "Threshold");
+			3, "Threshold");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PULSE_DETECTION_HYSTERESIS, hysteresis),
-		4, "Hysteresis");
+			4, "Hysteresis");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -487,12 +487,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseMeasurementDetectionLimit(ViSession ins
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PULSE_DETECTION_LIMIT_STATE, detectionLimit),
-		2, "Detection Limit");
+			2, "Detection Limit");
 
 	if (detectionLimit)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_DETECTION_PULSE_COUNT, maximumPulseCount),
-			3, "Maximum Pulse Count");
+				3, "Maximum Pulse Count");
 	}
 
 Error:
@@ -516,10 +516,10 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseMeasurementPoint(ViSession instrSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_REFERENCE_POINT_TYPE, reference),
-		2, "Reference");
+			2, "Reference");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PULSE_REFERENCE_POINT_OFFSET, offset),
-		3, "offset");
+			3, "offset");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -544,7 +544,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseMeasurementPointAveragingWindow(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PULSE_REFERENCE_POINT_AVERAGING_WINDOW, averagingWindow),
-		2, "Averaging Window");
+			2, "Averaging Window");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -571,20 +571,20 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseMeasurementRange(ViSession instrSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_REFERENCE_RANGE_TYPE, reference),
-		2, "Reference");
+			2, "Reference");
 
 	if (reference == RSSPECAN_VAL_PULSE_REFERENCE_RANGE_CENTER)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PULSE_REFERENCE_RANGE_LENGTH, length),
-			3, "Length");
+				3, "Length");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Left", RSSPECAN_ATTR_PULSE_REFERENCE_RANGE_OFFSET, riseOffset),
-			4, "Rise Offset");
+				4, "Rise Offset");
 
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Right", RSSPECAN_ATTR_PULSE_REFERENCE_RANGE_OFFSET, fallOffset),
-			5, "Fall Offset");
+				5, "Fall Offset");
 	}
 
 Error:
@@ -611,13 +611,13 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseTopLevel(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_TOP_LEVEL_POSITION, position),
-		2, "Position");
+			2, "Position");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_TOP_LEVEL_ALGORITHM, measurementAlgorithm),
-		3, "Measurement Algorithm");
+			3, "Measurement Algorithm");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PULSE_TOP_LEVEL_RIPPLE_PORTION, ripplePortion),
-		4, "Ripple Portion");
+			4, "Ripple Portion");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -646,19 +646,19 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseReferenceLevel(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_REFERENCE_LEVEL_UNIT, unit),
-		2, "Unit");
+			2, "Unit");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "HRef", RSSPECAN_ATTR_PULSE_REFERENCE_LEVEL_THRESHOLD, highThreshold),
-		3, "High Threshold");
+			3, "High Threshold");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "MRef", RSSPECAN_ATTR_PULSE_REFERENCE_LEVEL_THRESHOLD, middleThreshold),
-		4, "Middle Threshold");
+			4, "Middle Threshold");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "LRef", RSSPECAN_ATTR_PULSE_REFERENCE_LEVEL_THRESHOLD, lowerThreshold),
-		5, "Lower Threshold");
+			5, "Lower Threshold");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PULSE_REFERENCE_LEVEL_BOUNDARY, boundary),
-		6, "Boundary");
+			6, "Boundary");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -679,7 +679,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseSelection(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_SELECTION, pulseNumber),
-		2, "Pulse Number");
+			2, "Pulse Number");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -704,7 +704,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultAutomaticRangeScaling(ViSession i
 	if (automaticRangeScaling == RSSPECAN_VAL_PULSE_RESULT_SCALE_ONCE)
 	{
 		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_PULSE_RESULT_AUTOMATIC_RANGE_SCALING_ONCE, NULL),
-			2, "Automatic Range Scaling");
+				2, "Automatic Range Scaling");
 	}
 	else
 	{
@@ -734,10 +734,10 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultReferencePoint(ViSession instrSes
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_RESULT_RANGE_REFERENCE, reference),
-		2, "Reference");
+			2, "Reference");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PULSE_RESULT_RANGE_OFFSET, offset),
-		3, "Offset");
+			3, "Offset");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -760,10 +760,10 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultRange(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_RESULT_RANGE_ALIGNMENT, alignment),
-		2, "Alignment");
+			2, "Alignment");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PULSE_RESULT_RANGE_LENGTH, length),
-		3, "Length");
+			3, "Length");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -784,7 +784,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulsePhaseUnit(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PULSE_RESULT_PHASE_UNIT, unit),
-		2, "Unit");
+			2, "Unit");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -814,12 +814,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterTrendPower(ViSession ins
 	if (group == RSSPECAN_VAL_GROUP_Y)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_POWER_Y_AXIS, axis),
-			4, "Axis");
+				4, "Axis");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_POWER_X_AXIS, axis),
-			4, "Axis");
+				4, "Axis");
 	}
 
 Error:
@@ -850,12 +850,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterTrendTiming(ViSession in
 	if (group == RSSPECAN_VAL_GROUP_Y)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_TIMING_Y_AXIS, axis),
-			4, "Axis");
+				4, "Axis");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_TIMING_X_AXIS, axis),
-			4, "Axis");
+				4, "Axis");
 	}
 
 Error:
@@ -886,12 +886,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterTrendFrequency(ViSession
 	if (group == RSSPECAN_VAL_GROUP_Y)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_FREQUENCY_Y_AXIS, axis),
-			4, "Axis");
+				4, "Axis");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_FREQUENCY_X_AXIS, axis),
-			4, "Axis");
+				4, "Axis");
 	}
 
 Error:
@@ -922,12 +922,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterTrendPhase(ViSession ins
 	if (group == RSSPECAN_VAL_GROUP_Y)
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_PHASE_Y_AXIS, axis),
-			4, "Axis");
+				4, "Axis");
 	}
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_PARAMETER_TREND_PHASE_X_AXIS, axis),
-			4, "Axis");
+				4, "Axis");
 	}
 
 Error:
@@ -956,7 +956,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterDistributionBins(
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_PARAMETER_DISTRIBUTION_BINS, numberOfBins),
-		3, "Number Of Bins");
+			3, "Number Of Bins");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -987,9 +987,9 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterDistributionPower(ViSess
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K6"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, xAxis, RSSPECAN_VAL_PULSE_RESULT_POWER_TOP, RSSPECAN_VAL_PULSE_RESULT_POWER_PPR),
-		3, "X Axis");
+			3, "X Axis");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, yAxis, RSSPECAN_VAL_PULSE_RESULT_Y_AXIS_COUNT, RSSPECAN_VAL_PULSE_RESULT_Y_AXIS_OCCURANCE),
-		4, "Y Axis");
+			4, "Y Axis");
 
 	if (window == 0)
 		sprintf(cmd, "CALC:DIST:POW %s,%s", PulsePowerParameterArr[xAxis], PulseYAxisArr[yAxis]);
@@ -1030,9 +1030,9 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterDistributionTiming(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K6"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, xAxis, RSSPECAN_VAL_PULSE_RESULT_TIMING_TST, RSSPECAN_VAL_PULSE_RESULT_TIMING_PRF),
-		3, "X Axis");
+			3, "X Axis");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, yAxis, RSSPECAN_VAL_PULSE_RESULT_Y_AXIS_COUNT, RSSPECAN_VAL_PULSE_RESULT_Y_AXIS_OCCURANCE),
-		4, "Y Axis");
+			4, "Y Axis");
 
 	if (window == 0)
 		sprintf(cmd, "CALC:DIST:TIM %s,%s", PulseTimingParameterArr[xAxis], PulseYAxisArr[yAxis]);
@@ -1073,9 +1073,9 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterDistributionFrequency(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K6"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, xAxis, RSSPECAN_VAL_PULSE_RESULT_FREQ_POIN, RSSPECAN_VAL_PULSE_RESULT_FREQ_CRAT),
-		3, "X Axis");
+			3, "X Axis");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, yAxis, RSSPECAN_VAL_PULSE_RESULT_Y_AXIS_COUNT, RSSPECAN_VAL_PULSE_RESULT_Y_AXIS_OCCURANCE),
-		4, "Y Axis");
+			4, "Y Axis");
 
 	if (window == 0)
 		sprintf(cmd, "CALC:DIST:FREQ %s,%s", PulseFreqParameterArr[xAxis], PulseYAxisArr[yAxis]);
@@ -1116,9 +1116,9 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterDistributionPhase(
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K6"));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, xAxis, RSSPECAN_VAL_PULSE_RESULT_PHASE_POIN, RSSPECAN_VAL_PULSE_RESULT_PHASE_DEV),
-		3, "X Axis");
+			3, "X Axis");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, yAxis, RSSPECAN_VAL_PULSE_RESULT_Y_AXIS_COUNT, RSSPECAN_VAL_PULSE_RESULT_Y_AXIS_OCCURANCE),
-		4, "Y Axis");
+			4, "Y Axis");
 
 	if (window == 0)
 		sprintf(cmd, "CALC:DIST:PHAS %s,%s", PulsePhaseParameterArr[xAxis], PulseYAxisArr[yAxis]);
@@ -1159,12 +1159,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterSpectrumFrequency(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, window, 0, 16),
-		2, "Window");
+			2, "Window");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_PARAMETER_SPECTRUM_FREQUENCY, parameter),
-		3, "Parameter");
+			3, "Parameter");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1197,12 +1197,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterSpectrumPhase(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, window, 0, 16),
-		2, "Window");
+			2, "Window");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_PARAMETER_SPECTRUM_PHASE, parameter),
-		3, "Parameter");
+			3, "Parameter");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1235,12 +1235,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterSpectrumPower(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, window, 0, 16),
-		2, "Window");
+			2, "Window");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_PARAMETER_SPECTRUM_POWER, parameter),
-		3, "Parameter");
+			3, "Parameter");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1273,12 +1273,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterSpectrumTiming(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, window, 0, 16),
-		2, "Window");
+			2, "Window");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PULSE_PARAMETER_SPECTRUM_TIMING, parameter),
-		3, "Parameter");
+			3, "Parameter");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1305,12 +1305,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultTablePower(ViSession instrSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, parameter, RSSPECAN_VAL_PULSE_RESULT_POWER_ALL, RSSPECAN_VAL_PULSE_RESULT_POWER_PPR),
-		3, "Parameter");
+			3, "Parameter");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,%s", window, PulsePowerParameterArr[parameter]);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_TABLE_POWER, visibility),
-		4, "visibility");
+			4, "visibility");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1339,9 +1339,9 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultTableTiming(ViSession instrSessio
 
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K6"));
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, parameter, RSSPECAN_VAL_PULSE_RESULT_TIMING_ALL, RSSPECAN_VAL_PULSE_RESULT_TIMING_PRF),
-		3, "Parameter");
+			3, "Parameter");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, scaling, RSSPECAN_VAL_PULSE_RESULT_FREQ_SCALING_HZ_NS, RSSPECAN_VAL_PULSE_RESULT_FREQ_SCALING_GHZ_S),
-		5, "Scaling");
+			5, "Scaling");
 
 	if (window == 0)
 		p2buf = cmd + sprintf(cmd, "CALC:TABL:TIM:%s %s", PulseTimingParameterArr[parameter], PulseOnOffArr[visibility]);
@@ -1385,9 +1385,9 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultTableFrequency(ViSession instrSes
 
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K6"));
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, parameter, RSSPECAN_VAL_PULSE_RESULT_FREQ_ALL, RSSPECAN_VAL_PULSE_RESULT_FREQ_CRAT),
-		3, "Parameter");
+			3, "Parameter");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, scaling, RSSPECAN_VAL_PULSE_RESULT_FREQ_SCALING_HZ_NS, RSSPECAN_VAL_PULSE_RESULT_FREQ_SCALING_GHZ_S),
-		5, "Scaling");
+			5, "Scaling");
 
 	if (window == 0)
 		sprintf(cmd, "CALC:TABL:FREQ:%s %s,%s", PulseFreqParameterArr[parameter],
@@ -1424,12 +1424,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultTablePhase(ViSession instrSession
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, parameter, RSSPECAN_VAL_PULSE_RESULT_PHASE_ALL, RSSPECAN_VAL_PULSE_RESULT_PHASE_DEV),
-		3, "Parameter");
+			3, "Parameter");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,%s", window, PulsePhaseParameterArr[parameter]);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_PULSE_RESULT_TABLE_PHASE, visibility),
-		4, "visibility");
+			4, "visibility");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1458,9 +1458,9 @@ ViStatus _VI_FUNC rsspecan_ExportPulseResultTable(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, window, 1, 16),
-		2, "Window");
+			2, "Window");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, exportCollumns, RSSPECAN_VAL_PULSE_COLLUMNS_SELECTED, RSSPECAN_VAL_PULSE_COLLUMNS_ALL),
-		3, "Export Collumns");
+			3, "Export Collumns");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "MMEM:STOR%ld:TABL %s,'%s'", window, exportCollumnsArr[exportCollumns], filename);
 	checkErr(RsCore_Write(instrSession, cmd));
@@ -1492,12 +1492,12 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseAutomaticGridScaling(ViSession instrSes
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 1),
-		3, "trace");
+			3, "trace");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,TR%ld", window, trace);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_PULSE_AUTO_GRID_SCALING, autoScale),
-		4, "autoScale");
+			4, "autoScale");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1527,10 +1527,10 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseAbsoluteScaling(ViSession instrSession,
 	snprintf(repCap_max, RS_REPCAP_BUF_SIZE, "Win%ld,Max", window);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap_min, RSSPECAN_ATTR_PULSE_ABSOLUTE_SCALING, minimum),
-		3, "minimum");
+			3, "minimum");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap_max, RSSPECAN_ATTR_PULSE_ABSOLUTE_SCALING, maximum),
-		4, "Maximum");
+			4, "Maximum");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1564,18 +1564,18 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseRelativeScaling(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 1),
-		3, "trace");
+			3, "trace");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_DISP_Y_AXIS_SCALING, perDivison),
-		4, "Per Divison");
+			4, "Per Divison");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_DISP_REF_POSITION, referencePosition),
-		5, "Reference Position");
+			5, "Reference Position");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_LEVEL, referenceValue),
-		6, "Reference Value");
+			6, "Reference Value");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1607,16 +1607,16 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseReferenceValues(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace, 1, 1),
-		3, "trace");
+			3, "trace");
 
 	snprintf(repCap_min, RS_REPCAP_BUF_SIZE, "Win%ld,TR%ld,Min", window, trace);
 	snprintf(repCap_max, RS_REPCAP_BUF_SIZE, "Win%ld,TR%ld,Max", window, trace);
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap_min, RSSPECAN_ATTR_PULSE_REFERENCE_VALUE_MIN_MAX, minimum),
-		4, "Minimum");
+			4, "Minimum");
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap_max, RSSPECAN_ATTR_PULSE_REFERENCE_VALUE_MIN_MAX, maximum),
-		5, "Maximum");
+			5, "Maximum");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1644,17 +1644,17 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseMarker(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, markerNumber, 1, 4),
-		3, "Marker Number");
+			3, "Marker Number");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,M%ld", window, markerNumber);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_MARKER_ENABLED, markerState),
-		4, "Marker State");
+			4, "Marker State");
 
 	if (markerState)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_MARKER_POSITION, stimulus),
-			5, "Stimulus");
+				5, "Stimulus");
 	}
 
 Error:
@@ -1683,16 +1683,16 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseDeltaMarker(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, deltaMarker, 1, 4),
-		3, "Delta Marker");
+			3, "Delta Marker");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,DM%ld", window, deltaMarker);
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_MARKER_STATE, deltaMarkerState),
-		4, "Delta Marker State");
+			4, "Delta Marker State");
 	if (deltaMarkerState)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_MARKER_POSITION, stimulus),
-			5, "Stimulus");
+				5, "Stimulus");
 	}
 
 Error:

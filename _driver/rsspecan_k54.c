@@ -33,7 +33,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMIFinalMeasurementMarkerState(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_EMI_FMEAS_STATE, state),
-		2, "State");
+			2, "State");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -62,13 +62,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMIFinalMeasurementMarkerDetector(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 16),
-		2, "Marker");
+			2, "Marker");
 	viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_MARKER_DETECTOR,
 			"Marker", marker - 1, RS_REPCAP_BUF_SIZE, repCap),
-		2, "Marker");
+			2, "Marker");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_MARKER_DETECTOR, detector),
-		3, "Detector");
+			3, "Detector");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -113,7 +113,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMIFinalMeasurementMarkerDwellTime(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_EMI_FMEAS_DWELL_TIME, dwellTime),
-		2, "Dwell Time");
+			2, "Dwell Time");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -150,25 +150,25 @@ ViStatus _VI_FUNC rsspecan_QueryEMIFinalMeasurementMarkerLimitLine(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 16),
-		2, "Marker");
+			2, "Marker");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		3, "Limit");
+			3, "Limit");
 	viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_MARKER_LIMIT_CONDITION,
 			"Marker", marker - 1, RS_REPCAP_BUF_SIZE, repCap_m),
-		2, "Marker");
+			2, "Marker");
 	viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_MARKER_LIMIT_CONDITION,
 			"Limit", limit - 1, RS_REPCAP_BUF_SIZE, repCap_l),
-		3, "Limit");
+			3, "Limit");
 
 	strcpy(repCap, repCap_m);
 	strcat(repCap, ",");
 	strcat(repCap, repCap_l);
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_MARKER_LIMIT_CONDITION, markerCondition),
-		4, "Marker Condition");
+			4, "Marker Condition");
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_MARKER_LIMIT_VERTICAL_DISTANCE, markerVerticalDistance),
-		5, "Marker Vertical Distance");
+			5, "Marker Vertical Distance");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -196,13 +196,13 @@ ViStatus _VI_FUNC rsspecan_QueryEMIFinalMeasurementMarkerResult(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, marker, 1, 16),
-		2, "Marker");
+			2, "Marker");
 	viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_MARKER_RESULT,
 			"Marker", marker - 1, RS_REPCAP_BUF_SIZE, repCap),
-		2, "Marker");
+			2, "Marker");
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_MARKER_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -231,13 +231,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMIFinalMeasurementDeltaMarkerDetector(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, deltaMarker, 1, 16),
-		2, "Delta Marker");
+			2, "Delta Marker");
 	viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_DETECTOR,
 			"DeltaMarker", deltaMarker - 1, RS_REPCAP_BUF_SIZE, repCap),
-		2, "Delta Marker");
+			2, "Delta Marker");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_DETECTOR, detector),
-		3, "Detector");
+			3, "Detector");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -292,25 +292,25 @@ ViStatus _VI_FUNC rsspecan_QueryEMIFinalMeasurementDeltaMarkerLimitLine(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, deltaMarker, 1, 16),
-		2, "Delta Marker");
+			2, "Delta Marker");
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
-		3, "Limit");
+			3, "Limit");
 	viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_LIMIT_CONDITION,
 			"DeltaMarker", deltaMarker - 1, RS_REPCAP_BUF_SIZE, repCap_m),
-		2, "Delta Marker");
+			2, "Delta Marker");
 	viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_LIMIT_CONDITION,
 			"Limit", limit - 1, RS_REPCAP_BUF_SIZE, repCap_l),
-		3, "Limit");
+			3, "Limit");
 
 	strcpy(repCap, repCap_m);
 	strcat(repCap, ",");
 	strcat(repCap, repCap_l);
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_LIMIT_CONDITION, deltaMarkerCondition),
-		4, "Delta Marker Condition");
+			4, "Delta Marker Condition");
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_LIMIT_VERTICAL_DISTANCE, deltaMarkerVerticalDistance),
-		5, "Delta Marker Vertical Distance");
+			5, "Delta Marker Vertical Distance");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -339,13 +339,13 @@ ViStatus _VI_FUNC rsspecan_QueryEMIFinalMeasurementDeltaMarkerResult(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, deltaMarker, 1, 16),
-		2, "Delta Marker");
+			2, "Delta Marker");
 	viCheckParm(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_RESULT,
 			"DeltaMarker", deltaMarker - 1, RS_REPCAP_BUF_SIZE, repCap),
-		2, "DeltaMarker");
+			2, "DeltaMarker");
 
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_EMI_FMEAS_DELTA_MARKER_RESULT, result),
-		3, "Result");
+			3, "Result");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -369,7 +369,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMILISNVnetworkType(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_EMI_LISN_V_NETWORK_TYPE, vNetworkType),
-		2, "V-Network Type");
+			2, "V-Network Type");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -394,7 +394,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMILISNVnetworkHighPassFilter(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_EMI_LISN_V_NETWORK_HIGH_PASS_FILTER, highPassFilter),
-		2, "High Pass Filter");
+			2, "High Pass Filter");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -418,7 +418,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMILISNVnetworkPhase(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_EMI_LISN_V_NETWORK_PHASE, phase),
-		2, "Phase");
+			2, "Phase");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -442,7 +442,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureEMIBandwithFilterType(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_EMI_RESOLUTION_BANDWIDTH_FILTER_TYPE, filterType),
-		2, "Filter Type");
+			2, "Filter Type");
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
