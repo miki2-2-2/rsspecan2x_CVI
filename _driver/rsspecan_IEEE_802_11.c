@@ -890,7 +890,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANEvaluationRangeTimeDomain(ViSession inst
 			2, "source Of Payload Length");
 	}
 
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_WLAN_SYM_EQU, equalPPDULength),
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_WLAN_SYM_EQU, equalPPDULength),
 		3, "equal PPDU Length");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Min", RSSPECAN_ATTR_WLAN_SYM, minNumberOfDataSymbols),

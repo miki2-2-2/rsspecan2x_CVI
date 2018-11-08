@@ -168,12 +168,10 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10LevelSettings(
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_AUTO_PWR_LEV, VI_TRUE),
 			2, "Automatic Reference Level");
 	}
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_AUTO_PWR_LEV, automaticReferenceLevel),
+
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_AUTO_PWR_LEV, automaticReferenceLevel > 0),
 		2, "Automatic Reference Level");
 
-	if (automaticReferenceLevel == RSSPECAN_VAL_GSM_K10_AUTO_OFF)
-	{
-	}
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_REFERENCE_LEVEL_OFFSET, externalAttenuation),
 		4, "External Attenuation");
 
@@ -1084,7 +1082,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10ModulationTransientSpectrumAdditional(
 	checkErr(RsCore_Write(instrSession, cmd));
 	checkErr(rsspecan_CheckStatus (instrSession));
 
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_MODULATION_TRANSIENT_SPECTRUM_HIGH_DYNAMIC, highDynamic),
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_MODULATION_TRANSIENT_SPECTRUM_HIGH_DYNAMIC, highDynamic),
 		6, "highDynamic");
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_GSM_K10_MODULATION_TRANSIENT_SPECTRUM_FREQUENCY_LIST, modulationFrequencyList),

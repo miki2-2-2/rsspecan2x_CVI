@@ -590,7 +590,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseENRCommonMode(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_ENR_COMMON_MODE, commonMode),
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_NOISE_CORR_ENR_COMMON_MODE, commonMode),
 		2, "Common Mode");
 
 Error:

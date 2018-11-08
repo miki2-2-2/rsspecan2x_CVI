@@ -16414,7 +16414,7 @@ Error:
  *****************************************************************************/
 ViStatus _VI_FUNC rsspecan_error_message(ViSession instrSession, ViStatus errorCode,
                                          ViChar errorMessage[])
-{
+{  // TODO: ERROR: Correct to (void)(RsCore_LockSession(instrSession));
 	ViStatus error = VI_SUCCESS;
 
 	checkErr(RsCore_LockSession(instrSession));

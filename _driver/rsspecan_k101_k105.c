@@ -241,7 +241,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkIQ(
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_IQ_SWAP, swapIQ),
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_IQ_SWAP, swapIQ),
 		2, "Swap IQ");
 
 Error:
@@ -506,7 +506,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkCodeBitsScrambling(ViSession instrS
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SCRAMBLING_OF_CODED_BITS, scramblingOfCodedBits),
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SCRAMBLING_OF_CODED_BITS, scramblingOfCodedBits),
 		2, "Scrambling Of Coded Bits");
 
 Error:
@@ -1294,7 +1294,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSubframeSelection(
 
 	if (allSubframes == VI_TRUE)
 	{
-		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SUBFRAME_SELECTION_ALL, allSubframes),
+		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_LTE_UPLINK_SUBFRAME_SELECTION_ALL, NULL),
 			2, "All Subframes");
 	}
 	else

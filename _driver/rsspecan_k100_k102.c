@@ -898,7 +898,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkPDSCHPowerRatio(ViSession instrSe
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_UPDATE_IQ_RESULTS, PDSCHPowerRatio),
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_PDSCH_POWER_RATIO, PDSCHPowerRatio),
 		2, "PDSCH Power Ratio");
 
 Error:
@@ -965,7 +965,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEDownlinkSubframeSelection(ViSession instr
 
 	if (allSubframes)
 	{
-		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_SUBFRAME_SELECTION_ALL, allSubframes),
+		viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_LTE_DOWNLINK_SUBFRAME_SELECTION_ALL, allSubframes),
 			2, "All Subframes");
 	}
 	else

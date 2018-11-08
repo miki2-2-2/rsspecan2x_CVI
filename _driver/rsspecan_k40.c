@@ -359,7 +359,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseDisplayYAxisSettings(ViSession instrSes
 			4, "Y Axis Range");
 		break;
 	case RSSPECAN_VAL_PHASE_Y_SCALE_AUTO:
-		checkErr(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_Y_AUTO, VI_TRUE));
+		checkErr(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_PHASE_DISP_TRACE_Y_AUTO, VI_TRUE));
 
 		break;
 	default:

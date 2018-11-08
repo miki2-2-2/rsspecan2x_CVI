@@ -3587,12 +3587,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAModulationErrors(
 
 	case RSSPECAN_VAL_VSA_RESULT_DISP_FREQ_ERR_ABS:
 		checkErr(rsspecan_SetAttributeViInt32(instrSession, repCapWin, RSSPECAN_ATTR_VSA_RESULT_FORMAT, RSSPECAN_VAL_VSA_RESULT_FORMAT_FREQ));
-		checkErr(rsspecan_SetAttributeViInt32 (instrSession, repCapWin, RSSPECAN_ATTR_DISP_AMPLITUDE_GRID_MODE, RSSPECAN_VAL_ABS)) // TODO: Check semicolon
+		checkErr(rsspecan_SetAttributeViInt32(instrSession, repCapWin, RSSPECAN_ATTR_DISP_AMPLITUDE_GRID_MODE, RSSPECAN_VAL_ABS));
 		break;
 
 	case RSSPECAN_VAL_VSA_RESULT_DISP_FREQ_ERR_REL:
 		checkErr(rsspecan_SetAttributeViInt32(instrSession, repCapWin, RSSPECAN_ATTR_VSA_RESULT_FORMAT, RSSPECAN_VAL_VSA_RESULT_FORMAT_FREQ));
-		checkErr(rsspecan_SetAttributeViInt32 (instrSession, repCapWin, RSSPECAN_ATTR_DISP_AMPLITUDE_GRID_MODE, RSSPECAN_VAL_REL)) // TODO: Check semicolon
+		checkErr(rsspecan_SetAttributeViInt32(instrSession, repCapWin, RSSPECAN_ATTR_DISP_AMPLITUDE_GRID_MODE, RSSPECAN_VAL_REL));
 		break;
 
 	default:

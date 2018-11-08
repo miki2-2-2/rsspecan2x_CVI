@@ -302,6 +302,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodFilter(
 )
 {
 	ViStatus error = VI_SUCCESS;
+	ViInt32 filterFrequencyInt = (ViInt32)filterFrequency;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -336,7 +337,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodFilter(
 			3, "Filter State");
 		if (filterState)
 		{
-			viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_ADEM_FILT_LPAS_FREQ_REL, filterFrequency),
+			viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_ADEM_FILT_LPAS_FREQ_REL, filterFrequencyInt),
 				4, "Filter Frequency");
 		}
 		break;
@@ -644,7 +645,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodOnlineOutput(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_ANALOG_DEMOD_OUTPUT_STATE, outputState),
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_ANALOG_DEMOD_OUTPUT_STATE, outputState),
 		2, "Output State");
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_ANALOG_DEMOD_OUTPUT_SELECTION, outputSelection),

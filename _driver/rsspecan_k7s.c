@@ -495,7 +495,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoAFFilter(
 			(lowPass == RSSPECAN_VAL_FMS_LPAS_FILT_10PCT) ||
 			(lowPass == RSSPECAN_VAL_FMS_LPAS_FILT_25PCT))
 		{
-			viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_LOW_PASS_FREQUENCY_RELATIVE, lowPassArr[lowPass]),
+			viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_FMS_AF_FILTER_LOW_PASS_FREQUENCY_RELATIVE, (ViInt32)lowPassArr[lowPass]),
 				4, "Low Pass");
 		}
 		else

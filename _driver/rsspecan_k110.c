@@ -93,6 +93,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRALevelSettings(
 {
 	ViStatus error = VI_SUCCESS;
 	ViInt32 type;
+	ViInt32	levelInt = (ViInt32)level;
 	autoLevel;
 
 	checkErr(RsCore_LockSession(instrSession));
@@ -116,7 +117,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRALevelSettings(
 		break;
 
 	case RSSPECAN_VAL_BB_INPUT_DIQ:
-		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_IQ_MEASUREMENT, level),
+		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_IQ_MEASUREMENT, levelInt),
 			3, "Level");
 		break;
 	}
@@ -332,6 +333,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAAdvancedIQDigital(
 {
 	ViStatus error = VI_SUCCESS;
 	ViInt32 type;
+	ViInt32	levelInt = (ViInt32)level;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -353,7 +355,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAAdvancedIQDigital(
 		break;
 
 	case RSSPECAN_VAL_BB_INPUT_DIQ:
-		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_IQ_MEASUREMENT, level),
+		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_REFERENCE_LEVEL_FOR_IQ_MEASUREMENT, levelInt),
 			3, "Level");
 		break;
 	}
@@ -414,7 +416,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRADemodulationSettings(
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_PAYLOAD_MODULATION, payloadModulation),
 		3, "Payload Modulation");
 
-	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_TETRA_MAXIMUM_CARRIER_OFFSET, maxCarrierOffset),
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TETRA_MAXIMUM_CARRIER_OFFSET, maxCarrierOffset),
 		4, "Max Carrier Offset");
 
 Error:
