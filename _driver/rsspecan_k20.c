@@ -849,7 +849,6 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACarrierLimit(ViSession instrSession,
 {
 	ViStatus error = VI_SUCCESS;
 	ViChar repCap[RS_REPCAP_BUF_SIZE];
-	ViChar buffer2[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -878,9 +877,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACarrierLimit(ViSession instrSession,
 				4, "Limit Value");
 		break;
 	case RSSPECAN_VAL_ATV_SC1PR:
-		// strcat (buffer, ",SC1");
-		strcat(buffer2, "SC1, buffer");
-		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, buffer2, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_REL_POWER, limitValue),
+		strcat(repCap, ",SC1");
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_REL_POWER, limitValue),
 				4, "Limit Value");
 		break;
 	case RSSPECAN_VAL_ATV_SC1IF:
@@ -1907,25 +1905,21 @@ ViStatus _VI_FUNC rsspecan_QueryCATVACarrierLimitResult(ViSession instrSession,
 				4, "Result");
 		break;
 	case RSSPECAN_VAL_ATV_SC1PR:
-		//strcat (buffer,",SC1");
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "SC1,%s", repCap2);
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_REL_POWER_RESULT, result),
 				4, "Result");
 		break;
 	case RSSPECAN_VAL_ATV_SC1IF:
-		//strcat (buffer,",SC1");
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "SC1,%s", repCap2);
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_FREQ_OFFSET_RESULT, result),
 				4, "Result");
 		break;
 	case RSSPECAN_VAL_ATV_SC2PR:
-		//strcat (buffer,",SC2");
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "SC2,%s", repCap2);
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_REL_POWER_RESULT, result),
 				4, "Result");
 		break;
 	case RSSPECAN_VAL_ATV_SC2IF:
-		//strcat (buffer,",SC2");
 		snprintf(repCap, RS_REPCAP_BUF_SIZE, "SC2,%s", repCap2);
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_CATV_ATV_CARR_LIM_FREQ_OFFSET_RESULT, result),
 				4, "Result");

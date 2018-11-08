@@ -2406,7 +2406,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkBitstream(ViSession instrSession,
 				{
 					nIndexSymbol += nSymbols;
 					nType = 0;
-					(*noofValues)++;
+	(*noofValues)++;
 				}
 
 				if (nIndexSymbol + nCurrentSymbol >= bitStreamSize)

@@ -401,7 +401,6 @@ ViStatus _VI_FUNC rsspecan_GetTDSUEChannelTableCatalog(ViSession instrSession,
                                                        ViChar channelTablesList[])
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar* buf = NULL;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -413,18 +412,16 @@ ViStatus _VI_FUNC rsspecan_GetTDSUEChannelTableCatalog(ViSession instrSession,
 
 	if (!RsCore_IsInstrumentModel(instrSession, "FSW"))
 	{
-		checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CONF:CDP:CTAB:CAT?", &buf));
+		checkErr(RsCore_QueryCatalog(instrSession, "CONF:CDP:CTAB:CAT?", bufferSize, channelTablesList, numberofChannelTables));
 	}
 	else
 	{
-		checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CONF:CDP:MS:CTAB:CAT?", &buf));
+		checkErr(RsCore_QueryCatalog(instrSession, "CONF:CDP:MS:CTAB:CAT?", bufferSize, channelTablesList, numberofChannelTables));
 	}
 
-	checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (buf) free(buf);
 	(void)RsCore_UnlockSession(instrSession);
 	return error;
 }

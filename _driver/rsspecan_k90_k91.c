@@ -591,7 +591,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanBasebandSignalLevel(ViSession instrSessi
 			3, "Auto Level Time");
 
 	if (!autoLevel && RsCore_HasInstrumentOptions(instrSession, "K91") &&
-		(!RsCore_IsInstrumentModel(instrSession, "FSL") && !rsspecan_IsFSV(instrSession)))
+	(!RsCore_IsInstrumentModel(instrSession, "FSL") && !rsspecan_IsFSV(instrSession)))
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_WLAN_POW_EXP_IQ, signalLevel),
 				4, "Signal Level");

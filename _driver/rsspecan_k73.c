@@ -375,7 +375,6 @@ ViStatus _VI_FUNC rsspecan_Query3GPPFDDUEChannelTableCatalog(ViSession instrSess
                                                              ViChar channelTablesList[])
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar* buf = NULL;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -385,14 +384,12 @@ ViStatus _VI_FUNC rsspecan_Query3GPPFDDUEChannelTableCatalog(ViSession instrSess
 			3, "Buffer Size");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTablesList), 4, "Channel Table List");
 
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CONF:WCDP:MS:CTAB:CAT?", &buf));
-	checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
+	checkErr(RsCore_QueryCatalog(instrSession, ":CONF:WCDP:MS:CTAB:CAT?", bufferSize, channelTablesList, numberofChannelTables));
 
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (buf) free(buf);
-	(void)RsCore_UnlockSession(instrSession);
+		(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 
@@ -438,7 +435,6 @@ ViStatus _VI_FUNC rsspecan_Get3GPPUETrace(ViSession instrSession,
                                           ViReal64 values[])
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar* exBuf = NULL;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -453,8 +449,7 @@ ViStatus _VI_FUNC rsspecan_Get3GPPUETrace(ViSession instrSession,
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (exBuf) free(exBuf);
-	(void)RsCore_UnlockSession(instrSession);
+		(void)RsCore_UnlockSession(instrSession);
 
 	return error;
 }

@@ -1164,7 +1164,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLevel(ViSession instrSession,
 	if (!RsCore_IsInstrumentModel(instrSession, "FMU"))
 	{
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_INPUT_IMPEDANCE,
-			(ViInt32) inputImpedance), 4, "Input Impedance");
+	(ViInt32) inputImpedance), 4, "Input Impedance");
 	}
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_LEVEL, referenceLevel),
 			5, "Reference Level");
@@ -1902,7 +1902,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTraceIQDataAnalyzerEnabled(ViSession instrSe
 
 	sprintf(buffer, "Win%ld", window);
 
-	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "buffer", RSSPECAN_ATTR_IQ_DATA_ANALYZER_STATE, IQDataAnalyzerEnabled),
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, buffer, RSSPECAN_ATTR_IQ_DATA_ANALYZER_STATE, IQDataAnalyzerEnabled),
 			2, "IQ Data Analyzer Enabled");
 
 Error:
@@ -2569,7 +2569,7 @@ ViStatus _VI_FUNC rsspecan_SubtractTraces(ViSession instrSession,
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, trace2, 2, trace_range),
 			3, "Trace 2");
 
-	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MATH (TRACE1-TRACE%ld)", window, trace2);
+	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MATH(TRACE1-TRACE%ld)", window, trace2);
 	checkErr(RsCore_Write(instrSession, cmd));
 
 	checkErr(rsspecan_CheckStatus(instrSession));
@@ -5966,7 +5966,7 @@ ViStatus _VI_FUNC rsspecan_CreateExternalMixerConversionLossTable(ViSession inst
 
 	checkErr(RsCore_CheckInstrumentModel(instrSession, "!FMU"));
 
-	// sprintf (buffer, "Win%ld", window);
+	// sprintf(buffer, "Win%ld", window);
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_CVL_NAME, tableName),
 			3, "Table Name");
@@ -6024,7 +6024,7 @@ ViStatus _VI_FUNC rsspecan_ExternalMixerConversionLossTableSelect(ViSession inst
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	//sprintf (buffer, "Win%ld", window);
+	//sprintf(buffer, "Win%ld", window);
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_CVL_NAME, tableName),
 			2, "Table Name");
 
@@ -6256,8 +6256,8 @@ ViStatus _VI_FUNC rsspecan_CreateLimitLine(
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
 			3, "Limit");
-	viCheckParm(RsCore_InvalidViInt32Range(instrSession, strlen(name), 0, 8), 4, "Name (string length)");
-	viCheckParm(RsCore_InvalidViInt32Range(instrSession, strlen(comment), 0, 40), 6, "Comment (string length)");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, strlen(name), 0, 8), 4, "Name(string length)");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, strlen(comment), 0, 40), 6, "Comment(string length)");
 	viCheckParm(RsCore_InvalidViBooleanRange(instrSession, deleteExistingLine), 8, "Delete Existing Line");
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%ld", limit);
 
@@ -6267,7 +6267,7 @@ ViStatus _VI_FUNC rsspecan_CreateLimitLine(
 
 		do
 		{
-			(void)rsspecan_error_query(instrSession, &error, error_message);
+	(void)rsspecan_error_query(instrSession, &error, error_message);
 		}
 		while (error != 0);
 	}
@@ -6431,7 +6431,7 @@ ViStatus _VI_FUNC rsspecan_SelectLimitLine(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
 			3, "Limit");
-	viCheckParm(RsCore_InvalidViInt32Range(instrSession, strlen(name), 0, 8), 4, "Name (string length)");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, strlen(name), 0, 8), 4, "Name(string length)");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%ld", limit);
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_LIMIT_NAME, name),
@@ -7282,8 +7282,7 @@ ViStatus _VI_FUNC rsspecan_GetDisplayThemeCatalog(ViSession instrSession,
 			3, "Buffer Size");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, themeList), 4, "Theme List");
 
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "DISP:THEM:CAT?", &buf));
-	checkErr(RsCore_ParseCatalog(buf, bufferSize, themeList, number_ofThemes));
+	checkErr(RsCore_QueryCatalog(instrSession, "DISP:THEM:CAT?", bufferSize, themeList, number_ofThemes));
 
 	checkErr(rsspecan_CheckStatus(instrSession));
 
@@ -7853,7 +7852,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTransducerFactor(ViSession instrSession,
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, noofTestPoints, 0, INT_MAX),
 			7, "No Of Test Points");
 
-	viCheckAlloc (pbuf = (ViChar*) malloc((size_t)(23 + 2 * noofTestPoints * 15 + 300)));
+	viCheckAlloc(pbuf = (ViChar*) malloc((size_t)(23 + 2 * noofTestPoints * 15 + 300)));
 
 	p2buf = pbuf;
 
@@ -7912,7 +7911,6 @@ ViStatus _VI_FUNC rsspecan_GetTransducerFactorCatalog(ViSession instrSession,
                                                       ViChar transducerFactorsList[])
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar* buf = NULL;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -7925,14 +7923,12 @@ ViStatus _VI_FUNC rsspecan_GetTransducerFactorCatalog(ViSession instrSession,
 			3, "Buffer Size");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, transducerFactorsList), 4, "Transducer Factor List");
 
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CORR:TRAN:CAT?", &buf));
-	checkErr(RsCore_ParseCatalog(buf, bufferSize, transducerFactorsList, numberofTransducerFactors));
+	checkErr(RsCore_QueryCatalog(instrSession, ":CORR:TRAN:CAT?", bufferSize, transducerFactorsList, numberofTransducerFactors));
 
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (buf) free(buf);
-	(void)RsCore_UnlockSession(instrSession);
+		(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 
@@ -13093,7 +13089,7 @@ ViStatus _VI_FUNC rsspecan_QueryViBoolean(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	viCheckParm(RsCore_InvalidViInt32Range(instrSession, (ViInt32)strlen(command), 1, 10000000), 2, "Command (null string length)");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, (ViInt32)strlen(command), 1, 10000000), 2, "Command(null string length)");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, value), 3, "Value");
 
 	checkErr(RsCore_QueryViBoolean(instrSession, command, value));
@@ -13117,7 +13113,7 @@ ViStatus _VI_FUNC rsspecan_QueryViInt32(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	viCheckParm(RsCore_InvalidViInt32Range(instrSession, (ViInt32)strlen(command), 1, 10000000), 2, "Command (null string length)");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, (ViInt32)strlen(command), 1, 10000000), 2, "Command(null string length)");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, value), 3, "Value");
 
 	checkErr(RsCore_QueryViInt32(instrSession, command, value));
@@ -13141,7 +13137,7 @@ ViStatus _VI_FUNC rsspecan_QueryViReal64(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	viCheckParm(RsCore_InvalidViInt32Range(instrSession, (ViInt32)strlen(command), 1, 10000000), 2, "Command (null string length)");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, (ViInt32)strlen(command), 1, 10000000), 2, "Command(null string length)");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, value), 3, "Value");
 
 	checkErr(RsCore_QueryViReal64(instrSession, command, value));
@@ -13168,7 +13164,7 @@ ViStatus _VI_FUNC rsspecan_QueryViString(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	viCheckParm(RsCore_InvalidViInt32Range(instrSession, (ViInt32)strlen(command), 1, 10000000), 2, "Command (null string length)");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, (ViInt32)strlen(command), 1, 10000000), 2, "Command(null string length)");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, value), 3, "Value");
 
 	checkErr(RsCore_QueryViStringUnknownLengthToUserBuffer(instrSession, command, bufferSize, value, NULL));
@@ -15297,7 +15293,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureSEMUsedPowerClasses(ViSession instrSession,
 	else
 	{
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_SEM_POWER_CLASS_USED,
-			(ViBoolean) usedPowerClass), 3, "Used Power Class");
+	(ViBoolean) usedPowerClass), 3, "Used Power Class");
 	}
 
 Error:
@@ -16104,12 +16100,12 @@ Error:
     ViStatus    error   = VI_SUCCESS;
     ViSession   vi      = RsCore_ViSession(instrSession);
 
-    checkErr(Rs_LockSession (vi, NULL));
+    checkErr(Rs_LockSession(vi, NULL));
     checkErr(rsspecan_reset(instrSession));
     checkErr(Rs_ApplyDefaultSetup(vi));
 
 Error:
-    (void) Rs_UnlockSession(vi, NULL);
+ (void) Rs_UnlockSession(vi, NULL);
     return error;
 }
 */
@@ -16353,7 +16349,6 @@ ViStatus _VI_FUNC rsspecan_ErrorListSpecificType(ViSession instrSession,
 {
 	ViStatus error = VI_SUCCESS;
 	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-	ViChar* pbuffer = NULL;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -16374,8 +16369,7 @@ ViStatus _VI_FUNC rsspecan_ErrorListSpecificType(ViSession instrSession,
 	checkErr(rsspecan_QueryViString(instrSession, cmd, bufferSize, messages));
 
 Error:
-	if (pbuffer) free(pbuffer);
-	(void)RsCore_UnlockSession(instrSession);
+		(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 

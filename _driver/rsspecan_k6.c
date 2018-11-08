@@ -270,7 +270,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseRFInput(ViSession instrSession,
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "",
 		RSSPECAN_ATTR_INPUT_IMPEDANCE,
-		(ViInt32)impedance), 3, "Impedance");
+	(ViInt32)impedance), 3, "Impedance");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_AMPL_HIGHPASS_FILTER, highpassFilter),
 			4, "Highpass Filter");

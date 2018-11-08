@@ -392,8 +392,8 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsTHD(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	if ((THD != RSSPECAN_VAR_AVI_DEMOD_SUMM_30) &&
-		(THD != RSSPECAN_VAR_AVI_DEMOD_SUMM_ID) &&
-		(THD != RSSPECAN_VAR_AVI_DEMOD_SUMM_90_150))
+	(THD != RSSPECAN_VAR_AVI_DEMOD_SUMM_ID) &&
+	(THD != RSSPECAN_VAR_AVI_DEMOD_SUMM_90_150))
 	{
 		viCheckParm(RS_ERROR_INVALID_PARAMETER, 2, "THD");
 	}

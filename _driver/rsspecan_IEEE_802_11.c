@@ -1201,7 +1201,6 @@ ViStatus _VI_FUNC rsspecan_ReadWlanTraceData(ViSession instrSession,
 {
 	ViStatus error = VI_SUCCESS;
 	ViChar traceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
-	ViChar* pbuffer = NULL;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -1216,8 +1215,7 @@ ViStatus _VI_FUNC rsspecan_ReadWlanTraceData(ViSession instrSession,
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (pbuffer) free(pbuffer);
-	(void)RsCore_UnlockSession(instrSession);
+		(void)RsCore_UnlockSession(instrSession);
 
 	return error;
 }

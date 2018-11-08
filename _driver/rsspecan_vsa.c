@@ -92,8 +92,8 @@ ViStatus _VI_FUNC rsspecan_SetVSAFactoryDefaults(ViSession instrSession,
 	else
 	{
 		if ((defaults != RSSPECAN_VAL_VSA_FACTORY_STAN) &&
-			(defaults != RSSPECAN_VAL_VSA_FACTORY_PATT) &&
-			(defaults != RSSPECAN_VAL_VSA_FACTORY_ALL))
+	(defaults != RSSPECAN_VAL_VSA_FACTORY_PATT) &&
+	(defaults != RSSPECAN_VAL_VSA_FACTORY_ALL))
 		viCheckParm(RS_ERROR_INVALID_PARAMETER, 2, "Defaults");
 	}
 
@@ -683,7 +683,6 @@ ViStatus _VI_FUNC rsspecan_GetVSAModulationMappingCatalog(ViSession instrSession
 {
 	ViStatus error = VI_SUCCESS;
 	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-	ViChar* buf = NULL;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -694,14 +693,12 @@ ViStatus _VI_FUNC rsspecan_GetVSAModulationMappingCatalog(ViSession instrSession
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, mappingsList), 5, "Mapping List");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SENS%ld:DDEM:MAPP:CAT?", window);
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf));
-	checkErr(RsCore_ParseCatalog(buf, bufferSize, mappingsList, numberofMappings));
+	checkErr(RsCore_QueryCatalog(instrSession, cmd, bufferSize, mappingsList, numberofMappings));
 
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (buf) free(buf);
-	(void)RsCore_UnlockSession(instrSession);
+		(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 
@@ -952,7 +949,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSADataCaptureSettings(
 	case RSSPECAN_VAL_VSA_DEM_RLEN_SYMBOL:
 		checkErr(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_VSA_DEMODULATION_REC_LENGTH_AUTO, VI_FALSE));
 		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_VSA_DEMODULATION_REC_LENGTH_SYM,
-			(ViInt32) captureLength), 4, "Capture Length");
+	(ViInt32) captureLength), 4, "Capture Length");
 		break;
 	case RSSPECAN_VAL_VSA_DEM_RLEN_TIME:
 		checkErr(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_VSA_DEMODULATION_REC_LENGTH_AUTO, VI_FALSE));
@@ -1298,7 +1295,6 @@ ViStatus _VI_FUNC rsspecan_GetVSAPatternCatalog(ViSession instrSession,
 {
 	ViStatus error = VI_SUCCESS;
 	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-	ViChar* buf = NULL;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -1311,14 +1307,12 @@ ViStatus _VI_FUNC rsspecan_GetVSAPatternCatalog(ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, patternsList), 6, "Patterns List");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS%ld:DDEM:SEAR:SYNC:CAT? %s", window, VSACatPatternArr[selection]);
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf));
-	checkErr(RsCore_ParseCatalog(buf, bufferSize, patternsList, numberofPatterns));
+	checkErr(RsCore_QueryCatalog(instrSession, cmd, bufferSize, patternsList, numberofPatterns));
 
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (buf) free(buf);
-	(void)RsCore_UnlockSession(instrSession);
+		(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 
@@ -4108,9 +4102,9 @@ ViStatus _VI_FUNC rsspecan_QueryVSAModulationAccuracyLimitsCheckResults(
 	checkErr(RsCore_LockSession(instrSession));
 
 	if ((measurementType == RSSPECAN_VAL_VSA_RESULT_RHO) ||
-		(measurementType == RSSPECAN_VAL_VSA_RESULT_CF_ERROR) ||
-		(measurementType == RSSPECAN_VAL_VSA_RESULT_IQ_OFFSET) ||
-		(measurementType == RSSPECAN_VAL_VSA_RESULT_FSK_DEV_ERROR))
+	(measurementType == RSSPECAN_VAL_VSA_RESULT_CF_ERROR) ||
+	(measurementType == RSSPECAN_VAL_VSA_RESULT_IQ_OFFSET) ||
+	(measurementType == RSSPECAN_VAL_VSA_RESULT_FSK_DEV_ERROR))
 	{
 		maxStat = RSSPECAN_VAL_VSA_LIMIT_PEAK;
 	}
@@ -4170,9 +4164,9 @@ ViStatus _VI_FUNC rsspecan_QueryVSAModulationAccuracyStatisticResults(
 			4, "Measurement Type");
 
 	if ((measurementType == RSSPECAN_VAL_VSA_RESULT_EVM) ||
-		(measurementType == RSSPECAN_VAL_VSA_RESULT_PHASE_ERROR) ||
-		(measurementType == RSSPECAN_VAL_VSA_RESULT_FREQ_ERROR) ||
-		(measurementType == RSSPECAN_VAL_VSA_RESULT_MOD_ERROR))
+	(measurementType == RSSPECAN_VAL_VSA_RESULT_PHASE_ERROR) ||
+	(measurementType == RSSPECAN_VAL_VSA_RESULT_FREQ_ERROR) ||
+	(measurementType == RSSPECAN_VAL_VSA_RESULT_MOD_ERROR))
 	{
 		maxStat = RSSPECAN_VAL_VSA_STAT_MAX_95_RMS;
 	}

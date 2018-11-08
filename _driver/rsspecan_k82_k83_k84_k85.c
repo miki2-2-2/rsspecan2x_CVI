@@ -328,7 +328,6 @@ ViStatus _VI_FUNC rsspecan_QueryC2KChannelTableCatalog(
 )
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar* buf = NULL;
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K82|K83|K84|K85"));
 
 	checkErr(RsCore_LockSession(instrSession));
@@ -337,14 +336,12 @@ ViStatus _VI_FUNC rsspecan_QueryC2KChannelTableCatalog(
 			3, "Buffer Size");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTablesList), 4, "Channel Table List");
 
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CONF:CDP:CTAB:CAT?", &buf));
-	checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
+	checkErr(RsCore_QueryCatalog(instrSession, "CONF:CDP:CTAB:CAT?", bufferSize, channelTablesList, numberofChannelTables));
 
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (buf) free(buf);
-	(void)RsCore_UnlockSession(instrSession);
+		(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 
@@ -479,7 +476,6 @@ ViStatus _VI_FUNC rsspecan_ReadC2KTraceData(
 )
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar* exBuf = NULL;
 	ViChar traceName[RS_MAX_MESSAGE_BUF_SIZE] = "";
 
 	checkErr(RsCore_LockSession(instrSession));
@@ -496,8 +492,7 @@ ViStatus _VI_FUNC rsspecan_ReadC2KTraceData(
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (exBuf) free(exBuf);
-	(void)RsCore_UnlockSession(instrSession);
+		(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 

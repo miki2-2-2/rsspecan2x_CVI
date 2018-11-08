@@ -947,8 +947,8 @@ ViStatus _VI_FUNC rsspecan_CreatePhaseLimitLine(
 
 	viCheckParm(RsCore_InvalidViInt32Range(instrSession, limit, 1, 8),
 			3, "Limit");
-	viCheckParm(RsCore_InvalidViInt32Range(instrSession, strlen(name), 0, 8), 4, "Name (string length)");
-	viCheckParm(RsCore_InvalidViInt32Range(instrSession, strlen(comment), 0, 40), 5, "Comment (string length)");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, strlen(name), 0, 8), 4, "Name(string length)");
+	viCheckParm(RsCore_InvalidViInt32Range(instrSession, strlen(comment), 0, 40), 5, "Comment(string length)");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "L%ld", limit);
 

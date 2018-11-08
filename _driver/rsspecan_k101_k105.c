@@ -198,24 +198,24 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkTrigger(
 	}
 
 	if ((mode == RSSPECAN_VAL_TRIG_MODE_IF_POWER) ||
-		(mode == RSSPECAN_VAL_TRIG_MODE_POWER)/* ||
-		(mode == RSSPECAN_VAL_TRIG_MODE_RF_POWER)*/)
+	(mode == RSSPECAN_VAL_TRIG_MODE_POWER)/* ||
+	(mode == RSSPECAN_VAL_TRIG_MODE_RF_POWER)*/)
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_IFP_OFFSET, holdoff),
 				4, "Holdoff");
 	}
 
 	if ((mode == RSSPECAN_VAL_TRIG_MODE_IF_POWER) ||
-		(mode == RSSPECAN_VAL_TRIG_MODE_POWER))
+	(mode == RSSPECAN_VAL_TRIG_MODE_POWER))
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", RSSPECAN_ATTR_TRIGGER_IFP_HYSTERESIS, hysteresis),
 				5, "Hysteresis");
 	}
 
 	if ((mode == RSSPECAN_VAL_TRIG_MODE_EXTERNAL) ||
-		(mode == RSSPECAN_VAL_TRIG_MODE_IF_POWER) ||
-		(mode == RSSPECAN_VAL_TRIG_MODE_POWER) ||
-		(mode == RSSPECAN_VAL_TRIG_MODE_RF_POWER))
+	(mode == RSSPECAN_VAL_TRIG_MODE_IF_POWER) ||
+	(mode == RSSPECAN_VAL_TRIG_MODE_POWER) ||
+	(mode == RSSPECAN_VAL_TRIG_MODE_RF_POWER))
 	{
 		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win0", trig_level_attr[mode], triggerLevel),
 				6, "Trigger Level");
@@ -2924,7 +2924,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEUplinkBitstream(
 				{
 					nIndexSymbol += nSymbols;
 					nType = 0;
-					(*noofValues)++;
+	(*noofValues)++;
 				}
 
 				if (nIndexSymbol + nCurrentSymbol >= bitStreamSize)

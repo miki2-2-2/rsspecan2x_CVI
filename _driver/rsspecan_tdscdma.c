@@ -235,7 +235,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSSynchronization(ViSession instrSession,
 			3, "Midamble Shift Cells");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TDBS_SYNC_TO_SLOT,
-		(ViBoolean) syncTo), 4, "Sync To");
+	(ViBoolean) syncTo), 4, "Sync To");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TDBS_SYNC_TO_SLOT_ROTATE, rotateCodeChannels),
 			5, "Rotate Code Channels");
@@ -698,7 +698,6 @@ ViStatus _VI_FUNC rsspecan_GetTDSBSChannelTableCatalog(ViSession instrSession,
                                                        ViChar channelTablesList[])
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar* buf = NULL;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -708,14 +707,12 @@ ViStatus _VI_FUNC rsspecan_GetTDSBSChannelTableCatalog(ViSession instrSession,
 			3, "Buffer Size");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, channelTablesList), 4, "Channel Table List");
 
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CONF:CDP:CTAB:CAT?", &buf));
-	checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
+	checkErr(RsCore_QueryCatalog(instrSession, ":CONF:CDP:CTAB:CAT?", bufferSize, channelTablesList, numberofChannelTables));
 
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (buf) free(buf);
-	(void)RsCore_UnlockSession(instrSession);
+		(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 

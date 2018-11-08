@@ -494,7 +494,6 @@ ViStatus _VI_FUNC rsspecan_GetVSAModulationFilterCatalog(ViSession instrSession,
 {
 	ViStatus error = VI_SUCCESS;
 	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
-	ViChar* buf = NULL;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -510,14 +509,12 @@ ViStatus _VI_FUNC rsspecan_GetVSAModulationFilterCatalog(ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, modulationFiltersList), 5, "Modulation Filter List");
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SENS%ld:DDEM:FILT:CAT?", window);
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf));
-	checkErr(RsCore_ParseCatalog(buf, bufferSize, modulationFiltersList, numberofFilters));
+	checkErr(RsCore_QueryCatalog(instrSession, cmd, bufferSize, modulationFiltersList, numberofFilters));
 
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (buf) free(buf);
-	(void)RsCore_UnlockSession(instrSession);
+		(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 
