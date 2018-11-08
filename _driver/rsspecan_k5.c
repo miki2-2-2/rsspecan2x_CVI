@@ -538,8 +538,8 @@ ViStatus _VI_FUNC rsspecan_ReadGsmPhaseFreqErrorValues(ViSession instrSession,
 			3, "Measurement");
 	if ((modifier != RSSPECAN_VAL_MEASTYPE_MAX) && (modifier != RSSPECAN_VAL_MEASTYPE_AVER))
 	viCheckParm(RS_ERROR_INVALID_PARAMETER, 4, "Modifier");
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	switch (modifier)
 	{
 	case RSSPECAN_VAL_MEASTYPE_MAX:
@@ -701,8 +701,8 @@ ViStatus _VI_FUNC rsspecan_ReadGsmModulAccValues(ViSession instrSession,
 			3, "Measurement");
 	if ((modifier != RSSPECAN_VAL_MEASTYPE_MAX) && (modifier != RSSPECAN_VAL_MEASTYPE_AVER))
 	viCheckParm(RS_ERROR_INVALID_PARAMETER, 4, "Modifier");
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 
 	switch (modifier)
 	{
@@ -920,8 +920,8 @@ ViStatus _VI_FUNC rsspecan_ReadGsmPowVsTimeValues(ViSession instrSession,
 	viCheckParm(RS_ERROR_INVALID_PARAMETER, 3, "Measurement");
 	if ((modifier != RSSPECAN_VAL_MEASTYPE_MAX) && (modifier != RSSPECAN_VAL_MEASTYPE_AVER))
 	viCheckParm(RS_ERROR_INVALID_PARAMETER, 4, "Modifier");
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	switch (modifier)
 	{
 	case RSSPECAN_VAL_MEASTYPE_MAX:

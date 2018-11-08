@@ -469,7 +469,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseResidualCalculations(
 	if (evaluateFrom > evaluateTo)
 	viCheckParm(RS_ERROR_INVALID_PARAMETER, 3, "Evaluate From>Evaluate To");
 
-	viCheckParm(rsspecan_SetAttributeViBoolean (instrSession, "C1", RSSPECAN_ATTR_PHASE_CALC_EVAL,
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "C1", RSSPECAN_ATTR_PHASE_CALC_EVAL,
 		!useMeasurementSettings), 2, "Use Measurement Settings");
 
 	if (useMeasurementSettings == VI_FALSE)
@@ -1389,11 +1389,11 @@ ViStatus _VI_FUNC rsspecan_ReferencePhaseMeasurement(
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_PHASE_CONF_REFM, NULL));
 
-	checkErr(rsspecan_SetOPCTimeout (instrSession, old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, old_timeout));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

@@ -42,8 +42,8 @@ ViStatus _VI_FUNC rsspecan_AdjustC2KSettings(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 4, "Timeout");
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	checkErr(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_C2K_ACH_PRES, adjustSettings));
 
 Error:
@@ -71,8 +71,8 @@ ViStatus _VI_FUNC rsspecan_AdjustC2KReferenceLevel(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_C2K_ADJUST_REF_LEVEL, NULL));
 
 Error:
@@ -445,8 +445,8 @@ ViStatus _VI_FUNC rsspecan_AdjustC2KAmplitudeReferenceLevel(ViSession instrSessi
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_C2K_CDP_LEVEL_ADJUST, NULL));
 
 Error:

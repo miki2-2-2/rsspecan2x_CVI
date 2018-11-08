@@ -745,7 +745,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureLTEUplinkSubframeTable(
 			"LTESubframe", subframe , RS_REPCAP_BUF_SIZE, repCap),
 			2, "Subframe");
 
-	viCheckParm(rsspecan_SetAttributeViInt32 (instrSession, repCap,
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap,
 		RSSPECAN_ATTR_LTE_UPLINK_SUBFRAME_ALLOCATION_ENABLE_PUCCH,
 		enablePUCCH ? RSSPECAN_VAL_LTE_UPLINK_SUBFRAME_PUCCH : RSSPECAN_VAL_LTE_UPLINK_SUBFRAME_PUSCH), 3, "Enable PUCCH");
 

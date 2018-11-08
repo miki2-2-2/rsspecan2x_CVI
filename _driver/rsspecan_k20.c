@@ -389,7 +389,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVAModulStandard(ViSession instrSession,
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win0", RSSPECAN_ATTR_CATV_ATV_TRIGGER_QUIET_LINE, quietLine),
 			8, "Quiet Line");
 
-	viCheckParm(rsspecan_SetAttributeViInt32 (instrSession, "Win0", RSSPECAN_ATTR_CATV_ATV_TRIGGER_QLINE_FIELD,
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "Win0", RSSPECAN_ATTR_CATV_ATV_TRIGGER_QLINE_FIELD,
 		quietField), 9, "Quiet Field")
 
 Error:
@@ -446,8 +446,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACNNoiseFloorCorrection(ViSession instrS
 {
 	ViStatus error = VI_SUCCESS;
 	ViInt32 old_timeout = 0;
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -471,8 +471,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACNMeasurement(ViSession instrSession,
 {
 	ViStatus error = VI_SUCCESS;
 	ViInt32 old_timeout = 0;
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, 60000));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, 60000));
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -677,8 +677,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACSONoiseFloorCorrection(ViSession instr
 {
 	ViStatus error = VI_SUCCESS;
 	ViInt32 old_timeout = 0;
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -805,8 +805,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACTBNoiseFloorCorrection(ViSession instr
 {
 	ViStatus error = VI_SUCCESS;
 	ViInt32 old_timeout = 0;
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 
 	checkErr(RsCore_LockSession(instrSession));
 

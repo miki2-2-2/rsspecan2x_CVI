@@ -367,8 +367,8 @@ ViStatus _VI_FUNC rsspecan_Set3GPPBSASequence(ViSession instrSession)
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, 30000));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, 30000));
 
 	checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_3GPP_ASEQ, NULL));
 

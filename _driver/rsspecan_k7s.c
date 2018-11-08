@@ -208,8 +208,8 @@ ViStatus _VI_FUNC rsspecan_FMStereoDifferenceFrequencyDistortionSearchSignal(
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 600000UL), 3, "Timeout");
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
@@ -271,8 +271,8 @@ ViStatus _VI_FUNC rsspecan_FMStereoIntermodulationDistortionSearchSignal(
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 600000UL), 3, "Timeout");
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 

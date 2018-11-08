@@ -369,10 +369,10 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsAM(ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K15"));
 
 	sprintf(cmd, "CALC1:AVI:AM:DEPT? '%s'", avionicsSummary[AMDepth]);
-	checkErr(rsspecan_QueryViReal64 (instrSession, cmd, AMDepthResult));
+	checkErr(rsspecan_QueryViReal64(instrSession, cmd, AMDepthResult));
 
 	sprintf(cmd, "CALC1:AVI:AM:FREQ? '%s'", avionicsSummary[AMFrequency]);
-	checkErr(rsspecan_QueryViReal64 (instrSession, cmd, AMFrequencyResult));
+	checkErr(rsspecan_QueryViReal64(instrSession, cmd, AMFrequencyResult));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -401,7 +401,7 @@ ViStatus _VI_FUNC rsspecan_QueryAvionicsTHD(ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K15"));
 
 	sprintf(cmd, "CALC1:AVI:THD:RES? '%s'", avionicsSummary[THD]);
-	checkErr(rsspecan_QueryViReal64 (instrSession, cmd, THDResult));
+	checkErr(rsspecan_QueryViReal64(instrSession, cmd, THDResult));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

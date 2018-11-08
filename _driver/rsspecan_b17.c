@@ -174,7 +174,7 @@ ViStatus _VI_FUNC rsspecan_QueryDigitalBasebandInputOutputConfiguration(ViSessio
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, digitalBasebandSelect), 2, "Digital Baseband Select");
 	}
 
-	checkErr(rsspecan_GetAttributeViString (instrSession, "", attr,
+	checkErr(rsspecan_GetAttributeViString(instrSession, "", attr,
 		arraySize, configuration));
 
 Error:

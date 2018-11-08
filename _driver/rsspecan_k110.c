@@ -203,7 +203,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRATriggerSettings(
 	}
 	else
 	{
-		viCheckParm(rsspecan_SetAttributeViInt32 (instrSession, "",
+		viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "",
 			RSSPECAN_ATTR_TETRA_TRIGGER_TEDS_SLOT_DURATION,
 			(ViInt32) offset), 3, "Offset");
 	}

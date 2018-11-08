@@ -184,8 +184,8 @@ ViStatus _VI_FUNC rsspecan_TDSUECDPLevelAdjust(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_TDUE_CDP_LEV_ADJUST, NULL));
 
 Error:
@@ -574,8 +574,8 @@ ViStatus _VI_FUNC rsspecan_GetTDSUEReferenceLevelAdjustmentResult(ViSession inst
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDUE_ADJ_RLEV_QUERY, result),
 			2, "Result");
 

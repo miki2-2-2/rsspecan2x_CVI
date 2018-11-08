@@ -393,7 +393,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFFTTimeDomain(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_SetAttributeViReal64 (instrSession, "Win1", RSSPECAN_ATTR_FREQUENCY_SPAN,
+	checkErr(rsspecan_SetAttributeViReal64(instrSession, "Win1", RSSPECAN_ATTR_FREQUENCY_SPAN,
 		0.0));
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "C1", RSSPECAN_ATTR_FFT_FORM, type),
 			2, "Type");

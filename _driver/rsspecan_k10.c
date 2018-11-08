@@ -1167,8 +1167,8 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10MeasurementResults(
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(result == NULL, 5, "Result");
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 
 	switch (measurement)
 	{
@@ -1371,8 +1371,8 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10BurstSlotResults(
 	ViStatus error = VI_SUCCESS;
 	ViChar repCap[RS_REPCAP_BUF_SIZE];
 	ViInt32 old_timeout = 0;
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -1450,8 +1450,8 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10BurstSlotDeltaToSync(ViSession instrSession
 	ViStatus error = VI_SUCCESS;
 	ViChar repCap[RS_REPCAP_BUF_SIZE];
 	ViInt32 old_timeout = 0;
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 
 	checkErr(RsCore_LockSession(instrSession));
 

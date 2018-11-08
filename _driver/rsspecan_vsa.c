@@ -56,8 +56,8 @@ ViStatus _VI_FUNC rsspecan_SetVSAMode(ViSession instrSession)
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, 15000));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, 15000));
 
 	checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_VSA_MODE, ""));
 
@@ -153,8 +153,8 @@ ViStatus _VI_FUNC rsspecan_VSARefLevelAdjust(ViSession instrSession,
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295), 3, "Timeout");
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_VSA_REF_LEVEL_ADJUST, ""));
 
 Error:
@@ -1126,7 +1126,7 @@ ViStatus _VI_FUNC rsspecan_GetVSABurstFound(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, found), 2, "Found");
-	checkErr(rsspecan_getStatusRegister (instrSession, 11, &statusRegisterValue));
+	checkErr(rsspecan_getStatusRegister(instrSession, 11, &statusRegisterValue));
 	*found = (ViBoolean)(statusRegisterValue & 1);
 
 Error:

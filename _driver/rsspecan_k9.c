@@ -479,8 +479,8 @@ ViStatus _VI_FUNC rsspecan_ReadPWMResult(ViSession instrSession,
 	checkErr(rsspecan_GetAttributeViInt32(instrSession, NULL, RSSPECAN_ATTR_PMET_SELECT, &pmet));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld,PM%ld", window, pmet);
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	viCheckParm(rsspecan_GetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_PMET_READ, result),
 			3, "Result");
 

@@ -3328,8 +3328,8 @@ ViStatus _VI_FUNC rsspecan_ConfigureMarkerZoom(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 4, "Timeout");
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, repCap, RSSPECAN_ATTR_MARKER_ZOOM, markerZoom),
@@ -4518,7 +4518,7 @@ ViStatus _VI_FUNC rsspecan_SpeakerVolume(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	viCheckParm(rsspecan_SetAttributeViReal64 (instrSession, "",
+	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "",
 			RSSPECAN_ATTR_SYST_SPEAKER, speakerVolume / 100.0),
 		2, "Speaker Volume");
 
@@ -6080,7 +6080,7 @@ ViStatus _VI_FUNC rsspecan_ExternalMixerConversionLossTableCatalog(ViSession ins
 
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CORR:CVL:CAT?", &buf));
 	RsCore_TrimString(buf, RS_VAL_TRIM_WHITESPACES_AND_SINGLE_QUOTES);
-	checkErr(rsspecan_ParseLimitLineCatalog (buf, bufferSize, CVLNamesList, numberofCVL));
+	checkErr(rsspecan_ParseLimitLineCatalog(buf, bufferSize, CVLNamesList, numberofCVL));
 
 	checkErr(rsspecan_CheckStatus(instrSession));
 
@@ -8370,7 +8370,7 @@ ViStatus _VI_FUNC rsspecan_HardcopyGetPrinterList(ViSession instrSession,
 
 	p2buf = printerList;
 	count = 0;
-	checkErr(rsspecan_GetAttributeViString (instrSession, "", RSSPECAN_ATTR_HCOPY_PRINTER_FIRST,
+	checkErr(rsspecan_GetAttributeViString(instrSession, "", RSSPECAN_ATTR_HCOPY_PRINTER_FIRST,
 		RS_MAX_MESSAGE_BUF_SIZE, buffer));
 
 	while (strlen(buffer) > 1)
@@ -8379,7 +8379,7 @@ ViStatus _VI_FUNC rsspecan_HardcopyGetPrinterList(ViSession instrSession,
 		count++; //add one position for comma
 		if (count <= bufferSize)
 			p2buf += sprintf(p2buf, "%s,", buffer);
-		checkErr(rsspecan_GetAttributeViString (instrSession, "", RSSPECAN_ATTR_HCOPY_PRINTER_NEXT,
+		checkErr(rsspecan_GetAttributeViString(instrSession, "", RSSPECAN_ATTR_HCOPY_PRINTER_NEXT,
 			RS_MAX_MESSAGE_BUF_SIZE, buffer));
 	}
 	*--p2buf = '\0';
@@ -9024,8 +9024,8 @@ ViStatus _VI_FUNC rsspecan_Calibration(ViSession instrSession,
 	{
 		viCheckParm(RsCore_InvalidViInt32Range(instrSession, timeout, 0, 600000),
 				3, "Timeout");
-		checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-		checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+		checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+		checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 
 		viCheckParm(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_CALIBRATION, result),
 				2, "Result");
@@ -9073,7 +9073,7 @@ ViStatus _VI_FUNC rsspecan_CalibrationResult(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	//viCheckParm(rsspecan_GetAttributeViString (instrSession, "",
+	//viCheckParm(rsspecan_GetAttributeViString(instrSession, "",
 	//        RSSPECAN_ATTR_CALIBRATION_RESULT_QUERY, arraySize, result), 2, "Result");
 	checkErr(rsspecan_QueryViString(instrSession, "CAL:RES?", arraySize, result));
 
@@ -9279,10 +9279,10 @@ ViStatus _VI_FUNC rsspecan_StartProbeCalibration(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	// STAT:QUES:SYNC:ENAB, STAT:QUES:SYNC:PTR, STAT:QUES:SYNC:NTR
-	checkErr(rsspecan_setStatusRegister (instrSession, 1, 4, 12288, 12288, 0));
+	checkErr(rsspecan_setStatusRegister(instrSession, 1, 4, 12288, 12288, 0));
 
 	// STAT:OPER:ENAB, STAT:OPER:PTR, STAT:OPER:NTR
-	checkErr(rsspecan_setStatusRegister (instrSession, 1, 0, 2048, 2048, 0));
+	checkErr(rsspecan_setStatusRegister(instrSession, 1, 0, 2048, 2048, 0));
 
 	viCheckParm(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_CAL_PROBE_START, probeDataSetName),
 			2, "Probe Data Set Name");
@@ -9319,7 +9319,7 @@ ViStatus _VI_FUNC rsspecan_GetProbeCalibrationStatus(ViSession instrSession,
 
 		if (response & 0x8)
 		{
-			checkErr(rsspecan_getStatusRegister (instrSession, 10, &status));
+			checkErr(rsspecan_getStatusRegister(instrSession, 10, &status));
 			if (status & 4096) // 12. bit
 				*probeCalibrationStatusI = VI_TRUE;
 			if (status & 8192) // 13. bit
@@ -9499,7 +9499,7 @@ ViStatus _VI_FUNC rsspecan_ProbeMicroButtonAction(ViSession instrSession,
 
 	checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PROBE_CONNECTOR, &probe));
 
-	checkErr(RsCore_GetAttributeRepCapName (instrSession,
+	checkErr(RsCore_GetAttributeRepCapName(instrSession,
 		RSSPECAN_ATTR_PROBE_MICRO_BUTTON_ACTION,
 		"Probe",
 		probe - 1,
@@ -9538,7 +9538,7 @@ ViStatus _VI_FUNC rsspecan_GetProbeInformation(ViSession instrSession, ViInt32 b
 
 	checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PROBE_CONNECTOR, &probe));
 
-	checkErr(RsCore_GetAttributeRepCapName (instrSession,
+	checkErr(RsCore_GetAttributeRepCapName(instrSession,
 		RSSPECAN_ATTR_PROBE_MICRO_BUTTON_ACTION,
 		"Probe",
 		probe - 1,
@@ -10128,7 +10128,7 @@ ViStatus _VI_FUNC rsspecan_ReadYTrace(ViSession instrSession,
 			3, "Trace");
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, maximumTime, 0, 4294967295UL), 4, "Maximum Time");
 
-	checkErr(rsspecan_Initiate (instrSession, window, maximumTime));
+	checkErr(rsspecan_Initiate(instrSession, window, maximumTime));
 
 	sprintf(traceName, "TRACE%ld", trace);
 	checkErr(rsspecan_dataReadTrace(instrSession, window, traceName, arrayLength, amplitude, actualPoints));
@@ -10515,8 +10515,8 @@ ViStatus _VI_FUNC rsspecan_Initiate(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_INIT, NULL));
@@ -10545,8 +10545,8 @@ ViStatus _VI_FUNC rsspecan_InitiateSpurious(ViSession instrSession,
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_INIT_SPURIOUS, NULL));
 
 Error:
@@ -10572,8 +10572,8 @@ ViStatus _VI_FUNC rsspecan_InitiateSEMMeasurement(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 	checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_INIT_SEM_MEAS, NULL));
 
@@ -10632,8 +10632,8 @@ ViStatus _VI_FUNC rsspecan_Continue(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 
 	checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_INIT_CONMEAS, NULL));
@@ -10661,8 +10661,8 @@ ViStatus _VI_FUNC rsspecan_SendSoftwareTrigger(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_INIT_SW_TRIGGER, NULL));
 
 Error:
@@ -10695,8 +10695,8 @@ ViStatus _VI_FUNC rsspecan_InitiateSequencer(
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 
 	checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_INIT_SEQUENCER, NULL));
 
@@ -11207,8 +11207,8 @@ ViStatus _VI_FUNC rsspecan_PowerAdjustReferenceLevel(ViSession instrSession,
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MEAS_POW_REF_VALUE, NULL));
 
 Error:
@@ -11239,8 +11239,8 @@ ViStatus _VI_FUNC rsspecan_PowerPresetMeasurement(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_MEAS_POW_ADJ_PRESET, channelPowerType),
 			3, "Channel Power Type");
 
@@ -11480,8 +11480,8 @@ ViStatus _VI_FUNC rsspecan_ACPChannelPowerAutoAdjust(ViSession instrSession,
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 3, "Timeout");
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MEAS_ACP_PRESET_REF_LEVEL, NULL));
 
 Error:
@@ -11685,8 +11685,8 @@ ViStatus _VI_FUNC rsspecan_ACPAdjustReferenceLevelToChannelPower(ViSession instr
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295), 2, "Timeout");
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 	checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_MEAS_ACP_PRESET_REF_LEVEL_ADJ, NULL));
 
@@ -12410,8 +12410,8 @@ ViStatus _VI_FUNC rsspecan_SignalStatisticMeasurementAdjustSettings(ViSession in
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MEAS_STAT_ADJ, NULL));
 
 Error:
@@ -12437,8 +12437,8 @@ ViStatus _VI_FUNC rsspecan_SignalStatisticMeasurementRefLevelAdjust(ViSession in
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MEAS_STAT_REF_LEVEL_ADJUST, NULL));
 
 Error:
@@ -12812,8 +12812,8 @@ ViStatus _VI_FUNC rsspecan_AdjustHDistSettings(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_MEAS_HDIST_PRESET, NULL));
 
 Error:
@@ -15431,7 +15431,7 @@ ViStatus _VI_FUNC rsspecan_QuerySEMPowerClassAllLimits(ViSession instrSession,
 		checkErr(RS_ERROR_INSTRUMENT_MODEL);
 	}
 
-	checkErr(RsCore_QueryFloatArrayToUserBuffer (instrSession, "CALC:LIM:ESP:LIM?", 1001, limits, NULL));
+	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC:LIM:ESP:LIM?", 1001, limits, NULL));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
@@ -15486,7 +15486,7 @@ ViStatus _VI_FUNC rsspecan_QueryMSRAAnalysisInterval(
 
 	sprintf(cmd, "CALC:MSRA:WIND%ld:IVAL?", window);
 
-	checkErr(rsspecan_QueryViString (instrSession, cmd, RS_MAX_MESSAGE_BUF_SIZE, response));
+	checkErr(rsspecan_QueryViString(instrSession, cmd, RS_MAX_MESSAGE_BUF_SIZE, response));
 
 	p2buff = strtok(response, ",");
 	if (p2buff != NULL)
@@ -15961,7 +15961,7 @@ ViStatus _VI_FUNC rsspecan_ServiceHWInfo(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	//viCheckParm(rsspecan_GetAttributeViString (instrSession, "",
+	//viCheckParm(rsspecan_GetAttributeViString(instrSession, "",
 	//            RSSPECAN_ATTR_SERVICE_HW_INFO, arraySize, HWInfo), 2, "HW Info");
 	checkErr(rsspecan_QueryViString(instrSession, "DIAG:SERV:HWIN?", arraySize, HWInfo));
 
@@ -16232,7 +16232,7 @@ ViStatus _VI_FUNC rsspecan_setCheckStatus(ViSession instrSession,
 {
 	ViStatus error = VI_SUCCESS;
 
-	checkErr(RsCore_SetAttributeViBoolean (instrSession, "", RS_ATTR_QUERY_INSTRUMENT_STATUS, 0, statusChecking));
+	checkErr(RsCore_SetAttributeViBoolean(instrSession, "", RS_ATTR_QUERY_INSTRUMENT_STATUS, 0, statusChecking));
 
 Error:
 	return error;

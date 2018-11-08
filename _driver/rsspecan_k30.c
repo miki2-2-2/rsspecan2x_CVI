@@ -300,7 +300,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseAnalyzerSettings(
 
 	if (automaticRefLevel == VI_FALSE)
 	{
-		viCheckParm(rsspecan_SetAttributeViReal64 (instrSession, "Win1",
+		viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "Win1",
 			RSSPECAN_ATTR_REFERENCE_LEVEL,
 			refLevel), 9, "Ref Level")
 	}
@@ -959,7 +959,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseTraceSettings(
 	case RSSPECAN_VAL_NOISE_DISP_DATA_OFF:
 		viCheckParm(RsCore_InvalidViReal64Range(instrSession, maxYAxis, -75.0, 75.0), 6, "Max Y-Axis");
 		viCheckParm(RsCore_InvalidViReal64Range(instrSession, minYAxis, -75.0, 75.0), 5, "Min Y-Axis");
-		viCheckParm(rsspecan_SetAttributeViBoolean (instrSession, repCap,
+		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap,
 			RSSPECAN_ATTR_NOISE_DISP_TRAC_STAT,
 			VI_FALSE), 2, "Y-Axis")
 		break;

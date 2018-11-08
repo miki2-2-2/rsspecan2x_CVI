@@ -268,7 +268,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseRFInput(ViSession instrSession,
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_AMPL_RF_COUPLING, inputCoupling),
 			2, "Input Coupling");
 
-	viCheckParm(rsspecan_SetAttributeViInt32 (instrSession, "",
+	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "",
 		RSSPECAN_ATTR_INPUT_IMPEDANCE,
 		(ViInt32)impedance), 3, "Impedance");
 
@@ -708,7 +708,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultAutomaticRangeScaling(ViSession i
 	}
 	else
 	{
-		viCheckParm(rsspecan_SetAttributeViBoolean (instrSession, "",
+		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "",
 			RSSPECAN_ATTR_PULSE_RESULT_AUTOMATIC_RANGE_SCALING,
 			automaticRangeScaling != 0), 2, "Automatic Range Scaling");
 	}

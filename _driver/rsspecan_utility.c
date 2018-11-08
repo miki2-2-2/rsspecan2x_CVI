@@ -87,10 +87,10 @@ ViStatus rsspecan_DefaultInstrSetup(ViSession instrSession)
 	checkErr(RsCore_GetRsSession(instrSession, &rsSession));
 
 	// Set all the attributes to the default state. Do not update inherent attributes!
-	checkErr(RsCore_ApplyAttributeDefaults (instrSession, VI_FALSE));
+	checkErr(RsCore_ApplyAttributeDefaults(instrSession, VI_FALSE));
 
 	// Init attributes
-	checkErr(rsspecan_InitAttributes (instrSession));
+	checkErr(rsspecan_InitAttributes(instrSession));
 
 	rsSession->fastSweepInstrument = 0;
 	checkErr(RsCore_ResetRegistersEseSre(instrSession));

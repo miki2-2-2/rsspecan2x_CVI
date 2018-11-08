@@ -536,8 +536,8 @@ ViStatus _VI_FUNC rsspecan_ADemAutoTune(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 	checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_ADEM_SIGNAL_SEARCH, ""));
 
 Error:

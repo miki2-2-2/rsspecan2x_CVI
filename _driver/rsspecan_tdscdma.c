@@ -194,8 +194,8 @@ ViStatus _VI_FUNC rsspecan_TDSAdaptSignalAutoLevelTime(ViSession instrSession,
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 
 	checkErr(rsspecan_SetAttributeViString(instrSession, "", RSSPECAN_ATTR_TDBS_ADAPT_SIGN_AUT_LEVEL_TIME, NULL));
 
@@ -234,7 +234,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSSynchronization(ViSession instrSession,
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_TDBS_CELL_SHIFTS, midambleShiftCells),
 			3, "Midamble Shift Cells");
 
-	viCheckParm(rsspecan_SetAttributeViBoolean (instrSession, "", RSSPECAN_ATTR_TDBS_SYNC_TO_SLOT,
+	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TDBS_SYNC_TO_SLOT,
 		(ViBoolean) syncTo), 4, "Sync To");
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_TDBS_SYNC_TO_SLOT_ROTATE, rotateCodeChannels),
@@ -829,7 +829,7 @@ ViStatus _VI_FUNC rsspecan_GetTDSUEResult(ViSession instrSession,
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MARK:FUNC:CDP:RES? %s", resultCDPArrFSW[type]);
 	}
 
-	checkErr(RsCore_QueryViReal64WithOpc (instrSession, cmd, timeout, result));
+	checkErr(RsCore_QueryViReal64WithOpc(instrSession, cmd, timeout, result));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:

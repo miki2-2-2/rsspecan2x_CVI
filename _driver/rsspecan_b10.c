@@ -298,8 +298,8 @@ ViStatus _VI_FUNC rsspecan_ExternalGeneratorCalibration(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 4, "Timeout");
 
-	checkErr(rsspecan_GetOPCTimeout (instrSession, &old_timeout));
-	checkErr(rsspecan_SetOPCTimeout (instrSession, timeout));
+	checkErr(rsspecan_GetOPCTimeout(instrSession, &old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, timeout));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "Win%ld", window);
 	switch (method)
@@ -319,7 +319,7 @@ ViStatus _VI_FUNC rsspecan_ExternalGeneratorCalibration(ViSession instrSession,
 		viCheckParm(RsCore_InvalidViInt32Value(instrSession, method), 3, "Method");
 	}
 
-	checkErr(rsspecan_SetOPCTimeout (instrSession, old_timeout));
+	checkErr(rsspecan_SetOPCTimeout(instrSession, old_timeout));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
