@@ -774,7 +774,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureFMStereoTraceModes(
 	}
 
 	checkErr(RsCore_Write(instrSession, cmd));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -832,7 +832,7 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoDifferenceFrequencyDistortionResult(
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:DFD:RES?", window);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 2, differenceFrequencyDistortion, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -860,7 +860,7 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoIntermodulationDistortionResult(
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:IMD:RES?", window);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 2, intermodulationDistortion, NULL));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -968,7 +968,7 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoChannelTypeAllResults(
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MARK:FUNC:SFM:%s:RES? ALL", ChannelTypeArr[channelType]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 32001, result, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1008,7 +1008,7 @@ ViStatus _VI_FUNC rsspecan_QueryFMStereoResultValues(
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SENS:SFM:%s:%s:RES? %s", ChannelTypeArr[channelType], resultTypeArr[measurementType], traceModesArr[traceMode]);
 	checkErr(RsCore_QueryFloatArrayToUserBufferWithOpc(instrSession, cmd, timeout, arraySize, resultValues, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

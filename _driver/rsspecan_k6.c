@@ -998,7 +998,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterDistributionPower(ViSess
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1041,7 +1041,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterDistributionTiming(
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1084,7 +1084,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterDistributionFrequency(
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1127,7 +1127,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultParameterDistributionPhase(
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1357,7 +1357,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultTableTiming(ViSession instrSessio
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1398,7 +1398,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePulseResultTableFrequency(ViSession instrSes
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1465,7 +1465,7 @@ ViStatus _VI_FUNC rsspecan_ExportPulseResultTable(
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "MMEM:STOR%ld:TABL %s,'%s'", window, exportCollumnsArr[exportCollumns], filename);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1725,7 +1725,7 @@ ViStatus _VI_FUNC rsspecan_QueryPulseIDs(ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS:PULS:ID? %s", PulseQueryRangeArr[queryRange]);
 	checkErr(RsCore_QueryIntegerArrayToUserBuffer(instrSession, cmd, arraySize, pulseIDs, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1758,7 +1758,7 @@ ViStatus _VI_FUNC rsspecan_QueryPulseNumbers(ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS:PULS:NUMB? %s", PulseQueryRangeArr[queryRange]);
 	checkErr(RsCore_QueryIntegerArrayToUserBuffer(instrSession, cmd, arraySize, pulseNumbers, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1805,7 +1805,7 @@ ViStatus _VI_FUNC rsspecan_QueryPulseResultPower(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS:PULS:POW:%s%s? %s", PulsePowerResultArr[parameter],
 	         PulseResultTypeArr[resultType], PulseQueryRangeArr[queryRange]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1852,7 +1852,7 @@ ViStatus _VI_FUNC rsspecan_QueryPulseResultTiming(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS:PULS:TIM:%s%s? %s", PulseTimingParameterArr[parameter],
 	         PulseResultTypeArr[resultType], PulseQueryRangeArr[queryRange]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1899,7 +1899,7 @@ ViStatus _VI_FUNC rsspecan_QueryPulseResultFrequency(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS:PULS:FREQ:%s%s? %s", PulseFreqParameterArr[parameter],
 	         PulseResultTypeArr[resultType], PulseQueryRangeArr[queryRange]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1946,7 +1946,7 @@ ViStatus _VI_FUNC rsspecan_QueryPulseResultPhase(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS:PULS:PHAS:%s%s? %s", PulsePhaseParameterArr[parameter],
 	         PulseResultTypeArr[resultType], PulseQueryRangeArr[queryRange]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

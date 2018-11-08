@@ -1002,7 +1002,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanResultSummaryDisplay(
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1112,7 +1112,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLANAllLimits(ViSession instrSession,
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1142,7 +1142,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanAllLimits(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":CALC%ld:LIM%ld:BURS:ALL?", window, limit);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 12, values, NULL));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1213,7 +1213,7 @@ ViStatus _VI_FUNC rsspecan_ReadWlanTraceData(ViSession instrSession,
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 1, traceName, arraySize, traceData, noofValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pbuffer) free(pbuffer);
@@ -1314,7 +1314,7 @@ ViStatus _VI_FUNC rsspecan_ReadWlanSEMResults(ViSession instrSession,
 		failureFlag[i] = data[j++];
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (data) free(data);
@@ -1341,7 +1341,7 @@ ViStatus _VI_FUNC rsspecan_FetchWlanBurstAll(ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K90|K91"));
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:ALL?", 32001, results, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1636,7 +1636,7 @@ ViStatus _VI_FUNC rsspecan_FetchWlanSymbolCount(ViSession instrSession,
 	checkErr(RsCore_LockSession(instrSession));
 
 	checkErr(RsCore_QueryIntegerArrayToUserBuffer(instrSession, "FETC:SYMB:COUN?", arraySize, symbolCount, noOfValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1846,7 +1846,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanPowerResults(ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:POW:RES? %s", window, powerMeasurementArr[powerMeasurement]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1994,7 +1994,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanAllLimitCheckResults(ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM%ld:BURS:ALL:RESULT?", window, limit);
 	checkErr(RsCore_QueryIntegerArrayToUserBuffer(instrSession, cmd, 12, results, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

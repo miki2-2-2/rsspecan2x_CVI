@@ -321,7 +321,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSUEChannelTableData(ViSession instrSession
 		                   reserved1[i], reserved2[i]);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -421,7 +421,7 @@ ViStatus _VI_FUNC rsspecan_GetTDSUEChannelTableCatalog(ViSession instrSession,
 	}
 
 	checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);

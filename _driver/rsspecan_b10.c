@@ -250,7 +250,7 @@ ViStatus _VI_FUNC rsspecan_SendCommandToExternalGenerator(ViSession instrSession
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SYST:COMM:GPIB:RDEV:COMM %ld,%s", deviceAddress, commandString);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

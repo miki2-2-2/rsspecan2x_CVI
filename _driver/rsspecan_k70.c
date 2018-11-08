@@ -90,7 +90,7 @@ ViStatus _VI_FUNC rsspecan_GetVSADigitalStandardCatalog(ViSession instrSession,
 	if (numberofDigitalStandards)
 		*numberofDigitalStandards = strlen(digitalStandardsList);
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -467,7 +467,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureVSAModulationFilters(ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS%ld:DDEM:FILT:MOD '%s','%s','%s'", window, txFilter, receiveFilter, measFilter);
 	checkErr(RsCore_Write(instrSession, cmd));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -513,7 +513,7 @@ ViStatus _VI_FUNC rsspecan_GetVSAModulationFilterCatalog(ViSession instrSession,
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf));
 	checkErr(RsCore_ParseCatalog(buf, bufferSize, modulationFiltersList, numberofFilters));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -1291,7 +1291,7 @@ ViStatus _VI_FUNC rsspecan_GetVSACompressionPointResults(ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 4, "Results");
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "C%ld", window);
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 	switch (type)
 	{
 	case RSSPECAN_VAL_VSA_CPOINT_PSHIFT:

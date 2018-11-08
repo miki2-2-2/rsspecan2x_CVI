@@ -982,7 +982,7 @@ ViStatus _VI_FUNC rsspecan_SpectrogramDeltaMarkerSearch(ViSession instrSession,
 		checkErr(rsspecan_SetAttributeViString(instrSession, repCap, RSSPECAN_ATTR_REFERENCE_MARKER_Y_TRIGGER, NULL));
 		break;
 	}
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1066,7 +1066,7 @@ ViStatus _VI_FUNC rsspecan_ReadSpectrogramTraceData(ViSession instrSession,
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, "SPEC", arraySize, results, returnedValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1135,7 +1135,7 @@ ViStatus _VI_FUNC rsspecan_ReadMaxholdTraceData(ViSession instrSession,
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "TRAC? HMAX", arraySize, results, returnedValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1176,7 +1176,7 @@ ViStatus _VI_FUNC rsspecan_GetSpectrogramXAxisScaling(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:SPEC:X:DATA? %s", win, (frame == RSSPECAN_VAL_SPECM_FRAME_CURRENT) ? "CURR" : "ALL");
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, xAxis, returnedValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

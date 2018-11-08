@@ -551,7 +551,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACNMeasurementFrequencies(ViSession inst
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":ATV:CN:TABL%ld:MFR %d,%.12lf,%.12lf\n", tableRow, state == VI_FALSE ? 0 : 1, centerFrequency, span);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -660,7 +660,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACSOMeasurementFrequencies(ViSession ins
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":ATV:CSO:TABL%ld:MFR %d,%.12lf,%.12lf", tableRow, state == VI_FALSE ? 0 : 1, centerFrequency, span);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -788,7 +788,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureCATVACTBMeasurementFrequencies(ViSession ins
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":ATV:CTB:TABL%ld:MFR %d,%.12lf,%.12lf\n", tableRow, state == VI_FALSE ? 0 : 1, centerFrequency, span);
 	checkErr(RsCore_Write(instrSession, cmd));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1699,7 +1699,7 @@ ViStatus _VI_FUNC rsspecan_QueryCATVACarrierAllResults(ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 2, "Results");
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC:ATV:RES:CARR? ALL", 6, results, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1779,7 +1779,7 @@ ViStatus _VI_FUNC rsspecan_QueryCATVACarrierAllRatioResults(ViSession instrSessi
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":CALC:ATV:RES:%s? ALL", rsspecan_rngCatvAtvMeas.rangeValues[measurement].cmdString);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 32001, results, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1860,7 +1860,7 @@ ViStatus _VI_FUNC rsspecan_QueryCATVAVisionAllModulationResults(ViSession instrS
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 2, "Results");
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC:ATV:RES:VMOD? ALL", 32001, results, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2175,7 +2175,7 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDOverviewAllResults(ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 2, "Results");
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, ":CALC:DTV:RES? ALL", 32001, results, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2248,7 +2248,7 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDModulationErrorsAllResults(ViSession instrS
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, results), 2, "Results");
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, ":CALC:DTV:RES? ALL", 32001, results, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2309,7 +2309,7 @@ ViStatus _VI_FUNC rsspecan_QueryCATVDSignalStatisticsAllResults(ViSession instrS
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":CALC:STAT:RES%ld? ALL", traceNumber);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 32001, results, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

@@ -340,7 +340,7 @@ ViStatus _VI_FUNC rsspecan_QueryC2KChannelTableCatalog(
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CONF:CDP:CTAB:CAT?", &buf));
 	checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -493,7 +493,7 @@ ViStatus _VI_FUNC rsspecan_ReadC2KTraceData(
 	sprintf(traceName, "TRACE%ld", sourceTrace);
 	checkErr(rsspecan_dataReadTrace(instrSession, window, traceName, arrayLength, values, actualPoints));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (exBuf) free(exBuf);
@@ -565,7 +565,7 @@ ViStatus _VI_FUNC rsspecan_ReadC2KCDPTraceData(
 	sprintf(traceName, "%s", traceC2KArr[sourceTrace]);
 	checkErr(rsspecan_dataReadTrace(instrSession, window, traceName, arrayLength, values, actualPoints));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -752,7 +752,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBC2KChannelTableData(
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1010,7 +1010,7 @@ ViStatus _VI_FUNC rsspecan_ReadBC2KSEMPeakList(
 		deltaLimit[i] = data[i * 3 + 2];
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (data) free(data);
@@ -1046,7 +1046,7 @@ ViStatus _VI_FUNC rsspecan_QueryBC2KCodeDomainAnalyzerResultSummary(
 	else
 		*result = atof(buf);
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -1229,7 +1229,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMC2KChannelTableData(
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1349,7 +1349,7 @@ ViStatus _VI_FUNC rsspecan_QueryMC2KCodeDomainAnalyzerResultSummary(
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:CDP:RES? %s", window, analyzerResultSummaryArr[resultType]);
 	checkErr(RsCore_QueryViReal64(instrSession, cmd, result));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1702,7 +1702,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureBDOChannelTableData(
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1849,7 +1849,7 @@ ViStatus _VI_FUNC rsspecan_ReadBDOSEMPeakList(
 		deltaLimit[i] = data[i * 3 + 2];
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (data) free(data);
@@ -1923,7 +1923,7 @@ ViStatus _VI_FUNC rsspecan_ReadBDOPowerVsTimeListEvaluation(ViSession instrSessi
 		reserved2[i] = data[j++];
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (data) free(data);
@@ -1959,7 +1959,7 @@ ViStatus _VI_FUNC rsspecan_QueryBDOCodeDomainAnalyzerGeneralResults(
 	else
 		*result = atof(buf);
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -1989,7 +1989,7 @@ ViStatus _VI_FUNC rsspecan_QueryBDOCodeDomainAnalyzerChannelResults(
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:CDP:RES? %s", window, analyzerResultSummaryArr[resultType]);
 	checkErr(RsCore_QueryViReal64(instrSession, cmd, result));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2169,7 +2169,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMDOChannelTableData(
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2283,7 +2283,7 @@ ViStatus _VI_FUNC rsspecan_QueryMDOCodeDomainAnalyzerResultSummary(
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:CDP:RES? %s", window, analyzerResultSummaryArr[resultType]);
 	checkErr(RsCore_QueryViReal64(instrSession, cmd, result));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

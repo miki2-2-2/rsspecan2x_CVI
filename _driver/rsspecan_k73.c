@@ -337,7 +337,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDUEChannelTableData(ViSession instrSes
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -388,7 +388,7 @@ ViStatus _VI_FUNC rsspecan_Query3GPPFDDUEChannelTableCatalog(ViSession instrSess
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CONF:WCDP:MS:CTAB:CAT?", &buf));
 	checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -450,7 +450,7 @@ ViStatus _VI_FUNC rsspecan_Get3GPPUETrace(ViSession instrSession,
 
 	checkErr(rsspecan_dataReadTrace(instrSession, window, trace3GUEArr[trace], arrayLength, values, actualPoints));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (exBuf) free(exBuf);
@@ -480,7 +480,7 @@ ViStatus _VI_FUNC rsspecan_Get3GPPUEResult(ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MARK:FUNC:WCDP:MS:RES? %s", result3GUECDPArr[type]);
 	checkErr(RsCore_QueryViReal64(instrSession, cmd, result));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

@@ -697,7 +697,7 @@ ViStatus _VI_FUNC rsspecan_GetVSAModulationMappingCatalog(ViSession instrSession
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf));
 	checkErr(RsCore_ParseCatalog(buf, bufferSize, mappingsList, numberofMappings));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -1314,7 +1314,7 @@ ViStatus _VI_FUNC rsspecan_GetVSAPatternCatalog(ViSession instrSession,
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, cmd, &buf));
 	checkErr(RsCore_ParseCatalog(buf, bufferSize, patternsList, numberofPatterns));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -2710,7 +2710,7 @@ ViStatus _VI_FUNC rsspecan_VSAImport(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "DDEM:IMP:%s '%s','%s'", VSAimpExpTypeArr[type], name, path);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2751,7 +2751,7 @@ ViStatus _VI_FUNC rsspecan_VSAExport(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "DDEM:EXP:%s '%s','%s'", VSAimpExpTypeArr[type], name, path);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -3960,7 +3960,7 @@ ViStatus _VI_FUNC rsspecan_GetVSAResult(ViSession instrSession,
 	}
 
 	checkErr(RsCore_QueryViReal64(instrSession, cmd, result));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -3996,7 +3996,7 @@ ViStatus _VI_FUNC rsspecan_GetVSAAllResults(ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:DDEM:STAT:ALL?", window);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 32001, results, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -4036,7 +4036,7 @@ ViStatus _VI_FUNC rsspecan_ReadVSATraceData(ViSession instrSession,
 			3, "Source Trace");
 
 	checkErr(rsspecan_dataReadTrace(instrSession, window, VSATraceArr[sourceTrace], arraySize, traceData, noofValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -4185,7 +4185,7 @@ ViStatus _VI_FUNC rsspecan_QueryVSAModulationAccuracyStatisticResults(
 	         measTypeArr[measurementType],
 	         VSAStatisticArr[statistic]);
 	checkErr(RsCore_QueryViReal64(instrSession, cmd, value));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

@@ -1080,7 +1080,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGSMK10ModulationTransientSpectrumAdditional(
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CONF:SPEC:MOD:LIST:BAND:RES %ld,%s", offsetFrequency, RBWArr[modulationRBWAt1800kHz]);
 	checkErr(RsCore_Write(instrSession, cmd));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_K10_MODULATION_TRANSIENT_SPECTRUM_HIGH_DYNAMIC, highDynamic),
 			6, "highDynamic");
@@ -1322,7 +1322,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10ModulationAccuracyResults(
 
 	checkErr(RsCore_QueryFloatArrayToUserBufferWithOpc(instrSession, "READ:BURS:ALL?", timeout, arraySize, result, returnedValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1347,7 +1347,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10ModulationAccuracyResults(
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:ALL?", arraySize, result, returnedValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1546,7 +1546,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10SpectrumReferencePower(ViSession instrSessi
 	*level2 = data[1];
 	*resolutionBW = data[2];
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1594,7 +1594,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10SpectrumReferencePower(ViSession instrSess
 	*level2 = data[1];
 	*resolutionBW = data[2];
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1659,7 +1659,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10ModulationSpectrumResults(ViSession instrSe
 	}
 
 	*num_ofResults = cnt;
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pbuffer) free(pbuffer);
@@ -1723,7 +1723,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10ModulationSpectrumResults(ViSession instrS
 	}
 
 	*num_ofResults = cnt;
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pbuffer) free(pbuffer);
@@ -1789,7 +1789,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10TransientSpectrumResults(ViSession instrSes
 	}
 
 	*num_ofResults = cnt;
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pbuffer) free(pbuffer);
@@ -1852,7 +1852,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10TransientSpectrumResults(ViSession instrSe
 	}
 
 	*num_ofResults = cnt;
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pbuffer) free(pbuffer);
@@ -1925,7 +1925,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10WideSpectrumResults(ViSession instrSession,
 	}
 
 	*numOfResults = cnt;
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pbuffer) free(pbuffer);
@@ -1996,7 +1996,7 @@ ViStatus _VI_FUNC rsspecan_FetchGSMK10WideSpectrumResults(ViSession instrSession
 	}
 
 	*numOfResults = cnt;
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pbuffer) free(pbuffer);
@@ -2027,7 +2027,7 @@ ViStatus _VI_FUNC rsspecan_ReadGSMK10WideSpectrumGating(ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, gateLength), 4, "Gate Length");
 
 	checkErr(RsCore_QueryViStringUnknownLengthWithOpc(instrSession, "READ:SPEC:WMOD:GAT?", timeout, &pbuffer));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 	p2buf = strtok(pbuffer, ",");
 

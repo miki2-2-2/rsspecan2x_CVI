@@ -184,7 +184,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseFrequencyTable(
 	}
 
 	checkErr(RsCore_Write(instrSession, cmd));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -534,7 +534,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseENRTable(
 	}
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -722,7 +722,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseLossInputTable(
 		checkErr(RsCore_Write(instrSession, cmd));
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -829,7 +829,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureNoiseLossOutputTable(
 		*--p2buffer = '\n';
 	}
 	checkErr(RsCore_Write(instrSession, cmd));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1197,7 +1197,7 @@ ViStatus _VI_FUNC rsspecan_DefineNoiseLimitLine(
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:LIM%ld:%s ", limit, measTypeArr[type]);
 	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, cmd, amplitude, count));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1464,7 +1464,7 @@ ViStatus _VI_FUNC rsspecan_QueryNoiseResults(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "TRAC%ld:DATA? TRACe%ld,%s", window, trace, resultArr[resultType]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arrayLength, results, actualPoints));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1963,7 +1963,7 @@ ViStatus _VI_FUNC rsspecan_FetchNoiseArray(
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FORM ASC;:FETC:ARR:NOIS:%s?", fetchTypeArr[modifier]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, values, NULL));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1991,7 +1991,7 @@ ViStatus _VI_FUNC rsspecan_FetchNoiseScalar(
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FETC:SCAL:NOIS:%s?", fetchTypeArr[modifier]);
 	checkErr(RsCore_QueryViReal64(instrSession, cmd, value));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2024,7 +2024,7 @@ ViStatus _VI_FUNC rsspecan_FetchNoiseMemoryArray(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FETC:ARR:MEM%ld:NOIS:%s?", memory, fetchTypeArr[modifier]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, measResult, NULL));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

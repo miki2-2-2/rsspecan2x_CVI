@@ -618,7 +618,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTDSBSChannelTableData(ViSession instrSession
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -711,7 +711,7 @@ ViStatus _VI_FUNC rsspecan_GetTDSBSChannelTableCatalog(ViSession instrSession,
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CONF:CDP:CTAB:CAT?", &buf));
 	checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -764,7 +764,7 @@ ViStatus _VI_FUNC rsspecan_GetTDSBSPowerVsTimeResult(ViSession instrSession,
 	viCheckParm(RsCore_InvalidViUInt32Range(instrSession, timeout, 0, 4294967295UL), 2, "Timeout");
 
 	checkErr(RsCore_QueryFloatArrayToUserBufferWithOpc(instrSession, "CONF:CDP:PVT:LIST:RES?", timeout, 10, results, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -830,7 +830,7 @@ ViStatus _VI_FUNC rsspecan_GetTDSUEResult(ViSession instrSession,
 	}
 
 	checkErr(RsCore_QueryViReal64WithOpc (instrSession, cmd, timeout, result));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -862,7 +862,7 @@ ViStatus _VI_FUNC rsspecan_FetchTDSBSTrace(ViSession instrSession,
 	sprintf(traceName, "TRACE%ld", trace);
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arrayLength, values, actualPoints));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -894,7 +894,7 @@ ViStatus _VI_FUNC rsspecan_FetchTDSUETrace(ViSession instrSession,
 	sprintf(traceName, "TRACE%ld", trace);
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arrayLength, values, actualPoints));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

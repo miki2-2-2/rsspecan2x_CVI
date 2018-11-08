@@ -575,7 +575,7 @@ ViStatus _VI_FUNC rsspecan_GetBTOPowerOfChannels(ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, power), 3, "Power List");
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, ":CALC:BTO:ACLR:LIST?", arraySize, power, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -746,7 +746,7 @@ ViStatus _VI_FUNC rsspecan_GetBTOPacketDataBits(ViSession instrSession,
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, "BTOB", arrayLength, values, actualPoints));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -772,7 +772,7 @@ ViStatus _VI_FUNC rsspecan_ReadBTOFMTrace(ViSession instrSession,
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, "BTOF", arrayLength, amplitude, actualPoints));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -907,7 +907,7 @@ ViStatus _VI_FUNC rsspecan_GetBTOSEPowerOfAdjacentChannels(ViSession instrSessio
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, power), 3, "Power List");
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, ":CALC:BTO:IBS?", arraySize, power, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

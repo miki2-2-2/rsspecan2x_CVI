@@ -1000,7 +1000,7 @@ ViStatus _VI_FUNC rsspecan_DefinePhaseLimitLine(
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:LIM%ld:%s ", limit, limTypeArr[type]);
 	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, cmd, xAxis, count));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1234,7 +1234,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePhaseNoiseLimitSettings(ViSession instrSessi
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:PNL:TRAC %s", selectedTraces);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 	viCheckParm(rsspecan_SetAttributeViReal64(instrSession, "", RSSPECAN_ATTR_PHASE_NOISE_LIMIT_LEVEL, noiseFloor),
 			4, "Noise Floor");
@@ -1462,7 +1462,7 @@ ViStatus _VI_FUNC rsspecan_ReadPhaseTraceData(
 		traceDataY[i] = data[j++];
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (data) free(data);
@@ -1491,7 +1491,7 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseResidualResults(
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FETC:PNO:%s?", fetchPhaseArr[modifier]);
 	checkErr(RsCore_QueryViReal64(instrSession, cmd, value));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1524,7 +1524,7 @@ ViStatus _VI_FUNC rsspecan_FetchPhaseResidualUserResults(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "FETC:PNO:USER%ld:%s?", userRange, fetchPhaseArr[modifier]);
 	checkErr(RsCore_QueryViReal64(instrSession, cmd, value));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1794,7 +1794,7 @@ ViStatus _VI_FUNC rsspecan_GetPhaseDecadeSpotNoiseResult(ViSession instrSession,
 	checkErr(RsCore_CheckInstrumentOptions(instrSession, "K40"));
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC:SNO:DEC:X?", arraySize, horizontalPosition, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC:SNO:DEC:Y?", arraySize, verticalPosition, returnedValues));
 	checkErr(rsspecan_CheckStatus(instrSession));

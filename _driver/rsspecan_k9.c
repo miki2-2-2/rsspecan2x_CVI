@@ -332,7 +332,7 @@ ViStatus _VI_FUNC rsspecan_ConfigurePowerSensorAssignment(ViSession instrSession
 		checkErr(RsCore_Write(instrSession, cmd));
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

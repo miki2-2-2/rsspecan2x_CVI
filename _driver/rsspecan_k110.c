@@ -723,7 +723,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTETRAResultSummaryLimitsAll(
 
 	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, "CALC:LIM:BURS:ALL ", limitValues, arraySize));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -746,7 +746,7 @@ ViStatus _VI_FUNC rsspecan_GetTETRAResultSummaryLimitsAll(
 	checkErr(RsCore_LockSession(instrSession));
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:PVTT:ALL?", arraySize, limitValues, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1131,7 +1131,7 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAMeasurementResultsAll(
 	checkErr(RsCore_LockSession(instrSession));
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:PVTT:ALL?", arraySize, result, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1177,7 +1177,7 @@ ViStatus _VI_FUNC rsspecan_FetchTETRASubcarrierMeanPower(
 		break;
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1223,7 +1223,7 @@ ViStatus _VI_FUNC rsspecan_FetchTETRASubcarrierReferencePower(
 		break;
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1292,7 +1292,7 @@ ViStatus _VI_FUNC rsspecan_FetchTETRAPVTMeasurementAll(
 	checkErr(RsCore_LockSession(instrSession));
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:PVTT:ALL?", arraySize, results, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1476,7 +1476,7 @@ ViStatus _VI_FUNC rsspecan_GetTETRAResultSummaryLimitCheckResultsAll(
 	checkErr(RsCore_LockSession(instrSession));
 
 	checkErr(RsCore_QueryIntegerArrayToUserBuffer(instrSession, "CALC:LIM:BURS:ALL:RES?", arraySize, results, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

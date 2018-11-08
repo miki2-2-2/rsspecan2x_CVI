@@ -687,7 +687,7 @@ ViStatus _VI_FUNC rsspecan_StoreMultiCarrierGroupDelayTraceToFile(
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "MMEM:STOR%ld:TRAC %ld,'%s'", window, trace, fileName);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

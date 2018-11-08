@@ -341,7 +341,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureGsmExtendedSlotCommonSettings(ViSession inst
 			2, "Long Slots");
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CONF:ECON:LSL:VAL %ld,%ld", longSlotsValues[0], longSlotsValues[1]);
 	checkErr(RsCore_Write(instrSession, cmd));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, "", RSSPECAN_ATTR_GSM_EXTENDED_SLOT_OFRAME, onlyOneFrame),
 			3, "Only One Frame");
 
@@ -510,7 +510,7 @@ ViStatus _VI_FUNC rsspecan_ReadGsmLevelTime(ViSession instrSession,
 	if (triggerTimes) *triggerTimes = tmp_triggerTimes;
 	if (triggerLeveldBmV) *triggerLeveldBmV = tmp_triggerLeveldBmV;
 	if (reserved) *reserved = tmp_reserved;
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -892,7 +892,7 @@ ViStatus _VI_FUNC rsspecan_ReadGsmPtempRef(ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, returnedValues), 3, "Returned Values");
 
 	checkErr(RsCore_QueryFloatArrayToUserBufferWithOpc(instrSession, "READ:BURS:PTEM:REF?", timeout, 3, returnedValues, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1015,7 +1015,7 @@ ViStatus _VI_FUNC rsspecan_FetchGsmPtempRef(ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, returnedValues), 4, "Power List");
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:BURS:PTEM:REF?", 3, returnedValues, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1132,7 +1132,7 @@ ViStatus _VI_FUNC rsspecan_ReadGsmSpecModRef(ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, returnedValues), 3, "Returned Values");
 
 	checkErr(RsCore_QueryFloatArrayToUserBufferWithOpc(instrSession, "READ:SPEC:MOD:REF?", timeout, 3, returnedValues, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1196,7 +1196,7 @@ ViStatus _VI_FUNC rsspecan_ReadGsmModSpectrum(ViSession instrSession,
 	}
 
 	*num_ofResults = cnt;
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pbuffer) free(pbuffer);
@@ -1218,7 +1218,7 @@ ViStatus _VI_FUNC rsspecan_FetchGsmSpecModRef(ViSession instrSession,
 
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, returnedValues), 2, "Returned Values");
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "FETC:SPEC:MOD:REF?", 3, returnedValues, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1281,7 +1281,7 @@ ViStatus _VI_FUNC rsspecan_FetchGsmModSpectrum(ViSession instrSession,
 	}
 
 	*num_ofResults = cnt;
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pbuffer) free(pbuffer);
@@ -1307,7 +1307,7 @@ ViStatus _VI_FUNC rsspecan_ReadGsmSpecTransRef(ViSession instrSession,
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, returnedValues), 3, "Returned Values");
 
 	checkErr(RsCore_QueryFloatArrayToUserBufferWithOpc(instrSession, "READ:SPEC:SWIT:REF?", timeout, 3, returnedValues, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (old_timeout >= 0)
@@ -1372,7 +1372,7 @@ ViStatus _VI_FUNC rsspecan_ReadGsmTransSpectrum(ViSession instrSession,
 	}
 
 	*num_ofResults = cnt;
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pbuffer) free(pbuffer);
@@ -1435,7 +1435,7 @@ ViStatus _VI_FUNC rsspecan_FetchGsmTransSpectrum(ViSession instrSession,
 	}
 
 	*num_ofResults = cnt;
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pbuffer) free(pbuffer);

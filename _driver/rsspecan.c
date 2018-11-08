@@ -1393,7 +1393,7 @@ ViStatus _VI_FUNC rsspecan_AddMeasurementChannel(ViSession instrSession,
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1446,7 +1446,7 @@ ViStatus _VI_FUNC rsspecan_ReplaceMeasurementChannel(ViSession instrSession,
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1475,7 +1475,7 @@ ViStatus _VI_FUNC rsspecan_RenameMeasurementChannel(ViSession instrSession,
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1568,7 +1568,7 @@ ViStatus _VI_FUNC rsspecan_QueryAllMeasurementChannels(ViSession instrSession,
 	if (returnedValues != NULL)
 		*returnedValues = cnt;
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pbuffer) free(pbuffer);
@@ -1704,7 +1704,7 @@ ViStatus _VI_FUNC rsspecan_StoreTraceToFile(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "MMEM:STOR%ld:TRAC %ld,'%s'", window, trace, fileName);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1782,7 +1782,7 @@ ViStatus _VI_FUNC rsspecan_TraceIQSet(ViSession instrSession,
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2310,7 +2310,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureListPowerSequence(ViSession instrSession,
 
 	checkErr(RsCore_Write(instrSession, pwrite_buffer));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pwrite_buffer) free(pwrite_buffer);
@@ -2385,7 +2385,7 @@ ViStatus _VI_FUNC rsspecan_QueryListPowerSequence(ViSession instrSession,
 	*--pbuffer = '\0'; // Remove remaining comma
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, pwrite_buffer, noofListItems, listPowerResults, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pwrite_buffer) free(pwrite_buffer);
@@ -2426,7 +2426,7 @@ ViStatus _VI_FUNC rsspecan_QueryListPowerResult(ViSession instrSession,
 	}
 	if (returnedValues)
 		*returnedValues = index;
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2468,7 +2468,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureListPowerSet(ViSession instrSession,
 	         triggerOffset, gateLength);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2503,7 +2503,7 @@ ViStatus _VI_FUNC rsspecan_CopyTrace(ViSession instrSession,
 	         destinationTrace, sourceTrace);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2572,7 +2572,7 @@ ViStatus _VI_FUNC rsspecan_SubtractTraces(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MATH (TRACE1-TRACE%ld)", window, trace2);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -3519,7 +3519,7 @@ ViStatus _VI_FUNC rsspecan_QueryNdBFrequencies(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:NDBD:FREQ?", window);
 	checkErr(RsCore_QueryViString(instrSession, cmd, response));
 	sscanf(response, "%le,%le", ndBFrequencyLower, ndBFrequencyHigher);
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -3549,7 +3549,7 @@ ViStatus _VI_FUNC rsspecan_QueryNdBTimes(ViSession instrSession,
 	checkErr(RsCore_QueryViString(instrSession, cmd, response));
 	sscanf(response, "%le,%le", n_dBTimeLower, n_dBTimeHigher);
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -3801,7 +3801,7 @@ ViStatus _VI_FUNC rsspecan_QueryMarkerPeakList(ViSession instrSession,
 	}
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, peakList, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -3994,7 +3994,7 @@ ViStatus _VI_FUNC rsspecan_ReadMarkerPeakList(ViSession instrSession,
 		deltaLimit[i] = data[i * 3 + 2];
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (data) free(data);
@@ -5377,9 +5377,9 @@ ViStatus _VI_FUNC rsspecan_ConfigureFrequencyMaskShape(ViSession instrSession,
 			2, "Mode");
 
 	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, "CALC:MASK:LOW ", lower, arraySize));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, "CALC:MASK:UPP ", upper, arraySize));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -6005,7 +6005,7 @@ ViStatus _VI_FUNC rsspecan_CreateExternalMixerConversionLossTable(ViSession inst
 
 		checkErr(RsCore_Write(instrSession, buffer));
 	}
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -6082,7 +6082,7 @@ ViStatus _VI_FUNC rsspecan_ExternalMixerConversionLossTableCatalog(ViSession ins
 	RsCore_TrimString(buf, RS_VAL_TRIM_WHITESPACES_AND_SINGLE_QUOTES);
 	checkErr(rsspecan_ParseLimitLineCatalog (buf, bufferSize, CVLNamesList, numberofCVL));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -6407,7 +6407,7 @@ ViStatus _VI_FUNC rsspecan_DefineLimitLine(
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:LIM%ld:%s ", limit, limTypeArr[type]);
 	checkErr(RsCore_WriteAsciiViReal64Array(instrSession, cmd, amplitude, count));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -6768,7 +6768,7 @@ ViStatus _VI_FUNC rsspecan_GetLimitLineCatalog(ViSession instrSession,
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "CALC:LIM:CAT?", &buf));
 	checkErr(rsspecan_ParseLimitLineCatalog(buf, bufferSize, limitLinesList, number_ofLimitLines));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -7286,7 +7286,7 @@ ViStatus _VI_FUNC rsspecan_GetDisplayThemeCatalog(ViSession instrSession,
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "DISP:THEM:CAT?", &buf));
 	checkErr(RsCore_ParseCatalog(buf, bufferSize, themeList, number_ofThemes));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -7375,7 +7375,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureDisplayZoom(ViSession instrSession,
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "DISP:WIND%ld:ZOOM:AREA %.12lG,%.12lG,%.12lG,%.12lG", window, x1, y1, x2, y2);
 		checkErr(RsCore_Write(instrSession, cmd));
 
-		checkErr(rsspecan_CheckStatus (instrSession));
+		checkErr(rsspecan_CheckStatus(instrSession));
 	}
 
 Error:
@@ -7430,7 +7430,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureDisplayMultipleZoom(ViSession instrSession,
 				window, zoomWindow, x1, y1, x2, y2);
 		checkErr(RsCore_Write(instrSession, cmd));
 
-		checkErr(rsspecan_CheckStatus (instrSession));
+		checkErr(rsspecan_CheckStatus(instrSession));
 	}
 
 Error:
@@ -7533,7 +7533,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureDisplayColor(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "DISP:CMAP%ld:HSL %.12f,%.12f,%.12f", colorMap, tint / 100.0, saturation / 100.0, brightness / 100.0);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -7600,7 +7600,7 @@ ViStatus _VI_FUNC rsspecan_AddWindow(ViSession instrSession, ViInt32 stringSize,
 		checkErr(RsCore_CopyToUserBufferAsciiData(instrSession, returnedWindowName, stringSize, pbuffer));
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pbuffer != NULL) free(pbuffer);
@@ -7648,7 +7648,7 @@ ViStatus _VI_FUNC rsspecan_ReplaceWindow(ViSession instrSession,
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -7698,7 +7698,7 @@ ViStatus _VI_FUNC rsspecan_QueryWindowIndex(ViSession instrSession,
 	pbuff = strtok(response, ",\n");
 	*index = atol(pbuff);
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -7779,7 +7779,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureSplitterPosition(ViSession instrSession,
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -7870,7 +7870,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTransducerFactor(ViSession instrSession,
 		checkErr(RsCore_Write(instrSession, p2buf));
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (p2buf) free(p2buf);
@@ -7930,7 +7930,7 @@ ViStatus _VI_FUNC rsspecan_GetTransducerFactorCatalog(ViSession instrSession,
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CORR:TRAN:CAT?", &buf));
 	checkErr(RsCore_ParseCatalog(buf, bufferSize, transducerFactorsList, numberofTransducerFactors));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -8100,7 +8100,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureTransducerSet(ViSession instrSession,
 	         startFrequency, stopFrequency, factors);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -8134,7 +8134,7 @@ ViStatus _VI_FUNC rsspecan_QueryTransducerSetCatalog(ViSession instrSession,
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CORR:TSET:CAT?", &buf));
 	checkErr(RsCore_ParseCatalog(buf, bufferSize, transducerSetsList, numberOfTransducerSets));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);  // TODO: Missing free(buf)
@@ -8511,7 +8511,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureHardcopyColor(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "HCOP:CMAP%ld:HSL %.12f,%.12f,%.12f", colorMap, tint / 100.0, saturation / 100.0, brightness / 100.0);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -8993,7 +8993,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureUserSettingsSoftkey(
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "MMEM:USER%ld '%s','%s'", softkeyNumber, filename, label);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -9150,7 +9150,7 @@ ViStatus _VI_FUNC rsspecan_GetCalibrationProbeCatalog(ViSession instrSession,
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "SENS:PROB:CAT?", &buf));
 	checkErr(RsCore_ParseCatalog(buf, bufferSize, dataSetList, number_ofDataSets));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -9416,7 +9416,7 @@ ViStatus _VI_FUNC rsspecan_CalibrationProbeRename(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS:PROB:MOVE '%s','%s'", probeDataSetSource, probeDataSetDestination);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -10133,7 +10133,7 @@ ViStatus _VI_FUNC rsspecan_ReadYTrace(ViSession instrSession,
 	sprintf(traceName, "TRACE%ld", trace);
 	checkErr(rsspecan_dataReadTrace(instrSession, window, traceName, arrayLength, amplitude, actualPoints));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -10192,7 +10192,7 @@ ViStatus _VI_FUNC rsspecan_FetchYTrace(ViSession instrSession,
 
 	checkErr(rsspecan_dataReadTrace(instrSession, window, traceName, arrayLength, amplitude, actualPoints));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -10235,7 +10235,7 @@ ViStatus _VI_FUNC rsspecan_ReadYTracePrevious(ViSession instrSession,
 
 	checkErr(rsspecan_dataReadTrace(instrSession, window, traceName, arrayLength, amplitude, actualPoints));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -10264,7 +10264,7 @@ ViStatus _VI_FUNC rsspecan_FetchXTrace(ViSession instrSession,
 
 	sprintf(cmd, "FORM REAL,32;TRAC:DATA:X? TRACe%ld", trace);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arrayLength, x, actualPoints));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -10299,7 +10299,7 @@ ViStatus _VI_FUNC rsspecan_GetCurrentResults(ViSession instrSession,
 	checkErr(RsCore_QueryViString(instrSession, cmd, response));
 	sscanf(response, "%le,%le", xValue, yValue);
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -11014,7 +11014,7 @@ ViStatus _VI_FUNC rsspecan_QueryTDomPowerPulseSequenceResult(ViSession instrSess
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK:FUNC:MSUM? %.12f,%.12f,%.12f,%ld", window, timeOffsetofFirstPulse, measurementTime, period, numberofPulses);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, numberofPulses, result, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -11128,7 +11128,7 @@ ViStatus _VI_FUNC rsspecan_QueryPowerResults(ViSession instrSession,
 	         window, rsspecan_rngMeasPowerSelect.rangeValues[powerMeasurement].cmdString);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -11746,13 +11746,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureACPAdjacentChannelLimit(ViSession instrSessi
 	{
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM:ACP:ACH %.12lf,0.0", window, relativeValue);
 		checkErr(RsCore_Write(instrSession, cmd));
-		checkErr(rsspecan_CheckStatus (instrSession));
+		checkErr(rsspecan_CheckStatus(instrSession));
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_MEAS_ACP_LIMIT_REL_STATE, relativeState),
 				3, "Relative State");
 
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM:ACP:ACH:ABS %.12lf,0.0", window, absoluteValue);
 		checkErr(RsCore_Write(instrSession, cmd));
-		checkErr(rsspecan_CheckStatus (instrSession));
+		checkErr(rsspecan_CheckStatus(instrSession));
 		if (relativeState == VI_FALSE)
 		{
 			viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_MEAS_ACP_LIMIT_ABS_STATE, absoluteState),
@@ -11763,12 +11763,12 @@ ViStatus _VI_FUNC rsspecan_ConfigureACPAdjacentChannelLimit(ViSession instrSessi
 	{
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM:ACP:ACH %.12lf,0.0", window, relativeValue);
 		checkErr(RsCore_Write(instrSession, cmd));
-		checkErr(rsspecan_CheckStatus (instrSession));
+		checkErr(rsspecan_CheckStatus(instrSession));
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_MEAS_ACP_LIMIT_REL_STATE, relativeState),
 				3, "Relative State");
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM:ACP:ACH:ABS %.12lf,0.0", window, absoluteValue);
 		checkErr(RsCore_Write(instrSession, cmd));
-		checkErr(rsspecan_CheckStatus (instrSession));
+		checkErr(rsspecan_CheckStatus(instrSession));
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_MEAS_ACP_LIMIT_ABS_STATE, absoluteState),
 				5, "Absolute State");
 	}
@@ -11813,7 +11813,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureACPAlternateChannelLimit(ViSession instrSess
 			snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM:ACP:ALT%ld %.12lf,0.0", window,
 			         channelNumber, relativeValue);
 			checkErr(RsCore_Write(instrSession, cmd));
-			checkErr(rsspecan_CheckStatus (instrSession));
+			checkErr(rsspecan_CheckStatus(instrSession));
 		}
 
 		if (absoluteState)
@@ -11824,7 +11824,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureACPAlternateChannelLimit(ViSession instrSess
 			snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM:ACP:ALT%ld:ABS %.12lf,0.0", window,
 			         channelNumber, absoluteValue);
 			checkErr(RsCore_Write(instrSession, cmd));
-			checkErr(rsspecan_CheckStatus (instrSession));
+			checkErr(rsspecan_CheckStatus(instrSession));
 		}
 	}
 	else
@@ -11832,13 +11832,13 @@ ViStatus _VI_FUNC rsspecan_ConfigureACPAlternateChannelLimit(ViSession instrSess
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM:ACP:ALT%ld %.12lf,0.0", window,
 		         channelNumber, relativeValue);
 		checkErr(RsCore_Write(instrSession, cmd));
-		checkErr(rsspecan_CheckStatus (instrSession));
+		checkErr(rsspecan_CheckStatus(instrSession));
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_MEAS_ACP_ALT_LIMIT_REL_STATE, relativeState),
 				4, "Relative State");
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:LIM:ACP:ALT%ld:ABS %.12lf,0.0", window,
 		         channelNumber, absoluteValue);
 		checkErr(RsCore_Write(instrSession, cmd));
-		checkErr(rsspecan_CheckStatus (instrSession));
+		checkErr(rsspecan_CheckStatus(instrSession));
 		viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_MEAS_ACP_ALT_LIMIT_ABS_STATE, absoluteState),
 				6, "Absolute State");
 	}
@@ -11912,7 +11912,7 @@ ViStatus _VI_FUNC rsspecan_QueryACPAlternateChannelLimitCheckResults(ViSession i
 	checkErr(RsCore_GetIndexOfToken(resultsString, ',', buf1, lowerResult, NULL));
 	checkErr(RsCore_GetIndexOfToken(resultsString, ',', buf2, upperResult, NULL));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -12256,7 +12256,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMSRGapLimitChecking(ViSession instrSession,
 	{
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:LIM:ACP:GAP%ld:REL %.12lf,0.0", gap, relativeValue);
 		checkErr(RsCore_Write(instrSession, cmd));
-		checkErr(rsspecan_CheckStatus (instrSession));
+		checkErr(rsspecan_CheckStatus(instrSession));
 	}
 
 	viCheckParm(rsspecan_SetAttributeViBoolean(instrSession, repCap, RSSPECAN_ATTR_MSR_GAP_LIMIT_ABSOLUTE_STATE, absoluteState),
@@ -12265,7 +12265,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureMSRGapLimitChecking(ViSession instrSession,
 	{
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:LIM:ACP:GAP%ld:ABS %.12lf,0.0", gap, absoluteValue);
 		checkErr(RsCore_Write(instrSession, cmd));
-		checkErr(rsspecan_CheckStatus (instrSession));
+		checkErr(rsspecan_CheckStatus(instrSession));
 	}
 
 Error:
@@ -12543,7 +12543,7 @@ ViStatus _VI_FUNC rsspecan_QuerySignalStatisticCCDFLevel(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:STAT:CCDF:X%ld? %s", trace, statProbArr[probability]);
 	checkErr(RsCore_QueryViReal64(instrSession, cmd, result));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -12845,7 +12845,7 @@ ViStatus _VI_FUNC rsspecan_QueryHDist(ViSession instrSession,
 	checkErr(RsCore_QueryViString(instrSession, ":CALC:MARK:FUNC:HARM:DIST? TOT", response));
 	sscanf(response, "%le,%le", harmonicDistortion_in_percent, harmonicDistortion_in_dB);
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -12869,7 +12869,7 @@ ViStatus _VI_FUNC rsspecan_QueryHDistHarmonicsList(ViSession instrSession,
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC:MARK:FUNC:HARM:LIST?", 255, harmonicsList, NULL));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -12901,7 +12901,7 @@ ViStatus _VI_FUNC rsspecan_QueryHDistBandwidthList(ViSession instrSession,
 			2, "Array Size");
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC:MARK:FUNC:HARM:BAND:LIST?", arraySize, resultValues, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -12957,7 +12957,7 @@ ViStatus _VI_FUNC rsspecan_BurstPowerSequence(ViSession instrSession,
 	         triggerLevel, triggerOffsets, measTypeArr[type_ofMeas], noofMeasurements);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -13032,7 +13032,7 @@ ViStatus _VI_FUNC rsspecan_GetBurstPowerSequence(ViSession instrSession,
 	         triggerLevel, triggerOffsets, measTypeArr[type_ofMeas], no_ofMeasurements);
 	checkErr(RsCore_QueryFloatArrayToUserBufferWithOpc(instrSession, cmd, timeout, no_ofMeasurements, burstPowerResults, NULL));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -13062,7 +13062,7 @@ ViStatus _VI_FUNC rsspecan_GetBurstPowerResults(ViSession instrSession,
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "SENS%ld:MPOW:RES?", window);
 	checkErr(RsCore_QueryFloatArrayToUserBufferWithOpc(instrSession, cmd, 0, no_ofResults, burstPowerResults, NULL));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -13261,7 +13261,7 @@ ViStatus _VI_FUNC rsspecan_getStatusRegister(ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":STAT:%s?", statusRegArr[statusReg]);
 	checkErr(RsCore_QueryViInt32(instrSession, cmd, registerValue));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -13966,7 +13966,7 @@ ViStatus _VI_FUNC rsspecan_SEStandardCatalog(ViSession instrSession,
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "SENS:LIST:STAN:CAT?", &buf));
 	checkErr(RsCore_ParseCatalog(buf, arraySize, catalogList, numberOfStandards));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -14131,7 +14131,7 @@ ViStatus _VI_FUNC rsspecan_ReadSEPeakList(ViSession instrSession,
 		deltaLimit[i] = data[i * 3 + 2];
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (data) free(data);
@@ -14224,7 +14224,7 @@ ViStatus _VI_FUNC rsspecan_ReadSEListEvaluation(ViSession instrSession,
 		reserved2[i] = data[j++];
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (data) free(data);
@@ -14413,7 +14413,7 @@ ViStatus _VI_FUNC rsspecan_ReadSEMPeakList(ViSession instrSession,
 		deltaLevel[i] = data[i * 3 + 2];
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (data) free(data);
@@ -14541,7 +14541,7 @@ ViStatus _VI_FUNC rsspecan_ReadSEMListEvaluationResults(ViSession instrSession,
 		reserved2[i] = data[j++];
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (data) free(data);
@@ -15408,7 +15408,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureSEMPowerClassAllLimits(ViSession instrSessio
 
 	free(pbuffer);
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -15432,7 +15432,7 @@ ViStatus _VI_FUNC rsspecan_QuerySEMPowerClassAllLimits(ViSession instrSession,
 	}
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer (instrSession, "CALC:LIM:ESP:LIM?", 1001, limits, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -15496,7 +15496,7 @@ ViStatus _VI_FUNC rsspecan_QueryMSRAAnalysisInterval(
 	if (p2buff != NULL)
 		*intervalStop = atof(p2buff);
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -16003,7 +16003,7 @@ ViStatus _VI_FUNC rsspecan_NetworkMapDrive(ViSession instrSession,
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (p2buf) free(p2buf);

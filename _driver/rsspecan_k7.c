@@ -126,7 +126,7 @@ ViStatus _VI_FUNC rsspecan_SelectADemodResult(ViSession instrSession,
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -232,7 +232,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodSet(
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -281,7 +281,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureADemodResultType(
 		}
 	}
 	checkErr(RsCore_Write(instrSession, cmd));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -989,7 +989,7 @@ ViStatus _VI_FUNC rsspecan_GetADemodResultValues(
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":SENS:ADEM:%s:RES? %s", ADEMTypeArr[demodulationType], resultTypeArr[resultType]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, resultValues, returnedValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

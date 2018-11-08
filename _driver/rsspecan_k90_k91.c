@@ -499,7 +499,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLAN_MIMO_UDFSpatialMappingAntenna(ViSession
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -538,7 +538,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWLAN_MIMO_UDFSpatialMappingStream(ViSession 
 
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 	snprintf(repCap, RS_REPCAP_BUF_SIZE, "TX%ld", TX);
 
@@ -841,7 +841,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanMarkerBurstSymbol(ViSession instrSession
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC%ld:MARK%ld:BSYM %ld,%ld", window, marker, burstNumber, symbolNumber);
 	checkErr(RsCore_Write(instrSession, cmd));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1068,7 +1068,7 @@ ViStatus _VI_FUNC rsspecan_ConfigureWlanSelectFilter(ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "DEM:FILT:MOD '%s','%s'", txFilterName, rxFilterName);
 	checkErr(RsCore_Write(instrSession, cmd));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1713,7 +1713,7 @@ ViStatus _VI_FUNC rsspecan_GetWlanACPMeasurement(ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":CALC%ld:MARK%ld:FUNC:POW:RES:%s?", window, marker, ACPMeas[mode]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, 12, values, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

@@ -677,7 +677,7 @@ ViStatus _VI_FUNC rsspecan_Configure3GPPFDDBSChannelTableData(ViSession instrSes
 		                   status[i] > 0 ? 1 : 0, CDPRelative[i]);
 	checkErr(RsCore_Write(instrSession, cmd));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -709,7 +709,7 @@ ViStatus _VI_FUNC rsspecan_Query3GPPFDDBSChannelTableCatalog(ViSession instrSess
 	checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CONF:WCDP:CTAB:CAT?", &buf));
 	checkErr(RsCore_ParseCatalog(buf, bufferSize, channelTablesList, numberofChannelTables));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (buf) free(buf);
@@ -837,7 +837,7 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSTrace(ViSession instrSession,
 
 	checkErr(rsspecan_dataReadTrace(instrSession, window, trace3GBSArr[trace], arrayLength, values, actualPoints));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (exBuf) free(exBuf);
@@ -868,7 +868,7 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSResult(ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MARK:FUNC:WCDP:RES? %s", result3GBSWCDPArr[type]);
 	checkErr(RsCore_QueryViReal64(instrSession, cmd, result));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -909,7 +909,7 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSCDPResult(ViSession instrSession,
 
 	snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, "CALC:MARK:FUNC:POW:RES? %s", result3GBSCDPArr[type]);
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, cmd, arraySize, results, returnedValues));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -961,7 +961,7 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSCDPScramblingCodeResult(ViSession instrSessi
 		power[i] = data[j++];
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (data) free(data);
@@ -1066,7 +1066,7 @@ ViStatus _VI_FUNC rsspecan_Get3GPPBSTimeAlignmentErrorResult(ViSession instrSess
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, result), 3, "Result");
 
 	checkErr(RsCore_QueryViReal64(instrSession, "CALC:MARK:FUNC:TAER:RES? TAER", result));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);

@@ -1710,7 +1710,7 @@ ViStatus _VI_FUNC rsspecan_QueryLTEDownlinkMeasurementACPResult(ViSession instrS
 			2, "Array size");
 
 	checkErr(RsCore_QueryFloatArrayToUserBuffer(instrSession, "CALC1:MARK:FUNC:POW:RES?", arraySize, result, NULL));
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1813,7 +1813,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkEVMVersusCarrierTrace(ViSession instrS
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1840,7 +1840,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkEVMVersusSymbolTrace(ViSession instrSe
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1868,7 +1868,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkFrequencyErrorVersusSymbolTrace(ViSess
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1893,7 +1893,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkEVMVersusSubframeTrace(ViSession instr
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1930,7 +1930,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkSEMTrace(ViSession instrSession,
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1955,7 +1955,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkACPTrace(ViSession instrSession,
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -1981,7 +1981,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkPowerSpectrumTrace(ViSession instrSess
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2022,7 +2022,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkPowerVersusRBReferenceSignalTrace(ViSe
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2063,7 +2063,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkPowerVersusRBPDSCHTrace(ViSession inst
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2105,7 +2105,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkChannelFlatnessTrace(ViSession instrSe
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2147,7 +2147,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkChannelGroupDelayTrace(ViSession instr
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2189,7 +2189,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkChannelFlatnessDifferenceTrace(ViSessi
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2269,7 +2269,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkCCDF(ViSession instrSession,
 
 	checkErr(rsspecan_dataReadTrace(instrSession, 0, traceName, arraySize, traceData, noofValues));
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -2421,7 +2421,7 @@ ViStatus _VI_FUNC rsspecan_ReadLTEDownlinkBitstream(ViSession instrSession,
 		}
 	}
 
-	checkErr(rsspecan_CheckStatus (instrSession));
+	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
 	if (pBuffer) free(pBuffer);
