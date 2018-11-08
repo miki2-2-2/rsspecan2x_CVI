@@ -22,7 +22,7 @@ ViStatus rsspecan_InitAttributes(ViSession instrSession)
 	ViStatus error = VI_SUCCESS;
 
 	// Instrument Identification
-	//Parameter idnModelFullName determines RS_ATTR_INSTRUMENT_MODEL value:
+	// Parameter idnModelFullName determines RS_ATTR_INSTRUMENT_MODEL value:
 	// VI_FALSE: RS_ATTR_INSTRUMENT_MODEL = "FSQ"
 	// VI_TRUE: RS_ATTR_INSTRUMENT_MODEL = "FSQ26"
 	// This is important for CheckInstrumentModel() function used in all attributes and some hi-level functions

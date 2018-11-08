@@ -13465,8 +13465,8 @@ ViStatus _VI_FUNC rsspecan_close(ViSession instrSession)
 	checkErr(RsCore_ViClose(instrSession));
 
 Error:
-	(void)RsCore_Dispose(instrSession);
 	(void)RsCore_UnlockSession(instrSession);
+	(void)RsCore_Dispose(instrSession);
 
 	return error;
 }
