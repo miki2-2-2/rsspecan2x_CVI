@@ -9499,12 +9499,8 @@ ViStatus _VI_FUNC rsspecan_ProbeMicroButtonAction(ViSession instrSession,
 
 	checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PROBE_CONNECTOR, &probe));
 
-	checkErr(RsCore_GetAttributeRepCapName(instrSession,
-		RSSPECAN_ATTR_PROBE_MICRO_BUTTON_ACTION,
-		"Probe",
-		probe - 1,
-		10,
-		repCap));
+	checkErr(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_PROBE_MICRO_BUTTON_ACTION,
+			"Probe", probe - 1, RS_REPCAP_BUF_SIZE, repCap));
 
 	viCheckParm(rsspecan_SetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PROBE_MICRO_BUTTON_ACTION, microButtonAction),
 			2, "microButtonAction");
@@ -9538,12 +9534,8 @@ ViStatus _VI_FUNC rsspecan_GetProbeInformation(ViSession instrSession, ViInt32 b
 
 	checkErr(rsspecan_GetAttributeViInt32(instrSession, "", RSSPECAN_ATTR_PROBE_CONNECTOR, &probe));
 
-	checkErr(RsCore_GetAttributeRepCapName(instrSession,
-		RSSPECAN_ATTR_PROBE_MICRO_BUTTON_ACTION,
-		"Probe",
-		probe - 1,
-		10,
-		repCap));
+	checkErr(RsCore_GetAttributeRepCapName(instrSession, RSSPECAN_ATTR_PROBE_MICRO_BUTTON_ACTION,
+			"Probe", probe - 1, RS_REPCAP_BUF_SIZE, repCap));
 
 	viCheckParm(rsspecan_GetAttributeViInt32(instrSession, repCap, RSSPECAN_ATTR_PROBE_CONNECTION_STATE, state),
 			3, "state");
