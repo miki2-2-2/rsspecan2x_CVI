@@ -7270,7 +7270,6 @@ ViStatus _VI_FUNC rsspecan_GetDisplayThemeCatalog(ViSession instrSession,
                                                   ViChar themeList[])
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar* buf = NULL;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -7289,7 +7288,6 @@ ViStatus _VI_FUNC rsspecan_GetDisplayThemeCatalog(ViSession instrSession,
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (buf) free(buf);
 	(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
@@ -8123,7 +8121,6 @@ ViStatus _VI_FUNC rsspecan_QueryTransducerSetCatalog(ViSession instrSession,
                                                      ViChar transducerSetsList[])
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar* buf = NULL;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -8131,13 +8128,12 @@ ViStatus _VI_FUNC rsspecan_QueryTransducerSetCatalog(ViSession instrSession,
 			3, "Buffer Size");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, transducerSetsList), 4, "Transducer Set List");
 
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, ":CORR:TSET:CAT?", &buf));
-	checkErr(RsCore_ParseCatalog(buf, bufferSize, transducerSetsList, numberOfTransducerSets));
+	checkErr(RsCore_QueryCatalog(instrSession, ":CORR:TSET:CAT?", bufferSize, transducerSetsList, numberOfTransducerSets));
 
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	(void)RsCore_UnlockSession(instrSession);  // TODO: Missing free(buf)
+	(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
 
@@ -9137,7 +9133,6 @@ ViStatus _VI_FUNC rsspecan_GetCalibrationProbeCatalog(ViSession instrSession,
                                                       ViChar dataSetList[])
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar* buf = NULL;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -9147,13 +9142,11 @@ ViStatus _VI_FUNC rsspecan_GetCalibrationProbeCatalog(ViSession instrSession,
 			3, "Buffer Size");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, dataSetList), 4, "Data Set List");
 
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "SENS:PROB:CAT?", &buf));
-	checkErr(RsCore_ParseCatalog(buf, bufferSize, dataSetList, number_ofDataSets));
+	checkErr(RsCore_QueryCatalog(instrSession, "SENS:PROB:CAT?", bufferSize, dataSetList, number_ofDataSets));
 
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (buf) free(buf);
 	(void)RsCore_UnlockSession(instrSession);
 	return error;
 }
@@ -11140,7 +11133,7 @@ ViStatus _VI_FUNC rsspecan_QueryChannelPowerStandardCatalog(ViSession instrSessi
 
 	checkErr(RsCore_LockSession(instrSession));
 
-	checkErr(rsspecan_QueryViString(instrSession, "CALC:MARK:FUNC:POW:STAN:CAT?", bufferSize, powerStandardCatalog));
+	checkErr(RsCore_QueryCatalog(instrSession, "CALC:MARK:FUNC:POW:STAN:CAT?", bufferSize, powerStandardCatalog, NULL));
 
 Error:
 	(void)RsCore_UnlockSession(instrSession);
@@ -13947,7 +13940,6 @@ ViStatus _VI_FUNC rsspecan_SEStandardCatalog(ViSession instrSession,
                                              ViChar catalogList[])
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar* buf = NULL;
 
 	checkErr(RsCore_LockSession(instrSession));
 
@@ -13955,13 +13947,11 @@ ViStatus _VI_FUNC rsspecan_SEStandardCatalog(ViSession instrSession,
 			2, "Array Size");
 	viCheckParm(RsCore_InvalidNullPointer(instrSession, catalogList), 4, "Catalog List");
 
-	checkErr(RsCore_QueryViStringUnknownLength(instrSession, "SENS:LIST:STAN:CAT?", &buf));
-	checkErr(RsCore_ParseCatalog(buf, arraySize, catalogList, numberOfStandards));
+	checkErr(RsCore_QueryCatalog(instrSession, "SENS:LIST:STAN:CAT?", arraySize, catalogList, numberOfStandards));
 
 	checkErr(rsspecan_CheckStatus(instrSession));
 
 Error:
-	if (buf) free(buf);
 	(void)RsCore_UnlockSession(instrSession);
 	return error;
 }

@@ -7255,6 +7255,31 @@ Error:
 }
 
 /*****************************************************************************************************/
+/*  RsCore_QueryCatalog
+	Queries string response in a form of catalog from the instrument. The response length is unlimited.
+	The function uses RsCore_ParseCatalog to return a catalog to the user buffer.
+	- elementsCount can be set to NULL. If not it returns comma-separated number of elements
+******************************************************************************************************/
+ViStatus RsCore_QueryCatalog(ViSession instrSession, ViConstString query, ViInt32 bufferSize, ViChar* catalogOut, ViInt32* elementsCount)
+{
+	ViStatus error = VI_SUCCESS;
+	ViChar *data = NULL;
+	ViInt32* count;
+
+	checkErr(RsCore_QueryViStringUnknownLength(instrSession, query, &data));
+	checkErr(RsCore_ParseCatalog(data, bufferSize, catalogOut, &count));
+
+	if (elementsCount)
+		*elementsCount = count;
+
+Error:
+	if (data) free(data);
+	return error;
+}
+
+
+
+/*****************************************************************************************************/
 /*  RsCore_QueryViStringUnknownLengthToUserBuffer
 	Queries string response from the instrument. The response length is unlimited,
 	but maximum of bufferSize length is copied to the provided responseString.

@@ -1147,6 +1147,7 @@ ViStatus RsCore_QueryViString(ViSession instrSession, ViConstString query, ViCha
 ViStatus RsCore_QueryViStringShort(ViSession instrSession, ViConstString query, ViChar* responseString);
 ViStatus RsCore_QueryViStringUnknownLength(ViSession instrSession, ViConstString query, ViChar** responseString);
 ViStatus RsCore_QueryViStringUnknownLengthToUserBuffer(ViSession instrSession, ViConstString query, ViInt32 bufferSize, ViChar* responseString, ViInt32 *responseLength);
+ViStatus RsCore_QueryCatalog(ViSession instrSession, ViConstString query, ViInt32 bufferSize, ViChar* catalogOut, ViInt32* elementsCount);
 
 ViStatus RsCore_QueryViStringWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs, ViInt32 bufferSize, ViChar* responseString);
 ViStatus RsCore_QueryViStringUnknownLengthWithOpc(ViSession instrSession, ViConstString query, ViInt32 timeoutMs, ViChar** responseString);
