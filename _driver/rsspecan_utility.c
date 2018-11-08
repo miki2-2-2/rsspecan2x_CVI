@@ -206,27 +206,14 @@ ViBoolean rsspecan_IsFSV(ViSession instrSession)
 /*===========================================================================*/
 /* Function: Read Trace Data                                                 */
 /* Purpose:  This function reads out trace data from the instrument.         */
-/*           It checks if data are ASCII or binary                           */
+/*           It works with ASCII or binary float data                        */
 /*===========================================================================*/
 ViStatus rsspecan_dataReadTrace(ViSession instrSession, ViInt32 window, ViString trace, ViInt32 arrayLength, ViReal64 traceData[], ViPInt32 noofPoints)
 {
 	ViStatus error = VI_SUCCESS;
-	ViChar cmd[RS_MAX_MESSAGE_BUF_SIZE];
 	ViReal64* responseArray = NULL;
 
-	checkErr(RsCore_Write(instrSession, ":FORM REAL,32"));
-
-	if (window == 0)
-	{
-		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC? %s", trace);
-	}
-	else
-	{
-		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC%ld? %s", window, trace);
-	}
-
-	checkErr(RsCore_QueryFloatArray(instrSession, cmd, &responseArray, noofPoints));
-	checkErr(rsspecan_CheckStatus(instrSession));
+	checkErr(rsspecan_dataReadTraceDynSize(instrSession, window, trace, &responseArray, noofPoints));
 	checkErr(RsCore_CopyToUserBufferViReal64Array(instrSession, traceData, arrayLength, responseArray, *noofPoints));
 
 Error:
@@ -237,7 +224,7 @@ Error:
 /*===========================================================================*/
 /* Function: Read Trace Data Dynamic size                                    */
 /* Purpose:  This function reads out trace data from the instrument.         */
-/*           It checks if data are ASCII or binary                           */
+/*           It works with ASCII or binary float data                        */
 /*===========================================================================*/
 ViStatus rsspecan_dataReadTraceDynSize(ViSession instrSession, ViInt32 window, ViString trace, ViReal64** traceData, ViInt32* noofPoints)
 {
@@ -247,9 +234,14 @@ ViStatus rsspecan_dataReadTraceDynSize(ViSession instrSession, ViInt32 window, V
 	checkErr(RsCore_Write(instrSession, ":FORM REAL,32"));
 
 	if (window == 0)
+	{
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC? %s", trace);
+	}
 	else
+	{
 		snprintf(cmd, RS_MAX_MESSAGE_BUF_SIZE, ":TRAC%ld? %s", window, trace);
+	}
+
 	checkErr(RsCore_QueryFloatArray(instrSession, cmd, traceData, noofPoints));
 	checkErr(rsspecan_CheckStatus(instrSession));
 
